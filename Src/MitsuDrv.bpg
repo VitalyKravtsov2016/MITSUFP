@@ -1,0 +1,26 @@
+#------------------------------------------------------------------------------
+VERSION = BWS.01
+#------------------------------------------------------------------------------
+!ifndef ROOT
+ROOT = $(MAKEDIR)\..
+!endif
+#------------------------------------------------------------------------------
+MAKE = $(ROOT)\bin\make.exe -$(MAKEFLAGS) -f$**
+DCC = $(ROOT)\bin\dcc32.exe $**
+BRCC = $(ROOT)\bin\brcc32.exe $**
+#------------------------------------------------------------------------------
+PROJECTS = MitsuDrv1C.dll MitsuDrvTest.exe MitsuDrvTestLib.exe
+#------------------------------------------------------------------------------
+default: $(PROJECTS)
+#------------------------------------------------------------------------------
+
+MitsuDrv1C.dll: MitsuDrv1C\MitsuDrv1C.dpr
+  $(DCC)
+
+MitsuDrvTestLib.exe: ..\Test\MisuDrvTest\MitsuDrvTestLib.dpr
+  $(DCC)
+
+MitsuDrvTest.exe: ..\Test\MisuDrvTest\MitsuDrvTest.dpr
+  $(DCC)
+
+

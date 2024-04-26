@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OFDParams>
+  <OFDServer>193.0.214.11</OFDServer>
+  <OFDPort>7777</OFDPort>
+  <OFDName>ООО "Такском"</OFDName>
+  <OFDUrl>www.taxcom.ru</OFDUrl>
+  <INNOFD>7704211201</INNOFD>
+  <TaxOfficeURL>www.nalog.gov.ru</TaxOfficeURL>
+  <ServerKM>193.0.214.11</ServerKM>
+  <PortKM>8777</PortKM>
+  <SenderEmail>noreply@taxcom.ru</SenderEmail>
+</OFDParams>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OFDParams>
+  <OFDServer>212.8.238.73</OFDServer>
+  <OFDPort>9999</OFDPort>
+  <OFDName>ООО Удостоверяющий центр "ИнитПро"</OFDName>
+  <OFDUrl>ofd-initpro.ru</OFDUrl>
+  <INNOFD>5902034504</INNOFD>
+  <TaxOfficeURL>www.nalog.gov.ru</TaxOfficeURL>
+  <ServerKM>212.8.238.73</ServerKM>
+  <PortKM>9996</PortKM>
+  <SenderEmail>noreply@ofd-initpro.ru</SenderEmail>
+</OFDParams>

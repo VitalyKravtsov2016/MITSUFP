@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OFDParams>
+  <OFDServer>91.239.5.75</OFDServer>
+  <OFDPort>7777</OFDPort>
+  <OFDName>АО "КАЛУГА АСТРАЛ"</OFDName>
+  <OFDUrl>ofd.astralnalog.ru</OFDUrl>
+  <INNOFD>4029017981</INNOFD>
+  <TaxOfficeURL>www.nalog.gov.ru</TaxOfficeURL>
+  <ServerKM>91.239.5.75</ServerKM>
+  <PortKM>7777</PortKM>
+  <SenderEmail>noreplyofd@astralnalog.ru</SenderEmail>
+</OFDParams>

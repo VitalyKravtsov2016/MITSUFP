@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OFDParams>
+  <OFDServer>92.53.73.60</OFDServer>
+  <OFDPort>7777</OFDPort>
+  <OFDName>ООО АО "ЭСК"</OFDName>
+  <OFDUrl>www.1-ofd.ru</OFDUrl>
+  <INNOFD>7709364346</INNOFD>
+  <TaxOfficeURL>www.nalog.gov.ru</TaxOfficeURL>
+  <ServerKM>92.53.73.60</ServerKM>
+  <PortKM>7788</PortKM>
+  <SenderEmail>noreply@1-ofd.ru</SenderEmail>
+</OFDParams>

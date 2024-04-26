@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OFDParams>
+  <OFDServer>94.143.160.11</OFDServer>
+  <OFDPort>4000</OFDPort>
+  <OFDName>ООО "ПЕТЕР-СЕРВИС Спецтехнологии"</OFDName>
+  <OFDUrl>www.ofd.ru</OFDUrl>
+  <INNOFD>7841465198</INNOFD>
+  <TaxOfficeURL>www.nalog.gov.ru</TaxOfficeURL>
+  <ServerKM>94.143.160.19</ServerKM>
+  <PortKM>7000</PortKM>
+  <SenderEmail>noreply@ofd.ru</SenderEmail>
+</OFDParams>

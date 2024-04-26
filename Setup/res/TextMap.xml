@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Root>
+  <TextMaps>
+    <TextMap>
+      <Src>ТИП И РЕЖИМ КАССЫ</Src>
+      <Dst>Device type and mode</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ПАРОЛИ КАССИРОВ И АДМИНИСТРАТОРОВ</Src>
+      <Dst>Casiers and administrator passwords</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ТАБЛИЦА ПЕРЕВОДА ВРЕМЕНИ</Src>
+      <Dst>Time change table</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ТЕКСТ В ЧЕКЕ</Src>
+      <Dst>Receipt text lines</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>НАИМЕНОВАНИЕ ТИПОВ ОПЛАТЫ</Src>
+      <Dst>Tender names</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>НАЛОГОВЫЕ СТАВКИ</Src>
+      <Dst>Tax rates</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>НАИМЕНОВАНИЕ ОТДЕЛОВ</Src>
+      <Dst>Department names</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>НАСТРОЙКА ШРИФТОВ</Src>
+      <Dst>Fonts parameters</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ТАБЛИЦА ФОРМАТА ЧЕКА</Src>
+      <Dst>Receipt format settings</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>СЛУЖЕБНАЯ</Src>
+      <Dst>Service parameters</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>НОМЕР ККМ В МАГАЗИНЕ</Src>
+      <Dst>Store ECR number</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>АВТ. ОБНУЛЕНИЕ ДЕНЕЖНОЙ НАЛИЧНОСТИ</Src>
+      <Dst>Automatic cashout on Z report</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ПЕЧАТЬ РЕКЛАМНОГО ТЕКСТА</Src>
+      <Dst>Print trailer</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ПЕЧАТЬ ОСТАТКОВ ФП В ОТЧЕТЕ</Src>
+      <Dst>Print FM free records in report</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ПЕЧАТЬ НЕОБНУЛЯЕМОЙ СУММЫ</Src>
+      <Dst>Print grand total</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>РАБОТА С ДЕНЕЖНЫМ ЯЩИКОМ</Src>
+      <Dst>Cash drawer enabled</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ОТРЕЗКА ЧЕКА</Src>
+      <Dst>Receipt cut type</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ПЕЧАТАТЬ ДРОБНОЕ В КОЛИЧЕСТВЕ</Src>
+      <Dst>Print fractional part in quantity</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ЛОГ. УРОВЕНЬ ДАТ. ДЕНЕЖНОГО ЯЩИКА</Src>
+      <Dst>Cash drawer logical level</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ДЛИТЕЛЬНОСТЬ ИМП. ДЕНЕЖНОГО ЯЩИКА</Src>
+      <Dst>Cash drawer pulse time</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ДЛИТЕЛЬНОСТЬ ПАУЗЫ ДЕНЕЖНОГО ЯЩИКА</Src>
+      <Dst>Cash drawer pause time</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>КОЛИЧЕСТВО ИМП. ДЕНЕЖНОГО ЯЩИКА</Src>
+      <Dst>Cash drawer pulse number</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ИСПОЛЬЗОВАНИЕ ВЕСОВЫХ ДАТЧИКОВ</Src>
+      <Dst>Paper near end sensor enabled</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>НАЧИСЛЕНИЕ НАЛОГОВ</Src>
+      <Dst>Tax processing (position or receipt)</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>АВТОМАТИЧЕСКИЙ ПЕРЕВОД ВРЕМЕНИ</Src>
+      <Dst>Automatic time change enabled</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ПЕЧАТЬ НАЛОГОВ</Src>
+      <Dst>Print tax info</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ПЕЧАТЬ ЗАГОЛОВКА</Src>
+      <Dst>Print receipt header</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ПЕЧАТЬ ЕДИНИЧНОГО КОЛИЧЕСТВА</Src>
+      <Dst>Print single quantity</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>СОХРАНЯТЬ СТРОКИ В БУФЕРЕ ЧЕКА</Src>
+      <Dst>Save text lines in receipt buffer</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ПЕЧАТЬ ЧЕКА ПО ЗАКРЫТИЮ</Src>
+      <Dst>Print receipt after close</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ПРОМОТКА ПЕРЕД ОТРЕЗКОЙ</Src>
+      <Dst>Feed paper before cut</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ОТРЕЗКА ПРИ ОТКРЫТОМ ЧЕКЕ</Src>
+      <Dst>Opened receipt cut enabled</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ЗАПРЕТ НУЛЕВОГО ЧЕКА</Src>
+      <Dst>Empty receipt disabled</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ОТСТУП В СТРОКЕ ТИПОВ ОПЛАТЫ</Src>
+      <Dst>Tender name offset</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ИСПОЛЬЗОВАНИЕ ФОРМАТИРОВАНИЯ В ЧЕКЕ</Src>
+      <Dst>Receipt format enabled</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ОБНУЛЕНИЕ СЧЕТЧИКА ЧЕКОВ</Src>
+      <Dst>Receipt number reset</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>КОНТРОЛЬ ВРЕМЕНИ</Src>
+      <Dst>Time control</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ОТКЛЮЧЕНИЕ ЗВУКА ПРИ ОШИБКАХ</Src>
+      <Dst>Disable beep on errors</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>МЕЖСТРОЧНЫЙ ИНТЕРВАЛ</Src>
+      <Dst>Line spasing</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ТИП СУТОЧНОГО ОТЧЕТА</Src>
+      <Dst>Day report type</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>СЖАТИЕ ШРИФТА НА ЧЕКОВОЙ ЛЕНТЕ</Src>
+      <Dst>Condensed font on receipt paper enabled</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>РАЗГОН ПРИ ПЕЧАТИ</Src>
+      <Dst>Motor acceleration enabled</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>КОРРЕКЦИЯ ЯРКОСТИ</Src>
+      <Dst>Brightness correction</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ЯРКОСТЬ ПЕЧАТИ</Src>
+      <Dst>Brightness</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ПЕЧАТЬ ТИПОВ ОПЛАТЫ</Src>
+      <Dst>Print tender names</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ПОЛОЖЕНИЕ ПРИНТЕРА</Src>
+      <Dst>Printer orientation</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ПЕЧАТЬ РНМ</Src>
+      <Dst>Print device ID</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>УКОРОЧЕННОЕ КЛИШЕ</Src>
+      <Dst>Short receipt header enabled</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ПАРОЛИ КАССИРОВ</Src>
+      <Dst>Cashier passwords</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>РЕКВИЗИТЫ КАССИРОВ</Src>
+      <Dst>Cashier names</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>РАЗРЕШЕНИЕ ПЕРЕВОДА</Src>
+      <Dst>Time change enabled</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ЧИСЛО</Src>
+      <Dst>Day</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>МЕСЯЦ</Src>
+      <Dst>Month</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ВРЕМЯ ГОДА</Src>
+      <Dst>Season</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ЗАПРОГРАММИРОВАННЫЕ СТРОКИ</Src>
+      <Dst>Text lines</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ЗАПРОГРАММИРОВАННЫЕ ТИПЫ ОПЛАТЫ</Src>
+      <Dst>Tender names</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ВЕЛИЧИНА НАЛОГА</Src>
+      <Dst>Tax rates</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>НАЗВАНИЕ НАЛОГА</Src>
+      <Dst>Tax names</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ЗАПРОГРАММИРОВАННЫЕ НАЗВАНИЯ СЕКЦИЙ</Src>
+      <Dst>Department names</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>РЕКЛАМНЫЙ ТЕКСТ</Src>
+      <Dst>Trailer lines</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ЗАГОЛОВОК ЧЕКА</Src>
+      <Dst>Header lines</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>1 СТРОКА В ОПЕРАЦИИ</Src>
+      <Dst>1 receipt item line</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2 СТРОКА В ОПЕРАЦИИ</Src>
+      <Dst>2 receipt item line</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>3 СТРОКА В ОПЕРАЦИИ</Src>
+      <Dst>3 receipt item line</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>1 СТРОКА В СКИДКЕ</Src>
+      <Dst>1 discount line</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2 СТРОКА В СКИДКЕ</Src>
+      <Dst>2 discount line</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>1 СТРОКА В НАДБАВКЕ</Src>
+      <Dst>1 charge line</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2 СТРОКА В НАДБАВКЕ</Src>
+      <Dst>2 charge line</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>1 СТРОКА В СТОРНО СКИДКИ</Src>
+      <Dst>1 discount storno line</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2 СТРОКА В СТОРНО СКИДКИ</Src>
+      <Dst>2 discount storno line</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>1 СТРОКА В СТОРНО НАДБАВКИ</Src>
+      <Dst>1 charge storno line</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2 СТРОКА В СТОРНО НАДБАВКИ</Src>
+      <Dst>2 charge storno line</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>СТРОКА В ЗАКРЫТИИ ЧЕКА</Src>
+      <Dst>Close receipt line</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>СКИДКА В ЗАКРЫТИИ ЧЕКА</Src>
+      <Dst>Close receipt discount</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ВСЕГО В ЗАКРЫТИИ ЧЕКА</Src>
+      <Dst>Total in receipt close</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ИТОГ ЧЕКА</Src>
+      <Dst>Receipt total</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ТЕКСТ В ТИПЕ ОПЛАТЫ</Src>
+      <Dst>Tender name text</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ТЕКСТ В СДАЧЕ</Src>
+      <Dst>Change text</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ОБОРОТ ПО НАЛОГАМ</Src>
+      <Dst>Tax turnover</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>НАЛОГИ</Src>
+      <Dst>Tax</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>НОМЕР СТРОКИ</Src>
+      <Dst>Line number</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>СМЕЩЕНИЕ В СТРОКЕ (В СИМВОЛАХ)</Src>
+      <Dst>Line offset (in characters)</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>РАЗМЕР (В СИМВОЛАХ)</Src>
+      <Dst>Size (in characters)</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ВЫРАВНИВАНИЕ</Src>
+      <Dst>Alignment</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>НАИМЕНОВАНИЕ</Src>
+      <Dst>Name</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>РАССТОЯНИЕ ОТ ГОЛОВКИ ДО НОЖА</Src>
+      <Dst>Distance from printing head to cutter</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>РАССТОЯНИЕ ОТ НОЖА ДО ГРЕБЕНКИ</Src>
+      <Dst>Distance from printing head to comb</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>НИЖНИЙ ПОРОГ НАПРЯЖЕНИЯ</Src>
+      <Dst>Low power supply voltage threshold</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ВЕРХНИЙ ПОРОГ НАПРЯЖЕНИЯ</Src>
+      <Dst>High power supply voltage threshold</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ЗАРЕЗЕРВИРОВАНО</Src>
+      <Dst>Reserved</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2002 ГОД ВЕСНА</Src>
+      <Dst>2002 year spring</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2002 ГОД ОСЕНЬ</Src>
+      <Dst>2002 year autumn</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2003 ГОД ВЕСНА</Src>
+      <Dst>2003 year spring</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2003 ГОД ОСЕНЬ</Src>
+      <Dst>2003 year autumn</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2004 ГОД ВЕСНА</Src>
+      <Dst>2004 year spring</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2004 ГОД ОСЕНЬ</Src>
+      <Dst>2004 year autumn</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2005 ГОД ВЕСНА</Src>
+      <Dst>2005 year spring</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2005 ГОД ОСЕНЬ</Src>
+      <Dst>2005 year autumn</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2006 ГОД ВЕСНА</Src>
+      <Dst>2006 year spring</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2006 ГОД ОСЕНЬ</Src>
+      <Dst>2006 year autumn</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2007 ГОД ВЕСНА</Src>
+      <Dst>2007 year spring</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2007 ГОД ОСЕНЬ</Src>
+      <Dst>2007 year autumn</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2008 ГОД ВЕСНА</Src>
+      <Dst>2008 year spring</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2008 ГОД ОСЕНЬ</Src>
+      <Dst>2008 year autumn</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2009 ГОД ВЕСНА</Src>
+      <Dst>2009 year spring</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2009 ГОД ОСЕНЬ</Src>
+      <Dst>2009 year autumn</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2010 ГОД ВЕСНА</Src>
+      <Dst>2010 year spring</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2010 ГОД ОСЕНЬ</Src>
+      <Dst>2010 year autumn</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2011 ГОД ВЕСНА</Src>
+      <Dst>2011 year spring</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>2011 ГОД ОСЕНЬ</Src>
+      <Dst>2011 year autumn</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>НАИМЕНОВАНИЕ В ОПЕРАЦИИ</Src>
+      <Dst>Receipt item name</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>КОЛИЧЕСТВО X ЦЕНУ В ОПЕРАЦИИ</Src>
+      <Dst>Quantity X price for receipt item</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>СЕКЦИЯ В ОПЕРАЦИИ</Src>
+      <Dst>Receipt item department</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>СТОИМОСТЬ В ОПЕРАЦИИ</Src>
+      <Dst>Receipt item amount</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>НАДПИСЬ СТОРНО В ОПЕРАЦИИ</Src>
+      <Dst>Receipt item STORNO text</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ТЕКСТ В СКИДКЕ</Src>
+      <Dst>Text in discount</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>НАДПИСЬ СКИДКА</Src>
+      <Dst>DISCOUNT text</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>СУММА СКИДКИ</Src>
+      <Dst>Discount amount</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ТЕКСТ В НАДБАВКЕ</Src>
+      <Dst>Text in charge</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>НАДПИСЬ НАДБАВКА</Src>
+      <Dst>CHARGE text</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>СУММА НАДБАВКИ</Src>
+      <Dst>Charge amount</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ТЕКСТ В СТОРНО СКИДКИ</Src>
+      <Dst>Discount void text</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>НАДПИСЬ СТОРНО СКИДКИ</Src>
+      <Dst>VOID DISCOUNT text</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>СУММА СТОРНО СКИДКИ</Src>
+      <Dst>Discount void amount</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>ТЕКСТ В СТОРНО НАДБАВКИ</Src>
+      <Dst>Charge void text</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>НАДПИСЬ СТОРНО НАДБАВКИ</Src>
+      <Dst>VOID CHARGE text</Dst>
+    </TextMap>
+    <TextMap>
+      <Src>СУММА СТОРНО НАДБАВКИ</Src>
+      <Dst>Charge void amount</Dst>
+    </TextMap>
+  </TextMaps>
+</Root>

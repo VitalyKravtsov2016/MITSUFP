@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OFDParams>
+  <OFDServer>193.19.169.36</OFDServer>
+  <OFDPort>7001</OFDPort>
+  <OFDName>АО "Тандер"</OFDName>
+  <OFDUrl>ofd-magnit.ru</OFDUrl>
+  <INNOFD>2310031475</INNOFD>
+  <TaxOfficeURL>www.nalog.gov.ru</TaxOfficeURL>
+  <ServerKM>193.19.169.36</ServerKM>
+  <PortKM>7005</PortKM>
+  <SenderEmail>ofd@magnit.ru</SenderEmail>
+</OFDParams>

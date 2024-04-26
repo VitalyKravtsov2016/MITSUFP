@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<drivers>
+<component progid="AddIn.SMDrvFR1C20" type="ККТ" name="Штрих-М: ККТ с передачей данных в ОФД 2.0"/>
+</drivers>

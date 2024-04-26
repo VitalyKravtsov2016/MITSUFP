@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<bundle xmlns="http://v8.1c.ru/8.2/addin/bundle">
+  <component os="Windows" path="smdrvfr_37_5_17_0_933_win_32.dll" type="native" arch="i386"/>
+  <component os="Windows" path="smdrvfr_37_5_17_0_933_win_x64.dll" type="native" arch="x86_64"/>
+</bundle>
