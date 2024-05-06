@@ -1,56 +1,46 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ini>
   <LANGUAGE>ru</LANGUAGE>
-  <main_top>160</main_top>
-  <main_left>560</main_left>
+  <main_top>42</main_top>
+  <main_left>608</main_left>
   <main_width>800</main_width>
-  <main_height>720</main_height>
+  <main_height>600</main_height>
   <KKTIP>192.168.1.100</KKTIP>
   <Port>8200</Port>
   <Speed>115200</Speed>
   <SERVICEIP>127.0.0.1</SERVICEIP>
   <SERVICEPort>8800</SERVICEPort>
   <SERVKKTID>0</SERVKKTID>
-  <OFDIP>109.73.43.4</OFDIP>
-  <OFDPort>19086</OFDPort>
-  <CASHIER>Гадя Петрович Хренова</CASHIER>
+  <OFDIP>f1test.taxcom.ru</OFDIP>
+  <OFDPort>7778</OFDPort>
+  <CASHIER>asd</CASHIER>
   <COM>COM8</COM>
-  <CRC></CRC>
-  <Print>0</Print>
-  <OISMIP>82.202.183.18</OISMIP>
-  <OISMPort>21701</OISMPort>
-  <OKPIP>prod01.okp-fn.ru</OKPIP>
-  <OKPPort>26101</OKPPort>
+  <CRC>D65848C0</CRC>
+  <Print>1</Print>
+  <OISMIP>f1test.taxcom.ru</OISMIP>
+  <OISMPort>7778</OISMPort>
+  <OKPIP>test.okp.atlas-kard.ru</OKPIP>
+  <OKPPort>31101</OKPPort>
   <FWUPLOAD>0</FWUPLOAD>
   <FW_FILE></FW_FILE>
   <KKTSERIAL>0</KKTSERIAL>
-  <KM>
-    <M0>010123456789012321M,7aL0JDGbJCWa\x1D91808B\x1D92CuE2b4wBhPv9XeoBQDEux9wOKeNR4vf4I+q/QbhqzhRGyYQymkkpgtAZUtPHlfp0THGVN6i+D8ZxZQcbTnvEMg==</M0>
-    <M1>010123456789012321XHe"ImQ&gt;*A&amp;jOL\x1D91808B\x1D92BCBr3YRDprM1AAWPkjE/RatPM7XyltEtqOTV4Y9bOtnegQLzeh1OVuOZHMfQDSMqTnXjIcM8Yb20qLr4d+Ykfg==</M1>
-    <M2>010464007801637221AgqLybqxM9MbR\x1D91FFD0\x1D92dGVzdL31KAYL0YT6592MjmW7a2HkF3IY+muf2pVSKdQ=</M2>
-    <M3>0104810112011285215w9SXTP,Y?VOC93gbra</M3>
-    <M4>0103041094787443215GsjdH\x1D93dGVz</M4>
-    <M5>0103041094787443215fdhd?\x1D93dGVz</M5>
-    <M6>00000046210654vC:Jp87AAPidGVz</M6>
-    <M7>00000046210654&gt;i0Tq)PAAPidGVz</M7>
-    <M8>029000023778429HsSUuwACW.OdXx</M8>
-  </KM>
+  <KM></KM>
   <REG>
-    <T1037>Рег. номер</T1037>
-    <T1018>ИНН пользователя</T1018>
-    <T1048>Пользователь</T1048>
-    <T1009>Адрес расчетов</T1009>
-    <T1187>Место расчетов</T1187>
-    <T1017>ИНН ОФД</T1017>
-    <T1046>Наименование ОФД</T1046>
-    <T1036>Номер автомата</T1036>
-    <T1060>Адрес сайта ФНС</T1060>
-    <T1117>Email пользователя</T1117>
-    <T1274>Доп.реквизит ОР</T1274>
-    <T1275>11223344556677889900AABBCCDDEEFF</T1275>
-    <T1013>Серийный номер ККТ</T1013>
-    <TAX>00</TAX>
+    <T1037>0000000000046409</T1037>
+    <T1018>505303696069</T1018>
+    <T1048>V1</T1048>
+    <T1009>1</T1009>
+    <T1187>1</T1187>
+    <T1017>7728699517</T1017>
+    <T1046>ЯРУС</T1046>
+    <T1036></T1036>
+    <T1060>www.nalog.gov.ru</T1060>
+    <T1117>v@mail.ru</T1117>
+    <T1274>12</T1274>
+    <T1275>12</T1275>
+    <T1013>065001000000008</T1013>
+    <TAX>03</TAX>
     <ModeA>00</ModeA>
-    <ModeB>00</ModeB>
+    <ModeB>11</ModeB>
   </REG>
 </ini>

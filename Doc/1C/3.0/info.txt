@@ -1,0 +1,10 @@
+Демонстрационная среда БПО 2.1.1.20
+CEL_2_1_1_20_setup1c.exe
+
+Расположена на ftp 
+
+ftp.v8.1c.ru
+Логин: bizdev29
+Пароль: 9AnwUQMnrl
+Адрес с логином и паролем:
+ftp://bizdev29:9AnwUQMnrl@ftp.v8.1c.ru/

@@ -280,7 +280,6 @@ begin
   inherited Create;
   FLogger := ALogger;
   Inc(LastID); FID := LastID;
-  Logger.Debug('TSerialPort.Create. ID: ' + IntToStr(FID));
 
   FHandle := INVALID_HANDLE_VALUE;
   FLock := TCriticalSection.Create;
@@ -399,7 +398,7 @@ var
   dwSize: DWORD;
   CommConfig: TCommConfig;
 begin
-  Logger.Debug(Logger.Separator);
+  //Logger.Debug(Logger.Separator);
   dwSize := Sizeof(CommConfig);
 
   if not GetCommConfig(GetHandle, CommConfig, dwSize) then
@@ -409,9 +408,11 @@ begin
     RaiseSerialPortError;
   end;
 
+(*
   Logger.Debug(Format('ProvSubType      : 0x%.8x, %s', [
     CommConfig.dwProviderSubType,
     GetProviderSubTypeText(CommConfig.dwProviderSubType)]));
+*)
 end;
 
 procedure TSerialPort.UpdateCommProperties;
@@ -483,7 +484,7 @@ begin
       Inc(FOpenCount);
       SetupComm(GetHandle, 1024, 1024);
       UpdateCommTimeouts;
-      UpdateCommProperties;
+      //UpdateCommProperties; !!!
       UpdateDCB;
 
       ReadCommConfig;

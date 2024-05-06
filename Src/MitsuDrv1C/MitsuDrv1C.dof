@@ -143,8 +143,9 @@ Item0=Dcu
 Item1=..\dcu
 Item2=../DCU
 [HistoryLists\hlOutputDirectorry]
-Count=4
-Item0=..\
-Item1=../../../Bin
-Item2=..\..\Bin
-Item3=Bin
+Count=5
+Item0=..\bin
+Item1=..\
+Item2=../../../Bin
+Item3=..\..\Bin
+Item4=Bin

@@ -8,7 +8,7 @@ uses
   // VCL
   ComObj2, ActiveX, StdVcl, SysUtils,
   // This
-  SMDrvFR1CLib_TLB, VersionInfo, ActiveXView, AddIn1CInterface,
+  SMDrvFR1CLib_TLB, DrvFR1CLib_TLB, VersionInfo, ActiveXView, AddIn1CInterface,
   ActiveXControl1C, AxCtrls2, LogFile;
 
 type
