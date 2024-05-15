@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ini>
   <LANGUAGE>ru</LANGUAGE>
-  <main_top>42</main_top>
-  <main_left>608</main_left>
+  <main_top>65</main_top>
+  <main_left>163</main_left>
   <main_width>800</main_width>
   <main_height>600</main_height>
   <KKTIP>192.168.1.100</KKTIP>
@@ -11,16 +11,16 @@
   <SERVICEIP>127.0.0.1</SERVICEIP>
   <SERVICEPort>8800</SERVICEPort>
   <SERVKKTID>0</SERVKKTID>
-  <OFDIP>f1test.taxcom.ru</OFDIP>
-  <OFDPort>7778</OFDPort>
-  <CASHIER>asd</CASHIER>
+  <OFDIP></OFDIP>
+  <OFDPort>80</OFDPort>
+  <CASHIER>23423434234</CASHIER>
   <COM>COM8</COM>
   <CRC>D65848C0</CRC>
   <Print>1</Print>
-  <OISMIP>f1test.taxcom.ru</OISMIP>
-  <OISMPort>7778</OISMPort>
-  <OKPIP>test.okp.atlas-kard.ru</OKPIP>
-  <OKPPort>31101</OKPPort>
+  <OISMIP></OISMIP>
+  <OISMPort>80</OISMPort>
+  <OKPIP>prod01.okp-fn.ru</OKPIP>
+  <OKPPort>26101</OKPPort>
   <FWUPLOAD>0</FWUPLOAD>
   <FW_FILE></FW_FILE>
   <KKTSERIAL>0</KKTSERIAL>
@@ -36,10 +36,10 @@
     <T1036></T1036>
     <T1060>www.nalog.gov.ru</T1060>
     <T1117>v@mail.ru</T1117>
-    <T1274>12</T1274>
-    <T1275>12</T1275>
+    <T1274></T1274>
+    <T1275></T1275>
     <T1013>065001000000008</T1013>
-    <TAX>03</TAX>
+    <TAX>01</TAX>
     <ModeA>00</ModeA>
     <ModeB>11</ModeB>
   </REG>

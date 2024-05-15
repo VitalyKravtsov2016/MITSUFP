@@ -4,12 +4,13 @@ interface
 
 uses
   // VCL
-  SysUtils, Classes, XMLDoc, XMLIntf, DateUtils,
-  //NetEncoding,
+  SysUtils, Classes, XMLDoc, XMLIntf, DateUtils, Variants,
   // This
-  XmlUtils, stringutils, LogFile, GS1Util, Optional, BinUtils;
+  XmlUtils, stringutils, LogFile;
 
 type
+  { TRequestKM }
+
   TRequestKM = record
     GUID: string;
     WaitForResult: Boolean;
@@ -23,8 +24,9 @@ type
     Numerator: Integer;
     Denominator: Integer;
     NotSendToServer: Boolean;
-    //procedure Load(AValue: WideString);
   end;
+
+  { TPayments }
 
   TPayments = record
     Cash: Currency;
@@ -32,8 +34,9 @@ type
     PrePayment: Currency;
     PostPayment: Currency;
     Barter: Currency;
-    //procedure Load(ANode: IXMLNode);
   end;
+
+  { TCorrectionData }
 
   TCorrectionData = record
     Enabled: Boolean;
@@ -41,8 +44,9 @@ type
     Description: WideString; // Описание коррекции
     Date: TDateTime; // Дата совершения корректируемого расчета
     Number: WideString; // Номер предписания налогового органа
-    //procedure Load(ANode: IXMLNode);
   end;
+
+  { TAgentData }
 
   TAgentData = record
     Enabled: Boolean;
@@ -53,23 +57,26 @@ type
     AcquirerOperatorName: WideString; // 	Наименование оператора перевода 1026
     AcquirerOperatorAddress: WideString; //	Адрес оператора перевода 1005
     AcquirerOperatorINN: WideString; //	ИНН оператора перевода 1016
-    //procedure Load(ANode: IXMLNode);
   end;
+
+  { TVendorData }
 
   TVendorData = record
     Enabled: Boolean;
     VendorPhone: WideString; //	Телефон поставщика 1171
     VendorName: WideString; //Наименование поставщика 1225
     VendorINN: WideString; //ИНН поставщика 1226
-    //procedure Load(ANode: IXMLNode);
   end;
+
+  { TUserAttribute }
 
   TUserAttribute = record
     Enabled: Boolean;
     Name: string;
     Value: string;
-    //procedure Load(ANode: IXMLNode);
   end;
+
+  { TCheckCorrectionParamsRec3 }
 
   TCheckCorrectionParamsRec3 = record
     Id: string;
@@ -103,6 +110,8 @@ type
     SettlementPlace: WideString;
   end;
 
+  { TCustomerDetail }
+
   TCustomerDetail = record
     Enabled: Boolean;
     Info: string;   // Наименование организации или фамилия, имя, отчество (при наличии)
@@ -115,16 +124,18 @@ type
     DocumentTypeCode: Integer; // Числовой код вида документа, удостоверяющего личность (ФФД, Таблица 116)
     DocumentData: string;      // Данные документа, удостоверяющего личность
     Address: string;           // Адрес покупателя (клиента)
-    //procedure Load(const ANode: IXMLNode);
   end;
+
+  { TOperationalAttribute }
 
   TOperationalAttribute = record
     Enabled: Boolean;
     DateTime: TDateTime;  // Дата, время операции
     OperationID: Integer;  // Идентификатор операции
     OperationData: string;  // Данные операции
-    //procedure Load(const ANode: IXMLNode);
   end;
+
+  { TIndustryAttribute }
 
   TIndustryAttribute = record
     Enabled: Boolean;
@@ -132,15 +143,17 @@ type
     DocumentDate: string;   // Дата документа основания в формате "DD.MM.YYYY"
     DocumentNumber: string;  // Номер документа основания
     AttributeValue: string; // Значение отраслевого реквизита
-    //procedure Load(const ANode: IXMLNode);
   end;
+
+  { TFractionalQuantity }
 
   TFractionalQuantity = record
     Enabled: Boolean;
     Numerator: Integer;
     Denominator: Integer;
-    //procedure Load(const ANode: IXMLNode);
   end;
+
+  { TItemCodeData }
 
   TItemCodeData = record
     MarkingType: Integer;
@@ -148,6 +161,8 @@ type
     SerialNumber: AnsiString;
     Barcode: AnsiString;
   end;
+
+  { TGoodCodeData }
 
   TGoodCodeData = record
     Enabled: Boolean;
@@ -169,8 +184,6 @@ type
     F5: AnsiString; //Код товара в формате Ф.5 в Base64
     F6: AnsiString; //Код товара в формате Ф.6 в Base64
     GTIN: AnsiString; // GTIN для формирования кода маркировки при продаже товаров в объемно-сортовом учете. При передаче этого поля формируется тег 2000 в Base64.
-    //procedure Load(const ANode: IXMLNode);
-    //procedure GetItemCodeData;
   end;
 
   TPosition1C3 = class;
@@ -215,18 +228,11 @@ type
     function GetItem(Index: Integer): TPosition1C3;
     procedure InsertItem(AItem: TPosition1C3);
     procedure RemoveItem(AItem: TPosition1C3);
-    function TaxToInt(const ATax: WideString): Integer;
   public
     constructor Create;
     destructor Destroy; override;
     function Add: TPosition1C3;
-    procedure ReadFromXML(AXML: WideString; ANonFiscal: Boolean);
-    procedure LoadParameters(ANode: IXMLNode);
-    procedure LoadPositions(ANode: IXMLNode; ANonFiscal: Boolean);
-    procedure LoadFiscalString32(ANode: IXMLNode);
-    procedure LoadNonFiscalString32(ANode: IXMLNode);
     function TotalTaxSum: Currency;
-    procedure LoadBarcode32(ANode: IXMLNode);
 
     procedure Clear;
     property Count: Integer read GetCount;
@@ -272,6 +278,8 @@ type
     destructor Destroy; override;
   end;
 
+  { TFiscalString }
+
   TFiscalString = class(TPosition1C3)
   private
     FAmount: Double;
@@ -290,6 +298,8 @@ type
     property Tax: Integer read FTax;
     property Department: Integer read FDepartment;
   end;
+
+  { TFiscalString32 }
 
   TFiscalString32 = class(TPosition1C3)
   private
@@ -366,16 +376,42 @@ type
     property Barcode: AnsiString read FBarcode;
   end;
 
-//function RequestKMToXML(const AGUID: string; const AWaitForResult: Boolean; const AMarkingCode: AnsiString; const APlannedStatus: Integer; const AQuantity: Double; const AMeasureOfQuantity: string; const AFractionalQuantity: Boolean; const ANumerator: Integer; const ADenominator: Integer): string;
-//function RequestKMResultToXML(const AChecking: Boolean; const ACheckingResult: Boolean): string;
-//function ProcessingKMResultToXML(const AGUID: string; const AResult: Boolean; const AResultCode: Integer; const AHasStatusInfo: Boolean; const AStatusInfo: Integer; const AHandleCode: Integer): string;
+  { TPositionsXmlReader }
+
+  TPositionsXmlReader = class
+  private
+    FLogger: TLogFile;
+    FItems: TPositions1C3;
+    procedure LoadParameters(ANode: IXMLNode);
+    procedure LoadPositions(ANode: IXMLNode; ANonFiscal: Boolean);
+    procedure LoadFiscalString32(ANode: IXMLNode);
+    procedure LoadNonFiscalString32(ANode: IXMLNode);
+    procedure LoadBarcode32(ANode: IXMLNode);
+  public
+    constructor Create(AItems: TPositions1C3; ALogger: TLogFile);
+    procedure ReadFromXML(AXML: WideString; ANonFiscal: Boolean);
+
+    property Logger: TLogFile read FLogger;
+    property Items: TPositions1C3 read FItems;
+  end;
+
+procedure LoadFromXml(Positions: TPositions1C3; Logger: TLogFile;
+  const Xml: WideString; ANonFiscal: Boolean);
 
 implementation
 
-uses
-  Variants;
-
-
+procedure LoadFromXml(Positions: TPositions1C3; Logger: TLogFile;
+  const Xml: WideString; ANonFiscal: Boolean);
+var
+  Reader: TPositionsXmlReader;
+begin
+  Reader := TPositionsXmlReader.Create(Positions, Logger);
+  try
+    Reader.ReadFromXML(Xml, ANonFiscal);
+  finally
+    Reader.Free;
+  end;
+end;
 
 { TPositions1C }
 
@@ -429,261 +465,6 @@ end;
 function TPositions1C3.Add: TPosition1C3;
 begin
   Result := TPosition1C3.Create(Self);
-end;
-
-procedure TPositions1C3.ReadFromXML(AXML: WideString; ANonFiscal: Boolean);
-var
-  Xml: IXMLDocument;
-  Node: IXMLNode;
-  i: Integer;
-  Doc: IXMLNode;
-begin
-  Logger.Debug('TPositions1C3.ReadFromXML');
-  Logger.Debug('ANonFiscal = ' + BoolToStr(ANonFiscal));
-  Xml := TXMLDocument.Create(nil);
-  try
-    Xml.Active := True;
-    Xml.Version := '1.0';
-    Xml.Encoding := 'UTF-8';
-    Xml.Options := Xml.Options + [doNodeAutoIndent];
-    Xml.LoadFromXML(AXML);
-    if ANonFiscal then
-      Doc := Xml.ChildNodes.FindNode('Document')
-    else
-      Doc := Xml.ChildNodes.FindNode('CheckPackage');
-    if Doc = nil then
-      Exit;
-    for i := 0 to Doc.ChildNodes.Count - 1 do
-    begin
-      Node := Doc.ChildNodes.Nodes[i];
-      if Node = nil then
-        Continue;
-      if Node.NodeName = 'Parameters' then
-      begin
-        LoadParameters(Node);
-        Continue;
-      end;
-      if Node.NodeName = 'Positions' then
-      begin
-        LoadPositions(Node, ANonFiscal);
-        Continue;
-      end;
-      if Node.NodeName = 'Payments' then
-      begin
-        //FPayments.Load(Node); !!
-        Continue;
-      end;
-    end;
-  finally
-    Xml := nil;
-  end;
-end;
-
-
-(*
-
-<Parameters PaymentType="1" TaxVariant="0" CashierName="Казакова Н.А." SenderEmail="info@1c.ru" CustomerEmail="" CustomerPhone="" AgentSign="2" AddressSettle="г.Москва, Дмитровское ш. д.9">
-		<AgentData PayingAgentOperation="operation" PayingAgentPhone="tel" ReceivePaymentsOperatorPhone="tel" MoneyTransferOperatorPhone="tel" MoneyTransferOperatorName="name" MoneyTransferOperatorAddress="addr"/>
-		<PurveyorData PurveyorPhone="12343332" PurveyorName="123fffff" PurveyorVATIN="123456789"/>
-	</Parameters>
-*)
-
-procedure TPositions1C3.LoadParameters(ANode: IXMLNode);
-var
-  Node: IXMLNode;
-begin
-  FCashierName := LoadString(ANode, 'CashierName', False);
-  FCashierINN := LoadString(ANode, 'CashierINN', False);
-  FOperationType := LoadInteger(ANode, 'OperationType', True);
-  FTaxationSystem := LoadInteger(ANode, 'TaxationSystem', True);
-  FCustomerInfo := LoadString(ANode, 'CustomerInfo', False);
-  FCustomerINN := LoadString(ANode, 'CustomerINN', False);
-  FCustomerEmail := LoadString(ANode, 'CustomerEmail', False);
-  FCustomerPhone := LoadString(ANode, 'CustomerPhone', False);
-  FSenderEmail := LoadString(ANode, 'SenderEmail', False);
-  FSaleAddress := LoadString(ANode, 'SaleAddress', False);
-  FSaleLocation := LoadString(ANode, 'SaleLocation', False);
-  FAgentType := LoadString(ANode, 'AgentType', False);
-  FAdditionalAttribute := LoadString(ANode, 'AdditionalAttribute', False);
-  //FCorrectionData.Load(ANode); !!
-  //FAgentData.Load(ANode);
-  //FVendorData.Load(ANode);
-  //FUserAttribute.Load(ANode);
-
-  // 34
-  //FCustomerDetail.Load(ANode);
-  //FOperationalAttribute.Load(ANode);
-  //FIndustryAttribute.Load(ANode);
-  //FAutomatNumber := LoadString(ANode, 'AutomatNumber', False);
-end;
-
-procedure TPositions1C3.LoadPositions(ANode: IXMLNode; ANonFiscal: Boolean);
-var
-  i: Integer;
-  Node: IXMLNode;
-begin
-  for i := 0 to ANode.ChildNodes.Count - 1 do
-  begin
-    Node := ANode.ChildNodes.Nodes[i];
-    if Node = nil then
-      Continue;
-    if not ANonFiscal then
-    begin
-      if Node.NodeName = 'FiscalString' then
-      begin
-        LoadFiscalString32(Node);
-        Continue;
-      end;
-    end;
-    if Node.NodeName = 'TextString' then
-    begin
-      LoadNonFiscalString32(Node);
-      Continue;
-    end;
-    if Node.NodeName = 'Barcode' then
-    begin
-      LoadBarcode32(Node);
-      Continue;
-    end;
-  end;
-end;
-
-function DecodeBase64(const AData: string): AnsiString;
-var
-  Data: TBytes;
-begin
-  if AData = '' then
-  begin
-    Result := '';
-    Exit;
-  end;
-  // Data := TNetEncoding.Base64.DecodeStringToBytes(AData); !!!
-  SetString(Result, PAnsiChar(Data), Length(Data));
-end;
-
-procedure TPositions1C3.LoadBarcode32(ANode: IXMLNode);
-var
-  Item: TBarcode32;
-begin
-  Item := TBarcode32.Create(Self);
-  Item.FBarcodeType := LoadString(ANode, 'Type', True);
-  if HasAttribute(ANode, 'Value') then
-    Item.FBarcode := LoadString(ANode, 'Value', True);
-  if HasAttribute(ANode, 'ValueBase64') then
-    Item.FBarcode := DecodeBase64(LoadString(ANode, 'ValueBase64', True));
-  Logger.Debug('FBARCODE ' + Item.FBarcode);
-end;
-
-procedure TPositions1C3.LoadNonFiscalString32(ANode: IXMLNode);
-begin
-  TNonFiscalString32.Create(Self).FText := LoadString(ANode, 'Text', True);
-end;
-
-procedure TPositions1C3.LoadFiscalString32(ANode: IXMLNode);
-var
-  Item: TFiscalString32;
-  T: WideString;
-  Node: IXMLNode;
-begin
-  Item := TFiscalString32.Create(Self);
-  Item.FName := LoadString(ANode, 'Name', True);
-  if ItemNameLength > 0 then
-    Item.FName := Copy(Item.FName, 1, ItemNameLength);
-
-  Item.FQuantity := LoadDouble(ANode, 'Quantity', True);
-  Item.FPriceWithDiscount := LoadDouble(ANode, 'PriceWithDiscount', True);
-  Item.FSumWithDiscount := LoadDouble(ANode, 'AmountWithDiscount', True);
-  if ANode.Attributes['DiscountAmount'] = '' then
-    Item.FDiscountSum := 0
-  else
-    Item.FDiscountSum := LoadDouble(ANode, 'DiscountAmount', True);
-  Item.FSignMethodCalculation := LoadIntegerDef(ANode, 'PaymentMethod', False, 4);
-  Item.FSignCalculationObject := LoadIntegerDef(ANode, 'CalculationSubject', False, 1);
-  T := LoadString(ANode, 'VATRate', True);
-  Item.FTax := TaxToInt(T);
-  Item.FTaxSumm := LoadDouble(ANode, 'VATAmount', False);
-  Item.FDepartment := LoadIntegerDef(ANode, 'Department', False, 0);
-  Item.AgentSign := LoadString(ANode, 'CalculationAgent', False);
-  Item.ExciseAmount := LoadString(ANode, 'ExciseAmount', False);
-  Item.FCountryOfOfigin := LoadString(ANode, 'CountryOfOrigin', False);
-  Item.FCustomsDeclaration := LoadString(ANode, 'CustomsDeclaration', False);
-  Item.FAdditionalAttribute := LoadString(ANode, 'AdditionalAttribute', False);
-  Item.FMeasurementUnit := LoadString(ANode, 'MeasurementUnit', False);
-
-(*
-  Item.FIndustryAttribute.Load(ANode); !!
-  Item.FMeasureOfQuantity := LoadInteger(ANode, 'MeasureOfQuantity', False);
-  Item.FFractionalQuantity.Load(ANode);
-  Item.FGoodCodeData.Load(ANode);
-  Item.FMarkingCode := DecodeBase64(LoadString(ANode, 'MarkingCode', False));
-  Item.FIndustryAttribute.Load(ANode);
-
-  // Код маркировки
-  Item.FMarking := '';
-  Item.FMarkingRaw := '';
-  Node := ANode.ChildNodes.FindNode('GoodCodeData');
-  if Node <> nil then
-  begin
-    Item.FMarking := DecodeBase64(LoadString(Node, 'MarkingCode', False));
-    Item.FMarkingRaw := LoadString(Node, 'MarkingCode', False);
-  end;
-  Logger.Debug('LoadFiscalString32.2');
-  // Данные агента
-  Item.FAgentData.Enabled := False;
-  Node := ANode.ChildNodes.FindNode('AgentData');
-  if Node <> nil then
-  begin
-    if Node.AttributeNodes.Count > 0 then
-    begin
-      Item.FAgentData.Enabled := True;
-      Item.FAgentData.AgentOperation := LoadString(Node, 'AgentOperation', False);
-      Item.FAgentData.AgentPhone := LoadString(Node, 'AgentPhone', False);
-      Item.FAgentData.PaymentProcessorPhone := LoadString(Node, 'PaymentProcessorPhone', False);
-      Item.FAgentData.AcquirerOperatorPhone := LoadString(Node, 'AcquirerOperatorPhone', False);
-      Item.FAgentData.AcquirerOperatorName := LoadString(Node, 'AcquirerOperatorName', False);
-      Item.FAgentData.AcquirerOperatorAddress := LoadString(Node, 'AcquirerOperatorAddress', False);
-      Item.FAgentData.AcquirerOperatorINN := LoadString(Node, 'AcquirerOperatorINN', False);
-
-      if (Item.FAgentData.AgentOperation = '') and (Item.FAgentData.AgentPhone = '') and (Item.FAgentData.PaymentProcessorPhone = '') and (Item.FAgentData.AcquirerOperatorPhone = '') and (Item.FAgentData.AcquirerOperatorName = '') and (Item.FAgentData.AcquirerOperatorAddress = '') and (Item.FAgentData.AcquirerOperatorINN = '') then
-        Item.FAgentData.Enabled := False;
-    end;
-  end;
-  Logger.Debug('LoadFiscalString32.3');
-  // Данные поставщика
-  Item.FVendorData.Enabled := False;
-  Node := ANode.ChildNodes.FindNode('VendorData');
-  if Node <> nil then
-  begin
-    if Node.AttributeNodes.Count > 0 then
-    begin
-      Item.FVendorData.Enabled := True;
-      Item.FVendorData.VendorPhone := LoadString(Node, 'VendorPhone', False);
-      Item.FVendorData.VendorName := LoadString(Node, 'VendorName', False);
-      Item.FVendorData.VendorINN := LoadString(Node, 'VendorINN', False);
-      if (Item.FVendorData.VendorPhone = '') and (Item.FVendorData.VendorName = '') and (Item.FVendorData.VendorINN = '') then
-        Item.FVendorData.Enabled := False;
-    end;
-  end;
-*)
-  Logger.Debug('LoadFiscalString32.4');
-end;
-
-function TPositions1C3.TaxToInt(const ATax: WideString): Integer;
-begin
-  if (ATax = '18') or (ATax = '20') then
-    Result := 1
-  else if ATax = '10' then
-    Result := 2
-  else if ATax = '0' then
-    Result := 3
-  else if ATax = 'none' then
-    Result := 4
-  else if (ATax = '18/118') or (ATax = '20/120') then
-    Result := 5
-  else if ATax = '10/110' then
-    Result := 6
-  else
-    raise Exception.Create('Invalid Tax Value: ' + ATax);
 end;
 
 function TPositions1C3.TotalTaxSum: Currency;
@@ -1199,6 +980,274 @@ begin
   end;
 end;
 *)
+
+
+{ TPositionsXmlReader }
+
+constructor TPositionsXmlReader.Create(AItems: TPositions1C3; ALogger: TLogFile);
+begin
+  inherited Create;
+  FItems := AItems;
+  FLogger := ALogger;
+end;
+
+
+procedure TPositionsXmlReader.ReadFromXML(AXML: WideString; ANonFiscal: Boolean);
+var
+  Xml: IXMLDocument;
+  Node: IXMLNode;
+  i: Integer;
+  Doc: IXMLNode;
+begin
+  Logger.Debug('TPositions1C3.ReadFromXML');
+  Logger.Debug('ANonFiscal = ' + BoolToStr(ANonFiscal));
+  Xml := TXMLDocument.Create(nil);
+  try
+    Xml.Active := True;
+    Xml.Version := '1.0';
+    Xml.Encoding := 'UTF-8';
+    Xml.Options := Xml.Options + [doNodeAutoIndent];
+    Xml.LoadFromXML(AXML);
+    if ANonFiscal then
+      Doc := Xml.ChildNodes.FindNode('Document')
+    else
+      Doc := Xml.ChildNodes.FindNode('CheckPackage');
+    if Doc = nil then
+      Exit;
+    for i := 0 to Doc.ChildNodes.Count - 1 do
+    begin
+      Node := Doc.ChildNodes.Nodes[i];
+      if Node = nil then
+        Continue;
+      if Node.NodeName = 'Parameters' then
+      begin
+        LoadParameters(Node);
+        Continue;
+      end;
+      if Node.NodeName = 'Positions' then
+      begin
+        LoadPositions(Node, ANonFiscal);
+        Continue;
+      end;
+      if Node.NodeName = 'Payments' then
+      begin
+        //FPayments.Load(Node); !!
+        Continue;
+      end;
+    end;
+  finally
+    Xml := nil;
+  end;
+end;
+
+(*
+
+<Parameters PaymentType="1" TaxVariant="0" CashierName="Казакова Н.А." SenderEmail="info@1c.ru" CustomerEmail="" CustomerPhone="" AgentSign="2" AddressSettle="г.Москва, Дмитровское ш. д.9">
+		<AgentData PayingAgentOperation="operation" PayingAgentPhone="tel" ReceivePaymentsOperatorPhone="tel" MoneyTransferOperatorPhone="tel" MoneyTransferOperatorName="name" MoneyTransferOperatorAddress="addr"/>
+		<PurveyorData PurveyorPhone="12343332" PurveyorName="123fffff" PurveyorVATIN="123456789"/>
+	</Parameters>
+*)
+
+procedure TPositionsXmlReader.LoadParameters(ANode: IXMLNode);
+var
+  Node: IXMLNode;
+begin
+  FItems.FCashierName := LoadString(ANode, 'CashierName', False);
+  FItems.FCashierINN := LoadString(ANode, 'CashierINN', False);
+  FItems.FOperationType := LoadInteger(ANode, 'OperationType', True);
+  FItems.FTaxationSystem := LoadInteger(ANode, 'TaxationSystem', True);
+  FItems.FCustomerInfo := LoadString(ANode, 'CustomerInfo', False);
+  FItems.FCustomerINN := LoadString(ANode, 'CustomerINN', False);
+  FItems.FCustomerEmail := LoadString(ANode, 'CustomerEmail', False);
+  FItems.FCustomerPhone := LoadString(ANode, 'CustomerPhone', False);
+  FItems.FSenderEmail := LoadString(ANode, 'SenderEmail', False);
+  FItems.FSaleAddress := LoadString(ANode, 'SaleAddress', False);
+  FItems.FSaleLocation := LoadString(ANode, 'SaleLocation', False);
+  FItems.FAgentType := LoadString(ANode, 'AgentType', False);
+  FItems.FAdditionalAttribute := LoadString(ANode, 'AdditionalAttribute', False);
+  //FCorrectionData.Load(ANode); !!
+  //FAgentData.Load(ANode);
+  //FVendorData.Load(ANode);
+  //FUserAttribute.Load(ANode);
+
+  // 34
+  //FCustomerDetail.Load(ANode);
+  //FOperationalAttribute.Load(ANode);
+  //FIndustryAttribute.Load(ANode);
+  //FAutomatNumber := LoadString(ANode, 'AutomatNumber', False);
+end;
+
+procedure TPositionsXmlReader.LoadPositions(ANode: IXMLNode; ANonFiscal: Boolean);
+var
+  i: Integer;
+  Node: IXMLNode;
+begin
+  for i := 0 to ANode.ChildNodes.Count - 1 do
+  begin
+    Node := ANode.ChildNodes.Nodes[i];
+    if Node = nil then
+      Continue;
+    if not ANonFiscal then
+    begin
+      if Node.NodeName = 'FiscalString' then
+      begin
+        LoadFiscalString32(Node);
+        Continue;
+      end;
+    end;
+    if Node.NodeName = 'TextString' then
+    begin
+      LoadNonFiscalString32(Node);
+      Continue;
+    end;
+    if Node.NodeName = 'Barcode' then
+    begin
+      LoadBarcode32(Node);
+      Continue;
+    end;
+  end;
+end;
+
+function DecodeBase64(const AData: string): AnsiString;
+//var
+//  Data: TBytes;
+begin
+(*
+  if AData = '' then
+  begin
+    Result := '';
+    Exit;
+  end;
+  // Data := TNetEncoding.Base64.DecodeStringToBytes(AData); !!!
+  SetString(Result, PAnsiChar(Data), Length(Data));
+*)
+end;
+
+procedure TPositionsXmlReader.LoadBarcode32(ANode: IXMLNode);
+var
+  Item: TBarcode32;
+begin
+  Item := TBarcode32.Create(FItems);
+  Item.FBarcodeType := LoadString(ANode, 'Type', True);
+  if HasAttribute(ANode, 'Value') then
+    Item.FBarcode := LoadString(ANode, 'Value', True);
+  if HasAttribute(ANode, 'ValueBase64') then
+    Item.FBarcode := DecodeBase64(LoadString(ANode, 'ValueBase64', True));
+  Logger.Debug('FBARCODE ' + Item.FBarcode);
+end;
+
+procedure TPositionsXmlReader.LoadNonFiscalString32(ANode: IXMLNode);
+begin
+  TNonFiscalString32.Create(FItems).FText := LoadString(ANode, 'Text', True);
+end;
+
+function TaxToInt(const ATax: WideString): Integer;
+begin
+  if (ATax = '18') or (ATax = '20') then
+    Result := 1
+  else if ATax = '10' then
+    Result := 2
+  else if ATax = '0' then
+    Result := 3
+  else if ATax = 'none' then
+    Result := 4
+  else if (ATax = '18/118') or (ATax = '20/120') then
+    Result := 5
+  else if ATax = '10/110' then
+    Result := 6
+  else
+    raise Exception.Create('Invalid Tax Value: ' + ATax);
+end;
+
+procedure TPositionsXmlReader.LoadFiscalString32(ANode: IXMLNode);
+var
+  Item: TFiscalString32;
+  T: WideString;
+  Node: IXMLNode;
+begin
+  Item := TFiscalString32.Create(FItems);
+  Item.FName := LoadString(ANode, 'Name', True);
+  if Items.ItemNameLength > 0 then
+    Item.FName := Copy(Item.FName, 1, Items.ItemNameLength);
+
+  Item.FQuantity := LoadDouble(ANode, 'Quantity', True);
+  Item.FPriceWithDiscount := LoadDouble(ANode, 'PriceWithDiscount', True);
+  Item.FSumWithDiscount := LoadDouble(ANode, 'AmountWithDiscount', True);
+  if ANode.Attributes['DiscountAmount'] = '' then
+    Item.FDiscountSum := 0
+  else
+    Item.FDiscountSum := LoadDouble(ANode, 'DiscountAmount', True);
+  Item.FSignMethodCalculation := LoadIntegerDef(ANode, 'PaymentMethod', False, 4);
+  Item.FSignCalculationObject := LoadIntegerDef(ANode, 'CalculationSubject', False, 1);
+  T := LoadString(ANode, 'VATRate', True);
+  Item.FTax := TaxToInt(T);
+  Item.FTaxSumm := LoadDouble(ANode, 'VATAmount', False);
+  Item.FDepartment := LoadIntegerDef(ANode, 'Department', False, 0);
+  Item.AgentSign := LoadString(ANode, 'CalculationAgent', False);
+  Item.ExciseAmount := LoadString(ANode, 'ExciseAmount', False);
+  Item.FCountryOfOfigin := LoadString(ANode, 'CountryOfOrigin', False);
+  Item.FCustomsDeclaration := LoadString(ANode, 'CustomsDeclaration', False);
+  Item.FAdditionalAttribute := LoadString(ANode, 'AdditionalAttribute', False);
+  Item.FMeasurementUnit := LoadString(ANode, 'MeasurementUnit', False);
+
+(*
+  Item.FIndustryAttribute.Load(ANode); !!
+  Item.FMeasureOfQuantity := LoadInteger(ANode, 'MeasureOfQuantity', False);
+  Item.FFractionalQuantity.Load(ANode);
+  Item.FGoodCodeData.Load(ANode);
+  Item.FMarkingCode := DecodeBase64(LoadString(ANode, 'MarkingCode', False));
+  Item.FIndustryAttribute.Load(ANode);
+
+  // Код маркировки
+  Item.FMarking := '';
+  Item.FMarkingRaw := '';
+  Node := ANode.ChildNodes.FindNode('GoodCodeData');
+  if Node <> nil then
+  begin
+    Item.FMarking := DecodeBase64(LoadString(Node, 'MarkingCode', False));
+    Item.FMarkingRaw := LoadString(Node, 'MarkingCode', False);
+  end;
+  Logger.Debug('LoadFiscalString32.2');
+  // Данные агента
+  Item.FAgentData.Enabled := False;
+  Node := ANode.ChildNodes.FindNode('AgentData');
+  if Node <> nil then
+  begin
+    if Node.AttributeNodes.Count > 0 then
+    begin
+      Item.FAgentData.Enabled := True;
+      Item.FAgentData.AgentOperation := LoadString(Node, 'AgentOperation', False);
+      Item.FAgentData.AgentPhone := LoadString(Node, 'AgentPhone', False);
+      Item.FAgentData.PaymentProcessorPhone := LoadString(Node, 'PaymentProcessorPhone', False);
+      Item.FAgentData.AcquirerOperatorPhone := LoadString(Node, 'AcquirerOperatorPhone', False);
+      Item.FAgentData.AcquirerOperatorName := LoadString(Node, 'AcquirerOperatorName', False);
+      Item.FAgentData.AcquirerOperatorAddress := LoadString(Node, 'AcquirerOperatorAddress', False);
+      Item.FAgentData.AcquirerOperatorINN := LoadString(Node, 'AcquirerOperatorINN', False);
+
+      if (Item.FAgentData.AgentOperation = '') and (Item.FAgentData.AgentPhone = '') and (Item.FAgentData.PaymentProcessorPhone = '') and (Item.FAgentData.AcquirerOperatorPhone = '') and (Item.FAgentData.AcquirerOperatorName = '') and (Item.FAgentData.AcquirerOperatorAddress = '') and (Item.FAgentData.AcquirerOperatorINN = '') then
+        Item.FAgentData.Enabled := False;
+    end;
+  end;
+  Logger.Debug('LoadFiscalString32.3');
+  // Данные поставщика
+  Item.FVendorData.Enabled := False;
+  Node := ANode.ChildNodes.FindNode('VendorData');
+  if Node <> nil then
+  begin
+    if Node.AttributeNodes.Count > 0 then
+    begin
+      Item.FVendorData.Enabled := True;
+      Item.FVendorData.VendorPhone := LoadString(Node, 'VendorPhone', False);
+      Item.FVendorData.VendorName := LoadString(Node, 'VendorName', False);
+      Item.FVendorData.VendorINN := LoadString(Node, 'VendorINN', False);
+      if (Item.FVendorData.VendorPhone = '') and (Item.FVendorData.VendorName = '') and (Item.FVendorData.VendorINN = '') then
+        Item.FVendorData.Enabled := False;
+    end;
+  end;
+*)
+  Logger.Debug('LoadFiscalString32.4');
+end;
+
 
 end.
 

@@ -7,7 +7,6 @@ Uses
   Classes, XMLIntf, XMLDoc;
 
 type
-
   TParam1CChoiceListItem = class;
 
   { TParam1CChoiceList }

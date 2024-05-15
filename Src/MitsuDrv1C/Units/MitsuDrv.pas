@@ -10,7 +10,98 @@ uses
   PrinterPort, SerialPort, SocketPort, LogFile, StringUtils, DriverError,
   ByteUtils;
 
+type
+  TBaudRates = array [0..8] of Integer;
+  TConnectionTypes = array[0..1] of Integer;
+
 const
+  /////////////////////////////////////////////////////////////////////////////
+  // VAT rate constants
+
+  MTS_VAT_RATE_20       = 1; // 1 ставка НДС 20%
+  MTS_VAT_RATE_10       = 2; // 2 ставка НДС 10%
+  MTS_VAT_RATE_20_120   = 3; // 3 ставка НДС расч. 20/120
+  MTS_VAT_RATE_10_110   = 4; // 4 ставка НДС расч. 10/110
+  MTS_VAT_RATE_0        = 5; // 5 ставка НДС 0%
+  MTS_VAT_RATE_NONE     = 6; // 6 НДС не облагается
+
+  /////////////////////////////////////////////////////////////////////////////
+  // Document type constants
+
+  MTS_DOC_TYPE_NONFISCAL    = 0; // 0 – Нефискальный документ
+  MTS_DOC_TYPE_REG_REPORT   = 1; // 1 – Отчёт о регистрации
+  MTS_DOC_TYPE_DAY_OPEN     = 2; // 2 – Отчёт об открытии смены
+  MTS_DOC_TYPE_RECEIPT      = 3; // 3 – Кассовый чек
+  MTS_DOC_TYPE_BLANK        = 4; // 4 – Бланк строкой отчетности (БСО)
+  MTS_DOC_TYPE_DAY_CLOSE    = 5; // 5 – Отчёт о закрытии смены
+  MTS_DOC_TYPE_FD_CLOSE     = 6; // 6 – Отчёт о закрытии ФН
+  MTS_DOC_TYPE_OPERATOR     = 7; // 7 – Подтверждение оператора
+  MTS_DOC_TYPE_REREG_REPORT = 11; // 11 – Отчет о (пере) регистрации
+  MTS_DOC_TYPE_PAYMENTS     = 21; // 21 – Отчет о текущем состоянии расчетов
+  MTS_DOC_TYPE_RECEIPT_CORRECTION = 31; // 31 – Кассовый чек коррекции
+  MTS_DOC_TYPE_BLANK_CORRECTION   = 41; // 41 – БСО коррекции
+
+  /////////////////////////////////////////////////////////////////////////////
+  // Document status constants
+
+  MTS_DOC_STATUS_OPENED  = 1;
+  MTS_DOC_STATUS_CLOSED  = 2;
+
+  /////////////////////////////////////////////////////////////////////////////
+  // Receipt type constants
+
+  MTS_RT_SALE     = 1;
+  MTS_RT_RETSALE  = 2;
+  MTS_RT_BUY      = 3;
+  MTS_RT_RETBUY   = 4;
+
+  /////////////////////////////////////////////////////////////////////////////
+  // Tax system type constants
+
+  MTS_TS_GENERAL   = 0;
+  MTS_TS_SIMPLIFIED_PROFIT  = 1; // упрощенная доход (УСН доход)
+  MTS_TS_SIMPLIFIED         = 2; // упрощенная доход минус расход (УСН доход-расход)
+  MTS_TS_AGRICULTURAL       = 4; // единый сельскохозяйственный налог (ЕСХН)
+  MTS_TS_PATENT             = 5; // патентная система налогообложения.
+
+  /////////////////////////////////////////////////////////////////////////////
+  // Options constants
+
+  // b0 Разделительные линии в чеке нет ---- или === графика – 0
+  MTS_OP_RECEIPT_SEPARATOR        = 0;
+
+  // b1 QR код в кассовом чеке слева по центру справа – 0
+  MTS_OP_RECEIPT_QRCODE_ALIGNMENT = 1;
+
+  // b2 Округление итога чека нет до 0,10 до 0,50 до 1,00 0
+  MTS_OP_RECEIPT_TOTAL_ROUNDING = 2;
+
+  // b3 Авто-резак нет включен – – 1
+  MTS_OP_AUTO_CUTTER = 3;
+
+  // b4 Авто-тест при включении кассы не печат. печатать – – 1
+  MTS_OP_PRINT_TEST_ON_START = 4;
+
+  // b5 Открыть денежный ящик при оплате не откр. нал. б/н нал. и б/н 1
+  MTS_OP_OPEN_CASH_DRAWER = 5;
+
+  // b6 Звуковой сигнал «близок конец бумаги» выкл. включен – – 0
+  MTS_OP_BEEP_ON_PAPER_NEAR_END = 6;
+
+  // b7 Совмещение текстовой строки с QR кодом нет совместить – – 0
+  MTS_OP_COMBINE_TEXT_QRCODE = 7;
+
+  // b8 Печатать количество покупок в чеке нет печатать – – 0
+  MTS_OP_PRINT_ITEM_COUNT = 8;
+
+
+  /////////////////////////////////////////////////////////////////////////////
+  // Day status constants
+
+  MTS_DAY_STATUS_CLOSED   = 0; // Day is closed
+  MTS_DAY_STATUS_OPENED   = 1; // Day is opened
+  MTS_DAY_STATUS_EXPIRED  = 9; // Day is expired (24 hours left)
+
   /////////////////////////////////////////////////////////////////////////////
   //
 
@@ -22,6 +113,15 @@ const
 
   ConnectionTypeSerial   = 0;
   ConnectionTypeSocket   = 1;
+
+  ConnectionTypes: TConnectiontypes = (
+    ConnectionTypeSerial,
+    ConnectionTypeSocket);
+
+  BaudRates: TBaudRates = (
+    CBR_2400, CBR_4800, CBR_9600, CBR_14400, CBR_19200,
+    CBR_38400, CBR_56000, CBR_57600, CBR_115200);
+
 
   /////////////////////////////////////////////////////////////////////////////
   // Notification status constants
@@ -47,28 +147,6 @@ const
   MTS_DT_CORRECTION_BSO   = 41; // БСО коррекции
 
 type
-  { TMTSDate }
-
-  TMTSDate = record
-    Year: Word;
-    Month: Word;
-    Day: Word;
-  end;
-
-  { TMTSTime }
-
-  TMTSTime = record
-    Hour: Word;
-    Min: Word;
-  end;
-
-  { TMTSDateTime }
-
-  TMTSDateTime = record
-    Date: TMTSDate;
-    Time: TMTSTime;
-  end;
-
   { TMTSVersion }
 
   TMTSVersion = record
@@ -158,118 +236,58 @@ type
     Value: AnsiString;
   end;
 
+  { TFNParams }
+
+  TFNParams = record
+    Base: Integer;
+    IsMarking: Boolean; // признак работы с маркированными товарами
+    IsPawnshop: Boolean; // признак осуществления ломбардной деятельности
+    IsInsurance: Boolean; // признак осуществления страховой деятельности
+    IsCatering: Boolean; // признак примененияпри оказании услуг общественного питания
+    IsWholesale: Boolean; // признак применения в оптовой торговле с организациями и ИП
+    IsAutomaticPrinter: Boolean; // признак применения с автоматическим устройством
+    IsAutomatic: Boolean; // признак автоматического режима
+    IsOffline: Boolean; // Признак автономного режима
+    IsEncrypted: Boolean; // признак шифрования
+    IsOnline: Boolean;  // Признак ККТ для расчетов в Интернет
+    IsService: Boolean; // Признак расчетов за услуги
+    IsBlank: Boolean; // признак режима БСО
+    IsLottery: Boolean; // Признак проведения лотереи
+    IsGambling: Boolean; // Признак проведения азартных игр
+    IsExcisable: Boolean; // Продажа подакцизного товара
+    IsVendingMachine: Boolean; // Признак применения в автоматическом торговом автомате
+
+    SaleAddress: WideString; // Адрес проведения расчетов
+    SaleLocation: WideString; // Место проведения расчетов
+    OFDCompany: WideString; // Название организации ОФД
+    OFDCompanyINN: WideString; // ИНН организации ОФД
+    FNSURL: WideString; // Адрес сайта уполномоченного органа (ФНС) в сети «Интернет»
+    CompanyName: WideString; // Название организации
+    CompanyINN: WideString; // ИНН организация
+    SenderEmail: WideString; // Адрес электронной почты отправителя чека
+    AutomaticNumber: WideString; // Номер автомата для автоматического режима
+    ExtendedProperty: WideString; // дополнительный реквизит ОР
+    ExtendedData: WideString; // дополнительные данные ОР
+    TaxSystems: AnsiString;
+    RegNumber: WideString; // Регистрационный номер ККТ
+  end;
+
   { TMTSRegParams }
 
   TMTSRegParams = record
     RegNumber: Integer;
     FDocNumber: Integer;
-    Date: TMTSDate;
-    Time: TMTSTime;
+    DateTime: TDateTime;
     Base: AnsiString;
 
-    IsMarking: Boolean; // признак работы с маркированными товарами
-    IsPawnshop: Boolean; // признак осуществления ломбардной деятельности
-    IsInsurance: Boolean; // признак осуществления страховой деятельности
-    IsCatering: Boolean; // признак примененияпри оказании услуг общественного питания
-    IsWholesaleTrade: Boolean; // признак применения в оптовой торговле с организациями и ИП
-    IsAutomaticPrinter: Boolean; // признак применения с автоматическим устройством
-    IsAutomatic: Boolean; // признак автоматического режима
-    IsOffline: Boolean; // Признак автономного режима
-    IsEncrypted: Boolean; // признак шифрования
-    TaxationSystems: AnsiString; // системы налогообложения
-    IsOnline: Boolean;  // Признак ККТ для расчетов в Интернет
-    IsService: Boolean; // Признак расчетов за услуги
-    IsBlank: Boolean; // признак режима БСО
-    IsLottery: Boolean; // Признак проведения лотереи
-    IsGambling: Boolean; // Признак проведения азартных игр
-    IsExcisable: Boolean; // Продажа подакцизного товара
-    IsVendingMachine: Boolean; // Признак применения в автоматическом торговом автомате
-    SaleAddress: WideString; // Адрес проведения расчетов
-    SaleLocation: WideString; // Место проведения расчетов
-    OFDCompany: WideString; // Название организации ОФД
-    OFDCompanyINN: WideString; // ИНН организации ОФД
-    FNSURL: WideString; // Адрес сайта уполномоченного органа (ФНС) в сети «Интернет»
-    CompanyName: WideString; // Название организации
-    CompanyINN: WideString; // ИНН организация
-    SenderEmail: WideString; // Адрес электронной почты отправителя чека
-    KKTNumber: WideString; // Регистрационный номер ККТ
-    AutomaticNumber: WideString; // Номер автомата для автоматического режима
-    ExtendedProperty: WideString; // дополнительный реквизит ОР
-    ExtendedData: WideString; // дополнительные данные ОР
-(*
-
-    Mode: Integer;
-    IsEncrypted: Boolean;   // Шифрование
-    IsOffline: Boolean;     // Автономный режим
-    IsAutomatic: Boolean;   // Автоматический режим
-    IsService: Boolean;     // Применение в сфере услуг
-    IsBlank: Boolean;       // Режим БСО (1), Режим чеков (0)
-    IsInternet: Boolean;    // Применение в Интернет
-    IsCatering: Boolean;    // Применение для оказания услуг общественного питания
-    IsWholesale: Boolean;   // Применение в оптовой торговле с органиязациями и ИП
-
-    ExtMode: Integer;
-    IsExcisable: Boolean;   // Продажа подакцизного товара
-    IsGambling: Boolean;    // Признак проведения азартных игр
-    IsLottery: Boolean;     // Признак проведения лотереи
-    IsAutomat: Boolean;     // Признак установки принтера в автомате
-    IsMarking: Boolean;     // Признак применения при осуществлении торговли товарами, подлежащими обязательной маркировке средствами идентификации
-    IsPawnshop: Boolean;    // Признак применения при осуществлении ломбардами кредитования граждан
-    IsInsurance: Boolean;   // Признак применения при осуществлении деятельности по страхованию
-    IsVendingMachine: Boolean; // Признак применения с торговым автоматом
-
     SerialNumber: AnsiString;
-    DeviceVersion: AnsiString;
-    T1189: AnsiString;
-    T1190: AnsiString;
-    T1209: AnsiString;
-    T1037: AnsiString;
-    T1018: AnsiString;
-    T1017: AnsiString;
-    T1036: AnsiString;
-    T1062: AnsiString;
-    T1041: AnsiString;
-    T1048: AnsiString;
-    SaleAddress: AnsiString;
-    T1187: AnsiString;
-    T1046: AnsiString;
-    T1117: AnsiString;
-    T1060: AnsiString;
-*)
-  end;
+    ModelVersion: AnsiString;
+    FFDVersionFP: AnsiString;
+    FFDVersionFD: AnsiString;
+    FFDVersion: AnsiString;
+    FDSerial: AnsiString;
 
-  { TFNParams }
-
-  TFNParams = record
-    IsMarking: Boolean; // признак работы с маркированными товарами
-    IsPawnshop: Boolean; // признак осуществления ломбардной деятельности
-    IsInsurance: Boolean; // признак осуществления страховой деятельности
-    IsCatering: Boolean; // признак примененияпри оказании услуг общественного питания
-    IsWholesaleTrade: Boolean; // признак применения в оптовой торговле с организациями и ИП
-    IsAutomaticPrinter: Boolean; // признак применения с автоматическим устройством
-    IsAutomatic: Boolean; // признак автоматического режима
-    IsOffline: Boolean; // Признак автономного режима
-    IsEncrypted: Boolean; // признак шифрования
-    TaxationSystems: AnsiString; // системы налогообложения
-    IsOnline: Boolean;  // Признак ККТ для расчетов в Интернет
-    IsService: Boolean; // Признак расчетов за услуги
-    IsBlank: Boolean; // признак режима БСО
-    IsLottery: Boolean; // Признак проведения лотереи
-    IsGambling: Boolean; // Признак проведения азартных игр
-    IsExcisable: Boolean; // Продажа подакцизного товара
-    IsVendingMachine: Boolean; // Признак применения в автоматическом торговом автомате
-    SaleAddress: WideString; // Адрес проведения расчетов
-    SaleLocation: WideString; // Место проведения расчетов
-    OFDCompany: WideString; // Название организации ОФД
-    OFDCompanyINN: WideString; // ИНН организации ОФД
-    FNSURL: WideString; // Адрес сайта уполномоченного органа (ФНС) в сети «Интернет»
-    CompanyName: WideString; // Название организации
-    CompanyINN: WideString; // ИНН организация
-    SenderEmail: WideString; // Адрес электронной почты отправителя чека
-    KKTNumber: WideString; // Регистрационный номер ККТ
-    AutomaticNumber: WideString; // Номер автомата для автоматического режима
-    ExtendedProperty: WideString; // дополнительный реквизит ОР
-    ExtendedData: WideString; // дополнительные данные ОР
+    FNParams: TFNParams;
   end;
 
   { TMTSDayStatus }
@@ -294,18 +312,18 @@ type
 
   TMTSTotals = record
     Count: Integer;
-    Total: Integer;
-    T1136: AnsiString;
-    T1138: AnsiString;
-    T1218: AnsiString;
-    T1219: AnsiString;
-    T1220: AnsiString;
-    T1139: AnsiString;
-    T1140: AnsiString;
-    T1141: AnsiString;
-    T1142: AnsiString;
-    T1143: AnsiString;
-    T1183: AnsiString;
+    Total: Int64;
+    T1136: Int64;
+    T1138: Int64;
+    T1218: Int64;
+    T1219: Int64;
+    T1220: Int64;
+    T1139: Int64;
+    T1140: Int64;
+    T1141: Int64;
+    T1142: Int64;
+    T1143: Int64;
+    T1183: Int64;
   end;
 
   { TMTSDayTotals }
@@ -326,10 +344,9 @@ type
     Phase: Integer;
     RegCount: Integer;
     RegLeft: Integer;
-    Valid: TMTSDate;
+    ValidDate: TDateTime;
     LastDoc: Integer;
-    DocDate: TMTSDate;
-    DocTime: TMTSTime;
+    DocDate: TDateTime;
     Flags: Integer;
   end;
 
@@ -339,8 +356,7 @@ type
     Serial: AnsiString;
     DocCount: Integer;
     FirstDoc: Integer;
-    FirstDate: TMTSDate;
-    FirstTime: TMTSTime;
+    FirstDate: TDateTime;
   end;
 
   { TMTSMCStatus }
@@ -361,8 +377,7 @@ type
     Status: Integer;      // состояние по передаче уведомлений
     QueueCount: Integer;  // количество уведомлений в очереди
     FirstNumber: Integer; // номер первого неподтвержденного уведомления
-    FirstDate: TMTSDate;  // дата первого неподтвержденного уведомления
-    FirstTime: TMTSTime;  // время первого неподтвержденного уведомления
+    FirstDate: TDateTime;  // дата и время первого неподтвержденного уведомления
     FillPercent: Integer; // процент заполнения области хранения уведомлений
   end;
 
@@ -373,14 +388,13 @@ type
     UpdateNeeded: Boolean; // признак необходимости обновления ключей
     CapD7Command: Boolean; // признак поддержки ФН выполнения команды D7
     OkpURL: AnsiString; // адрес и порт ОКП
-    Date: TMTSDate; // дата последнего обновления ключей проверки КМ
-    Time: TMTSTime; // время последнего обновления ключей проверки КМ
+    DateTime: TDateTime; // дата и время последнего обновления ключей проверки КМ
   end;
 
   { TDocStatus }
 
   TDocStatus = record
-    DocNumber: Integer; // порядковый номер фискального документа
+    Number: Integer; // порядковый номер фискального документа
     DocType: Integer;  // тип документа
     Status: Integer; // состояние документа
     Size: Integer; // размер открытого документа
@@ -404,6 +418,52 @@ type
     RemotePort: Integer;
   end;
 
+  { TMTSDayParams }
+
+  TMTSDayParams = record
+    SaleAddress: WideString; // Адрес проведения расчетов
+    SaleLocation: WideString; // Место проведения расчетов
+    ExtendedProperty: WideString; // дополнительный реквизит ОР
+    ExtendedData: WideString; // дополнительные данные ОР
+    PrintRequired: Boolean;
+  end;
+
+  { TMTSReceiptParams }
+
+  TMTSReceiptParams = record
+    ReceiptType: Integer; // Тип чека
+    TaxSystem: Integer; // Система налогообложения
+    SaleAddress: WideString; // Адрес проведения расчетов
+    SaleLocation: WideString; // Место проведения расчетов
+    AutomaticNumber: WideString; // Номер автомата для автоматического режима
+    SenderEmail: WideString; // Адрес электронной почты отправителя чека
+  end;
+
+  { TMTSPosition }
+
+  TMTSPosition = record
+    Quantity: Double;
+    TaxRate: Integer;
+    UnitValue: Integer;
+    Price: Int64;
+    Total: Int64;
+    ItemType: Integer;
+    PaymentType: Integer;
+    ExciseTaxTotal: Int64;
+    CountryCode: Integer;
+    DeclarationNumber: Integer;
+    Name: WideString;
+    Numerator: Integer;
+    Denominator: Integer;
+    MarkCode: AnsiString;
+    AddAttribute: AnsiString;
+    AgentType: Integer;
+    //Agent;
+    //Supplier;
+    //IndustryAttribute;
+    SupplierINN: AnsiString;
+  end;
+
   { TMitsuDrv }
 
   TMitsuDrv = class
@@ -415,6 +475,8 @@ type
     FCommand: AnsiString;
     FLastError: TMTSError;
     FParams: TMitsuParams;
+    FPrintDocument: Boolean;
+    function FNParamsToXml(const Params: TFNParams): AnsiString;
   public
     function GetPort: IPrinterPort;
     function CreatePort: IPrinterPort;
@@ -425,8 +487,8 @@ type
     function GetHexAttribute(const Attribute: AnsiString): Integer;
     function GetIntAttribute(const Attribute: AnsiString): Integer;
     function GetIntAttribute3(const Attribute: AnsiString; N: Integer): Integer;
-    function GetDateAttribute(const Attribute: AnsiString): TMTSDate;
-    function GetTimeAttribute(const Attribute: AnsiString): TMTSTime;
+    function GetDateAttribute(const Attribute: AnsiString): TDateTime;
+    function GetTimeAttribute(const Attribute: AnsiString): TDateTime;
     function GetChildAttribute(const Child, Attribute: AnsiString): AnsiString;
     function GetChildText(const Child: AnsiString): AnsiString;
     function HasAttribute(const Attribute: AnsiString): Boolean;
@@ -434,16 +496,23 @@ type
     constructor Create;
     destructor Destroy; override;
 
-    procedure Connect;
-    procedure Disconnect;
+    procedure LockPort;
+    procedure UnlockPort;
     procedure Check(Code: Integer);
+
+    function Reset: Integer;
+    function Connect: Integer;
+    function Disconnect: Integer;
+    function WaitForPrinting: Integer;
+    class function ValidBaudRates: TBaudRates;
+    class function ValidConnectionTypes: TConnectionTypes;
     function Send(const Command: AnsiString): Integer; overload;
     function Send(const Command: AnsiString; var Answer: AnsiString): Integer; overload;
 
     function Succeeded(rc: Integer): Boolean;
     function ReadDeviceName(var DeviceName: WideString): Integer;
     function ReadDeviceVersion(var R: TMTSVersion): Integer;
-    function ReadDateTime(var R: TMTSDateTime): Integer;
+    function ReadDateTime(var R: TDateTime): Integer;
     function ReadCashier(var R: TMTSCashier): Integer;
     function ReadPrinterParams(var R: TMTSPrinterParams): Integer;
     function ReadDrawerParams(var R: TMTSDrawerParams): Integer;
@@ -478,6 +547,17 @@ type
     function WriteCashier(const Cashier: TMTSCashier): Integer;
     function WriteBaudRate(const BaudRate: Integer): Integer;
     function FNOpen(const Params: TFNParams): Integer;
+    function FNChange(const Params: TFNParams): Integer;
+    function FNPrintReg(N: Integer): Integer;
+    function FNClose(const Params: TFNParams): Integer;
+
+    function OpenFiscalDay(const Params: TMTSDayParams): Integer;
+    function CloseFiscalDay(const Params: TMTSDayParams): Integer;
+
+    function BeginFiscalReceipt(const Params: TMTSReceiptParams): Integer;
+    function CancelFiscalReceipt: Integer;
+    function BeginPositions: Integer;
+    function AddPosition(const P: TMTSPosition): Integer;
 
 
     property Logger: ILogFile read FLogger;
@@ -485,29 +565,30 @@ type
     property Answer: AnsiString read FAnswer;
     property Command: AnsiString read FCommand;
     property Params: TMitsuParams read FParams write FParams;
+    property PrintDocument: Boolean read FPrintDocument write FPrintDocument;
   end;
 
-function MTSDateTimeToDateTime(const Date: TMTSDate; const Time: TMTSTime): TDateTime;
+function ConnectionTypeToStr(AConnectionType: Integer): string;
 
 implementation
+
+procedure AddChild(Node: IXmlNode; const TagName, Text: WideString);
+begin
+  Node.AddChild(TagName).Text := Text;
+end;
+
 
 const
   BoolToStr: array [Boolean] of string = ('0', '1');
 
-function MTSDateTimeToDateTime(const Date: TMTSDate; const Time: TMTSTime): TDateTime;
+function ConnectionTypeToStr(AConnectionType: Integer): string;
 begin
-  Result := EncodeDate(Date.Year, Date.Month, Date.Day) +
-    EncodeTime(Time.Hour, Time.Min, 0, 0);
-end;
-
-function MTSDateToStr(const Date: TDateTime): AnsiString;
-begin
-  Result := FormatDateTime('yyyy-mm-dd', Date);
-end;
-
-function MTSTimeToStr(const Date: TDateTime): AnsiString;
-begin
-  Result := FormatDateTime('hh:nn:ss', Date);
+  case AConnectionType of
+    0: Result := 'COM порт';
+    1: Result := 'TCP подключение';
+  else
+    Result := 'Неизвестно';
+  end
 end;
 
 function GetAttribute2(Root: IXMLNode; const Attribute: AnsiString; N: Integer): AnsiString;
@@ -734,6 +815,16 @@ begin
   Result := Format('%d, %s', [Code, Result]);
 end;
 
+function MTSDateToStr(const Date: TDateTime): AnsiString;
+begin
+  Result := FormatDateTime('yyyy-mm-dd', Date);
+end;
+
+function MTSTimeToStr(const Date: TDateTime): AnsiString;
+begin
+  Result := FormatDateTime('hh:nn:ss', Date);
+end;
+
 { TMitsuDrv }
 
 constructor TMitsuDrv.Create;
@@ -758,14 +849,60 @@ begin
   inherited Destroy;
 end;
 
-procedure TMitsuDrv.Connect;
+function TMitsuDrv.Connect: Integer;
 begin
-
+  Result := 0;
 end;
 
-procedure TMitsuDrv.Disconnect;
+function TMitsuDrv.Disconnect: Integer;
 begin
+  Result := 0;
+end;
 
+function TMitsuDrv.WaitForPrinting: Integer;
+begin
+  Result := 0;
+end;
+
+function TMitsuDrv.Reset: Integer;
+var
+  Doc: TDocStatus;
+begin
+  Result := ReadLastDocStatus(Doc);
+  if Failed(Result) then Exit;
+
+  case Doc.DocType of
+    MTS_DOC_TYPE_RECEIPT,
+    MTS_DOC_TYPE_BLANK,
+    MTS_DOC_TYPE_RECEIPT_CORRECTION,
+    MTS_DOC_TYPE_BLANK_CORRECTION:
+    begin
+      if Doc.Status = MTS_DOC_STATUS_OPENED then
+      begin
+        Result := CancelFiscalReceipt;
+      end;
+    end;
+  end;
+end;
+
+class function TMitsuDrv.ValidBaudRates: TBaudRates;
+begin
+  Result := BaudRates;
+end;
+
+class function TMitsuDrv.ValidConnectionTypes: TConnectionTypes;
+begin
+  Result := ConnectionTypes;
+end;
+
+procedure TMitsuDrv.LockPort;
+begin
+  Port.Lock;
+end;
+
+procedure TMitsuDrv.UnlockPort;
+begin
+  Port.Unlock;
 end;
 
 
@@ -1029,24 +1166,28 @@ begin
 end;
 
 // DATE='2000-00-00'
-function TMitsuDrv.GetDateAttribute(const Attribute: AnsiString): TMTSDate;
+function TMitsuDrv.GetDateAttribute(const Attribute: AnsiString): TDateTime;
 var
   S: AnsiString;
+  Year, Month, Day: Word;
 begin
   S := GetAttribute(Attribute);
-  Result.Year := StrToInt(Copy(S, 1, 4));
-  Result.Month := StrToInt(Copy(S, 6, 2));
-  Result.Day := StrToInt(Copy(S, 8, 2));
+  Year := StrToInt(Copy(S, 1, 4));
+  Month := StrToInt(Copy(S, 6, 2));
+  Day := StrToInt(Copy(S, 8, 2));
+  Result := EncodeDate(Year, Month, Day);
 end;
 
 // TIME='00:00'
-function TMitsuDrv.GetTimeAttribute(const Attribute: AnsiString): TMTSTime;
+function TMitsuDrv.GetTimeAttribute(const Attribute: AnsiString): TDateTime;
 var
   S: AnsiString;
+  Hour, Min: Word;
 begin
   S := GetAttribute(Attribute);
-  Result.Hour := StrToInt(Copy(S, 1, 2));
-  Result.Min := StrToInt(Copy(S, 4, 2));
+  Hour := StrToInt(Copy(S, 1, 2));
+  Min := StrToInt(Copy(S, 4, 2));
+  Result := EncodeTime(Hour, Min, 0, 0);
 end;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1101,13 +1242,12 @@ end;
 // Пример: <OK DATE='2023-02-06' TIME='08:32:18' />
 ///////////////////////////////////////////////////////////////////////////////
 
-function TMitsuDrv.ReadDateTime(var R: TMTSDateTime): Integer;
+function TMitsuDrv.ReadDateTime(var R: TDateTime): Integer;
 begin
   Result := GetRequest('DATE=''?'' TIME=''?''');
   if Succeeded(Result) then
   begin
-    R.Date := GetDateAttribute('DATE');
-    R.Time := GetTimeAttribute('TIME');
+    R := GetDateAttribute('DATE') + GetTimeAttribute('TIME');
   end;
 end;
 
@@ -1374,48 +1514,47 @@ begin
   begin
     R.RegNumber := GetIntAttribute('REG');
     R.FDocNumber := GetIntAttribute('FD');
-    R.Date := GetDateAttribute('DATE');
-    R.Time := GetTimeAttribute('TIME');
+    R.DateTime := GetDateAttribute('DATE') + GetTimeAttribute('TIME');
     R.Base := GetAttribute('BASE');
+    R.SerialNumber := GetAttribute('T1013');
+    R.ModelVersion := GetAttribute('T1188');
+    R.FFDVersionFP := GetAttribute('T1189');
+    R.FFDVersionFD := GetAttribute('T1190');
+    R.FFDVersion := GetAttribute('T1209');
+    R.FDSerial := GetAttribute('T1041');
 
     Mode := GetIntAttribute('MODE');
-    R.IsEncrypted := TestBit(Mode, 0);
-    R.IsOffline := TestBit(Mode, 1);
-    R.IsAutomatic := TestBit(Mode, 2);
-    R.IsService := TestBit(Mode, 3);
-    R.IsBlank := TestBit(Mode, 4);
-    R.IsInternet := TestBit(Mode, 5);
-    R.IsCatering := TestBit(Mode, 6);
-    R.IsWholesale := TestBit(Mode, 7);
+    R.FNParams.IsEncrypted := TestBit(Mode, 0);
+    R.FNParams.IsOffline := TestBit(Mode, 1);
+    R.FNParams.IsAutomatic := TestBit(Mode, 2);
+    R.FNParams.IsService := TestBit(Mode, 3);
+    R.FNParams.IsBlank := TestBit(Mode, 4);
+    R.FNParams.IsOnline := TestBit(Mode, 5);
+    R.FNParams.IsCatering := TestBit(Mode, 6);
+    R.FNParams.IsWholesale := TestBit(Mode, 7);
 
-    R.ExtMode := GetIntAttribute('ExtMODE');
-    R.IsExcisable := TestBit(R.ExtMode, 0);
-    R.IsGambling := TestBit(R.ExtMode, 1);
-    R.IsLottery := TestBit(R.ExtMode, 2);
-    R.IsAutomat := TestBit(R.ExtMode, 3);
-    R.IsMarking := TestBit(R.ExtMode, 4);
-    R.IsPawnshop := TestBit(R.ExtMode, 5);
-    R.IsInsurance := TestBit(R.ExtMode, 6);
-    R.IsVendingMachine := TestBit(R.ExtMode, 7);
+    ExtMode := GetIntAttribute('ExtMODE');
+    R.FNParams.IsExcisable := TestBit(ExtMode, 0);
+    R.FNParams.IsGambling := TestBit(ExtMode, 1);
+    R.FNParams.IsLottery := TestBit(ExtMode, 2);
+    R.FNParams.IsAutomaticPrinter := TestBit(ExtMode, 3);
+    R.FNParams.IsMarking := TestBit(ExtMode, 4);
+    R.FNParams.IsPawnshop := TestBit(ExtMode, 5);
+    R.FNParams.IsInsurance := TestBit(ExtMode, 6);
+    R.FNParams.IsVendingMachine := TestBit(ExtMode, 7);
 
-    R.SerialNumber := GetAttribute('T1013');
-    R.DeviceVersion := GetAttribute('T1188');
-    R.T1189 := GetAttribute('T1189');
-    R.T1190 := GetAttribute('T1190');
-    R.T1209 := GetAttribute('T1209');
-    R.T1037 := GetAttribute('T1037');
-    R.T1018 := GetAttribute('T1018');
-    R.T1017 := GetAttribute('T1017');
-    R.T1036 := GetAttribute('T1036');
-    R.T1062 := GetAttribute('T1062');
-    R.T1041 := GetAttribute('T1041');
+    R.FNParams.RegNumber := GetAttribute('T1037');
+    R.FNParams.CompanyINN := GetAttribute('T1018');
+    R.FNParams.CompanyName := GetChildText('T1048');
+    R.FNParams.OFDCompanyINN := GetAttribute('T1017');
+    R.FNParams.AutomaticNumber := GetAttribute('T1036');
+    R.FNParams.TaxSystems := GetAttribute('T1062');
 
-    R.T1048 := GetChildText('T1048');
-    R.SaleAddress := GetChildText('T1009');
-    R.T1187 := GetChildText('T1187');
-    R.T1046 := GetChildText('T1046');
-    R.T1117 := GetChildText('T1117');
-    R.T1060 := GetChildText('T1060');
+    R.FNParams.SaleAddress := GetChildText('T1009');
+    R.FNParams.SaleLocation := GetChildText('T1187');
+    R.FNParams.OFDCompany := GetChildText('T1046');
+    R.FNParams.SenderEmail := GetChildText('T1117');
+    R.FNParams.FNSURL := GetChildText('T1060');
   end;
 end;
 
@@ -1513,17 +1652,17 @@ function TMitsuDrv.ReadDayTotals(RequestType: Integer; var R: TMTSDayTotals): In
     if Result.Count > 0 then
     begin
       Result.Total := GetIntAttribute2(Node, 'TOTAL', N);
-      Result.T1136 := GetAttribute2(Node, 'T1136', N);
-      Result.T1138 := GetAttribute2(Node, 'T1138', N);
-      Result.T1218 := GetAttribute2(Node, 'T1218', N);
-      Result.T1219 := GetAttribute2(Node, 'T1219', N);
-      Result.T1220 := GetAttribute2(Node, 'T1220', N);
-      Result.T1139 := GetAttribute2(Node, 'T1139', N);
-      Result.T1140 := GetAttribute2(Node, 'T1140', N);
-      Result.T1141 := GetAttribute2(Node, 'T1141', N);
-      Result.T1142 := GetAttribute2(Node, 'T1142', N);
-      Result.T1143 := GetAttribute2(Node, 'T1143', N);
-      Result.T1183 := GetAttribute2(Node, 'T1183', N);
+      Result.T1136 := GetIntAttribute2(Node, 'T1136', N);
+      Result.T1138 := GetIntAttribute2(Node, 'T1138', N);
+      Result.T1218 := GetIntAttribute2(Node, 'T1218', N);
+      Result.T1219 := GetIntAttribute2(Node, 'T1219', N);
+      Result.T1220 := GetIntAttribute2(Node, 'T1220', N);
+      Result.T1139 := GetIntAttribute2(Node, 'T1139', N);
+      Result.T1140 := GetIntAttribute2(Node, 'T1140', N);
+      Result.T1141 := GetIntAttribute2(Node, 'T1141', N);
+      Result.T1142 := GetIntAttribute2(Node, 'T1142', N);
+      Result.T1143 := GetIntAttribute2(Node, 'T1143', N);
+      Result.T1183 := GetIntAttribute2(Node, 'T1183', N);
     end;
   end;
 
@@ -1612,10 +1751,9 @@ begin
     R.Phase := GetHexAttribute('PHASE');
     R.RegCount := GetIntAttribute3('REG', 1);
     R.RegLeft := GetIntAttribute3('REG', 2);
-    R.Valid := GetDateAttribute('VALID');
+    R.ValidDate := GetDateAttribute('VALID');
     R.LastDoc := GetIntAttribute('LAST');
-    R.DocDate := GetDateAttribute('DATE');
-    R.DocTime := GetTimeAttribute('TIME');
+    R.DocDate := GetDateAttribute('DATE') + GetTimeAttribute('TIME');
     R.Flags := GetHexAttribute('FLAG');
   end;
 end;
@@ -1641,8 +1779,7 @@ begin
     R.Serial := GetAttribute('FN');
     R.DocCount := GetIntAttribute('COUNT');
     R.FirstDoc := GetIntAttribute('FIRST');
-    R.FirstDate := GetDateAttribute('DATE');
-    R.FirstTime := GetTimeAttribute('TIME');
+    R.FirstDate := GetDateAttribute('DATE') + GetTimeAttribute('TIME');
   end;
 end;
 
@@ -1706,8 +1843,7 @@ begin
     R.Status := GetIntAttribute('NOTICE');
     R.QueueCount := GetIntAttribute('PENDING');
     R.FirstNumber := GetIntAttribute('CURRENT');
-    R.FirstDate := GetDateAttribute('DATE');
-    R.FirstTime := GetTimeAttribute('TIME');
+    R.FirstDate := GetDateAttribute('DATE') + GetTimeAttribute('TIME');
     R.FillPercent := GetIntAttribute('STORAGE');
   end;
 end;
@@ -1735,8 +1871,7 @@ begin
     R.UpdateNeeded := GetIntAttribute('NeedUpdate') = 1;
     R.CapD7Command := GetIntAttribute('D7') = 1;
     R.OkpURL := GetChildText('URL');
-    R.Date := GetDateAttribute('DATE');
-    R.Time := GetTimeAttribute('TIME');
+    R.DateTime := GetDateAttribute('DATE') + GetTimeAttribute('TIME');
   end;
 end;
 
@@ -1767,13 +1902,13 @@ end;
 
 function TMitsuDrv.ReadDocStatus(N: Integer; var R: TDocStatus): Integer;
 begin
-  Result := GetRequest('DOC=''0''');
+  Result := GetRequest(Format('DOC=''%d''', [N]));
   if Succeeded(Result) then
   begin
     if HasAttribute('FD') then
-      R.DocNumber := GetIntAttribute('FD')
+      R.Number := GetIntAttribute('FD')
     else
-      R.DocNumber := GetIntAttribute('TXT');
+      R.Number := GetIntAttribute('TXT');
     R.DocType := GetIntAttribute('TYPE');
     R.Status := GetIntAttribute('STATE');
     R.Size := GetIntAttribute('SIZE');
@@ -1997,61 +2132,326 @@ T1221='признак установки принтера в автомате'
 //Формат: <REG BASE=’0’ ATTR='данные'… ><TAG>данные</TAG>…</REG>
 //Ответ: <OK FD='номер фискального документа' FP='фискальный признак'/>
 
-function TMitsuDrv.FNOpen(const Params: TFNParams): Integer;
+function TMitsuDrv.FNParamsToXml(const Params: TFNParams): AnsiString;
 var
   Node: IXMLNode;
   Xml: IXMLDocument;
-  Command: AnsiString;
 begin
   Xml := NewXMLDocument('');
   Node := Xml.CreateElement('REG', '');
   Xml.DocumentElement := Node;
-  Node.SetAttribute('BASE', 0);
+  Node.SetAttribute('BASE', Params.Base);
   Node.SetAttribute('MARK', BoolToStr[Params.IsMarking]);
   Node.SetAttribute('PAWN', BoolToStr[Params.IsPawnshop]);
   Node.SetAttribute('INS', BoolToStr[Params.IsInsurance]);
   Node.SetAttribute('DINE', BoolToStr[Params.IsCatering]);
-  Node.SetAttribute('OPT', BoolToStr[Params.IsWholesaleTrade]);
+  Node.SetAttribute('OPT', BoolToStr[Params.IsWholesale]);
   Node.SetAttribute('VEND', BoolToStr[Params.IsVendingMachine]);
-  Node.SetAttribute('T1001', BoolToStr[Params.IsAutomaticMode]);
+  Node.SetAttribute('T1001', BoolToStr[Params.IsAutomatic]);
   Node.SetAttribute('T1002', BoolToStr[Params.IsOffline]);
   Node.SetAttribute('T1056', BoolToStr[Params.IsEncrypted]);
-  Node.SetAttribute('T1062', Params.TaxationSystems);
   Node.SetAttribute('T1108', BoolToStr[Params.IsOnline]);
   Node.SetAttribute('T1109', BoolToStr[Params.IsService]);
   Node.SetAttribute('T1110', BoolToStr[Params.IsBlank]);
   Node.SetAttribute('T1126', BoolToStr[Params.IsLottery]);
   Node.SetAttribute('T1193', BoolToStr[Params.IsGambling]);
   Node.SetAttribute('T1207', BoolToStr[Params.IsExcisable]);
-  Node.SetAttribute('T1221', BoolToStr[Params.IsAutomat]);
-  Node.AddChild('T1009', )
+  Node.SetAttribute('T1221', BoolToStr[Params.IsAutomaticPrinter]);
+  Node.SetAttribute('T1062', Params.TaxSystems);
+  AddChild(Node, 'T1009', Params.SaleAddress);
+  AddChild(Node, 'T1017', Params.OFDCompanyINN);
+  AddChild(Node, 'T1018', Params.CompanyINN);
+  AddChild(Node, 'T1036', Params.AutomaticNumber);
+  AddChild(Node, 'T1037', Params.RegNumber);
+  AddChild(Node, 'T1037', Params.RegNumber);
+  AddChild(Node, 'T1046', Params.OFDCompany);
+  AddChild(Node, 'T1048', Params.CompanyName);
+  AddChild(Node, 'T1060', Params.FNSURL);
+  AddChild(Node, 'T1117', Params.SenderEmail);
+  AddChild(Node, 'T1187', Params.SaleLocation);
+  AddChild(Node, 'T1274', Params.ExtendedProperty);
+  AddChild(Node, 'T1275', Params.ExtendedData);
+  Result := Trim(Xml.Xml.Text);
+end;
 
+function TMitsuDrv.FNOpen(const Params: TFNParams): Integer;
+var
+  Command: AnsiString;
+begin
+  Command := FNParamsToXml(Params);
+  Result := Send(Command);
+end;
+
+function TMitsuDrv.FNChange(const Params: TFNParams): Integer;
+var
+  Command: AnsiString;
+begin
+  Command := FNParamsToXml(Params);
+  Result := Send(Command);
+end;
 
 (*
-Теги: <T1009> адрес расчетов </T1009>
-* <T1017> ИНН ОФД </T1017>
-* <T1018> ИНН пользователя </T1018>
-<T1036> номер автомата </T1036>
-* <T1037> регистрационный номер</T1037>
-<T1046> наименование ОФД </T1046>
-* <T1048> наименование пользователя </T1048>
-* <T1060> адрес сайта ФНС </T1060>
-<T1117> адрес электронной почты отправителя чека </T1117>
-<T1187> место расчетов </T1187>
-<T1274> дополнительный реквизит ОР </T1274>
-<T1275> дополнительные данные ОР </T1275>
-Пример: <REG BASE='0' T1062='0,1,2,5' DINE='1' MARK='1'>
-<T1037>0000123456029024</T1037>
-<T1018>7700112233</T1018>
-<T1048> ООО "АБВГД"</T1048>
-<T1009>123456, г.Москва, Красная площадь д.1</T1009>
-<T1017>7714731464</T1017>
-<T1046> Атлас-Карт </T1046>
-<T1060>www.nalog.gov.ru</T1060>
-<T1117> noreply@ofd.com </T1117>
-
-  Result := Send(Format('<SET COM=''%d''/>', [BaudRate]));
+5.3. Печать отчета о (пере-) регистрации по номеру
+Формат: <GET REG='номер'/>
+<PRINT/>
 *)
+
+function TMitsuDrv.FNPrintReg(N: Integer): Integer;
+begin
+  Result := Send(Format('<GET REG=''%d''/><PRINT/>', [N]));
+end;
+
+(*
+5.4. Закрытие фискального накопителя
+Формат: <MAKE FISCAL=’CLOSE’/>
+<T1009>адрес расчетов</T1009>
+<T1187>место расчетов</T1187>
+<T1282> дополнительный реквизит ОЗФН </T1282>
+<T1283> дополнительные данные ОЗФН </T1283>
+</MAKE>
+Ответ: <OK FD='номер фискального документа'
+FP='фискальный признак документа'/>
+*)
+
+function TMitsuDrv.FNClose(const Params: TFNParams): Integer;
+var
+  Node: IXMLNode;
+  Xml: IXMLDocument;
+begin
+  Xml := NewXMLDocument('');
+  Node := Xml.CreateElement('MAKE', '');
+  Xml.DocumentElement := Node;
+  Node.SetAttribute('FISCAL', 'CLOSE');
+  Node.SetAttribute('T1009', Params.SaleAddress);
+  Node.SetAttribute('T1187', Params.SaleLocation);
+  Node.SetAttribute('T1282', Params.ExtendedProperty);
+  Node.SetAttribute('T1283', Params.ExtendedData);
+  if FPrintDocument then
+  Result := Send(Trim(Xml.Xml.Text));
+end;
+
+(*
+6.1. Открытие смены
+Формат: <Do SHIFT='OPEN'/>
+или: <Do SHIFT='OPEN'>
+<T1009> адрес расчетов </T1009>
+<T1187> место расчетов </T1187>
+<T1276> дополнительный реквизит ООС</T1276>
+<T1277> дополнительные данные ООС </T1277>
+</Do>
+Ответ: <OK
+SHIFT='номер открытой смены'
+FD='номер фискального документа'
+FP='фискальный признак документа'
+MsgOFD='маска сообщения оператора'
+OKP='маска состояния обновления ключей проверки КМ' />
+Пример: <OK SHIFT='18' FD='86' FP='0899945832' MsgOFD='0' OKP='0'/>
+*)
+
+function TMitsuDrv.OpenFiscalDay(const Params: TMTSDayParams): Integer;
+var
+  Node: IXMLNode;
+  Xml: IXMLDocument;
+  Command: AnsiString;
+begin
+  Xml := NewXMLDocument('');
+  Node := Xml.CreateElement('Do', '');
+  Xml.DocumentElement := Node;
+  Node.SetAttribute('SHIFT', 'OPEN');
+  Node.SetAttribute('T1009', Params.SaleAddress);
+  Node.SetAttribute('T1187', Params.SaleLocation);
+  Node.SetAttribute('T1276', Params.ExtendedProperty);
+  Node.SetAttribute('T1277', Params.ExtendedData);
+  Command := Trim(Xml.Xml.Text);
+  if Params.PrintRequired then
+    Command := Command + '<PRINT/>';
+  Result := Send(Command);
+end;
+
+(*
+6.2. Закрытие смены
+Формат: <Do SHIFT='CLOSE'/>
+или: <Do SHIFT='CLOSE'>
+<T1009> адрес расчетов </T1009>
+<T1187> место расчетов </T1187>
+<T1278> дополнительный реквизит ОЗС </T1278>
+<T1279> дополнительные данные ОЗС </T1279>
+</Do>
+Ответ: <OK
+SHIFT='номер закрытой смены'
+FD='номер фискального документа'
+FP='фискальный признак документа'
+MsgOFD='маска сообщения оператора'/>
+*)
+
+function TMitsuDrv.CloseFiscalDay(const Params: TMTSDayParams): Integer;
+var
+  Node: IXMLNode;
+  Xml: IXMLDocument;
+  Command: AnsiString;
+begin
+  Xml := NewXMLDocument('');
+  Node := Xml.CreateElement('Do', '');
+  Xml.DocumentElement := Node;
+  Node.SetAttribute('SHIFT', 'CLOSE');
+  Node.SetAttribute('T1009', Params.SaleAddress);
+  Node.SetAttribute('T1187', Params.SaleLocation);
+  Node.SetAttribute('T1278', Params.ExtendedProperty);
+  Node.SetAttribute('T1279', Params.ExtendedData);
+  Command := Trim(Xml.Xml.Text);
+  if Params.PrintRequired then
+    Command := Command + '<PRINT/>';
+  Result := Send(Command);
+end;
+
+(*
+7.1. Открытие чека
+Формат: <Do CHECK=’OPEN’ TYPE=’признак расчета’ TAX=’система налогообложения’/>
+или: <Do CHECK=’OPEN’ TYPE=’признак расчета’ TAX=’ система налогообложения’>
+<T1009> адрес расчетов </T1009>
+<T1187> место расчетов </T1187>
+<T1036> номер автомата </T1036>
+<T1117> адрес электронной почты отправителя чека </T1117>
+<Do/>
+*)
+
+function TMitsuDrv.BeginFiscalReceipt(const Params: TMTSReceiptParams): Integer;
+var
+  Node: IXMLNode;
+  Xml: IXMLDocument;
+  Command: AnsiString;
+begin
+  Xml := NewXMLDocument('');
+  Node := Xml.CreateElement('Do', '');
+  Xml.DocumentElement := Node;
+  Node.SetAttribute('CHECK', 'OPEN');
+  Node.SetAttribute('TYPE', Params.ReceiptType);
+  Node.SetAttribute('TAX', Params.TaxSystem);
+  if Params.SaleAddress <> '' then
+    AddChild(Node, 'T1009', Params.SaleAddress);
+  if Params.SaleLocation <> '' then
+    AddChild(Node, 'T1187', Params.SaleLocation);
+  if Params.AutomaticNumber <> '' then
+    AddChild(Node, 'T1036', Params.AutomaticNumber);
+  if Params.SenderEmail <> '' then
+    AddChild(Node, 'T1117', Params.SenderEmail);
+  Result := Send(Trim(Xml.Xml.Text));
+end;
+
+(*
+7.11. Отмена открытого чека
+Формат:
+*)
+
+function TMitsuDrv.CancelFiscalReceipt: Integer;
+begin
+  Result := Send('<Do CHECK=''CANCEL''/>');
+end;
+
+(*
+7.2. Начало ввода предметов расчета
+Формат:
+• Команда разрешает ввод предметов расчета (товарных позиций) и дополнительных реквизитов чека.
+• Команда выполняется, если чек открыт (см. Открытие чека).
+• Разрешен ввод текстовых и графических элементов.
+• Разрешена команда Отмена открытого чека.
+*)
+
+function TMitsuDrv.BeginPositions: Integer;
+begin
+  Result := Send('<Do CHECK=''BEGIN''/>');
+end;
+
+(*
+7.3. Предметы расчета (товарные позиции)
+Формат: <ADD ITEM= 'количество предмета расчета'
+TAX= 'ставка НДС по предмету расчета'
+UNIT= 'мера количества предмета расчета'
+PRICE= 'цена за единицу предмета расчета'
+TOTAL= 'стоимость предмета расчета'
+TYPE= 'признак предмета расчета'
+MODE= 'признак способа расчета'
+T1229= 'сумма акцизного сбора по предмету расчета'
+T1230= 'код страны происхождения'
+T1231= 'номер таможенной декларации' >
+<NAME>наименование предмета расчета</NAME>
+<QTY PART=’числитель’ OF=’знаменатель’ />
+<KM Тxxxx= ’код товара‘ />
+<T1191>дополнительный реквизит предмета расчета</T1191>
+<T1222>признак агента по предмету расчета</T1222>
+<T1223>
+<T1044>операция платежного агента</T1044>
+<T1073>телефон платежного агента</T1073>
+<T1074>телефон оператора по приему платежей</T1074>
+<T1075>телефон оператора перевода</T1075>
+<T1026>наименование оператора перевода</T1026>
+<T1005>адрес оператора перевода</T1005>
+<T1016>ИНН оператора перевода</T1016>
+</T1223>
+<T1224>
+<T1225>наименование поставщика</T1225>
+<T1171>телефон поставщика</T1171>
+</T1224>
+<T1260>
+<T1262>идентификатор ФОИВ</T1262>
+<T1263>дата документа основания</T1263>
+<T1264>номер документа основания</T1264>
+<T1265>значение отраслевого реквизита</T1265>
+</T1260>
+<T1226>ИНН поставщика</T1226>
+</ADD>
+Ответ: <OK TOTAL=’итог чека’
+ROUND=’округленный итог чека’
+OFF=’сумма округления’
+ITEMS=’количество предметов расчета’/>
+*)
+
+function QuantityToStr(Quantity: Double): AnsiString;
+begin
+  DecimalSeparator := '.';
+  Result := Format('%.6f', [Quantity]);
+end;
+
+function TMitsuDrv.AddPosition(const P: TMTSPosition): Integer;
+var
+  Node: IXMLNode;
+  Node2: IXMLNode;
+  Xml: IXMLDocument;
+begin
+  Xml := NewXMLDocument('');
+  Node := Xml.CreateElement('ADD', '');
+  Xml.DocumentElement := Node;
+  // Required
+  Node.SetAttribute('ITEM', QuantityToStr(P.Quantity));
+  Node.SetAttribute('UNIT', IntToStr(P.UnitValue));
+  Node.SetAttribute('PRICE', IntToStr(P.Price));
+  Node.SetAttribute('TAX', IntToStr(P.TaxRate));
+  AddChild(Node, 'NAME', P.Name);
+  // Optional
+  if P.Total <> 0 then
+    Node.SetAttribute('TOTAL', IntToStr(P.Total));
+  Node.SetAttribute('TYPE', IntToStr(P.ItemType));
+  Node.SetAttribute('MODE', IntToStr(P.PaymentType));
+  Node.SetAttribute('T1229', IntToStr(P.ExciseTaxTotal));
+  Node.SetAttribute('T1230', IntToStr(P.CountryCode));
+  Node.SetAttribute('T1231', IntToStr(P.DeclarationNumber));
+  if P.MarkCode <> '' then
+    AddChild(Node, 'KM', P.MarkCode);
+  if P.AddAttribute <> '' then
+    AddChild(Node, 'T1191', P.AddAttribute);
+  if P.AgentType > 0 then
+    AddChild(Node, 'T1222', IntToStr(P.AgentType));
+  if P.SupplierINN <> '' then
+    AddChild(Node, 'T1226', P.SupplierINN);
+  if P.Numerator <> 0 then
+    AddChild(Node, 'QTY', Format('PART=''%d'' OF=''%d''', [P.Numerator, P.Denominator]));
+(*
+  AgentToNode(Node, P.AgentInfo);
+  SupplierToNode(Node, P.supplier);
+  IndustryAttributeToNode(Node, P.IndustryAttribute);
+*)
+
+  Result := Send(Trim(Xml.Xml.Text));
 end;
 
 end.

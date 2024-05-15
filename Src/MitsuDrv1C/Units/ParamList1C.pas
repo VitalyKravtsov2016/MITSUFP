@@ -6,11 +6,9 @@ Uses
   // VCL
   Classes, XMLIntf, XMLDoc,
   // This
-  ParamList1CPage
-  ;
+  ParamList1CPage;
 
 type
-
   { TParamList1C }
 
   TParamList1C = class

@@ -10,14 +10,13 @@ uses
   // This
   DriverTypes;
 
-
 function GetLanguage: string;
 procedure SetLanguage(const Language: string);
 function GetRes(Value: PResStringRec): WideString;
 function GetLanguageParamsFileName: string;
 
-
 implementation
+
 var
   GLanguage: string = '';
 

@@ -4,13 +4,20 @@ interface
 
 uses
   // VCL
-  Classes, SysUtils, XMLDoc, XMLIntf,
+  Classes, SysUtils, XMLDoc, XMLIntf, Variants,
   // This
   XmlUtils;
 
 const
-///////////////////////////////////////////////////////////////////////////////
-// OperationType constants for method OperationFN
+  ///////////////////////////////////////////////////////////////////////////////
+  // Day status constants
+
+  D1C_DS_CLOSED   = 1; // 1 - Закрыта
+  D1C_DS_OPENED   = 2; // 2 - Открыта
+  D1C_DS_EXPIRED  = 3; // 3 - Истекла
+
+  ///////////////////////////////////////////////////////////////////////////////
+  // OperationType constants for method OperationFN
 
   D1C_FNOT_OPEN   = 1; // Регистрация
   D1C_FNOT_CHANGE = 2; // Изменение параметров регистрации
@@ -84,7 +91,7 @@ type
     CompanyINN: WideString; // ИНН организация
     SaleAddress: WideString; // Адрес проведения расчетов
     SaleLocation: WideString; // Место проведения расчетов
-    TaxationSystems: WideString; // Коды системы налогообложения через разделитель ",".
+    TaxSystems: WideString; // Коды системы налогообложения через разделитель ",".
     IsOffline: Boolean; // Признак автономного режима
     IsEncrypted: Boolean; // Признак шифрование данных
     IsService: Boolean; // Признак расчетов за услуги
@@ -92,7 +99,7 @@ type
     IsGambling: Boolean; // Признак проведения азартных игр
     IsLottery: Boolean; // Признак проведения лотереи
     AgentTypes: WideString; // Коды признаков агента через разделитель ",".
-    BSOSing: Boolean; // Признак формирования АС БСО
+    IsBlank: Boolean; // Признак формирования АС БСО
     IsAutomaticPrinter: Boolean; // Признак установки принтера в автомате
     IsAutomatic: Boolean; // Признак автоматического режима
     AutomaticNumber: WideString; // Номер автомата для автоматического режима
@@ -108,7 +115,7 @@ type
     // 4.1
     IsVendingMachine: Boolean; // Признак применения в автоматическом торговом автомате
     IsCatering: Boolean; // Признак применения при оказании услуг общественного питания
-    IsWholesaleTrade: Boolean; // Признак применения о оптовой торговле с организациями и ИП
+    IsWholesale: Boolean; // Признак применения о оптовой торговле с организациями и ИП
   end;
 
   { TParametersFiscal }
@@ -121,14 +128,109 @@ type
     RegistrationLabelCodes: WideString; // Коды причин изменения сведений о ККТ через разделитель ".
   end;
 
+  { TInputParametersRec }
+
+  TInputParametersRec = record
+    CashierName: WideString;
+    CashierINN: WideString;
+    SaleAddress: WideString;
+    SaleLocation: WideString;
+    PrintRequired: Boolean;
+  end;
+
+  { TOperationCountersRec }
+
+  TOperationCountersRec = record
+    CheckCount: Integer; // Количество чеков по операции данного типа
+    TotalChecksAmount: Double; // Итоговая сумма чеков по операциям данного типа
+    CorrectionCheckCount: Integer; // Количество чеков коррекции по операции данного типа
+    TotalCorrectionChecksAmount: Double; //	Итоговая сумма чеков коррекции по операциям данного типа
+  end;
+
+  { TOutputParametersRec }
+
+  TOutputParametersRec = record
+    ShiftNumber: Integer; //Номер открытой смены/Номер закрытой смены
+    CheckNumber: Integer; // Номер последнего фискального документа
+    ShiftClosingCheckNumber: Integer; // Номер последнего чека за смену
+    DateTime: TDateTime; // Дата и время формирования фискального документа
+    ShiftState: Integer; //	Состояние смены 1 - Закрыта, 2 - Открыта, 3 - Истекла
+    CountersOperationType1: TOperationCountersRec; // OperationCounters	Счетчики операций по типу "приход"
+    CountersOperationType2: TOperationCountersRec; // Счетчики операций по типу "возврат прихода"
+    CountersOperationType3: TOperationCountersRec; // Счетчики операций по типу "расход"
+    CountersOperationType4: TOperationCountersRec; // Счетчики операций по типу "возврат расхода"
+    CashBalance: Double; // Остаток наличных денежных средств в кассе
+    BacklogDocumentsCounter: Integer; // Количество непереданных документов
+    BacklogDocumentFirstNumber: Integer; // Номер первого непереданного документа
+    BacklogDocumentFirstDateTime: TDateTime; // Дата и время первого из непереданных документов
+    FNError: Boolean; // Признак необходимости срочной замены ФН
+    FNOverflow: Boolean; // Признак переполнения памяти ФН
+    FNFail: Boolean; // Признак исчерпания ресурса ФН
+    FNValidityDate: TDateTime; // Срок действия ФН
+  end;
+
+  TDocumentOutputParametersRec = record
+    ShiftNumber: Integer; // Номер открытой смены/Номер закрытой смены
+    CheckNumber: Integer; // Номер фискального документа
+    ShiftClosingCheckNumber: Integer; // Номер чека за смену
+    AddressSiteInspections: string; // Адрес сайта проверки
+    FiscalSign: string; // Фискальный признак
+    DateTime: TDateTime; // Дата и время формирования документа
+    MTNumber: Integer;  // Номер документа "Уведомление о реализации МТ" в который включается данные чека.
+    PrintError: Boolean; //Ошибка при печати бумажной формы чека
+  end;
+
+  TCorrectionDataRec = record
+    AType: Integer; // Тип коррекции 0 - самостоятельно, 1 - по предписанию
+    Description: string; // Описание коррекции
+    Date: TDateTime; // Дата совершения корректируемого расчета
+    Number: string; // Номер предписания налогового органа
+  end;
+
+  TAgentDataRec = record
+    AgentOperation: string; // Операция платежного агента
+    AgentPhone: string; // Телефон платежного агента. Допустимо несколько значений через разделитель ",".
+    PaymentProcessorPhone: string; // Телефон оператора по приему платежей. Допустимо несколько значений через разделитель ",".
+    AcquirerOperatorPhone: string; // Телефон оператора перевода. Допустимо несколько значений через разделитель ",".
+    AcquirerOperatorName: string; // Наименование оператора перевода
+    AcquirerOperatorAddress: string; // Адрес оператора перевода
+    AcquirerOperatorINN: string; // ИНН оператора перевода
+  end;
+
+  TVendorDataRec = record
+    VendorPhone: string; // Телефон поставщика  Допустимо несколько значений через разделитель ",".
+    VendorName: string; // Наименование поставщика
+    VendorINN: string; // ИНН поставщика
+  end;
+
+  TUserAttributeRec = record
+    Name: string; // Имя реквизита
+    Value: string; // Значение реквизита
+  end;
+
+  TProcessingKMResult = record
+    RequestStatus: Integer;
+    GUID: string;
+    Res: Boolean;
+    ResultCode: Integer;
+    HasStatusInfo: Boolean;
+    StatusInfo: Integer;
+    HandleCode: Integer;
+    isOSU: Boolean;
+    MarkingType2: Integer;
+  end;
+
   { T1CXmlReaderWriter }
 
   T1CXmlReaderWriter = class
+  private
   public
+    function Read(const Xml: WideString): TInputParametersRec; overload;
     procedure Read(const Xml: WideString; Params: TParametersKKT); overload;
     procedure Read(const Xml: WideString; Params: TParametersFiscal); overload;
-    procedure Write(var Xml: WideString; Params: TParametersKKT); overload;
-    procedure Write(var Xml: WideString; Params: TParametersFiscal); overload;
+    procedure Write(var XmlText: WideString; Params: TParametersKKT); overload;
+    procedure Write(var XmlText: WideString; Params: TParametersFiscal); overload;
+    procedure Write(var XmlText: WideString; Params: TOutputParametersRec); overload;
   end;
 
 implementation
@@ -147,6 +249,36 @@ begin
 end;
 
 { T1CXmlReaderWriter }
+
+function T1CXmlReaderWriter.Read(const Xml: WideString): TInputParametersRec;
+var
+  Node: IXMLNode;
+  XmlDoc: IXMLDocument;
+begin
+  XmlDoc := TXMLDocument.Create(nil);
+  try
+    XmlDoc.Active := True;
+    XmlDoc.Version := '1.0';
+    XmlDoc.Encoding := 'UTF-8';
+    XmlDoc.Options := XmlDoc.Options + [doNodeAutoIndent];
+    XmlDoc.LoadFromXML(Xml);
+    Node := XmlDoc.ChildNodes.FindNode('InputParameters');
+    if Node = nil then
+      raise Exception.Create('Wrong XML input parameters Table');
+
+    Node := Node.ChildNodes.FindNode('Parameters');
+    if Node = nil then
+      raise Exception.Create('Wrong XML input parameters Table');
+
+    Result.CashierName := LoadString(Node, 'CashierName', True);
+    Result.CashierINN := LoadString(Node, 'CashierINN', False);
+    Result.SaleAddress := LoadString(Node, 'SaleAddress', False);
+    Result.SaleLocation := LoadString(Node, 'SaleLocation', False);
+    Result.PrintRequired := LoadBool(Node, 'PrintRequired', False);
+  finally
+    XmlDoc := nil;
+  end;
+end;
 
 procedure T1CXmlReaderWriter.Read(const Xml: WideString;
   Params: TParametersFiscal);
@@ -178,7 +310,7 @@ begin
     Params.CompanyINN := LoadString(Node, 'INN', False);
     Params.SaleAddress := LoadString(Node, 'SaleAddress', False);
     Params.SaleLocation := LoadString(Node, 'SaleLocation', False);
-    Params.TaxationSystems := LoadString(Node, 'TaxationSystems', False);
+    Params.TaxSystems := LoadString(Node, 'TaxationSystems', False);
     Params.IsOffline := LoadBool(Node, 'IsOffline', False);
     Params.IsEncrypted := LoadBool(Node, 'IsEncrypted', False);
     Params.IsService := LoadBool(Node, 'IsService', False);
@@ -186,7 +318,7 @@ begin
     Params.IsGambling := LoadBool(Node, 'IsGambling', False);
     Params.IsLottery := LoadBool(Node, 'IsLottery', False);
     Params.AgentTypes := LoadString(Node, 'AgentTypes', False);
-    Params.BSOSing := LoadBool(Node, 'BSOSing', False);
+    Params.IsBlank := LoadBool(Node, 'BSOSing', False);
     Params.IsAutomaticPrinter := LoadBool(Node, 'IsAutomaticPrinter', False);
     Params.IsAutomatic := LoadBool(Node, 'IsAutomatic', False);
     Params.AutomaticNumber := LoadString(Node, 'AutomaticNumber', False);
@@ -234,7 +366,7 @@ begin
     Params.CompanyINN := LoadString(Node, 'INN', False);
     Params.SaleAddress := LoadString(Node, 'SaleAddress', False);
     Params.SaleLocation := LoadString(Node, 'SaleLocation', False);
-    Params.TaxationSystems := LoadString(Node, 'TaxationSystems', False);
+    Params.TaxSystems := LoadString(Node, 'TaxationSystems', False);
     Params.IsOffline := LoadBool(Node, 'IsOffline', False);
     Params.IsEncrypted := LoadBool(Node, 'IsEncrypted', False);
     Params.IsService := LoadBool(Node, 'IsService', False);
@@ -242,9 +374,9 @@ begin
     Params.IsGambling := LoadBool(Node, 'IsGambling', False);
     Params.IsLottery := LoadBool(Node, 'IsLottery', False);
     Params.AgentTypes := LoadString(Node, 'AgentTypes', False);
-    Params.BSOSing := LoadBool(Node, 'BSOSing', False);
+    Params.IsBlank := LoadBool(Node, 'BSOSing', False);
     Params.IsAutomaticPrinter := LoadBool(Node, 'IsAutomaticPrinter', False);
-    Params.IsAutomaticMode := LoadBool(Node, 'IsAutomatic', False);
+    Params.IsAutomatic := LoadBool(Node, 'IsAutomatic', False);
     Params.AutomaticNumber := LoadString(Node, 'AutomaticNumber', False);
     Params.OFDCompany := LoadString(Node, 'OFDCompany', False);
     Params.OFDCompanyINN := LoadString(Node, 'OFDCompanyINN', False);
@@ -255,26 +387,26 @@ begin
   end;
 end;
 
-procedure T1CXmlReaderWriter.Write(var Xml: WideString;
+procedure T1CXmlReaderWriter.Write(var XmlText: WideString;
   Params: TParametersFiscal);
 begin
 
 end;
 
-procedure T1CXmlReaderWriter.Write(var Xml: WideString;
+procedure T1CXmlReaderWriter.Write(var XmlText: WideString;
   Params: TParametersKKT);
 var
   i: Integer;
   Node: IXMLNode;
-  XmlDoc: IXMLDocument;
+  Xml: IXmlDocument;
 begin
-  XmlDoc := TXMLDocument.Create(nil);
+  Xml := TXmlDocument.Create(nil);
   try
-    XmlDoc.Active := True;
-    XmlDoc.Version := '1.0';
-    XmlDoc.Encoding := 'UTF-8';
-    XmlDoc.Options := XmlDoc.Options + [doNodeAutoIndent];
-    Node := XmlDoc.AddChild('Parameters');
+    Xml.Active := True;
+    Xml.Version := '1.0';
+    Xml.Encoding := 'UTF-8';
+    Xml.Options := Xml.Options + [doNodeAutoIndent];
+    Node := Xml.AddChild('Parameters');
 
     Node.Attributes['KKTNumber'] := Params.KKTNumber;
     Node.Attributes['KKTSerialNumber'] := Params.KKTSerialNumber;
@@ -289,7 +421,7 @@ begin
     Node.Attributes['INN'] := Params.CompanyINN;
     Node.Attributes['SaleAddress'] := Params.SaleAddress;
     Node.Attributes['SaleLocation'] := Params.SaleLocation;
-    Node.Attributes['TaxationSystems'] := Params.TaxationSystems;
+    Node.Attributes['TaxationSystems'] := Params.TaxSystems;
     Node.Attributes['IsOffline'] := To1Cbool(Params.IsOffline);
     Node.Attributes['IsEncrypted'] := To1Cbool(Params.IsEncrypted);
     Node.Attributes['IsService'] := To1Cbool(Params.IsService);
@@ -297,24 +429,60 @@ begin
     Node.Attributes['IsGambling'] := To1Cbool(Params.IsGambling);
     Node.Attributes['IsLottery'] := To1Cbool(Params.IsLottery);
     Node.Attributes['AgentTypes'] := Params.AgentTypes;
-    Node.Attributes['BSOSing'] := To1Cbool(Params.BSOSing);
+    Node.Attributes['BSOSing'] := To1Cbool(Params.IsBlank);
     Node.Attributes['IsOnline'] := To1Cbool(Params.IsOnline);
     Node.Attributes['IsMarking'] := To1Cbool(Params.IsMarking);
     Node.Attributes['IsPawnshop'] := To1Cbool(Params.IsPawnshop);
     Node.Attributes['IsAssurance'] := To1Cbool(Params.IsInsurance);
     Node.Attributes['IsVendingMachine'] := To1Cbool(Params.IsVendingMachine);
     Node.Attributes['IsCateringServices'] := To1Cbool(Params.IsCatering);
-    Node.Attributes['IsWholesaleTrade'] := To1Cbool(Params.IsWholesaleTrade);
+    Node.Attributes['IsWholesaleTrade'] := To1Cbool(Params.IsWholesale);
     Node.Attributes['IsAutomaticPrinter'] := To1Cbool(Params.IsAutomaticPrinter);
-    Node.Attributes['IsAutomatic'] := To1Cbool(Params.IsAutomaticMode);
+    Node.Attributes['IsAutomatic'] := To1Cbool(Params.IsAutomatic);
     Node.Attributes['AutomaticNumber'] := Params.AutomaticNumber;
     Node.Attributes['OFDCompany'] := Params.OFDCompany;
     Node.Attributes['OFDCompanyINN'] := Params.OFDCompanyINN;
     Node.Attributes['FNSURL'] := Params.FNSURL;
     Node.Attributes['SenderEmail'] := Params.SenderEmail;
-    Xml := XmlDoc.XML.Text;
+    XmlText := Xml.XML.Text;
   finally
-    XmlDoc := nil;
+    Xml := nil;
+  end;
+end;
+
+procedure T1CXmlReaderWriter.Write(var XmlText: WideString; Params: TOutputParametersRec);
+var
+  Node: IXMLNode;
+  Xml: IXMLDocument;
+begin
+  Xml := TXMLDocument.Create(nil);
+  try
+    Xml.Active := True;
+    Xml.Version := '1.0';
+    Xml.Encoding := 'UTF-8';
+    Xml.Options := Xml.Options + [doNodeAutoIndent];
+    Node := Xml.AddChild('OutputParameters').AddChild('Parameters');
+
+    Node.Attributes['ShiftNumber'] := IntToStr(Params.ShiftNumber); // Integer; //Номер открытой смены/Номер закрытой смены
+    Node.Attributes['CheckNumber'] := IntToStr(Params.CheckNumber); // Integer; // Номер последнего фискального документа
+    Node.Attributes['ShiftClosingCheckNumber'] := IntToStr(Params.ShiftClosingCheckNumber); // Integer; // Номер последнего чека за смену
+    Node.Attributes['DateTime'] := DateTimeToXML(Params.DateTime); // TDateTime; // Дата и время формирования фискального документа
+    Node.Attributes['ShiftState'] := IntToStr(Params.ShiftState); // Integer; //	Состояние смены 1 - Закрыта, 2 - Открыта, 3 - Истекла
+{   Node.Attributes['CountersOperationType1'] := Params.; // TOperationCountersRec; // OperationCounters	Счетчики операций по типу "приход"
+    Node.Attributes['CountersOperationType2'] := Params.; // TOperationCountersRec; // Счетчики операций по типу "возврат прихода"
+    Node.Attributes['CountersOperationType3'] := Params.; // TOperationCountersRec; // Счетчики операций по типу "расход"
+    Node.Attributes['CountersOperationType4'] := Params.; // TOperationCountersRec; // Счетчики операций по типу "возврат расхода"}
+    Node.Attributes['CashBalance'] := Params.CashBalance; // Double; // Остаток наличных денежных средств в кассе
+    Node.Attributes['BacklogDocumentsCounter'] := IntToStr(Params.BacklogDocumentsCounter); // Integer; // Количество непереданных документов
+    Node.Attributes['BacklogDocumentFirstNumber'] := Params.BacklogDocumentFirstNumber; // Integer; // Номер первого непереданного документа
+    Node.Attributes['BacklogDocumentFirstDateTime'] := DateTimeToXML(Params.BacklogDocumentFirstDateTime); // TDateTime; // Дата и время первого из непереданных документов
+    Node.Attributes['FNError'] := To1Cbool(Params.FNError); // Boolean; // Признак необходимости срочной замены ФН
+    Node.Attributes['FNOverflow'] := To1Cbool(Params.FNOverflow); // Boolean; // Признак переполнения памяти ФН
+    Node.Attributes['FNFail'] := To1Cbool(Params.FNFail); // Boolean; // Признак исчерпания ресурса ФН
+    Node.Attributes['FNValidityDate'] := DateTimeToXML(Params.FNValidityDate); // TDateTime;
+    XmlText := Xml.XML.Text;
+  finally
+    Xml := nil;
   end;
 end;
 

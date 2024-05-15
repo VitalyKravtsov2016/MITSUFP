@@ -1,0 +1,269 @@
+unit FFDTypes;
+
+interface
+
+const
+  /////////////////////////////////////////////////////////////////////////////
+  // Country code constants
+
+  FFD_CC_AFGHANISTAN  = 004; // Transitional Islamic State of Afghanistan	OF	AFG
+  FFD_CC_ALBANIA	    = 008; // Republic of Albania	AL	WHITE
+  FFD_CC_ANTARCTIC		= 010; //	AQ	MINUTES
+  FFD_CC_ALGERIA	    = 012; // Algerian People's Democratic Republic	DZ	DZA
+  FFD_CC_AMERICAN_SAMOA = 016; // AS	ASM
+  FFD_CC_ANDORRA	      = 020; // Principality of Andorra	AD	AND
+  FFD_CC_ANGOLA	        = 024; // Republic of Angola	TO THE	AGO
+  FFD_CC_ANTIGUA_AND_BARBUDA = 028;	// AG ATG
+  FFD_CC_AZERBAIJAN	= 031; // Republic of Azerbaijan	THE	COME
+  FFD_CC_ARGENTINA  = 032; // Argentine Republic	WITH	ARG
+  FFD_CC_AUSTRALIA	= 036; //	AT	OUT OF
+  FFD_CC_AUSTRIA	  = 040; // Republic of Austria	AT	AUT
+  FFD_CC_BAHAMAS	  = 044; // Commonwealth of the Bahamas	BS	BHS
+(*
+FFD_CC_	048	BAHRAIN	Kingdom of Bahrain	BH	BHR
+FFD_CC_	050	BANGLADESH	People's Republic of Bangladesh	BD	BGD
+FFD_CC_	051	ARMENIA	Republic of Armenia	AM	ARM
+FFD_CC_	052	BARBADOS		BB	BRB
+FFD_CC_	056	BELGIUM	Kingdom of Belgium	BE	BEL
+FFD_CC_	060	BERMUDA		BM	BMU
+FFD_CC_	064	BHUTAN	Kingdom of Bhutan	BT	BTN
+FFD_CC_	068	BOLIVIA, PLURI-NATIONAL STATE	Plurinational State of Bolivia	BO	HE WAS
+FFD_CC_	070	BOSNIA AND HERZEGOVINA		NOT	BIH
+FFD_CC_	072	BOTSWANA	Republic of Botswana	BW	Mrs
+FFD_CC_	074	FLEA ISLAND		BV	BVT
+FFD_CC_	076	BRAZIL	Federative Republic of Brazil	BR	GOOD
+FFD_CC_	084	BELIZE		BZ	PAGE
+FFD_CC_	086	BRITISH TERRITORY IN THE INDIAN OCEAN		IO	IOT
+FFD_CC_	090	SOLOMON ISLANDS		SB	SLB
+FFD_CC_	092	VIRGIN ISLANDS (BRITISH)	British Virgin Islands	VG	VGB
+FFD_CC_	096	BRUNEI DARUSSALAM		BN	BRN
+FFD_CC_	100	BULGARIA	Republic of Bulgaria	BG	BGR
+FFD_CC_	104	MYANMAR	Republic of the Union of Myanmar	MM	MMR
+FFD_CC_	108	BURUNDI	Republic of Burundi	WITH A	BDI
+FFD_CC_	112	BELARUS	Republic of Belarus	BY	BLR
+FFD_CC_	116	CAMBODIA	Kingdom of Cambodia	KH	KHM
+FFD_CC_	120	CAMEROON	Republic of Cameroon	CM	CMR
+FFD_CC_	124	CANADA		THAT	CAN
+FFD_CC_	132	CAPE VERDE	Republic of Cape Verde	CV	CPV
+FFD_CC_	136	CAYMAN ISLANDS		this	ENG
+FFD_CC_	140	CENTRAL AFRICAN REPUBLIC		CF	CAF
+FFD_CC_	144	SRI LANKA	Democratic Socialist Republic of Sri Lanka	LK	LKA
+FFD_CC_	148	SMOKE	Republic of Chad	TD	TCD
+FFD_CC_	152	CHILI	Republic of Chile	CL	CHL
+FFD_CC_	156	CHINA	People's Republic of China	CN	CHN
+FFD_CC_	158	TAIWAN (CHINA)		TW	TWN
+FFD_CC_	162	CHRISTMAS ISLAND		CX	CXR
+FFD_CC_	166	COCONUT (KEELING) ISLANDS		CC	CCK
+FFD_CC_	170	COLOMBIA	Republic of Colombia	CO	COL
+FFD_CC_	174	COMOROS	Union of Comoros	KM	WITH
+FFD_CC_	175	In Mayotte		YT	MYTH
+FFD_CC_	178	CONGO	Republic of the Congo	CG	COG
+FFD_CC_	180	CONGO, DEMOCRATIC REPUBLIC	Democratic Republic of the Congo	CD	COD
+FFD_CC_	184	HOOK ISLAND		CK	A LOT
+FFD_CC_	188	COSTA RICA	Republic of Costa Rica	CR	CRI
+FFD_CC_	191	CROATIA	Republic of Croatia	HR	HRV
+FFD_CC_	192	CUBA	Republic of Cuba	WITH	CUB
+FFD_CC_	196	CYPRUS	Republic of Cyprus	CY	CYP
+FFD_CC_	203	CZECH REPUBLIC	Czech Republic	CZ	JUN
+FFD_CC_	204	BENIN	Republic of Benin	BJ	BEN
+FFD_CC_	208	DENMARK	Kingdom of Denmark	DK	DNA
+FFD_CC_	212	DOMINICA	Commonwealth of Dominica	DM	DMA
+FFD_CC_	214	DOMINICAN REPUBLIC		DO	DOM
+FFD_CC_	218	ECUADOR	Republic of Ecuador	EC	ECU
+FFD_CC_	222	EL SALVADOR	Republic of El Salvador	SV	SLV
+FFD_CC_	226	EQUATORIAL GUINEA	Republic of Equatorial Guinea	GQ	GNQ
+FFD_CC_	231	ETHIOPIA	Federal Democratic Republic of Ethiopia	AND	ETH
+FFD_CC_	232	ERITREA	State of Eritrea	IS	DIFFERENT
+FFD_CC_	233	ESTONIA	Republic of Estonia	EE	EAST
+FFD_CC_	234	FAROE ISLANDS		FO	FRO
+FFD_CC_	238	FALKLAND ISLANDS (MALVINAS)		FK	FLK
+FFD_CC_	239	SOUTH GEORGIA AND SOUTH SANDWICH ISLANDS		GS	SGS
+FFD_CC_	242	FIJI	Republic of Fiji	FJ	FJI
+FFD_CC_	246	FINLAND	Republic of Finland	BE	END
+FFD_CC_	248	Aland ISLANDS		AX	LAND
+FFD_CC_	250	FRANCE	French Republic	FR	FROM
+FFD_CC_	254	FRENCH GUIANA		GF	GUF
+FFD_CC_	258	FRENCH POLYNESIA		PF	PYF
+FFD_CC_	260	FRENCH SOUTHERN TERRITORIES		TF	ATF
+FFD_CC_	262	Djibouti	Republic of Djibouti	DJ	DJI
+FFD_CC_	266	GABON	Gabonese Republic	GA	GAVE
+FFD_CC_	268	GEORGIA		GE	GEO
+FFD_CC_	270	THE GAMBIA	Islamic Republic of The Gambia	GM	GMB
+FFD_CC_	275	PALESTINE, STATE	State of Palestine	PS	WHY
+FFD_CC_	276	GERMANY	Federal Republic of Germany	OF	IT GAVE
+FFD_CC_	288	GHANA	Republic of Ghana	GH	DON'T
+FFD_CC_	292	GIBRALTAR		GI	GIB
+FFD_CC_	296	KIRIBATI	Republic of Kiribati	TO	DID
+FFD_CC_	300	GREECE	Hellenic Republic	GR	GRC
+FFD_CC_	304	GREENLAND		GL	GRL
+FFD_CC_	308	GRENADA		GD	GRD
+FFD_CC_	312	GUADELOUPE		GP	GLP
+FFD_CC_	316	GUAM		GU	GUM
+FFD_CC_	320	GUATEMALA	Republic of Guatemala	GT	GTM
+FFD_CC_	324	GUINEA	Republic of Guinea	GN	GIN
+FFD_CC_	328	GUYANA	Cooperative Republic of Guyana	GY	GUY
+FFD_CC_	332	HAITI	Republic of Haiti	HT	HTI
+FFD_CC_	334	HEARD ISLAND AND MACDONALD ISLAND		HM	HMD
+FFD_CC_	336	PAPAL THRONE (STATE - VATICAN CITY)		AND	VAT
+FFD_CC_	340	HONDURAS	Republic of Honduras	HN	HND
+FFD_CC_	344	HONG KONG	Hong Kong Special Administrative Region of the People's Republic of China	HK	HKG
+FFD_CC_	348	HUNGARY	Hungary	HU	SHE
+FFD_CC_	352	ICELAND		IS	ISL
+FFD_CC_	356	INDIA	Republic of India	IN	IN
+FFD_CC_	360	INDONESIA	Republic of Indonesia	ID	IDN
+FFD_CC_	364	IRAN (ISLAMIC REPUBLIC)	Islamic Republic of Iran	AND	IRN
+FFD_CC_	368	IRAQ	Republic of Iraq	IQ	IRQ
+FFD_CC_	372	IRELAND		IE	IRL
+FFD_CC_	376	ISRAEL	State of Israel	THE	ISR
+FFD_CC_	380	ITALY	Italian Republic	IT	SHE
+FFD_CC_	384	COTE D'IVOIRE	Republic of Cote d'Ivoire	THERE	CIV
+FFD_CC_	388	JAMAICA		JM	JAM
+FFD_CC_	392	JAPAN		JP	JPN
+FFD_CC_	398	KAZAKHSTAN	Republic of Kazakhstan	KZ	KAZ
+FFD_CC_	400	JORDAN	Hashemite Kingdom of Jordan	JO	JOR
+FFD_CC_	404	KENYA	Republic of Kenya	KE	KEN
+FFD_CC_	408	KOREA, DEMOCRATIC PEOPLE'S REPUBLIC	Democratic People's Republic of Korea	KP	PRK
+FFD_CC_	410	REPUBLIC OF KOREA	The Republic of Korea	NOK	UP
+FFD_CC_	414	KUWAIT	State of Kuwait	KW	KWT
+FFD_CC_	417	KYRGYZSIA	Kyrgyz Republic	KG	KGZ
+FFD_CC_	418	LAOTIAN PEOPLE'S DEMOCRATIC REPUBLIC		THE	LAO
+FFD_CC_	422	LEBANON	Lebanese Republic	LB	LBN
+FFD_CC_	426	THE EASY	Kingdom of Lesotho	LS	LSO
+FFD_CC_	428	LATVIA	Latvian republic	LV	LION
+FFD_CC_	430	LIBERIA	Republic of Liberia	LR	LBR
+FFD_CC_	434	LIBYA	State of Libya	LY	LBY
+FFD_CC_	438	LIECHTENSTEIN	Principality of Liechtenstein	THAT	LIE
+FFD_CC_	440	LITHUANIA	Republic of Lithuania	LT	LTU
+FFD_CC_	442	LUXEMBOURG	Grand Duchy of Luxembourg	LU	LUX
+FFD_CC_	446	MACAU	Macau Special Administrative Region of the People's Republic of China	MO	MAC
+FFD_CC_	450	MADAGASCAR	Republic of Madagascar	MG	MDG
+FFD_CC_	454	MALAWI	Republic of Malawi	MW	MWI
+FFD_CC_	458	MALAYSIA		MY	MYS
+FFD_CC_	462	MALDIVES	Republic of Maldives	MV	185
+FFD_CC_	466	SMALL	Republic of Mali	ML	MLI
+FFD_CC_	470	MALTA	Republic of Malta	MT	MLT
+FFD_CC_	474	MARTINIQUE		MQ	MTQ
+FFD_CC_	478	MAURITANIA	Islamic Republic of Mauritania	MR	MRT
+FFD_CC_	480	MAURITIUS	Republic of Mauritius	IN	MUS
+FFD_CC_	484	MEXICO	Mexican United States	MX	MEX
+FFD_CC_	492	MONACO	Principality of Monaco	MC	MCO
+FFD_CC_	496	MONGOLIA		MN	MNG
+FFD_CC_	498	MOLDOVA, REPUBLIC	The Republic of Moldova	MD	MDA
+FFD_CC_	499	MONTENEGRO		ME	ME
+FFD_CC_	500	MONTSERRAT		MS	MSR
+FFD_CC_	504	MOROCCO	Kingdom of Morocco	AND	MAR
+FFD_CC_	508	MOZAMBIQUE	Republic of Mozambique	MZ	MOZ
+FFD_CC_	512	OMAN	Sultanate of Oman	ABOUT	OMN
+FFD_CC_	516	NAMIBIA	Republic of Namibia	THAT	MALE
+FFD_CC_	520	NAURU	Republic of Nauru	No.	NO
+FFD_CC_	524	NEPAL		E.G	NPL
+FFD_CC_	528	NETHERLANDS, KINGDOM	Kingdom of the Netherlands	NL	NLD
+FFD_CC_	531	 ﬁ–¿—¿Œ		CW	CUW
+FFD_CC_	533	ARUBA		Aw	ABW
+FFD_CC_	534	SAINT MARTIN (Dutch part)		SX	SXM
+FFD_CC_	535	BONAIR, SINT ESTATE AND SABA		BQ	BES
+FFD_CC_	540	NEW CALEDONIA		NC	NCL
+FFD_CC_	548	VANUATU	Republic of Vanuatu	VU	BUT
+FFD_CC_	554	NEW ZEALAND		NZ	NZL
+FFD_CC_	558	NICARAGUA	Republic of Nicaragua	IN	NOTHING
+FFD_CC_	562	NIGERIA	Republic of Niger	NO	DOWN
+FFD_CC_	566	NIGERIA	Federal Republic of Nigeria	of	that
+FFD_CC_	570	New Zealand	Niue	NOT	NIU
+FFD_CC_	574	NORFOLK ISLAND		NF	NFK
+FFD_CC_	578	NORWAY	Kingdom of Norway	NO	NOR
+FFD_CC_	580	NORTHERN MARIANA ISLANDS	Commonwealth of the Northern Mariana Islands	MP	MNP
+FFD_CC_	581	MINOR PACIFIC REMOTE ISLANDS OF THE UNITED STATES		ONE	LONG
+FFD_CC_	583	MICRONESIA, FEDERATED STATES	Federated States of Micronesia	FM	FSM
+FFD_CC_	584	MARSHALL ISLANDS	Republic of the Marshall Islands	MH	MHL
+FFD_CC_	585	PALAU	Republic of Palau	PW	PLW
+FFD_CC_	586	PAKISTAN	Islamic Republic of Pakistan	PK	THEN
+FFD_CC_	591	PANAMA	Republic of Panama	Well	PAN
+FFD_CC_	598	PAPUA NEW GUINEA	Independent State of Papua New Guinea	PG	PNG
+FFD_CC_	600	PARAGUAY	Republic of Paraguay	PY	PRY
+FFD_CC_	604	PERU	Republic of Peru	ON	PER
+FFD_CC_	608	PHILIPPINES	Republic of the Philippines	PH	PHL
+FFD_CC_	612	Pitcairn		PN	PCN
+FFD_CC_	616	POLAND	Republic of Poland	PL	POL
+FFD_CC_	620	PORTUGAL	Portuguese Republic	PT	PRT
+FFD_CC_	624	GUINEA-BISSAU	Republic of Guinea-Bissau	GW	GNB
+FFD_CC_	626	TIMOR-LESTE	Democratic Republic of Timor-Leste	TL	TLS
+FFD_CC_	630	PUERTO RICO		PR	AT
+FFD_CC_	634	LINE UP	State of Qatar	QA	FLOOR
+FFD_CC_	638	REUNION		RE	REU
+FFD_CC_	642	ROMANIA		RO	ROU
+*)
+  FFD_CC_RUSSIA	= 643; // Russian Federation	RU	RUSSIAN
+  FFD_CC_RWANDA	= 646; // Republic of Rwanda	RW	RWA
+  FFD_CC_SEN_BARTHELEMY	= 652; // BL BLM
+(*
+  FFD_CC_	654	SAINT HELENA, ASCENSION ISLAND, TRISTAN DA CUNHA		SH	AS
+  FFD_CC_	659	SAINT KITTS AND NEVIS		KN	KNA
+  FFD_CC_	660	ANGUILLA		AI	THERE ARE
+  FFD_CC_	662	SAINT LUCIA		LC	LCA
+  FFD_CC_	663	SAINT MARTIN (French part)		MF	MAF
+  FFD_CC_	666	SAINT PIERRE AND MIKELON		PM	SPM
+  FFD_CC_	670	SAINT VINCENT AND THE GRENADINES		VC	VCT
+  FFD_CC_	674	SAN MARINO	Republic of San Marino	SM	SMR
+  FFD_CC_	678	SAO TOME AND PRINCIPE	Democratic Republic of Sao Tome and Principe	ST	STP
+  FFD_CC_	682	SAUDI ARABIA	Kingdom of Saudi Arabia	on	OR
+  FFD_CC_	686	SENEGAL	Republic of Senegal	SN	ITS
+  FFD_CC_	688	SERBIA	Republic of Serbia	RS	SRB
+  FFD_CC_	690	SEYCHELLES	Republic of Seychelles	SC	SYC
+  FFD_CC_	694	SIERRA LEONE	Republic of Sierra Leone	SL	SLE
+  FFD_CC_	702	SINGAPORE	Republic of Singapore	SG	SGP
+  FFD_CC_	703	SLOVAKIA	The Slovak Republic	SK	SVK
+  FFD_CC_	704	VIETNAM	Socialist Republic of Vietnam	VN	VNM
+  FFD_CC_	705	SLOVENIA	Republic of Slovenia	AND	SVN
+  FFD_CC_	706	SOMALIA	Federal Republic of Somalia	SO	AS
+  FFD_CC_	710	SOUTH AFRICA	South Africa	FOR	ZAF
+  FFD_CC_	716	ZIMBABWE	Republic of Zimbabwe	ZW	HEAR
+  FFD_CC_	724	SPAIN	The Kingdom of Spain	IS	ESP
+  FFD_CC_	728	SOUTH SUDAN	Republic of South Sudan	SS	SSD
+  FFD_CC_	729	SUDAN	Republic of Sudan	SD	SDN
+  FFD_CC_	732	WEST SAHARA		EH	ESH
+  FFD_CC_	740	SURINAME	Republic of Suriname	SR	ON
+  FFD_CC_	744	SPITSBERGEN AND JAN MAYEN		SJ	SJM
+  FFD_CC_	748	ESVATINY	Kingdom of Eswatini	S	SWZ
+  FFD_CC_	752	SWEDEN	Kingdom of Sweden	SE	SWE
+  FFD_CC_	756	SWITZERLAND	Swiss Confederation	CH	THAT
+  FFD_CC_	760	SYRIAN ARAB REPUBLIC		SY	SIR
+  FFD_CC_	762	TAJIKISTAN	Republic of Tajikistan	TJ	TJK
+  FFD_CC_	764	THAILAND	Kingdom of Thailand	TH	THERE ARE
+  FFD_CC_	768	THAT	Togolese Republic	TG	TGO
+  FFD_CC_	772	TOKELAU		TK	TKL
+  FFD_CC_	776	TONGA	Kingdom of Tonga	TO	TON
+  FFD_CC_	780	TRINIDAD AND TOBAGO	Republic of Trinidad and Tobago	TT	TTO
+  FFD_CC_	784	UNITED ARAB EMIRATES		BUT	ARE
+  FFD_CC_	788	TUNISIA	Tunisian Republic	TN	AGAIN
+  FFD_CC_	792	TURKEY	Turkish Republic	TR	SHOULD
+  FFD_CC_	795	TURKMENISTAN	Turkmenistan	TM	TKM
+  FFD_CC_	796	TURKS AND CAICOS ISLANDS		TC	TCA
+  FFD_CC_	798	Tuvalu		TV	TUV
+  FFD_CC_	800	UGANDA	Republic of Uganda	and	UGA
+  FFD_CC_	804	UKRAINE		UA	UKR
+  FFD_CC_	807	NORTH MACEDONIA	Republic of North Macedonia	MK	MKD
+  FFD_CC_	818	EGYPT	Arab Republic of Egypt	EG	ONE
+  FFD_CC_	826	UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND		GB	GBR
+  FFD_CC_	831	GUERNSES		GG	Peggy
+  FFD_CC_	832	JERSEY		IS	AGAIN
+  FFD_CC_	833	ISLE OF MAN		IN THE	IMN
+  FFD_CC_	834	TANZANIA, UNITED REPUBLIC	United Republic of Tanzania	TZ	TZA
+  FFD_CC_	840	UNITED STATES	USA	US	deer
+  FFD_CC_	850	VIRGIN ISLANDS (USA)	United States Virgin Islands	WE	FOR
+  FFD_CC_	854	BURKINA FASO		BF	BFA
+  FFD_CC_	858	URUGUAY	Eastern Republic of Uruguay	UY	URY
+  FFD_CC_	860	UZBEKISTAN	Republic of Uzbekistan	TO	UZB
+  FFD_CC_	862	VENEZUELA (BOLIVARIAN REPUBLIC)	Bolivarian Republic of Venezuela	VE	VEN
+  FFD_CC_	876	WALLIS AND FUTUNA		WF	WLF
+  FFD_CC_	882	SAMOA	Independent State of Samoa	WS	WSM
+  FFD_CC_	887	YEMEN	Yemen Republic	YE	BAIT
+  FFD_CC_	894	ZAMBIA	Republic of Zambia	ZM	ZMB
+  FFD_CC_	895	ABKHAZIA	Republic of Abkhazia	AB	ABH
+  FFD_CC_	896	SOUTH OSSETIA	Republic of South Ossetia	YOU	OST
+  FFD_CC_	897	DPR	Donetsk People's Republic	DN	DNR
+  FFD_CC_	898	LPR	Lugansk People's Republic	LN	ARC
+*)
+
+implementation
+
+end.

@@ -19,7 +19,21 @@ uses
   FileUtils in '..\..\Src\Shared\FileUtils.pas',
   ByteUtils in '..\..\Src\Shared\ByteUtils.pas',
   Types1C_1 in '..\..\Src\MitsuDrv1C\Units\Types1C_1.pas',
-  XmlUtils in '..\..\Src\MitsuDrv1C\Units\XmlUtils.pas';
+  XmlUtils in '..\..\Src\MitsuDrv1C\Units\XmlUtils.pas',
+  VersionInfo in '..\..\Src\Shared\VersionInfo.pas',
+  ParamList1C in '..\..\Src\MitsuDrv1C\Units\ParamList1C.pas',
+  ParamList1CPage in '..\..\Src\MitsuDrv1C\Units\ParamList1CPage.pas',
+  ParamList1CGroup in '..\..\Src\MitsuDrv1C\Units\ParamList1CGroup.pas',
+  ParamList1CItem in '..\..\Src\MitsuDrv1C\Units\ParamList1CItem.pas',
+  Param1CChoiceList in '..\..\Src\MitsuDrv1C\Units\Param1CChoiceList.pas',
+  LangUtils in '..\..\Src\TstShared\LangUtils.pas',
+  DriverTypes in '..\..\Src\TstShared\DriverTypes.pas',
+  GlobalConst in '..\..\Src\TstShared\GlobalConst.pas',
+  FDTypes in '..\..\Src\MitsuDrv1C\Units\FDTypes.pas',
+  Params1C in '..\..\Src\MitsuDrv1C\Units\Params1C.pas',
+  Types1C in '..\..\Src\MitsuDrv1C\Units\Types1C.pas',
+  Positions1C3 in '..\..\Src\MitsuDrv1C\Units\Positions1C3.pas',
+  FFDTypes in '..\..\Src\MitsuDrv1C\Units\FFDTypes.pas';
 
 begin
   TGUITestRunner.RunTest(RegisteredTests);

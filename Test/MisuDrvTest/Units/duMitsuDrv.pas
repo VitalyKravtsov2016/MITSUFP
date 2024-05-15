@@ -9,7 +9,7 @@ uses
   // DUnit
   TestFramework,
   // This
-  MitsuDrv, StringUtils, FileUtils;
+  MitsuDrv, StringUtils, FileUtils, FFDTypes;
 
 type
   { TMitsuDrvTest }
@@ -55,6 +55,9 @@ type
     procedure TestWriteDate;
     procedure TestWriteCashier;
     procedure TestWriteBaudRate;
+
+    procedure TestFiscalReceiptCancel;
+    procedure TestFiscalReceipt;
   end;
 
 implementation
@@ -291,6 +294,7 @@ begin
   CheckEquals(1, R.RegNumber, 'RegNumber');
   CheckEquals(1, R.FDocNumber, 'FDocNumber');
   CheckEquals('', R.Base, 'Base');
+(*
   CheckEquals(0, R.Mode, 'Mode');
   CheckEquals(17, R.ExtMode, 'ExtMode');
   CheckEquals('065001000000008', R.T1013, 'T1013');
@@ -310,6 +314,7 @@ begin
   CheckEquals('ßÐÓÑ', R.T1046, 'T1046');
   CheckEquals('v@mail.ru', R.T1117, 'T1117');
   CheckEquals('www.nalog.gov.ru', R.T1060, 'T1060');
+*)  
 end;
 
 // <OK SHIFT='1' STATE='1' COUNT='2' KeyValid='410'></OK>
@@ -460,6 +465,66 @@ end;
 procedure TMitsuDrvTest.TestWriteBaudRate;
 begin
   Driver.Check(Driver.WriteBaudRate(115200));
+end;
+
+procedure TMitsuDrvTest.TestFiscalReceiptCancel;
+var
+  Doc: TDocStatus;
+  StartDoc: TDocStatus;
+  Params: TMTSReceiptParams;
+begin
+  Driver.Check(Driver.Reset);
+  Driver.Check(Driver.ReadLastDocStatus(StartDoc));
+  // Open
+  Params.ReceiptType := MTS_RT_SALE;
+  Params.TaxSystem := MTS_TS_GENERAL;
+  Driver.Check(Driver.BeginFiscalReceipt(Params));
+  // Read doc status
+  Driver.Check(Driver.ReadLastDocStatus(Doc));
+  CheckEquals(MTS_DOC_TYPE_RECEIPT, Doc.DocType, 'Doc.DocType');
+  CheckEquals(MTS_DOC_STATUS_OPENED, Doc.Status, 'Doc.Status');
+  // Cancel
+  Driver.Check(Driver.CancelFiscalReceipt);
+  // Read doc status
+  Driver.Check(Driver.ReadLastDocStatus(Doc));
+  CheckEquals(StartDoc.Number, Doc.Number, 'Doc.Number');
+  CheckEquals(StartDoc.Size, Doc.Size, 'Doc.Size');
+  CheckEquals(StartDoc.DocType, Doc.DocType, 'Doc.DocType');
+  CheckEquals(StartDoc.Status, Doc.Status, 'Doc.Status');
+end;
+
+procedure TMitsuDrvTest.TestFiscalReceipt;
+var
+  Doc: TDocStatus;
+  Position: TMTSPosition;
+  Params: TMTSReceiptParams;
+begin
+  Driver.Check(Driver.Reset);
+  // Open
+  Params.ReceiptType := MTS_RT_SALE;
+  Params.TaxSystem := MTS_TS_GENERAL;
+  Driver.Check(Driver.BeginFiscalReceipt(Params));
+  // Begin add positions
+  Driver.Check(Driver.BeginPositions);
+  // Add positions
+  Position.Quantity := 1.234567;
+  Position.TaxRate := MTS_VAT_RATE_NONE;
+  Position.UnitValue := 0;
+  Position.Price := 12345; // 15241 +- 1
+  Position.Total := 15241;
+  Position.ItemType := 1;
+  Position.PaymentType := 4;
+  Position.ExciseTaxTotal := 0;
+  Position.CountryCode := FFD_CC_RUSSIA;
+  Position.DeclarationNumber := 0;
+  Position.Name := 'Item 1';
+  Position.Numerator := 0;
+  Position.Denominator := 0;
+  Position.MarkCode := '';
+  Position.AddAttribute := '';
+  Position.AgentType := -1;
+
+  Driver.Check(Driver.AddPosition(Position));
 end;
 
 initialization

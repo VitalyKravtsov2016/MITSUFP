@@ -6,11 +6,9 @@ Uses
   // VCL
   SysUtils, Classes, XMLIntf, XMLDoc,
   // This
-  Param1CChoiceList
-  ;
+  Param1CChoiceList;
 
 type
-
   TParamList1CItem = class;
 
   { TParamList1CItems }
