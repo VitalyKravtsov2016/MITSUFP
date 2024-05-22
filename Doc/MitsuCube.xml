@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ini>
   <LANGUAGE>ru</LANGUAGE>
-  <main_top>65</main_top>
-  <main_left>163</main_left>
+  <main_top>220</main_top>
+  <main_left>560</main_left>
   <main_width>800</main_width>
   <main_height>600</main_height>
   <KKTIP>192.168.1.100</KKTIP>
@@ -13,7 +13,7 @@
   <SERVKKTID>0</SERVKKTID>
   <OFDIP></OFDIP>
   <OFDPort>80</OFDPort>
-  <CASHIER>23423434234</CASHIER>
+  <CASHIER>q334234</CASHIER>
   <COM>COM8</COM>
   <CRC>D65848C0</CRC>
   <Print>1</Print>

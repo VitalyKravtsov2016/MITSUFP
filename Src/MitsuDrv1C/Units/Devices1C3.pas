@@ -1432,7 +1432,7 @@ begin
   end;
 end;
 
-procedure TDevice1C3.PrintFiscalLineFN32(const AName: WideString; AQuantity, APrice, ATotal, ADiscount: Double; ADepartment, ATax: Integer; ItemCodeData: string; AgentData: TAgentData; PurveyorData: TVendorData; AgentSign: WideString; APaymentTypeSign: Integer; APaymentItemSign: Integer; ACountryOfOrigin: WideString; ACustomsDeclaration: WideString; AExciseAmount: WideString; AAdditionalAttribute: WideString; AMeasurementUnit: WideString; ATaxValue: Currency; MeasureOfQuantity: Integer; FractionalQuantity: TFractionalQuantity; GoodCodeData: TGoodCodeData; MarkingCode: AnsiString; IndustryAttribute: TIndustryAttribute; AUseTaxSum: Boolean);
+procedure TDevice1C3.PrintFiscalLine32(Item: );
 
   function PaymentTypeSignToStr(AValue: Integer): string;
   begin

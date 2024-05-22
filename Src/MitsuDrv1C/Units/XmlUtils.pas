@@ -200,17 +200,17 @@ begin
       Exit;
     end;
   end;
-  saveSeparator := DecimalSeparator;
+  SaveSeparator := DecimalSeparator;
   try
     DecimalSeparator := '.';
     try
       Result := StrToFloat(Value);
     except
       Result := 0;
-      //raise Exception.Create('Wrong Double XML Value ' + AName + ': ' + Anode.Attributes[AName]);
+      raise Exception.Create('Wrong Double XML Value ' + AName + ': ' + Anode.Attributes[AName]);
     end;
   finally
-    DecimalSeparator := saveSeparator;
+    DecimalSeparator := SaveSeparator;
   end;
 end;
 

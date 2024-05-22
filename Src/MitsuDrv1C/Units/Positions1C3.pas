@@ -6,7 +6,7 @@ uses
   // VCL
   SysUtils, Classes, XMLDoc, XMLIntf, DateUtils, Variants,
   // This
-  XmlUtils, stringutils, LogFile;
+  XmlUtils, StringUtils, LogFile, GS1Util;
 
 type
   { TRequestKM }
@@ -140,7 +140,7 @@ type
   TIndustryAttribute = record
     Enabled: Boolean;
     IdentifierFOIV: string; // Идентификатор ФОИВ
-    DocumentDate: string;   // Дата документа основания в формате "DD.MM.YYYY"
+    DocumentDate: TDateTime;   // Дата документа основания в формате "DD.MM.YYYY"
     DocumentNumber: string;  // Номер документа основания
     AttributeValue: string; // Значение отраслевого реквизита
   end;
@@ -188,9 +188,9 @@ type
 
   TPosition1C3 = class;
 
-  { TPositions1C }
+  { TReceipt1C }
 
-  TPositions1C3 = class
+  TReceipt1C = class
   private
     FID: string;
     FBPOVersion: Integer;
@@ -242,7 +242,7 @@ type
     property CustomerEmail: WideString read FCustomerEmail;
     property CustomerPhone: WideString read FCustomerPhone;
     property AgentPhone: WideString read FAgentPhone;
-    property TaxVariant: Integer read FTaxationSystem;
+    property TaxationSystem: Integer read FTaxationSystem;
     property CashierVATIN: Widestring read FCashierINN;
     property CashierName: Widestring read FCashierName;
     property AgentData: TAgentData read FAgentData;
@@ -271,10 +271,10 @@ type
 
   TPosition1C3 = class
   private
-    FOwner: TPositions1C3;
-    procedure SetOwner(AOwner: TPositions1C3);
+    FOwner: TReceipt1C;
+    procedure SetOwner(AOwner: TReceipt1C);
   public
-    constructor Create(AOwner: TPositions1C3);
+    constructor Create(AOwner: TReceipt1C);
     destructor Destroy; override;
   end;
 
@@ -323,14 +323,12 @@ type
     FExciseAmount: WideString;
     FAdditionalAttribute: WideString;
     FMeasurementUnit: WideString;
-
     FIndustryAttribute: TIndustryAttribute;
     FMeasureQuantity: Integer;
     FFractionalQuantity: TFractionalQuantity;
     FGoodCodeData: TGoodCodeData;
     FMarkingCode: AnsiString;
     FMeasureOfQuantity: Integer;
-
   public
     property Name: WideString read FName;
     property Quantity: Double read FQuantity;
@@ -380,27 +378,62 @@ type
 
   TPositionsXmlReader = class
   private
-    FLogger: TLogFile;
-    FItems: TPositions1C3;
+    FLogger: ILogFile;
+    FItems: TReceipt1C;
+
     procedure LoadParameters(ANode: IXMLNode);
     procedure LoadPositions(ANode: IXMLNode; ANonFiscal: Boolean);
     procedure LoadFiscalString32(ANode: IXMLNode);
     procedure LoadNonFiscalString32(ANode: IXMLNode);
     procedure LoadBarcode32(ANode: IXMLNode);
   public
-    constructor Create(AItems: TPositions1C3; ALogger: TLogFile);
-    procedure ReadFromXML(AXML: WideString; ANonFiscal: Boolean);
+    constructor Create(AItems: TReceipt1C; ALogger: ILogFile);
+    procedure ReadFromXML(const AXML: WideString; ANonFiscal: Boolean);
 
-    property Logger: TLogFile read FLogger;
-    property Items: TPositions1C3 read FItems;
+    class procedure Load(ANode: IXMLNode; var R: TAgentData); overload;
+    class procedure Load(ANode: IXMLNode; var R: TVendorData); overload;
+    class procedure Load(ANode: IXMLNode; var R: TUserAttribute); overload;
+    class procedure Load(ANode: IXMLNode; var R: TCorrectionData); overload;
+    class procedure Load(ANode: IXMLNode; var R: TCustomerDetail); overload;
+    class procedure Load(ANode: IXMLNode; var R: TOperationalAttribute); overload;
+    class procedure Load(ANode: IXMLNode; var R: TIndustryAttribute); overload;
+    class procedure Load(ANode: IXMLNode; var R: TFractionalQuantity); overload;
+    class procedure Load(ANode: IXMLNode; var R: TGoodCodeData); overload;
+    class procedure Load(ANode: IXMLNode; var R: TPayments); overload;
+    class procedure Load(const XmlText: WideString; var R: TRequestKM); overload;
+
+    property Logger: ILogFile read FLogger;
+    property Items: TReceipt1C read FItems;
   end;
 
-procedure LoadFromXml(Positions: TPositions1C3; Logger: TLogFile;
+procedure LoadFromXml(Positions: TReceipt1C; Logger: ILogFile;
   const Xml: WideString; ANonFiscal: Boolean);
 
 implementation
 
-procedure LoadFromXml(Positions: TPositions1C3; Logger: TLogFile;
+function To1Cbool(AValue: Boolean): WideString;
+begin
+  if AValue then
+    Result := 'true'
+  else
+    Result := 'false';
+end;
+
+function QuantityToStr(AValue: Double): string;
+var
+  SaveSeparator: Char;
+begin
+  SaveSeparator := DecimalSeparator;
+  DecimalSeparator := '.';
+  try
+    Result := SysUtils.Format('%.*f', [6, AValue]);
+  finally
+    DecimalSeparator := SaveSeparator;
+  end;
+end;
+
+
+procedure LoadFromXml(Positions: TReceipt1C; Logger: ILogFile;
   const Xml: WideString; ANonFiscal: Boolean);
 var
   Reader: TPositionsXmlReader;
@@ -413,9 +446,83 @@ begin
   end;
 end;
 
+{ TGoodCodeData }
+
+function GetItemCodeData(const P: TGoodCodeData): TItemCodeData;
+begin
+  Result.MarkingType := -1;
+  Result.GTIN := '';
+  Result.SerialNumber := '';
+  Result.Barcode := '';
+
+  if P.EAN8 <> '' then
+  begin
+    Result.MarkingType := $4508;
+    Result.Barcode := P.EAN8;
+    Exit;
+  end;
+
+  if P.EAN13 <> '' then
+  begin
+    Result.MarkingType := $450D;
+    Result.Barcode := P.EAN13;
+    Exit;
+  end;
+
+  if P.ITF14 <> '' then
+  begin
+    Result.MarkingType := $490E;
+    Result.Barcode := P.ITF14;
+    Exit;
+  end;
+
+  if P.GS1_M <> '' then
+  begin
+    Result.MarkingType := $444D;
+    DecodeGS1_full(P.GS1_M, Result.GTIN, Result.SerialNumber);
+    AddTrailingSpaces(Result.SerialNumber, 13);
+    Exit;
+  end;
+
+  if P.MI <> '' then
+  begin
+    Result.MarkingType := $5246;
+    Result.Barcode := P.MI;
+    Exit;
+  end;
+
+  if P.EGAIS20 <> '' then
+  begin
+    Result.MarkingType := $C514;
+    Result.Barcode := P.EGAIS20;
+    Exit;
+  end;
+
+  if P.EGAIS30 <> '' then
+  begin
+    Result.MarkingType := $C51E;
+    Result.Barcode := P.EGAIS30;
+    Exit;
+  end;
+
+  if P.KMK <> '' then
+  begin
+    Result.MarkingType := 0;
+    Result.Barcode := P.KMK;
+    Exit;
+  end;
+
+  if P.NotIdentified <> '' then
+  begin
+    Result.MarkingType := 0;
+    Result.Barcode := P.NotIdentified;
+    Exit;
+  end;
+end;
+
 { TPositions1C }
 
-constructor TPositions1C3.Create;
+constructor TReceipt1C.Create;
 var
   Guid: TGUID;
 begin
@@ -427,47 +534,47 @@ begin
   FDeliveryRetail := False;
 end;
 
-destructor TPositions1C3.Destroy;
+destructor TReceipt1C.Destroy;
 begin
   Clear;
   FList.Free;
   inherited Destroy;
 end;
 
-procedure TPositions1C3.Clear;
+procedure TReceipt1C.Clear;
 begin
   while Count > 0 do
     Items[0].Free;
 end;
 
-function TPositions1C3.GetCount: Integer;
+function TReceipt1C.GetCount: Integer;
 begin
   Result := FList.Count;
 end;
 
-function TPositions1C3.GetItem(Index: Integer): TPosition1C3;
+function TReceipt1C.GetItem(Index: Integer): TPosition1C3;
 begin
   Result := FList[Index];
 end;
 
-procedure TPositions1C3.InsertItem(AItem: TPosition1C3);
+procedure TReceipt1C.InsertItem(AItem: TPosition1C3);
 begin
   FList.Add(AItem);
   AItem.FOwner := Self;
 end;
 
-procedure TPositions1C3.RemoveItem(AItem: TPosition1C3);
+procedure TReceipt1C.RemoveItem(AItem: TPosition1C3);
 begin
   AItem.FOwner := nil;
   FList.Remove(AItem);
 end;
 
-function TPositions1C3.Add: TPosition1C3;
+function TReceipt1C.Add: TPosition1C3;
 begin
   Result := TPosition1C3.Create(Self);
 end;
 
-function TPositions1C3.TotalTaxSum: Currency;
+function TReceipt1C.TotalTaxSum: Currency;
 var
   Position: TPosition1C3;
   i: Integer;
@@ -482,7 +589,7 @@ end;
 
 { TPosition1C }
 
-constructor TPosition1C3.Create(AOwner: TPositions1C3);
+constructor TPosition1C3.Create(AOwner: TReceipt1C);
 begin
   inherited Create;
   SetOwner(AOwner);
@@ -494,7 +601,7 @@ begin
   inherited Destroy;
 end;
 
-procedure TPosition1C3.SetOwner(AOwner: TPositions1C3);
+procedure TPosition1C3.SetOwner(AOwner: TReceipt1C);
 begin
   if AOwner <> FOwner then
   begin
@@ -505,501 +612,23 @@ begin
   end;
 end;
 
-
-(*
-{ TCustomerDetail }
-
-procedure TCustomerDetail.Load(const ANode: IXMLNode);
-var
-  Node: IXMLNode;
-begin
-  Enabled := False;
-  Node := ANode.ChildNodes.FindNode('CustomerDetail');
-  if Node = nil then
-    Exit;
-
-  Enabled := HasAttribute(Node, 'Info') or HasAttribute(Node, 'INN') or HasAttribute(Node, 'DateOfBirth') or HasAttribute(Node, 'Citizenship') or HasAttribute(Node, 'DocumentTypeCode') or HasAttribute(Node, 'DocumentData') or HasAttribute(Node, 'Address');
-  if not Enabled then
-    Exit;
-  Info := LoadString(Node, 'Info', False);
-  INN := LoadString(Node, 'INN', False);
-  DateOfBirthEnabled := HasAttribute(Node, 'DateOfBirth');
-  if DateOfBirthEnabled then
-    DateOfBirth := LoadDateTime(Node, 'DateOfBirth', False);
-  Citizenship := LoadString(Node, 'Citizenship', False);
-  DocumentTypeCodeEnabled := HasAttribute(Node, 'DocumentTypeCode');
-  if DocumentTypeCodeEnabled then
-    DocumentTypeCode := LoadInteger(Node, 'DocumentTypeCode', False);
-  DocumentData := LoadString(Node, 'DocumentData', False);
-  Address := LoadString(Node, 'Address', False);
-end;
-
-{ TOperationalAttribute }
-
-procedure TOperationalAttribute.Load(const ANode: IXMLNode);
-var
-  Node: IXMLNode;
-begin
-  Enabled := False;
-  Node := ANode.ChildNodes.FindNode('OperationalAttribute');
-  if Node = nil then
-    Exit;
-  Enabled := HasAttribute(Node, 'DateTime') or HasAttribute(Node, 'OperationID') or HasAttribute(Node, 'OperationData');
-  if not Enabled then
-    Exit;
-  DateTime := LoadDateTime(Node, 'DateTime', False);
-  OperationID := LoadInteger(Node, 'OperationID', False);
-  OperationData := LoadString(Node, 'OperationData', False);
-end;
-
-{ TIndustryAttribute }
-
-procedure TIndustryAttribute.Load(const ANode: IXMLNode);
-var
-  Node: IXMLNode;
-begin
-  Enabled := False;
-  Node := ANode.ChildNodes.FindNode('IndustryAttribute');
-  if Node = nil then
-    Exit;
-  Enabled := HasAttribute(Node, 'IdentifierFOIV') or HasAttribute(Node, 'DocumentDate') or HasAttribute(Node, 'DocumentNumber') or HasAttribute(Node, 'AttributeValue');
-  if not Enabled then
-    Exit;
-
-  IdentifierFOIV := LoadString(Node, 'IdentifierFOIV', False);
-  DocumentDate := LoadString(Node, 'DocumentDate', False); //LoadDateTime(Node, 'DocumentDate', False);
-  DocumentNumber := LoadString(Node, 'DocumentNumber', False);
-  AttributeValue := LoadString(Node, 'AttributeValue', False);
-
-  if (IdentifierFOIV = '') and (DocumentNumber = '') and (AttributeValue = '') then
-    Enabled := False;
-end;
-
-{ TUserAttribute }
-
-procedure TUserAttribute.Load(ANode: IXMLNode);
-var
-  Node: IXMLNode;
-begin
-  Enabled := False;
-  Node := ANode.ChildNodes.FindNode('UserAttribute');
-  if Node = nil then
-    Exit;
-  Enabled := True;
-  Name := LoadString(Node, 'Name', True);
-  Value := LoadString(Node, 'Value', True);
-  if (Name = '') and (Value = '') then
-    Enabled := False;
-end;
-
-{ TVendorData }
-
-procedure TVendorData.Load(ANode: IXMLNode);
-var
-  Node: IXMLNode;
-begin
-  Enabled := False;
-  Node := ANode.ChildNodes.FindNode('VendorData');
-  if Node = nil then
-    Exit;
-  Enabled := True;
-
-  VendorPhone := LoadString(Node, 'VendorPhone', False);
-  VendorName := LoadString(Node, 'VendorName', False);
-  VendorINN := LoadString(Node, 'VendorINN', False);
-  if (VendorPhone = '') and (VendorName = '') and (VendorINN = '') then
-    Enabled := False;
-end;
-
-
-{ TAgentData }
-
-procedure TAgentData.Load(ANode: IXMLNode);
-var
-  Node: IXMLNode;
-begin
-  Enabled := False;
-  Node := ANode.ChildNodes.FindNode('AgentData');
-  if Node = nil then
-    Exit;
-  Enabled := True;
-
-  AgentOperation := LoadString(Node, 'AgentOperation', False);
-  AgentPhone := LoadString(Node, 'AgentPhone', False);
-  PaymentProcessorPhone := LoadString(Node, 'PaymentProcessorPhone', False);
-  AcquirerOperatorPhone := LoadString(Node, 'AcquirerOperatorPhone', False);
-  AcquirerOperatorName := LoadString(Node, 'AcquirerOperatorName', False);
-  AcquirerOperatorAddress := LoadString(Node, 'AcquirerOperatorAddress', False);
-  AcquirerOperatorINN := LoadString(Node, 'AcquirerOperatorINN', False);
-  if (AgentOperation = '') and (AgentPhone = '') and (PaymentProcessorPhone = '') and (AcquirerOperatorPhone = '') and (AcquirerOperatorName = '') and (AcquirerOperatorAddress = '') and (AcquirerOperatorINN = '') then
-    Enabled := False;
-end;
-
-{ TCorrectionData }
-
-procedure TCorrectionData.Load(ANode: IXMLNode);
-var
-  Node: IXMLNode;
-begin
-  Enabled := False;
-  Node := ANode.ChildNodes.FindNode('CorrectionData');
-  if Node = nil then
-    Exit;
-  Enabled := True;
-
-  AType := LoadInteger(Node, 'Type', False);
-  Description := LoadString(Node, 'Description', False);
-  Date := LoadDateTime(Node, 'Date', False);
-  Number := LoadString(Node, 'Number', False);
-end;
-
-{ TPayments }
-
-procedure TPayments.Load(ANode: IXMLNode);
-begin
-  GlobalLogger.Debug('LoadPayments');
-  Cash := LoadDecimal(ANode, 'Cash', False);
-  GlobalLogger.Debug(Format('Cash %.2f', [Cash]));
-  ElectronicPayment := LoadDecimal(ANode, 'ElectronicPayment', True);
-  GlobalLogger.Debug(Format('ElectronicPayment %.2f', [ElectronicPayment]));
-  PrePayment := LoadDecimal(ANode, 'PrePayment', True);
-  PostPayment := LoadDecimal(ANode, 'PostPayment', True);
-  Barter := LoadDecimal(ANode, 'Barter', True);
-end;
-
-
-
-
-
-(*
-
-Driver.FNOperation;
-Driver.MarkingType := $4508; //EAN-8
-Driver.BarCode := '46198488';
-Driver.FNSendItemCodeData;
-//...
-Driver.FNOperation;
-Driver.MarkingType := $450D; //EAN-13
-Driver.BarCode := '4606203090785';
-Driver.FNSendItemCodeData;
-//...
-Driver.FNOperation;
-Driver.MarkingType := $490E; //ITF-14
-Driver.BarCode := '14601234567890';
-Driver.FNSendItemCodeData;
-//...
-Driver.FNOperation;
-Driver.MarkingType := $444D; //Data Matrix
-Driver.GTIN := '04600439931256';
-Driver.SerialNumber := 'JgXJ5.T112000';
-Driver.FNSendItemCodeData;
-//...
-Driver.FNOperation;
-Driver.MarkingType := $444D; //Data Matrix 2
-Driver.GTIN := '04604060006000';
-Driver.SerialNumber := 'N4N57RSCBUZTQ';
-Driver.FNSendItemCodeData;
-//...
-Driver.FNOperation;
-Driver.MarkingType := $444D; //Data Matrix 3
-Driver.GTIN := '00000046198488';
-Driver.SerialNumber := 'X?io+qCABm8 '; // два пробела в конце (до 13 симв.)
-Driver.FNSendItemCodeData;
-//...
-Driver.FNOperation;
-Driver.MarkingType := $5246; //Мех
-Driver.BarCode := 'RU-401301-AAA0277031';
-Driver.FNSendItemCodeData;
-//...
-Driver.FNOperation;
-Driver.MarkingType := $C514; //ЕГАИС 2.0
-Driver.BarCode := 'NU5DBKYDOT17ID980726019';
-Driver.FNSendItemCodeData;
-//...
-Driver.FNOperation;
-Driver.MarkingType := $C51E; //ЕГАИС 3.0
-Driver.BarCode := '13622200005881;
-Driver.FNSendItemCodeData;
-
-*)
-
-(*
-{ TGoodCodeData }
-
-procedure TGoodCodeData.GetItemCodeData;
-begin
-  ItemCodeData.MarkingType := -1;
-  ItemCodeData.GTIN := '';
-  ItemCodeData.SerialNumber := '';
-  ItemCodeData.Barcode := '';
-
-  if EAN8 <> '' then
-  begin
-    ItemCodeData.MarkingType := $4508;
-    ItemCodeData.Barcode := EAN8;
-    Exit;
-  end;
-
-  if EAN13 <> '' then
-  begin
-    ItemCodeData.MarkingType := $450D;
-    ItemCodeData.Barcode := EAN13;
-    Exit;
-  end;
-
-  if ITF14 <> '' then
-  begin
-    ItemCodeData.MarkingType := $490E;
-    ItemCodeData.Barcode := ITF14;
-    Exit;
-  end;
-
-  if GS1_M <> '' then
-  begin
-    ItemCodeData.MarkingType := $444D;
-    DecodeGS1_full(GS1_M, ItemCodeData.GTIN, ItemCodeData.SerialNumber);
-    AddFinalSpaces(ItemCodeData.SerialNumber, 13);
-    Exit;
-  end;
-
-  if MI <> '' then
-  begin
-    ItemCodeData.MarkingType := $5246;
-    ItemCodeData.Barcode := MI;
-    Exit;
-  end;
-
-  if EGAIS20 <> '' then
-  begin
-    ItemCodeData.MarkingType := $C514;
-    ItemCodeData.Barcode := EGAIS20;
-    Exit;
-  end;
-
-  if EGAIS30 <> '' then
-  begin
-    ItemCodeData.MarkingType := $C51E;
-    ItemCodeData.Barcode := EGAIS30;
-    Exit;
-  end;
-
-  if KMK <> '' then
-  begin
-    ItemCodeData.MarkingType := 0;
-    ItemCodeData.Barcode := KMK;
-    Exit;
-  end;
-
-  if NotIdentified <> '' then
-  begin
-    ItemCodeData.MarkingType := 0;
-    ItemCodeData.Barcode := NotIdentified;
-    Exit;
-  end;
-end;
-
-procedure TGoodCodeData.Load(const ANode: IXMLNode);
-var
-  Node: IXMLNode;
-begin
-  Enabled := False;
-  Node := ANode.ChildNodes.FindNode('GoodCodeData');
-  if Node = nil then
-    Exit;
-  Enabled := True;
-
-  NotIdentified := DecodeBase64(LoadString(Node, 'NotIdentified', False));
-  EAN8 := DecodeBase64(LoadString(Node, 'EAN8', False));
-  EAN13 := DecodeBase64(LoadString(Node, 'EAN13', False));
-  ITF14 := DecodeBase64(LoadString(Node, 'ITF14', False));
-  GS1_0 := DecodeBase64(LoadString(Node, 'GS1.0', False));
-  GS1_M := DecodeBase64(LoadString(Node, 'GS1.M', False));
-  KMK := DecodeBase64(LoadString(Node, 'KMK', False));
-  MI := LoadString(Node, 'MI', False);
-  EGAIS20 := DecodeBase64(LoadString(Node, 'EGAIS20', False));
-  EGAIS30 := DecodeBase64(LoadString(Node, 'EGAIS30', False));
-  F1 := DecodeBase64(LoadString(Node, 'F1', False));
-  F2 := DecodeBase64(LoadString(Node, 'F2', False));
-  F3 := DecodeBase64(LoadString(Node, 'F3', False));
-  F4 := DecodeBase64(LoadString(Node, 'F4', False));
-  F5 := DecodeBase64(LoadString(Node, 'F5', False));
-  F6 := DecodeBase64(LoadString(Node, 'F6', False));
-  GTIN := DecodeBase64(LoadString(Node, 'GTIN', False));
-end;
-
-{ TFractionalQuantity }
-
-procedure TFractionalQuantity.Load(const ANode: IXMLNode);
-var
-  Node: IXMLNode;
-begin
-  Enabled := False;
-  Node := ANode.ChildNodes.FindNode('FractionalQuantity');
-  if Node = nil then
-    Exit;
-  Enabled := True;
-
-  Numerator := LoadInteger(Node, 'Numerator', False);
-  Denominator := LoadInteger(Node, 'Denominator', False);
-end;
-
-function To1Cbool(AValue: Boolean): WideString;
-begin
-  if AValue then
-    Result := 'true'
-  else
-    Result := 'false';
-end;
-
-function QuantityToStr(AValue: Double): string;
-var
-  saveSeparator: Char;
-begin
-  saveSeparator := FormatSettings.DecimalSeparator;
-  FormatSettings.DecimalSeparator := '.';
-  try
-    Result := System.SysUtils.Format('%.*f', [6, AValue]);
-  finally
-    FormatSettings.DecimalSeparator := saveSeparator;
-  end;
-end;
-
-function RequestKMToXML(const AGUID: string; const AWaitForResult: Boolean; const AMarkingCode: AnsiString; const APlannedStatus: Integer; const AQuantity: Double; const AMeasureOfQuantity: string; const AFractionalQuantity: Boolean; const ANumerator: Integer; const ADenominator: Integer): string;
-var
-  Xml: IXMLDocument;
-  Node: IXMLNode;
-begin
-  Xml := TXMLDocument.Create(nil);
-  try
-    Xml.Active := True;
-    Xml.Version := '1.0';
-    Xml.Encoding := 'UTF-8';
-    Xml.Options := Xml.Options + [doNodeAutoIndent];
-    Node := Xml.AddChild('Parameters');
-
-    Node.Attributes['GUID'] := AGUID;
-    Node.Attributes['WaitForResult'] := To1Cbool(AWaitForResult);
-    Node.Attributes['MarkingCode'] := AMarkingCode;
-    Node.Attributes['PlannedStatus'] := APlannedStatus.ToString;
-    Node.Attributes['Quantity'] := QuantityToStr(AQuantity);
-    if AMeasureOfQuantity <> '' then
-      Node.Attributes['MeasureOfQuantity'] := AMeasureOfQuantity;
-    if AFractionalQuantity then
-    begin
-      Node := Node.AddChild('FractionalQuantity');
-      Node.Attributes['Numerator'] := ANumerator.ToString;
-      Node.Attributes['Denominator'] := ADenominator.ToString;
-    end;
-    Result := Xml.XML.Text;
-  finally
-    Xml := nil;
-  end;
-end;
-
-function RequestKMResultToXML(const AChecking: Boolean; const ACheckingResult: Boolean): string;
-var
-  Xml: IXMLDocument;
-  Node: IXMLNode;
-begin
-  Xml := TXMLDocument.Create(nil);
-  try
-    Xml.Active := True;
-    Xml.Version := '1.0';
-    Xml.Encoding := 'UTF-8';
-    Xml.Options := Xml.Options + [doNodeAutoIndent];
-    Node := Xml.AddChild('RequestKMResult');
-    Node.Attributes['Checking'] := To1Cbool(AChecking);
-    Node.Attributes['CheckingResult'] := To1Cbool(ACheckingResult);
-    Result := Xml.XML.Text;
-  finally
-    Xml := nil;
-  end;
-end;
-
-function ProcessingKMResultToXML(const AGUID: string; const AResult: Boolean; const AResultCode: Integer; const AHasStatusInfo: Boolean; const AStatusInfo: Integer; const AHandleCode: Integer): string;
-var
-  Xml: IXMLDocument;
-  Node: IXMLNode;
-begin
-  Xml := TXMLDocument.Create(nil);
-  try
-    Xml.Active := True;
-    Xml.Version := '1.0';
-    Xml.Encoding := 'UTF-8';
-    Xml.Options := Xml.Options + [doNodeAutoIndent];
-    Node := Xml.AddChild('ProcessingKMResult');
-    Node.Attributes['GUID'] := AGUID;
-    Node.Attributes['Result'] := To1Cbool(AResult);
-    Node.Attributes['ResultCode'] := AResultCode.ToString;
-    if AHasStatusInfo then
-      Node.Attributes['StatusInfo'] := AStatusInfo.ToString;
-    Node.Attributes['HandleCode'] := AHandleCode.ToString;
-    Result := Xml.XML.Text;
-  finally
-    Xml := nil;
-  end;
-end;
-
-{ TRequestKM }
-
-procedure TRequestKM.Load(AValue: WideString);
-var
-  Xml: IXMLDocument;
-  Node: IXMLNode;
-begin
-  Xml := TXMLDocument.Create(nil);
-  try
-    Xml.Active := True;
-    Xml.Version := '1.0';
-    Xml.Encoding := 'UTF-8';
-    Xml.Options := Xml.Options + [doNodeAutoIndent];
-    Xml.LoadFromXML(AValue);
-    Node := Xml.ChildNodes.FindNode('RequestKM');
-    if Node = nil then
-      raise Exception.Create('Wrong XML RequestKM Table');
-    GUID := LoadString(Node, 'GUID', False);
-    WaitForResult := LoadBool(Node, 'WaitForResult', False);
-    MarkingCode := DecodeBase64(LoadString(Node, 'MarkingCode', True));
-    PlannedStatus := LoadInteger(Node, 'PlannedStatus', True);
-    HasQuantity := HasAttribute(Node, 'Quantity');
-    Quantity := LoadDouble(Node, 'Quantity', False);
-    HasQuantity := HasAttribute(Node, 'MeasureOfQuantity');
-    HasMeasureOfQuantity := HasAttribute(Node, 'MeasureOfQuantity');
-    MeasureOfQuantity := LoadInteger(Node, 'MeasureOfQuantity', False);
-    NotSendToServer := LoadBool(Node, 'NotSendToServer', False);
-    FractionalQuantity := False;
-    Node := Node.ChildNodes.FindNode('FractionalQuantity');
-    if Node <> nil then
-    begin
-      FractionalQuantity := True;
-      Numerator := LoadInteger(Node, 'Numerator', False);
-      Denominator := LoadInteger(Node, 'Denominator', False);
-    end;
-  finally
-    Xml := nil;
-  end;
-end;
-*)
-
-
 { TPositionsXmlReader }
 
-constructor TPositionsXmlReader.Create(AItems: TPositions1C3; ALogger: TLogFile);
+constructor TPositionsXmlReader.Create(AItems: TReceipt1C; ALogger: ILogFile);
 begin
   inherited Create;
   FItems := AItems;
   FLogger := ALogger;
 end;
 
-
-procedure TPositionsXmlReader.ReadFromXML(AXML: WideString; ANonFiscal: Boolean);
+procedure TPositionsXmlReader.ReadFromXML(const AXML: WideString; ANonFiscal: Boolean);
 var
   Xml: IXMLDocument;
   Node: IXMLNode;
   i: Integer;
   Doc: IXMLNode;
 begin
-  Logger.Debug('TPositions1C3.ReadFromXML');
+  Logger.Debug('TReceipt1C.ReadFromXML');
   Logger.Debug('ANonFiscal = ' + BoolToStr(ANonFiscal));
   Xml := TXMLDocument.Create(nil);
   try
@@ -1014,6 +643,7 @@ begin
       Doc := Xml.ChildNodes.FindNode('CheckPackage');
     if Doc = nil then
       Exit;
+
     for i := 0 to Doc.ChildNodes.Count - 1 do
     begin
       Node := Doc.ChildNodes.Nodes[i];
@@ -1031,7 +661,7 @@ begin
       end;
       if Node.NodeName = 'Payments' then
       begin
-        //FPayments.Load(Node); !!
+        Load(Node, Items.FPayments);
         Continue;
       end;
     end;
@@ -1041,10 +671,13 @@ begin
 end;
 
 (*
-
-<Parameters PaymentType="1" TaxVariant="0" CashierName="Казакова Н.А." SenderEmail="info@1c.ru" CustomerEmail="" CustomerPhone="" AgentSign="2" AddressSettle="г.Москва, Дмитровское ш. д.9">
-		<AgentData PayingAgentOperation="operation" PayingAgentPhone="tel" ReceivePaymentsOperatorPhone="tel" MoneyTransferOperatorPhone="tel" MoneyTransferOperatorName="name" MoneyTransferOperatorAddress="addr"/>
-		<PurveyorData PurveyorPhone="12343332" PurveyorName="123fffff" PurveyorVATIN="123456789"/>
+<Parameters PaymentType="1" TaxVariant="0" CashierName="Казакова Н.А."
+  SenderEmail="info@1c.ru" CustomerEmail="" CustomerPhone="" AgentSign="2"
+  AddressSettle="г.Москва, Дмитровское ш. д.9">
+  <AgentData PayingAgentOperation="operation" PayingAgentPhone="tel"
+  ReceivePaymentsOperatorPhone="tel" MoneyTransferOperatorPhone="tel"
+  MoneyTransferOperatorName="name" MoneyTransferOperatorAddress="addr"/>
+  <PurveyorData PurveyorPhone="12343332" PurveyorName="123fffff" PurveyorVATIN="123456789"/>
 	</Parameters>
 *)
 
@@ -1065,16 +698,14 @@ begin
   FItems.FSaleLocation := LoadString(ANode, 'SaleLocation', False);
   FItems.FAgentType := LoadString(ANode, 'AgentType', False);
   FItems.FAdditionalAttribute := LoadString(ANode, 'AdditionalAttribute', False);
-  //FCorrectionData.Load(ANode); !!
-  //FAgentData.Load(ANode);
-  //FVendorData.Load(ANode);
-  //FUserAttribute.Load(ANode);
-
-  // 34
-  //FCustomerDetail.Load(ANode);
-  //FOperationalAttribute.Load(ANode);
-  //FIndustryAttribute.Load(ANode);
-  //FAutomatNumber := LoadString(ANode, 'AutomatNumber', False);
+  //FAutomaticNumber := LoadString(ANode, 'AutomatNumber', False);
+  Load(ANode, FItems.FCorrectionData);
+  Load(ANode, FItems.FAgentData);
+  Load(ANode, FItems.FVendorData);
+  Load(ANode, FItems.FUserAttribute);
+  Load(ANode, FItems.FCustomerDetail);
+  Load(ANode, FItems.FOperationalAttribute);
+  Load(ANode, FItems.FIndustryAttribute);
 end;
 
 procedure TPositionsXmlReader.LoadPositions(ANode: IXMLNode; ANonFiscal: Boolean);
@@ -1177,6 +808,7 @@ begin
     Item.FDiscountSum := 0
   else
     Item.FDiscountSum := LoadDouble(ANode, 'DiscountAmount', True);
+
   Item.FSignMethodCalculation := LoadIntegerDef(ANode, 'PaymentMethod', False, 4);
   Item.FSignCalculationObject := LoadIntegerDef(ANode, 'CalculationSubject', False, 1);
   T := LoadString(ANode, 'VATRate', True);
@@ -1189,14 +821,12 @@ begin
   Item.FCustomsDeclaration := LoadString(ANode, 'CustomsDeclaration', False);
   Item.FAdditionalAttribute := LoadString(ANode, 'AdditionalAttribute', False);
   Item.FMeasurementUnit := LoadString(ANode, 'MeasurementUnit', False);
-
-(*
-  Item.FIndustryAttribute.Load(ANode); !!
+  Load(ANode, Item.FIndustryAttribute);
   Item.FMeasureOfQuantity := LoadInteger(ANode, 'MeasureOfQuantity', False);
-  Item.FFractionalQuantity.Load(ANode);
-  Item.FGoodCodeData.Load(ANode);
+  Load(ANode, Item.FFractionalQuantity);
+  Load(ANode, Item.FGoodCodeData);
   Item.FMarkingCode := DecodeBase64(LoadString(ANode, 'MarkingCode', False));
-  Item.FIndustryAttribute.Load(ANode);
+  Load(ANode, Item.FIndustryAttribute);
 
   // Код маркировки
   Item.FMarking := '';
@@ -1224,7 +854,13 @@ begin
       Item.FAgentData.AcquirerOperatorAddress := LoadString(Node, 'AcquirerOperatorAddress', False);
       Item.FAgentData.AcquirerOperatorINN := LoadString(Node, 'AcquirerOperatorINN', False);
 
-      if (Item.FAgentData.AgentOperation = '') and (Item.FAgentData.AgentPhone = '') and (Item.FAgentData.PaymentProcessorPhone = '') and (Item.FAgentData.AcquirerOperatorPhone = '') and (Item.FAgentData.AcquirerOperatorName = '') and (Item.FAgentData.AcquirerOperatorAddress = '') and (Item.FAgentData.AcquirerOperatorINN = '') then
+      if (Item.FAgentData.AgentOperation = '') and
+        (Item.FAgentData.AgentPhone = '') and
+        (Item.FAgentData.PaymentProcessorPhone = '') and
+        (Item.FAgentData.AcquirerOperatorPhone = '') and
+        (Item.FAgentData.AcquirerOperatorName = '') and
+        (Item.FAgentData.AcquirerOperatorAddress = '') and
+        (Item.FAgentData.AcquirerOperatorINN = '') then
         Item.FAgentData.Enabled := False;
     end;
   end;
@@ -1244,9 +880,331 @@ begin
         Item.FVendorData.Enabled := False;
     end;
   end;
-*)
   Logger.Debug('LoadFiscalString32.4');
 end;
+
+class procedure TPositionsXmlReader.Load(ANode: IXMLNode; var R: TCorrectionData);
+var
+  Node: IXMLNode;
+begin
+  R.Enabled := False;
+  Node := ANode.ChildNodes.FindNode('CorrectionData');
+  if Node = nil then
+    Exit;
+
+  R.Enabled := True;
+  R.AType := LoadInteger(Node, 'Type', False);
+  R.Description := LoadString(Node, 'Description', False);
+  R.Date := LoadDateTime(Node, 'Date', False);
+  R.Number := LoadString(Node, 'Number', False);
+end;
+
+class procedure TPositionsXmlReader.Load(ANode: IXMLNode; var R: TAgentData);
+var
+  Node: IXMLNode;
+begin
+  R.Enabled := False;
+  Node := ANode.ChildNodes.FindNode('AgentData');
+  if Node = nil then
+    Exit;
+
+  R.Enabled := True;
+  R.AgentOperation := LoadString(Node, 'AgentOperation', False);
+  R.AgentPhone := LoadString(Node, 'AgentPhone', False);
+  R.PaymentProcessorPhone := LoadString(Node, 'PaymentProcessorPhone', False);
+  R.AcquirerOperatorPhone := LoadString(Node, 'AcquirerOperatorPhone', False);
+  R.AcquirerOperatorName := LoadString(Node, 'AcquirerOperatorName', False);
+  R.AcquirerOperatorAddress := LoadString(Node, 'AcquirerOperatorAddress', False);
+  R.AcquirerOperatorINN := LoadString(Node, 'AcquirerOperatorINN', False);
+  if (R.AgentOperation = '') and
+    (R.AgentPhone = '') and
+    (R.PaymentProcessorPhone = '') and
+    (R.AcquirerOperatorPhone = '') and
+    (R.AcquirerOperatorName = '') and
+    (R.AcquirerOperatorAddress = '') and
+    (R.AcquirerOperatorINN = '') then
+    R.Enabled := False;
+end;
+
+class procedure TPositionsXmlReader.Load(ANode: IXMLNode; var R: TVendorData);
+var
+  Node: IXMLNode;
+begin
+  R.Enabled := False;
+  Node := ANode.ChildNodes.FindNode('VendorData');
+  if Node = nil then
+    Exit;
+
+  R.Enabled := True;
+  R.VendorPhone := LoadString(Node, 'VendorPhone', False);
+  R.VendorName := LoadString(Node, 'VendorName', False);
+  R.VendorINN := LoadString(Node, 'VendorINN', False);
+  if (R.VendorPhone = '') and (R.VendorName = '') and (R.VendorINN = '') then
+    R.Enabled := False;
+end;
+
+class procedure TPositionsXmlReader.Load(ANode: IXMLNode; var R: TUserAttribute);
+var
+  Node: IXMLNode;
+begin
+  R.Enabled := False;
+  Node := ANode.ChildNodes.FindNode('UserAttribute');
+  if Node = nil then
+    Exit;
+
+  R.Enabled := True;
+  R.Name := LoadString(Node, 'Name', True);
+  R.Value := LoadString(Node, 'Value', True);
+  if (R.Name = '') and (R.Value = '') then
+    R.Enabled := False;
+end;
+
+class procedure TPositionsXmlReader.Load(ANode: IXMLNode; var R: TCustomerDetail);
+var
+  Node: IXMLNode;
+begin
+  R.Enabled := False;
+  Node := ANode.ChildNodes.FindNode('CustomerDetail');
+  if Node = nil then
+    Exit;
+
+  R.Enabled := HasAttribute(Node, 'Info') or HasAttribute(Node, 'INN') or
+    HasAttribute(Node, 'DateOfBirth') or HasAttribute(Node, 'Citizenship') or
+    HasAttribute(Node, 'DocumentTypeCode') or HasAttribute(Node, 'DocumentData')
+    or HasAttribute(Node, 'Address');
+  if not R.Enabled then
+    Exit;
+
+  R.Info := LoadString(Node, 'Info', False);
+  R.INN := LoadString(Node, 'INN', False);
+  R.DateOfBirthEnabled := HasAttribute(Node, 'DateOfBirth');
+  if R.DateOfBirthEnabled then
+    R.DateOfBirth := LoadDateTime(Node, 'DateOfBirth', False);
+  R.Citizenship := LoadString(Node, 'Citizenship', False);
+  R.DocumentTypeCodeEnabled := HasAttribute(Node, 'DocumentTypeCode');
+  if R.DocumentTypeCodeEnabled then
+    R.DocumentTypeCode := LoadInteger(Node, 'DocumentTypeCode', False);
+  R.DocumentData := LoadString(Node, 'DocumentData', False);
+  R.Address := LoadString(Node, 'Address', False);
+end;
+
+class procedure TPositionsXmlReader.Load(ANode: IXMLNode; var R: TOperationalAttribute);
+var
+  Node: IXMLNode;
+begin
+  R.Enabled := False;
+  Node := ANode.ChildNodes.FindNode('OperationalAttribute');
+  if Node = nil then
+    Exit;
+
+  R.Enabled := HasAttribute(Node, 'DateTime') or
+    HasAttribute(Node, 'OperationID') or HasAttribute(Node, 'OperationData');
+  if not R.Enabled then
+    Exit;
+
+  R.DateTime := LoadDateTime(Node, 'DateTime', False);
+  R.OperationID := LoadInteger(Node, 'OperationID', False);
+  R.OperationData := LoadString(Node, 'OperationData', False);
+end;
+
+class procedure TPositionsXmlReader.Load(ANode: IXMLNode; var R: TIndustryAttribute);
+var
+  Node: IXMLNode;
+begin
+  R.Enabled := False;
+  Node := ANode.ChildNodes.FindNode('IndustryAttribute');
+  if Node = nil then
+    Exit;
+
+  R.Enabled := HasAttribute(Node, 'IdentifierFOIV') or
+    HasAttribute(Node, 'DocumentDate') or
+    HasAttribute(Node, 'DocumentNumber') or
+    HasAttribute(Node, 'AttributeValue');
+
+  if not R.Enabled then
+    Exit;
+
+  R.IdentifierFOIV := LoadString(Node, 'IdentifierFOIV', False);
+  R.DocumentDate := LoadDateTime(Node, 'DocumentDate', False);
+  R.DocumentNumber := LoadString(Node, 'DocumentNumber', False);
+  R.AttributeValue := LoadString(Node, 'AttributeValue', False);
+  if (R.IdentifierFOIV = '') and (R.DocumentNumber = '') and (R.AttributeValue = '') then
+    R.Enabled := False;
+end;
+
+class procedure TPositionsXmlReader.Load(ANode: IXMLNode; var R: TFractionalQuantity);
+var
+  Node: IXMLNode;
+begin
+  R.Enabled := False;
+  Node := ANode.ChildNodes.FindNode('FractionalQuantity');
+  if Node = nil then
+    Exit;
+
+  R.Enabled := True;
+  R.Numerator := LoadInteger(Node, 'Numerator', False);
+  R.Denominator := LoadInteger(Node, 'Denominator', False);
+end;
+
+class procedure TPositionsXmlReader.Load(ANode: IXMLNode; var R: TGoodCodeData);
+var
+  Node: IXMLNode;
+begin
+  R.Enabled := False;
+  Node := ANode.ChildNodes.FindNode('GoodCodeData');
+  if Node = nil then
+    Exit;
+
+  R.Enabled := True;
+  R.NotIdentified := DecodeBase64(LoadString(Node, 'NotIdentified', False));
+  R.EAN8 := DecodeBase64(LoadString(Node, 'EAN8', False));
+  R.EAN13 := DecodeBase64(LoadString(Node, 'EAN13', False));
+  R.ITF14 := DecodeBase64(LoadString(Node, 'ITF14', False));
+  R.GS1_0 := DecodeBase64(LoadString(Node, 'GS1.0', False));
+  R.GS1_M := DecodeBase64(LoadString(Node, 'GS1.M', False));
+  R.KMK := DecodeBase64(LoadString(Node, 'KMK', False));
+  R.MI := LoadString(Node, 'MI', False);
+  R.EGAIS20 := DecodeBase64(LoadString(Node, 'EGAIS20', False));
+  R.EGAIS30 := DecodeBase64(LoadString(Node, 'EGAIS30', False));
+  R.F1 := DecodeBase64(LoadString(Node, 'F1', False));
+  R.F2 := DecodeBase64(LoadString(Node, 'F2', False));
+  R.F3 := DecodeBase64(LoadString(Node, 'F3', False));
+  R.F4 := DecodeBase64(LoadString(Node, 'F4', False));
+  R.F5 := DecodeBase64(LoadString(Node, 'F5', False));
+  R.F6 := DecodeBase64(LoadString(Node, 'F6', False));
+  R.GTIN := DecodeBase64(LoadString(Node, 'GTIN', False));
+end;
+
+class procedure TPositionsXmlReader.Load(const XmlText: WideString; var R: TRequestKM);
+var
+  Node: IXMLNode;
+  Xml: IXMLDocument;
+begin
+  Xml := TXMLDocument.Create(nil);
+  try
+    Xml.Active := True;
+    Xml.Version := '1.0';
+    Xml.Encoding := 'UTF-8';
+    Xml.Options := Xml.Options + [doNodeAutoIndent];
+    Xml.LoadFromXML(XmlText);
+    Node := Xml.ChildNodes.FindNode('RequestKM');
+    if Node = nil then
+      raise Exception.Create('Wrong XML RequestKM Table');
+
+    R.GUID := LoadString(Node, 'GUID', False);
+    R.WaitForResult := LoadBool(Node, 'WaitForResult', False);
+    R.MarkingCode := DecodeBase64(LoadString(Node, 'MarkingCode', True));
+    R.PlannedStatus := LoadInteger(Node, 'PlannedStatus', True);
+    R.HasQuantity := HasAttribute(Node, 'Quantity');
+    R.Quantity := LoadDouble(Node, 'Quantity', False);
+    R.HasQuantity := HasAttribute(Node, 'MeasureOfQuantity');
+    R.HasMeasureOfQuantity := HasAttribute(Node, 'MeasureOfQuantity');
+    R.MeasureOfQuantity := LoadInteger(Node, 'MeasureOfQuantity', False);
+    R.NotSendToServer := LoadBool(Node, 'NotSendToServer', False);
+    R.FractionalQuantity := False;
+    Node := Node.ChildNodes.FindNode('FractionalQuantity');
+    if Node <> nil then
+    begin
+      R.FractionalQuantity := True;
+      R.Numerator := LoadInteger(Node, 'Numerator', False);
+      R.Denominator := LoadInteger(Node, 'Denominator', False);
+    end;
+  finally
+    Xml := nil;
+  end;
+end;
+
+class procedure TPositionsXmlReader.Load(ANode: IXMLNode; var R: TPayments);
+begin
+  R.Cash := LoadDecimal(ANode, 'Cash', False);
+  R.ElectronicPayment := LoadDecimal(ANode, 'ElectronicPayment', True);
+  R.PrePayment := LoadDecimal(ANode, 'PrePayment', True);
+  R.PostPayment := LoadDecimal(ANode, 'PostPayment', True);
+  R.Barter := LoadDecimal(ANode, 'Barter', True);
+end;
+
+(*
+
+function RequestKMToXML(const AGUID: string; const AWaitForResult: Boolean; const AMarkingCode: AnsiString; const APlannedStatus: Integer; const AQuantity: Double; const AMeasureOfQuantity: string; const AFractionalQuantity: Boolean; const ANumerator: Integer; const ADenominator: Integer): string;
+var
+  Xml: IXMLDocument;
+  Node: IXMLNode;
+begin
+  Xml := TXMLDocument.Create(nil);
+  try
+    Xml.Active := True;
+    Xml.Version := '1.0';
+    Xml.Encoding := 'UTF-8';
+    Xml.Options := Xml.Options + [doNodeAutoIndent];
+    Node := Xml.AddChild('Parameters');
+
+    Node.Attributes['GUID'] := AGUID;
+    Node.Attributes['WaitForResult'] := To1Cbool(AWaitForResult);
+    Node.Attributes['MarkingCode'] := AMarkingCode;
+    Node.Attributes['PlannedStatus'] := APlannedStatus.ToString;
+    Node.Attributes['Quantity'] := QuantityToStr(AQuantity);
+    if AMeasureOfQuantity <> '' then
+      Node.Attributes['MeasureOfQuantity'] := AMeasureOfQuantity;
+    if AFractionalQuantity then
+    begin
+      Node := Node.AddChild('FractionalQuantity');
+      Node.Attributes['Numerator'] := ANumerator.ToString;
+      Node.Attributes['Denominator'] := ADenominator.ToString;
+    end;
+    Result := Xml.XML.Text;
+  finally
+    Xml := nil;
+  end;
+end;
+
+function RequestKMResultToXML(const AChecking: Boolean; const ACheckingResult: Boolean): string;
+var
+  Xml: IXMLDocument;
+  Node: IXMLNode;
+begin
+  Xml := TXMLDocument.Create(nil);
+  try
+    Xml.Active := True;
+    Xml.Version := '1.0';
+    Xml.Encoding := 'UTF-8';
+    Xml.Options := Xml.Options + [doNodeAutoIndent];
+    Node := Xml.AddChild('RequestKMResult');
+    Node.Attributes['Checking'] := To1Cbool(AChecking);
+    Node.Attributes['CheckingResult'] := To1Cbool(ACheckingResult);
+    Result := Xml.XML.Text;
+  finally
+    Xml := nil;
+  end;
+end;
+
+function ProcessingKMResultToXML(const AGUID: string; const AResult: Boolean; const AResultCode: Integer; const AHasStatusInfo: Boolean; const AStatusInfo: Integer; const AHandleCode: Integer): string;
+var
+  Xml: IXMLDocument;
+  Node: IXMLNode;
+begin
+  Xml := TXMLDocument.Create(nil);
+  try
+    Xml.Active := True;
+    Xml.Version := '1.0';
+    Xml.Encoding := 'UTF-8';
+    Xml.Options := Xml.Options + [doNodeAutoIndent];
+    Node := Xml.AddChild('ProcessingKMResult');
+    Node.Attributes['GUID'] := AGUID;
+    Node.Attributes['Result'] := To1Cbool(AResult);
+    Node.Attributes['ResultCode'] := AResultCode.ToString;
+    if AHasStatusInfo then
+      Node.Attributes['StatusInfo'] := AStatusInfo.ToString;
+    Node.Attributes['HandleCode'] := AHandleCode.ToString;
+    Result := Xml.XML.Text;
+  finally
+    Xml := nil;
+  end;
+end;
+
+{ TRequestKM }
+
+*)
+
 
 
 end.

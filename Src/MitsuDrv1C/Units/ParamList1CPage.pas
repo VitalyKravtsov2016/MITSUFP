@@ -43,8 +43,9 @@ type
     procedure SaveToXML(XML: IXMLNode);
     constructor Create(AOwner: TParamList1CPages);
     destructor Destroy; override;
-    property Caption: WideString read FCaption write FCaption;
+
     property Groups: TParamList1CGroups read FGroups;
+    property Caption: WideString read FCaption write FCaption;
   end;
 
 implementation

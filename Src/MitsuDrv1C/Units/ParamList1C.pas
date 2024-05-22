@@ -41,8 +41,8 @@ end;
 
 function TParamList1C.ToString: WideString;
 var
-  Xml: IXMLDocument;
   Node: IXMLNode;
+  Xml: IXMLDocument;
 begin
   Result := '';
   Xml := TXMLDocument.Create(nil);
@@ -53,7 +53,7 @@ begin
     Xml.Options := Xml.Options + [doNodeAutoIndent];
     Node := Xml.AddChild('Settings');
     SaveToXML(Node);
-    Result := Xml.XML.Text;  //XMLStringToWideString(XML.XML.Text);
+    Xml.SaveToXML(Result);
   finally
     Xml := nil;
   end;

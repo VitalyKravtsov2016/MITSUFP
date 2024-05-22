@@ -4,12 +4,12 @@ interface
 
 uses
   // VCL
-  Classes, SysUtils, XMLDoc, XMLIntf,
+  Classes, SysUtils, Variants, XMLDoc, XMLIntf,
   // This
   MitsuDrv, ByteUtils, Types1C_1, DriverError, VersionInfo,
   ParamList1C, ParamList1CPage, ParamList1CGroup, ParamList1CItem,
   Param1CChoiceList, LangUtils, FDTypes, Params1C, Positions1C3,
-  LogFile;
+  LogFile, StringUtils, DriverTypes, Types1C;
 
 const
   // Праметры по умолчанию
@@ -99,7 +99,6 @@ type
     FDevice: TDevice;
     FDevices: TDevices;
     FDriver: TMitsuDrv;
-    FLogger: TLogFile;
     FParams: TMitsuParams;
     FParamList: TParamList1C;
     FReader: T1CXmlReaderWriter;
@@ -116,13 +115,15 @@ type
     function ReadOutputParameters: AnsiString;
     function ReadValuesArray(const AValuesArray: IDispatch): T1CDriverParams;
     function GetAdditionalDescription: WideString;
-    (*
-    procedure doProcessCheck(Electronically: Boolean;
-      const CheckPackage: WideString; IsCorrection: Boolean);
-    *)
+    procedure doProcessCheck(Electronically: Boolean; const InXml: WideString;
+      out OutXml: WideString);
+
+    function GetLogger: ILogFile;
 
     property Device: TDevice read FDevice;
     property Devices: TDevices read FDevices;
+    procedure PrintFiscalString32(Receipt: TReceipt1C;
+      Item: TFiscalString32);
   public
     constructor Create;
     destructor Destroy; override;
@@ -172,8 +173,10 @@ type
     function GetLocalizationPattern(out LocalizationPattern: WideString): WordBool;
     function SetLocalization(const LanguageCode: WideString; const LocalizationPattern: WideString): WordBool;
 
-    property Logger: TLogFile read FLogger;
     property Driver: TMitsuDrv read FDriver;
+    property Logger: ILogFile read GetLogger;
+    property ResultCode: Integer read FResultCode write FResultCode;
+    property ResultDescription: string read FResultDescription write FResultDescription;
   end;
 
 implementation
@@ -307,6 +310,7 @@ constructor TMitsuDrv1C.Create;
 begin
   inherited Create;
   FDriver := TMitsuDrv.Create;
+  FDevices := TDevices.Create(TDevice);
   FReader := T1CXmlReaderWriter.Create;
   FParamList := TParamList1C.Create;
   CreateParamList;
@@ -316,8 +320,14 @@ destructor TMitsuDrv1C.Destroy;
 begin
   FReader.Free;
   FDriver.Free;
+  FDevices.Free;
   FParamList.Free;
   inherited Destroy;
+end;
+
+function TMitsuDrv1C.GetLogger: ILogFile;
+begin
+  Result := Driver.Logger;
 end;
 
 procedure TMitsuDrv1C.ClearError;
@@ -502,14 +512,14 @@ begin
   try
     ID := StrToInt(DeviceID);
   except
-    //RaiseError(E_INVALIDPARAM, Format('%s %s', [GetRes(@SInvalidParam), '"DeviceID"'])); !!!
+    RaiseError(E_INVALIDPARAM, Format('%s %s', [GetRes(@SInvalidParam), '"DeviceID"']));
   end;
 
   Device := FDevices.ItemByID(ID);
   if Device = nil then
   begin
     Logger.Error(Format('Device "%s"  not found', [DeviceID]));
-    //RaiseError(E_INVALIDPARAM, GetRes(@SDeviceNotActive));
+    RaiseError(E_INVALIDPARAM, GetRes(@SDeviceNotActive));
   end;
 
   if Device <> FDevice then
@@ -700,13 +710,12 @@ end;
 function TMitsuDrv1C.GetDescription(
   out DriverDescription: WideString): WordBool;
 var
-  Xml: IXMLDocument;
   Node: IXMLNode;
-  LogEnabled: Boolean;
-  ver: string;
+  Xml: IXMLDocument;
+const
+  Version = '4.1';
 begin
   Logger.Debug('GetDescription');
-  ver := '4.1';
 
   Result := True;
   Xml := TXMLDocument.Create(nil);
@@ -717,21 +726,21 @@ begin
     Xml.Options := Xml.Options + [doNodeAutoIndent];
     Node := Xml.AddChild('DriverDescription');
     {$IFDEF WIN64}
-    Node.Attributes['Name'] := 'Штрих-М: Драйвер ККТ с передачей данных в ОФД ' + ver + ' (Win64)';
-    Node.Attributes['Description'] := 'Штрих-М: Драйвер ККТ с передачей данных в ОФД ' + ver + ' (Win64)';
+    Node.Attributes['Name'] := 'Драйвер ККТ с передачей данных в ОФД ' + Version + ' (Win64)';
+    Node.Attributes['Description'] := 'Драйвер ККТ с передачей данных в ОФД ' + Version + ' (Win64)';
     {$ELSE}
-    Node.Attributes['Name'] := 'Штрих-М: Драйвер ККТ с передачей данных в ОФД ' + ver + ' (Win32)';
-    Node.Attributes['Description'] := 'Штрих-М: Драйвер ККТ с передачей данных в ОФД ' + ver + ' (Win32)';
+    Node.Attributes['Name'] := 'Драйвер ККТ с передачей данных в ОФД ' + Version + ' (Win32)';
+    Node.Attributes['Description'] := 'Драйвер ККТ с передачей данных в ОФД ' + Version + ' (Win32)';
     {$ENDIF}
     Node.Attributes['EquipmentType'] := 'ККТ';
     Node.Attributes['IntegrationComponent'] := 'true';
     Node.Attributes['MainDriverInstalled'] := 'true';
     Node.Attributes['DriverVersion'] := GetFileVersionInfoStr;
     Node.Attributes['IntegrationComponentVersion'] := GetFileVersionInfoStr;
-    Node.Attributes['DownloadURL'] := 'http://www.shtrih-m.ru/support/download/?section_id=76&product_id=all&type_id=156';
-    //Node.Attributes['LogPath'] := Driver.Params.LogPath;
-    //Node.Attributes['LogIsEnabled'] := to1CBool(Driver.Params.LogEnabled); !!!
-    DriverDescription := Xml.XML.Text;
+    Node.Attributes['DownloadURL'] := 'http://www.vav.ru/support/download';
+    Node.Attributes['LogPath'] := Driver.Params.LogPath;
+    Node.Attributes['LogIsEnabled'] := to1CBool(Driver.Params.LogEnabled);
+    Xml.SaveToXML(DriverDescription);
   finally
     Xml := nil;
   end;
@@ -867,15 +876,6 @@ begin
   Item.DefaultValue := '0';
   for i := Low(Driver.ValidConnectionTypes) to High(Driver.ValidConnectionTypes) do
     Item.AddChoiceListItem(ConnectionTypeToStr(ConnectionTypes[i]), IntToSTr(ConnectionTypes[i]));
-  // Тип протокола
-  Item := Group.Items.Add;
-  Item.Name := 'ProtocolType';
-  Item.Caption := GetRes(@SProtocolType);
-  Item.Description := GetRes(@SProtocolType);
-  Item.TypeValue := 'Number';
-  Item.DefaultValue := '0';
-  Item.AddChoiceListItem(GetRes(@SStandard), '0');
-  Item.AddChoiceListItem(GetRes(@SProtocol2), '1');
   // Порт
   Item := Group.Items.Add;
   Item.Name := 'Port';
@@ -905,13 +905,6 @@ begin
   Item.Description := GetRes(@STimeout);
   Item.TypeValue := 'Number';
   Item.DefaultValue := '10000';
-  //Computer name
-  Item := Group.Items.Add;
-  Item.Name := 'ComputerName';
-  Item.Caption := GetRes(@SComputerName);
-  Item.Description := GetRes(@SComputerName);
-  Item.TypeValue := 'String';
-  Item.DefaultValue := '';
   //IP адрес
   Item := Group.Items.Add;
   Item.Name := 'IPAddress';
@@ -940,35 +933,21 @@ begin
   Item.Description := GetRes(@SAdminPassword);
   Item.TypeValue := 'Number';
   Item.DefaultValue := '30';
-{  // Буферизировать строки
-  Item := Group.Items.Add;
-  Item.Name := 'BufferStrings';
-  Item.Caption := GetRes(@SBufferStrings);
-  Item.Description := GetRes(@SBufferStrings);
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'True';}
-
   // Печать QR
-{  Item := Group.Items.Add;
+  Item := Group.Items.Add;
   Item.Name := 'BarcodeFirstLine';
   Item.Caption := GetRes(@SBarcodeFirstLine);
   Item.Description := GetRes(@SBarcodeFirstLine);
   Item.TypeValue := 'Number';
-  Item.DefaultValue := '1';}
+  Item.DefaultValue := '1';
   //
-  {Item := Group.Items.Add;
-  Item.Name := 'QRCodeHeight';
-  Item.Caption := GetRes(@SQRCodeHeight);
-  Item.Description := GetRes(@SQRCodeHeight);
-  Item.TypeValue := 'Number';
-  Item.DefaultValue := '200';}
   Item := Group.Items.Add;
   Item.Name := 'QRCodeDotWidth';
   Item.Caption := GetRes(@SQRCodeDotWidth);
   Item.Description := GetRes(@SQRCodeDotWidth);
   Item.TypeValue := 'Number';
-  Item.DefaultValue := '5';
-
+  Item.DefaultValue := '3';
+  //
   Item := Group.Items.Add;
   Item.Name := 'CheckClock';
   Item.Caption := GetRes(@SCheckClock);
@@ -976,11 +955,9 @@ begin
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
-(*
   // СТРАНИЦА Налоговые ставки и типы оплат
   Page := FParamList.Pages.Add;
   Page.Caption := GetRes(@STaxRates);
-
   { --- Налоговые ставки и типы оплат --- }
   Group := Page.Groups.Add;
   Group.Caption := GetRes(@STaxRates);
@@ -1013,9 +990,7 @@ begin
   Item.TypeValue := 'String';
   Item.DefaultValue := GetRes(@SPayName3DefaultValue);
 
-*)
-
-(*  // СТРАНИЦА Настройка лога
+  // СТРАНИЦА Настройка лога
   Page := FParamList.Pages.Add;
   Page.Caption := GetRes(@SLogParams);
   { --- Настройка лога --- }
@@ -1027,14 +1002,14 @@ begin
   Item.Caption := GetRes(@SEnableLog);
   Item.Description := GetRes(@SEnableLog);
   Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';*)
+  Item.DefaultValue := 'False';
 
-{  Item := Group.Items.Add;
-  Item.Name := 'LogFileName';
+  Item := Group.Items.Add;
+  Item.Name := 'LogPath';
   Item.Caption := GetRes(@SLogPath);
   Item.Description := GetRes(@SLogPath);
   Item.TypeValue := 'String';
-  Item.DefaultValue := FDriver.ComLogFile;}
+  Item.DefaultValue := FDriver.Params.LogPath;
 
   // СТРАНИЦА ФОРМАТ ЧЕКА
   Page := FParamList.Pages.Add;
@@ -1398,57 +1373,26 @@ begin
   Item.Description := GetRes(@SODIsAssurance);
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
-
- { KG KKT  }
-
-//  if FFormatVersion < 34 then
-//  begin
-    // Kg
-  Page := FParamList.Pages.Add;
-  Page.Caption := GetRes(@SKgKKT);
-  Group := Page.Groups.Add;
-  Group.Caption := GetRes(@SKgKKT);
-
-  Item := Group.Items.Add;
-  Item.Name := 'KgKKTEnabled';
-  Item.Caption := GetRes(@SKgKKTEnabled);
-  Item.Description := GetRes(@SKgKKTEnabled);
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  Item := Group.Items.Add;
-  Item.Name := 'KgKKTUrl';
-  Item.Caption := GetRes(@SKgKKTUrl);
-  Item.Description := GetRes(@SKgKKTUrl);
-  Item.TypeValue := 'String';
-  Item.DefaultValue := 'http://192.168.137.111:80';
-//  end;
 end;
 
 function TMitsuDrv1C.SetParameter(const Name: WideString; Value: OleVariant): WordBool;
 begin
-  //GlobalLogger.FileName := 'c:\Users\User\AppData\Roaming\SHTRIH-M\log2.txt';
-//  GlobalLogger.Enabled := True;
-  Logger.Debug('SetParameter  ' + Name + ' ' + Value);
+  Logger.Debug('SetParameter  ' + Name + ' ' + VarToWideStr(Value));
   Result := True;
   try
-  (*
     if WideSameStr('ConnectionType', Name) then
       FParams.ConnectionType := Value;
-    if WideSameStr('ProtocolType', Name) then
-      FParams.ProtocolType := Value;
     if WideSameStr('Port', Name) then
-      FParams.Port := Value;
+      FParams.PortName := Value;
     if WideSameStr('Baudrate', Name) then
       FParams.Baudrate := Value;
     if WideSameStr('Timeout', Name) then
-      FParams.Timeout := Value;
+      FParams.ByteTimeout := Value;
     if WideSameStr('IPAddress', Name) then
-      FParams.IPAddress := Value;
-    if WideSameStr('ComputerName', Name) then
-      FParams.ComputerName := Value;
+      FParams.RemoteHost := Value;
     if WideSameStr('TCPPort', Name) then
-      FParams.TCPPort := Value;
+      FParams.RemotePort := Value;
+(*
     if WideSameStr('AdminPassword', Name) then
       FParams.AdminPassword := Value;
     if WideSameStr('QRCodeDotWidth', Name) then
@@ -1669,15 +1613,6 @@ begin
     SelectDevice(DeviceID);
     Params := FReader.Read(InputParameters);
 
-    Driver.LockPort;
-    try
-      //Driver.PrintCashOperation(Amount, Params);
-      Driver.WaitForPrinting;
-    finally
-      Driver.UnlockPort;
-    end;
-
-
   except
     on E: Exception do
     begin
@@ -1787,14 +1722,18 @@ begin
   ClearError;
   Result := True;
   try
-    if WideSameText(ActionName, 'TaxReport') then
-    begin
-
-    end;
-    if WideSameText(ActionName, 'DepartmentReport') then
-    begin
-
-    end;
+    repeat
+      if WideSameText(ActionName, 'TaxReport') then
+      begin
+      
+        Break;
+      end;
+      if WideSameText(ActionName, 'DepartmentReport') then
+      begin
+        Break;
+      end;
+      Result := False;
+    until True;
   except
     on E: Exception do
     begin
@@ -1882,7 +1821,21 @@ end;
 
 function TMitsuDrv1C.OpenCashDrawer(const DeviceID: WideString): WordBool;
 begin
-
+  Logger.Debug('OpenCashDrawer DeviceID = ' + DeviceID);
+  ClearError;
+  Result := True;
+  try
+    SelectDevice(DeviceID);
+    Driver.Check(Driver.OpenCashDrawer);
+  except
+    on E: Exception do
+    begin
+      Logger.Error('OpenCashDrawer Error ' + E.Message);
+      Result := False;
+      HandleException(E);
+    end;
+  end;
+  Logger.Debug('OpenCashDrawer.end');
 end;
 
 function TMitsuDrv1C.OpenSessionRegistrationKM(
@@ -1971,7 +1924,7 @@ begin
   Result := True;
   try
     SelectDevice(DeviceID);
-    //doProcessCheck(Electronically, CheckPackage, DocumentOutputParameters, False);
+    doProcessCheck(Electronically, CheckPackage, DocumentOutputParameters);
   except
     on E: Exception do
     begin
@@ -1983,9 +1936,8 @@ begin
   Logger.Debug('ProcessCheck.end');
 end;
 
-(*
 procedure TMitsuDrv1C.doProcessCheck(Electronically: Boolean;
-  const CheckPackage: WideString; IsCorrection: Boolean);
+  const InXml: WideString; out OutXml: WideString);
 var
   i: Integer;
   NonFiscalString: TNonFiscalString32;
@@ -1997,62 +1949,70 @@ var
   saveTaxationType: Integer;
   TaxMode: Integer;
   SavePrintingStatus: Integer;
-  Positions: TPositions1C3;
+
+  Receipt: TReceipt1C;
+  Attributes: TMTSAttributes;
+  OpenReceipt: TMTSOpenReceipt;
+  FiscalString: TFiscalString32;
 begin
-  Logger.Debug('ProcessCheck32 Electronically = ' + Bool1C(Electronically) + '; IsCorrection = ' + Bool1C(IsCorrection));
-  Logger.Debug('CheckPackage: ' + CheckPackage);
+  Logger.Debug('ProcessCheck32 Electronically = ' + Bool1C(Electronically));
+  Logger.Debug('CheckPackage: ' + InXml);
 
   Driver.LockPort;
-  Positions := TPositions1C3.Create;
+  Receipt := TReceipt1C.Create;
   try
-    //Positions.FFDversion := FFFDVersion; !!!
-    //Positions.BPOVersion := BPOVersion;
-    //Positions.ItemNameLength := Params.ItemNameLength;
-    LoadFromXml(Positions, Logger, CheckPackage, False);
+    LoadFromXml(Receipt, Logger, InXml, False);
 
-    Logger.Debug('Positions.TotalTaxSum = ' + CurrToStr(Positions.TotalTaxSum));
+    Logger.Debug('Positions.TotalTaxSum = ' + CurrToStr(Receipt.TotalTaxSum));
     Logger.Debug('set Check Taxation type ' + IntToStr(TaxMode));
 
-    // Electronically
+    // Open receipt
+    OpenReceipt.ReceiptType := Receipt.OperationType;
+    OpenReceipt.TaxSystem := Receipt.TaxationSystem;
+    OpenReceipt.SaleAddress := Receipt.SaleAddress;
+    OpenReceipt.SaleLocation := Receipt.SaleLocation;
+    OpenReceipt.AutomaticNumber := Receipt.AutomatNumber;
+    OpenReceipt.SenderEmail := Receipt.SenderEmail;
+    OpenReceipt.Correction.Date := Receipt.CorrectionData.Date;
+    OpenReceipt.Correction.Document := Receipt.CorrectionData.Number;
+    Driver.Check(Driver.OpenReceipt(OpenReceipt));
+    // Add receipt tags
+    Attributes.CustomerPhone := Receipt.CustomerPhone;
+    // IndustryAttribute
+    Attributes.IndustryAttribute.Enabled := Receipt.IndustryAttribute.Enabled;
+    Attributes.IndustryAttribute.IdentifierFOIV := Receipt.IndustryAttribute.IdentifierFOIV;
+    Attributes.IndustryAttribute.DocumentDate := Receipt.IndustryAttribute.DocumentDate;
+    Attributes.IndustryAttribute.DocumentNumber := Receipt.IndustryAttribute.DocumentNumber;
+    Attributes.IndustryAttribute.AttributeValue := Receipt.IndustryAttribute.AttributeValue;
+    // CustomerDetail
+    Attributes.CustomerDetail.Enabled := Receipt.CustomerDetail.Enabled;
+    Attributes.CustomerDetail.Name := Receipt.CustomerDetail.Info;
+    Attributes.CustomerDetail.INN := Receipt.CustomerDetail.INN;
+    Attributes.CustomerDetail.BirthDate := Receipt.CustomerDetail.DateOfBirth;
+    Attributes.CustomerDetail.CountryCode := StrToInt(Receipt.CustomerDetail.Citizenship);
+    Attributes.CustomerDetail.DocumentCode := Receipt.CustomerDetail.DocumentTypeCode;
+    Attributes.CustomerDetail.DocumentData := Receipt.CustomerDetail.DocumentData;
+    Attributes.CustomerDetail.Address := Receipt.CustomerDetail.Address;
+    // OperationInfo
+    Attributes.OperationInfo.Enabled := Receipt.OperationalAttribute.Enabled;
+    Attributes.OperationInfo.ID := Receipt.OperationalAttribute.OperationID;
+    Attributes.OperationInfo.Data := Receipt.OperationalAttribute.OperationData;
+    Attributes.OperationInfo.Date := Receipt.OperationalAttribute.DateTime;
+    // UserAttribute
+    Attributes.UserAttribute.Enabled := Receipt.UserAttribute.Enabled;
+    Attributes.UserAttribute.Name := Receipt.UserAttribute.Name;
+    Attributes.UserAttribute.Value := Receipt.UserAttribute.Value;
+    Driver.Check(Driver.AddRecAttributes(Attributes));
 
-      OpenCheckFN(Positions.CashierName, Positions.OperationType, True, RecNumber, SessionNumber, IsCorrection);
-
-          try
-            if Positions.CustomerPhone <> '' then
-            begin
-              Driver.CustomerEmail := Positions.CustomerPhone;
-              Check(Driver.FNSendCustomerEmail, 'Ошибка передачи CustomerPhone');
-            end;
-
-            if Positions.CustomerEmail <> '' then
-            begin
-              Driver.CustomerEmail := Positions.CustomerEmail;
-              Check(Driver.FNSendCustomerEmail, 'Ошибка передачи CustomerEmail');
-            end;
-
-          // Если передали пустой, установить из параметров фискализации
-            if Positions.SenderEmail <> '' then
-              SetSenderEmail(Positions.SenderEmail)
-            else
-            begin
-            // Передаем только в случае если указан адрес покупателя
-              if (Positions.CustomerPhone <> '') or (Positions.CustomerEmail <> '') then
-                SetSenderEmail(FSenderEmail);
-            end;
-
-            SendTags32(Positions, IsCorrection); // Отправка дополнительных тэгов
-
-            SetCashierVATIN(Positions.CashierVATIN);
-            SetAgentData32(Positions.AgentData);
-            SetPurveyorData32(Positions.VendorData);
-
-            for i := 0 to Positions.Count - 1 do
-            begin
-              if Positions.Items[i] is TFiscalString32 then
-              begin
-                TotalSumm := TotalSumm + TFiscalString32(Positions.Items[i]).SumWithDiscount;
-                PrintFiscalString32(TFiscalString32(Positions.Items[i]), Positions.TotalTaxSum > 0);
-              end;
+    for i := 0 to Receipt.Count - 1 do
+    begin
+      if Receipt.Items[i] is TFiscalString32 then
+      begin
+        FiscalString := TFiscalString32(Receipt.Items[i]);
+        TotalSumm := TotalSumm + FiscalString.SumWithDiscount;
+        PrintFiscalString32(Receipt, FiscalString);
+      end;
+      (*
               if Positions.Items[i] is TNonFiscalString32 then
               begin
                 NonFiscalString := TNonFiscalString32(Positions[i]);
@@ -2119,12 +2079,83 @@ begin
       end;
     finally
     end;
+    *)
+  end;
   finally
-    Positions.Free;
+    Receipt.Free;
     Driver.UnlockPort;
   end;
 end;
+
+(*
+ PrintFiscalLineFN(
+ AFiscalString.Name, AFiscalString.Quantity,
+ AFiscalString.PriceWithDiscount,
+ AFiscalString.SumWithDiscount,
+ AFiscalString.DiscountSum, AFiscalString.Department, AFiscalString.
+ Tax, AFiscalString.ItemCodeData,
+ AFiscalString.AgentData, AFiscalString.PurveyorData, AFiscalString.AgentSign,
+ AFiscalString.SignMethodCalculation,
+ AFiscalString.SignCalculationObject,
+ AFiscalString.CountryOfOfigin, AFiscalString.CustomsDeclaration, AFiscalString.ExciseAmount, AFiscalString.AdditionalAttribute, AFiscalString.MeasurementUnit);
+
+const AName: WideString;
+AQuantity,
+APrice,
+ATotal,
+ADiscount: Double;
+ADepartment,
+ATax: Integer;
+ItemCodeData: TItemCodeData;
+AgentData: TAgentData;
+PurveyorData: TPurveyorData;
+AgentSign: WideString;
+APaymentTypeSign: Integer = 4; APaymentItemSign: Integer = 1; ACountryOfOrigin: WideString = ''; ACustomsDeclaration: WideString = ''; AExciseAmount: WideString = ''; AAdditionalAttribute: WideString = ''; AMeasurementUnit: WideString = '');
 *)
+
+procedure TMitsuDrv1C.PrintFiscalString32(Receipt: TReceipt1C; Item: TFiscalString32);
+var
+  Position: TMTSPosition;
+begin
+  Position.Name := Item.Name;
+  Position.TaxRate := Item.Tax;
+  Position.Quantity := Item.Quantity;
+  Position.Price := Item.PriceWithDiscount;
+  Position.Total := Item.SumWithDiscount;
+  Position.ItemType := Item.SignCalculationObject;
+  Position.PaymentType := Item.SignMethodCalculation;
+  Position.ExciseTaxTotal := Item.ExciseAmount;
+  Position.CountryCode := Item.CountryOfOfigin;
+
+
+(*
+    FPriceWithDiscount: Double;
+    FSumWithDiscount: Double;
+    FDiscountSum: Double;
+    FDepartment: Integer;
+    FTax: Integer;
+    FTaxSumm: Double;
+    FSignMethodCalculation: Integer;
+    FSignCalculationObject: Integer;
+    FMarking: AnsiString;
+    FMarkingRaw: string;
+    FAgentData: TAgentData;
+    FVendorData: TVendorData;
+    FAgentType: WideString;
+    FCountryOfOfigin: WideString;
+    FCustomsDeclaration: WideString;
+    FExciseAmount: WideString;
+    FAdditionalAttribute: WideString;
+    FMeasurementUnit: WideString;
+    FIndustryAttribute: TIndustryAttribute;
+    FMeasureQuantity: Integer;
+    FFractionalQuantity: TFractionalQuantity;
+    FGoodCodeData: TGoodCodeData;
+    FMarkingCode: AnsiString;
+    FMeasureOfQuantity: Integer;
+
+  Driver.Check(Driver.AddRecPosition(Position));
+end;
 
 function TMitsuDrv1C.ProcessCorrectionCheck(const DeviceID,
   CheckPackage: WideString;

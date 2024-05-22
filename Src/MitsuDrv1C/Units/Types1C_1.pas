@@ -225,13 +225,17 @@ type
   T1CXmlReaderWriter = class
   private
   public
-    function Read(const Xml: WideString): TInputParametersRec; overload;
-    procedure Read(const Xml: WideString; Params: TParametersKKT); overload;
-    procedure Read(const Xml: WideString; Params: TParametersFiscal); overload;
-    procedure Write(var XmlText: WideString; Params: TParametersKKT); overload;
-    procedure Write(var XmlText: WideString; Params: TParametersFiscal); overload;
-    procedure Write(var XmlText: WideString; Params: TOutputParametersRec); overload;
+    class function Read(const Xml: WideString): TInputParametersRec; overload;
+    class procedure Read(const Xml: WideString; Params: TParametersKKT); overload;
+    class procedure Read(const Xml: WideString; Params: TParametersFiscal); overload;
+
+    class procedure Write(var XmlText: WideString; Params: TParametersKKT); overload;
+    class procedure Write(var XmlText: WideString; Params: TParametersFiscal); overload;
+    class procedure Write(var XmlText: WideString; Params: TInputParametersRec); overload;
+    class procedure Write(var XmlText: WideString; Params: TOutputParametersRec); overload;
   end;
+
+function To1Cbool(AValue: Boolean): WideString;
 
 implementation
 
@@ -250,7 +254,7 @@ end;
 
 { T1CXmlReaderWriter }
 
-function T1CXmlReaderWriter.Read(const Xml: WideString): TInputParametersRec;
+class function T1CXmlReaderWriter.Read(const Xml: WideString): TInputParametersRec;
 var
   Node: IXMLNode;
   XmlDoc: IXMLDocument;
@@ -280,7 +284,33 @@ begin
   end;
 end;
 
-procedure T1CXmlReaderWriter.Read(const Xml: WideString;
+class procedure T1CXmlReaderWriter.Write(var XmlText: WideString;
+  Params: TInputParametersRec);
+var
+  Node: IXMLNode;
+  XmlDoc: IXMLDocument;
+begin
+  XmlDoc := TXMLDocument.Create(nil);
+  try
+    XmlDoc.Active := True;
+    XmlDoc.Version := '1.0';
+    XmlDoc.Encoding := 'UTF-8';
+    XmlDoc.Options := XmlDoc.Options + [doNodeAutoIndent];
+    Node := XmlDoc.AddChild('InputParameters');
+    XmlDoc.DocumentElement := Node;
+    Node := Node.AddChild('Parameters');
+    Node.Attributes['CashierName'] := Params.CashierName;
+    Node.Attributes['CashierINN'] := Params.CashierINN;
+    Node.Attributes['SaleAddress'] := Params.SaleAddress;
+    Node.Attributes['SaleLocation'] := Params.SaleLocation;
+    Node.Attributes['PrintRequired'] := Params.PrintRequired;
+    XmlDoc.SaveToXML(XmlText);
+  finally
+    XmlDoc := nil;
+  end;
+end;
+
+class procedure T1CXmlReaderWriter.Read(const Xml: WideString;
   Params: TParametersFiscal);
 var
   Node: IXMLNode;
@@ -336,7 +366,7 @@ begin
   end;
 end;
 
-procedure T1CXmlReaderWriter.Read(const Xml: WideString;
+class procedure T1CXmlReaderWriter.Read(const Xml: WideString;
   Params: TParametersKKT);
 var
   Node: IXMLNode;
@@ -387,13 +417,13 @@ begin
   end;
 end;
 
-procedure T1CXmlReaderWriter.Write(var XmlText: WideString;
+class procedure T1CXmlReaderWriter.Write(var XmlText: WideString;
   Params: TParametersFiscal);
 begin
 
 end;
 
-procedure T1CXmlReaderWriter.Write(var XmlText: WideString;
+class procedure T1CXmlReaderWriter.Write(var XmlText: WideString;
   Params: TParametersKKT);
 var
   i: Integer;
@@ -444,13 +474,13 @@ begin
     Node.Attributes['OFDCompanyINN'] := Params.OFDCompanyINN;
     Node.Attributes['FNSURL'] := Params.FNSURL;
     Node.Attributes['SenderEmail'] := Params.SenderEmail;
-    XmlText := Xml.XML.Text;
+    Xml.SaveToXML(XmlText);
   finally
     Xml := nil;
   end;
 end;
 
-procedure T1CXmlReaderWriter.Write(var XmlText: WideString; Params: TOutputParametersRec);
+class procedure T1CXmlReaderWriter.Write(var XmlText: WideString; Params: TOutputParametersRec);
 var
   Node: IXMLNode;
   Xml: IXMLDocument;
@@ -480,7 +510,7 @@ begin
     Node.Attributes['FNOverflow'] := To1Cbool(Params.FNOverflow); // Boolean; // Признак переполнения памяти ФН
     Node.Attributes['FNFail'] := To1Cbool(Params.FNFail); // Boolean; // Признак исчерпания ресурса ФН
     Node.Attributes['FNValidityDate'] := DateTimeToXML(Params.FNValidityDate); // TDateTime;
-    XmlText := Xml.XML.Text;
+    Xml.SaveToXML(XmlText);
   finally
     Xml := nil;
   end;

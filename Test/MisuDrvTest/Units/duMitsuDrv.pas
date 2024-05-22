@@ -18,6 +18,7 @@ type
   private
     Driver: TMitsuDrv;
     procedure TestReadVATNames;
+    procedure InitPrinter;
   protected
     procedure Setup; override;
     procedure TearDown; override;
@@ -58,6 +59,15 @@ type
 
     procedure TestFiscalReceiptCancel;
     procedure TestFiscalReceipt;
+
+    procedure TestPrintText;
+    procedure TestPrintBarcode;
+    procedure TestPrintQRCode;
+    procedure TestPrintPicture;
+    procedure TestPrintLine;
+    procedure TestCheckMarkCode;
+    procedure TestPrintCalcReport;
+    procedure TestPrintXReport;
   end;
 
 implementation
@@ -471,20 +481,20 @@ procedure TMitsuDrvTest.TestFiscalReceiptCancel;
 var
   Doc: TDocStatus;
   StartDoc: TDocStatus;
-  Params: TMTSReceiptParams;
+  Params: TMTSOpenReceipt;
 begin
   Driver.Check(Driver.Reset);
   Driver.Check(Driver.ReadLastDocStatus(StartDoc));
   // Open
   Params.ReceiptType := MTS_RT_SALE;
   Params.TaxSystem := MTS_TS_GENERAL;
-  Driver.Check(Driver.BeginFiscalReceipt(Params));
+  Driver.Check(Driver.OpenReceipt(Params));
   // Read doc status
   Driver.Check(Driver.ReadLastDocStatus(Doc));
   CheckEquals(MTS_DOC_TYPE_RECEIPT, Doc.DocType, 'Doc.DocType');
   CheckEquals(MTS_DOC_STATUS_OPENED, Doc.Status, 'Doc.Status');
   // Cancel
-  Driver.Check(Driver.CancelFiscalReceipt);
+  Driver.Check(Driver.CancelReceipt);
   // Read doc status
   Driver.Check(Driver.ReadLastDocStatus(Doc));
   CheckEquals(StartDoc.Number, Doc.Number, 'Doc.Number');
@@ -497,15 +507,15 @@ procedure TMitsuDrvTest.TestFiscalReceipt;
 var
   Doc: TDocStatus;
   Position: TMTSPosition;
-  Params: TMTSReceiptParams;
+  Params: TMTSOpenReceipt;
 begin
   Driver.Check(Driver.Reset);
   // Open
   Params.ReceiptType := MTS_RT_SALE;
   Params.TaxSystem := MTS_TS_GENERAL;
-  Driver.Check(Driver.BeginFiscalReceipt(Params));
+  Driver.Check(Driver.OpenReceipt(Params));
   // Begin add positions
-  Driver.Check(Driver.BeginPositions);
+  Driver.Check(Driver.BeginRecPositions);
   // Add positions
   Position.Quantity := 1.234567;
   Position.TaxRate := MTS_VAT_RATE_NONE;
@@ -524,7 +534,304 @@ begin
   Position.AddAttribute := '';
   Position.AgentType := -1;
 
-  Driver.Check(Driver.AddPosition(Position));
+  Driver.Check(Driver.AddRecPosition(Position));
+end;
+
+procedure TMitsuDrvTest.TestPrintText;
+var
+  P: TMTSPrintText;
+begin
+  Driver.Check(Driver.Reset);
+
+  Driver.Check(Driver.OpenNonfiscal);
+  // Normal
+  P.Text := '1. Normal text';
+  P.IsInversion := False;
+  P.HorizontalFactor := 0;
+  P.VerticalFactor := 0;
+  P.FontType := 0;
+  P.UnderlineMode := 0;
+  P.Alignment := 0;
+  Driver.Check(Driver.AddText(P));
+  // Inversion
+  P.Text := '2. Inverted text';
+  P.IsInversion := True;
+  P.HorizontalFactor := 0;
+  P.VerticalFactor := 0;
+  P.FontType := 0;
+  P.UnderlineMode := 0;
+  P.Alignment := 0;
+  Driver.Check(Driver.AddText(P));
+  // HorizontalFactor
+  P.Text := '3. HorizontalFactor = 2';
+  P.IsInversion := False;
+  P.HorizontalFactor := 2;
+  P.VerticalFactor := 0;
+  P.FontType := 0;
+  P.UnderlineMode := 0;
+  P.Alignment := 0;
+  Driver.Check(Driver.AddText(P));
+  // VerticalFactor
+  P.Text := '4. VerticalFactor = 2';
+  P.IsInversion := False;
+  P.HorizontalFactor := 0;
+  P.VerticalFactor := 2;
+  P.FontType := 0;
+  P.UnderlineMode := 0;
+  P.Alignment := 0;
+  Driver.Check(Driver.AddText(P));
+  // FontType = 1
+  P.Text := '5. FontType = 1';
+  P.IsInversion := False;
+  P.HorizontalFactor := 0;
+  P.VerticalFactor := 0;
+  P.FontType := 1;
+  P.UnderlineMode := 0;
+  P.Alignment := 0;
+  Driver.Check(Driver.AddText(P));
+  // FontType = 2
+  P.Text := '6. FontType = 2';
+  P.IsInversion := False;
+  P.HorizontalFactor := 0;
+  P.VerticalFactor := 0;
+  P.FontType := 2;
+  P.UnderlineMode := 0;
+  P.Alignment := 0;
+  Driver.Check(Driver.AddText(P));
+  // UnderlineMode = 1
+  P.Text := '7. UnderlineMode = 1';
+  P.IsInversion := False;
+  P.HorizontalFactor := 0;
+  P.VerticalFactor := 0;
+  P.FontType := 0;
+  P.UnderlineMode := 1;
+  P.Alignment := 0;
+  Driver.Check(Driver.AddText(P));
+  // UnderlineMode = 2
+  P.Text := '8. UnderlineMode = 2';
+  P.IsInversion := False;
+  P.HorizontalFactor := 0;
+  P.VerticalFactor := 0;
+  P.FontType := 0;
+  P.UnderlineMode := 2;
+  P.Alignment := 0;
+  Driver.Check(Driver.AddText(P));
+  // Align center
+  P.Text := '9. Align center';
+  P.IsInversion := False;
+  P.HorizontalFactor := 0;
+  P.VerticalFactor := 0;
+  P.FontType := 0;
+  P.UnderlineMode := 0;
+  P.Alignment := 1;
+  Driver.Check(Driver.AddText(P));
+  // Align right
+  P.Text := '10. Align right';
+  P.IsInversion := False;
+  P.HorizontalFactor := 0;
+  P.VerticalFactor := 0;
+  P.FontType := 0;
+  P.UnderlineMode := 0;
+  P.Alignment := 2;
+  Driver.Check(Driver.AddText(P));
+
+  Driver.Check(Driver.CloseNonfiscal(False));
+  Driver.Check(Driver.Print);
+end;
+
+procedure TMitsuDrvTest.TestPrintBarcode;
+var
+  Barcode: TMTSBarcode;
+begin
+  Driver.Check(Driver.Reset);
+  Driver.Check(Driver.OpenNonfiscal);
+  // UPC-A
+  Driver.Check(Driver.AddText('UPC-A'));
+  Barcode.BarcodeType := MTS_BARCODE_UPC_A;
+  Barcode.ModuleWidth := 2;
+  Barcode.BarcodeHeight := 100;
+  Barcode.Data := '123456123456';
+  Driver.Check(Driver.AddBarcode(Barcode));
+(*
+  // UPC-E
+  Driver.Check(Driver.AddText('UPC-E'));
+  Barcode.BarcodeType := MTS_BARCODE_UPC_E;
+  Barcode.ModuleWidth := 2;
+  Barcode.BarcodeHeight := 100;
+  Barcode.Data := '0123456';
+  Driver.Check(Driver.AddBarcode(Barcode));
+*)
+  // EAN13
+  Driver.Check(Driver.AddText('EAN13'));
+  Barcode.BarcodeType := MTS_BARCODE_EAN13;
+  Barcode.ModuleWidth := 2;
+  Barcode.BarcodeHeight := 100;
+  Barcode.Data := '123456123456';
+  Driver.Check(Driver.AddBarcode(Barcode));
+  // EAN8
+  Driver.Check(Driver.AddText('EAN8'));
+  Barcode.BarcodeType := MTS_BARCODE_EAN8;
+  Barcode.ModuleWidth := 2;
+  Barcode.BarcodeHeight := 100;
+  Barcode.Data := '1234568';
+  Driver.Check(Driver.AddBarcode(Barcode));
+  // CODE39
+  Driver.Check(Driver.AddText('CODE39'));
+  Barcode.BarcodeType := MTS_BARCODE_CODE39;
+  Barcode.ModuleWidth := 2;
+  Barcode.BarcodeHeight := 100;
+  Barcode.Data := '1234568';
+  Driver.Check(Driver.AddBarcode(Barcode));
+  // ITF
+  Driver.Check(Driver.AddText('ITF'));
+  Barcode.BarcodeType := MTS_BARCODE_ITF;
+  Barcode.ModuleWidth := 2;
+  Barcode.BarcodeHeight := 100;
+  Barcode.Data := '1234568';
+  Driver.Check(Driver.AddBarcode(Barcode));
+  // CODABAR
+  Driver.Check(Driver.AddText('CODABAR'));
+  Barcode.BarcodeType := MTS_BARCODE_CODABAR;
+  Barcode.ModuleWidth := 2;
+  Barcode.BarcodeHeight := 100;
+  Barcode.Data := '1234568';
+  Driver.Check(Driver.AddBarcode(Barcode));
+  // CODE93
+  Driver.Check(Driver.AddText('CODE93'));
+  Barcode.BarcodeType := MTS_BARCODE_CODE93;
+  Barcode.ModuleWidth := 2;
+  Barcode.BarcodeHeight := 100;
+  Barcode.Data := '1234568';
+  Driver.Check(Driver.AddBarcode(Barcode));
+  // CODE128
+  Driver.Check(Driver.AddText('CODE128'));
+  Barcode.BarcodeType := MTS_BARCODE_CODE128;
+  Barcode.ModuleWidth := 2;
+  Barcode.BarcodeHeight := 100;
+  Barcode.Data := '123456886876';
+  Driver.Check(Driver.AddBarcode(Barcode));
+
+  Driver.Check(Driver.CloseNonfiscal(True));
+  Driver.Check(Driver.Print);
+end;
+
+procedure TMitsuDrvTest.TestPrintQRCode;
+var
+  QRCode: TMTSQRCode;
+begin
+  Driver.Check(Driver.Reset);
+  Driver.Check(Driver.OpenNonfiscal);
+
+
+  QRCode.Data := '182376817236817236';
+  QRCode.Text := 'QRCode.Text';
+  QRCode.Alignment := MTS_ALIGN_CENTER;
+  QRCode.ModuleWidth := 3;
+  QRCode.CorrectionLevel := 2;
+  Driver.Check(Driver.AddQRCode(QRCode));
+
+  Driver.Check(Driver.CloseNonfiscal(True));
+  Driver.Check(Driver.Print);
+end;
+
+procedure TMitsuDrvTest.TestPrintPicture;
+var
+  Picture: TMTSPicture;
+begin
+  Driver.Check(Driver.Reset);
+  Driver.Check(Driver.OpenNonfiscal);
+
+  Picture.PicNumber := 1;
+  Picture.Alignment := MTS_ALIGN_CENTER;
+  Driver.Check(Driver.AddPicture(Picture));
+
+  Driver.Check(Driver.CloseNonfiscal(False));
+  Driver.Check(Driver.Print);
+end;
+
+procedure TMitsuDrvTest.TestPrintLine;
+begin
+  Driver.Check(Driver.Reset);
+  Driver.Check(Driver.OpenNonfiscal);
+
+  Driver.Check(Driver.FeedPixels(20));
+  Driver.Check(Driver.AddSeparatorLine(MTS_LINE_SINGLE));
+  Driver.Check(Driver.AddBlankPixels(20));
+  Driver.Check(Driver.FeedPixels(20));
+  Driver.Check(Driver.AddSeparatorLine(MTS_LINE_DOUBLE));
+  Driver.Check(Driver.AddBlankPixels(20));
+  Driver.Check(Driver.AddSeparatorLine(MTS_LINE_THICK));
+  Driver.Check(Driver.AddBlankPixels(20));
+  Driver.Check(Driver.FeedPixels(20));
+
+  Driver.Check(Driver.CloseNonfiscal(False));
+  Driver.Check(Driver.Print);
+end;
+
+procedure TMitsuDrvTest.InitPrinter;
+var
+  Day: TMTSDayStatus;
+  Cashier: TMTSCashier;
+  DayParams: TMTSDayParams;
+begin
+  Cashier.Name := 'Cashier1';
+  Cashier.INN := '505303696069';
+  DayParams.SaleAddress := 'SaleAddress';
+  DayParams.SaleLocation := 'SaleLocation';
+  DayParams.ExtendedProperty := 'ExtendedProperty';
+  DayParams.ExtendedData := 'ExtendedData';
+  DayParams.PrintRequired := False;
+
+  Driver.Check(Driver.ReadDayStatus(Day));
+  case Day.DayStatus of
+    MTS_DAY_STATUS_CLOSED:
+    begin
+      Driver.Check(Driver.WriteCashier(Cashier));
+      Driver.Check(Driver.OpenFiscalDay(DayParams));
+    end;
+    MTS_DAY_STATUS_OPENED:;
+    MTS_DAY_STATUS_EXPIRED:
+    begin
+      Driver.Check(Driver.WriteCashier(Cashier));
+      Driver.Check(Driver.CloseFiscalDay(DayParams));
+    end;
+  else
+    raise Exception.Create('Unknown day status value');
+  end;
+
+  Driver.Check(Driver.Reset);
+end;
+
+procedure TMitsuDrvTest.TestCheckMarkCode;
+const
+  MarkCode = '00000046210654NKZaYPiAAModGVz';
+var
+  Params: TMTSOpenReceipt;
+  CheckResult: TMTSMarkCheck;
+begin
+  InitPrinter;
+  // Open receipt
+  Params.ReceiptType := MTS_RT_SALE;
+  Params.TaxSystem := MTS_TS_GENERAL;
+  Driver.Check(Driver.OpenReceipt(Params));
+  // Check mark code
+  Driver.Check(Driver.CheckMarkCode(MarkCode, CheckResult));
+end;
+
+procedure TMitsuDrvTest.TestPrintCalcReport;
+var
+  R: TMTSCalcReport;
+begin
+  Driver.Check(Driver.MakeCalcReport(R));
+  Driver.Check(Driver.Print);
+end;
+
+procedure TMitsuDrvTest.TestPrintXReport;
+var
+  R: TMTSDayStatus;
+begin
+  Driver.Check(Driver.MakeXReport(R));
+  Driver.Check(Driver.Print);
 end;
 
 initialization

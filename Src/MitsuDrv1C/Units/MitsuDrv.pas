@@ -5,7 +5,7 @@ interface
 uses
   // VCL
   Windows, Classes, SysUtils, ActiveX, Variants, XMLDoc, MSXML, XMLIntf,
-  Math,
+  Math, DateUtils,
   // This
   PrinterPort, SerialPort, SocketPort, LogFile, StringUtils, DriverError,
   ByteUtils;
@@ -15,6 +15,56 @@ type
   TConnectionTypes = array[0..1] of Integer;
 
 const
+  CRLF = #13#10;
+
+  /////////////////////////////////////////////////////////////////////////////
+  // Separator line type constants
+
+  MTS_LINE_SINGLE   = 1; // одинарная тонкая
+  MTS_LINE_DOUBLE   = 2; // двойная
+  MTS_LINE_THICK    = 3; // толстая
+
+  /////////////////////////////////////////////////////////////////////////////
+  // Barcode type constants
+
+  MTS_BARCODE_UPC_A   = 0;
+  MTS_BARCODE_UPC_E   = 1;
+  MTS_BARCODE_EAN13   = 2;
+  MTS_BARCODE_EAN8    = 3;
+  MTS_BARCODE_CODE39  = 4;
+  MTS_BARCODE_ITF     = 5;
+  MTS_BARCODE_CODABAR = 6;
+  MTS_BARCODE_CODE93  = 7;
+  MTS_BARCODE_CODE128 = 8;
+  MTS_BARCODE_QRCODE  = 9;
+
+  /////////////////////////////////////////////////////////////////////////////
+  // Text inversion constants
+
+  MTS_TEXT_NO_INVERSION   = 0; // нет инверсии: черный текст на белом фоне
+  MTS_TEXT_INVERSION      = 1; // инверсия: белый текст на черном фоне
+
+  /////////////////////////////////////////////////////////////////////////////
+  // Font constants
+
+  MTS_FONT_DEFAULT = 0; // шрифт, заданный настройкой Установка настроек принтера
+  MTS_FONT_A = 1; // шрифт "А" (стандартный)
+  MTS_FONT_B = 2; // шрифт "B" (компактный)
+
+  /////////////////////////////////////////////////////////////////////////////
+  // Underline constants
+
+  MTS_UNDERLINE_NONE = 0; // нет
+  MTS_UNDERLINE_TEXT = 1; // подчеркнут только печатаемый текст
+  MTS_UNDERLINE_LINE = 2; // подчеркивание всей строки от левого поля до правого
+
+  /////////////////////////////////////////////////////////////////////////////
+  // Alignment constants
+
+  MTS_ALIGN_LEFT    = 0; // по левому краю
+  MTS_ALIGN_CENTER  = 1; // по центру
+  MTS_ALIGN_RIGHT   = 2; // по правому краю
+
   /////////////////////////////////////////////////////////////////////////////
   // VAT rate constants
 
@@ -416,6 +466,8 @@ type
     ByteTimeout: Integer;
     RemoteHost: AnsiString;
     RemotePort: Integer;
+    LogPath: WideString;
+    LogEnabled: Boolean;
   end;
 
   { TMTSDayParams }
@@ -428,15 +480,55 @@ type
     PrintRequired: Boolean;
   end;
 
-  { TMTSReceiptParams }
+  { TMTSCorrection }
 
-  TMTSReceiptParams = record
+  TMTSCorrection = record
+    Date: TDateTime;
+    Document: AnsiString;
+  end;
+
+  { TMTSOpenReceipt }
+
+  TMTSOpenReceipt = record
     ReceiptType: Integer; // Тип чека
     TaxSystem: Integer; // Система налогообложения
     SaleAddress: WideString; // Адрес проведения расчетов
     SaleLocation: WideString; // Место проведения расчетов
     AutomaticNumber: WideString; // Номер автомата для автоматического режима
     SenderEmail: WideString; // Адрес электронной почты отправителя чека
+    Correction: TMTSCorrection;
+  end;
+
+  { TMTSAgentData }
+
+  TMTSAgentData = record
+    Enabled: Boolean;
+    AgentOperation: WideString; // 1044, операция платежного агента
+    AgentPhone: WideString; // 1073, телефон платежного агента
+    PaymentProcessorPhone: WideString; //Телефон оператора по приему платежей 1074
+    AcquirerOperatorPhone: WideString; //	Телефон оператора перевода 1075
+    AcquirerOperatorName: WideString; // 	Наименование оператора перевода 1026
+    AcquirerOperatorAddress: WideString; //	Адрес оператора перевода 1005
+    AcquirerOperatorINN: WideString; //	ИНН оператора перевода 1016
+  end;
+
+  { TMTSIndustryAttribute }
+
+  TMTSIndustryAttribute = record
+    Enabled: Boolean;
+    IdentifierFOIV: AnsiString; // <T1262>идентификатор ФОИВ</T1262>
+    DocumentDate: TDateTime; // <T1263>дата документа основания</T1263>
+    DocumentNumber: AnsiString; // <T1264>номер документа основания</T1264>
+    AttributeValue: AnsiString; // <T1265>значение отраслевого реквизита</T1265>
+  end;
+
+  { TVendorData }
+
+  TMTSVendorData = record
+    Enabled: Boolean;
+    Phone: WideString; //	Телефон поставщика 1171
+    Name: WideString; //Наименование поставщика 1225
+    INN: WideString; //ИНН поставщика 1226
   end;
 
   { TMTSPosition }
@@ -458,10 +550,151 @@ type
     MarkCode: AnsiString;
     AddAttribute: AnsiString;
     AgentType: Integer;
-    //Agent;
-    //Supplier;
-    //IndustryAttribute;
-    SupplierINN: AnsiString;
+    AgentData: TMTSAgentData;
+    VendorData: TMTSVendorData;
+    IndustryAttribute: TMTSIndustryAttribute;
+  end;
+
+  { TMTSCustomerDetail }
+
+  TMTSCustomerDetail = record
+    Enabled: Boolean;
+    Name: WideString; // <T1227>ФИО или наименование покупателя</T1227>
+    INN: WideString;  // <T1228>ИНН покупателя</T1228>
+    BirthDate: TDateTime; // <T1243>дата рождения покупателя</T1243>
+    CountryCode: Integer; // <T1244>гражданство покупателя</T1244>
+    DocumentCode: Integer; // <T1245>код вида документа, удостоверяющего личность</T1245>
+    DocumentData: WideString; // <T1246>данные документа, удостоверяющего личность</T1246>
+    Address: WideString; // <T1254>адрес покупателя</T1254>
+  end;
+
+  { TMTSOperationInfo }
+
+  TMTSOperationInfo = record
+    Enabled: Boolean;
+    ID: Byte;
+    Data: AnsiString;
+    Date: TDateTime;
+  end;
+
+  { TMTSUserAttribute }
+
+  TMTSUserAttribute = record
+    Enabled: Boolean;
+    Name: AnsiString;
+    Value: AnsiString;
+  end;
+
+  { TMTSAttributes }
+
+  TMTSAttributes = record
+    ExtraAttribute: WideString;
+    CustomerPhone: WideString;
+    CustomerDetail: TMTSCustomerDetail;
+    IndustryAttribute: TMTSIndustryAttribute;
+    OperationInfo: TMTSOperationInfo;
+    UserAttribute: TMTSUserAttribute;
+  end;
+
+  { TMTSReceiptTotal }
+
+  TMTSReceiptTotal = record
+    Total: Int64; // итог чека
+    RoundedTotal: Int64; // округленный итог чека
+    RoundAmount: Int64; // сумма округления
+    ItemsCount: Integer; // количество предметов расчета
+  end;
+
+  { TMTSReceiptPayment }
+
+  TMTSReceiptPayment = record
+    CashAmount: Int64; // сумма оплаты наличными
+    CardAmount: Int64; // сумма оплаты безналичными
+    AdvanceAmount: Int64; // сумма оплаты в зачет аванса
+    CreditAmount: Int64; // сумма оплаты в кредит
+    OtherAmount: Int64; // сумма оплаты иная
+    DiscountAmount: Int64; // сумма произвольной скидки
+    CommentType: Integer; // тип оплаты безналичными от 1 до 5
+    CommentText: WideString; // текстовый комментарий до 168 символов
+    AmountType1: Int64; // сумма оплаты безналичными тип 1
+    AmountType2: Int64; // сумма оплаты безналичными тип 2
+    AmountType3: Int64; // сумма оплаты безналичными тип 3
+    AmountType4: Int64; // сумма оплаты безналичными тип 4
+    AmountType5: Int64; // сумма оплаты безналичными тип 5
+  end;
+
+  { TMTSEndPositions }
+
+  TMTSEndPositions = record
+    RecNumber: Integer; // номер чека за смену
+    DocNumber: Integer; // номер фискального документа
+    FiscalSign: AnsiString; // фискальный признак документа
+    Date: TDateTime; // дата
+    Total: Int64; // итог чека
+    AutomaticNumber: Integer; // номер автомата
+    SaleAddress: WideString; // Адрес проведения расчетов
+    SaleLocation: WideString; // Место проведения расчетов
+  end;
+
+  { TMTSCorrection }
+
+  TMTSCorrectionReason = record
+    Date: TDateTime;
+    Document: AnsiString;
+  end;
+
+  { TMTSPrintText }
+
+  TMTSPrintText = record
+    Text: WideString;
+    IsInversion: Boolean;
+    HorizontalFactor: Integer;
+    VerticalFactor: Integer;
+    FontType: Integer;
+    UnderlineMode: Integer;
+    Alignment: Integer;
+  end;
+
+  { TMTSBarcode }
+
+  TMTSBarcode = record
+    BarcodeType: Integer; // тип кода
+    ModuleWidth: Integer; // ширина штриха кода в пикселях (от 1 до 6)
+    BarcodeHeight: Integer; // высота кода в пикселях (от 1 до 255)
+    Data: AnsiString; // значение (должно соответствовать стандартам кода)
+  end;
+
+  { TMTSQRCode }
+
+  TMTSQRCode = record
+    Data: AnsiString;
+    Text: AnsiString;
+    Alignment: Integer;
+    ModuleWidth: Integer;
+    CorrectionLevel: Integer;
+  end;
+
+  { TMTSPicture }
+
+  TMTSPicture = record
+    PicNumber: Integer;
+    Alignment: Integer;
+  end;
+
+  { TMTSMarkCheck }
+
+  TMTSMarkCheck = record
+    Status: Integer; // T2004 : результат проверки КМ в ФН
+    Reason: Integer; // RES : код причины отказа в проверке КМ в ФН
+  end;
+
+  { TMTSCalcReport }
+
+  TMTSCalcReport = record
+    PendingCount: Integer;
+    FirstDocDate: TDateTime;
+    FDocNumber: Integer;
+    FiscalSign: Integer;
   end;
 
   { TMitsuDrv }
@@ -477,6 +710,7 @@ type
     FParams: TMitsuParams;
     FPrintDocument: Boolean;
     function FNParamsToXml(const Params: TFNParams): AnsiString;
+    procedure AddAgentData(Node: IXmlNode; const P: TMTSAgentData);
   public
     function GetPort: IPrinterPort;
     function CreatePort: IPrinterPort;
@@ -554,11 +788,38 @@ type
     function OpenFiscalDay(const Params: TMTSDayParams): Integer;
     function CloseFiscalDay(const Params: TMTSDayParams): Integer;
 
-    function BeginFiscalReceipt(const Params: TMTSReceiptParams): Integer;
-    function CancelFiscalReceipt: Integer;
-    function BeginPositions: Integer;
-    function AddPosition(const P: TMTSPosition): Integer;
-
+    function OpenReceipt(const Params: TMTSOpenReceipt): Integer;
+    function CancelReceipt: Integer;
+    function BeginRecPositions: Integer;
+    function AddRecPosition(const P: TMTSPosition): Integer;
+    function AddRecAttributes(const P: TMTSAttributes): Integer;
+    function ReadReceiptTotal(var R: TMTSReceiptTotal): Integer;
+    function PayReceipt(const P: TMTSReceiptPayment): Integer;
+    function EndPositions(var R: TMTSEndPositions): Integer;
+    function CloseReceipt(Print: Boolean): Integer;
+    function OpenCorrection(const P: TMTSOpenReceipt): Integer;
+    function PayCorrection(const P: TMTSReceiptPayment): Integer;
+    function OpenNonfiscal: Integer;
+    function CloseNonfiscal(Print: Boolean): Integer;
+    function Print: Integer;
+    function AddText(const P: TMTSPrintText): Integer; overload;
+    function AddText(const Text: WideString): Integer; overload;
+    function AddBarcode(const P: TMTSBarcode): Integer;
+    function AddQRCode(const P: TMTSQRCode): Integer;
+    function AddPicture(const P: TMTSPicture): Integer;
+    function AddSeparatorLine(LineType: Integer): Integer;
+    function AddBlankPixels(PixelCount: Integer): Integer;
+    function AddBlankLines(LineCount: Integer): Integer;
+    function FeedPixels(PixelCount: Integer): Integer;
+    function CutPaper: Integer;
+    function RestartFD: Integer;
+    function InitPrinter: Integer;
+    function ReadPrinterStatus: Integer;
+    function OpenCashDrawer: Integer;
+    function ReadCashDrawerStatus(var Status: Integer): Integer;
+    function CheckMarkCode(const Mark: AnsiString; var R: TMTSMarkCheck): Integer;
+    function MakeXReport(var R: TMTSDayStatus): Integer;
+    function MakeCalcReport(var R: TMTSCalcReport): Integer;
 
     property Logger: ILogFile read FLogger;
     property Port: IPrinterPort read GetPort;
@@ -825,6 +1086,12 @@ begin
   Result := FormatDateTime('hh:nn:ss', Date);
 end;
 
+// ДД.ММ.ГГГГ
+function DateToFDStr(const Date: TDateTime): AnsiString;
+begin
+  Result := FormatDateTime('dd.mm.yyyy', Date);
+end;
+
 { TMitsuDrv }
 
 constructor TMitsuDrv.Create;
@@ -870,6 +1137,7 @@ var
 begin
   Result := ReadLastDocStatus(Doc);
   if Failed(Result) then Exit;
+  if Doc.Status <> MTS_DOC_STATUS_OPENED then Exit;
 
   case Doc.DocType of
     MTS_DOC_TYPE_RECEIPT,
@@ -877,10 +1145,11 @@ begin
     MTS_DOC_TYPE_RECEIPT_CORRECTION,
     MTS_DOC_TYPE_BLANK_CORRECTION:
     begin
-      if Doc.Status = MTS_DOC_STATUS_OPENED then
-      begin
-        Result := CancelFiscalReceipt;
-      end;
+      Result := CancelReceipt;
+    end;
+    MTS_DOC_TYPE_NONFISCAL:
+    begin
+      Result := CloseNonfiscal(False);
     end;
   end;
 end;
@@ -993,7 +1262,7 @@ begin
       SerialParams.Parity := NOPARITY;
       SerialParams.FlowControl := FLOW_CONTROL_NONE;
       SerialParams.ReconnectPort := True;
-      SerialParams.ByteTimeout := 1000;
+      SerialParams.ByteTimeout := 10000; // !!!
       Result := TSerialPort.Create(SerialParams, Logger);
     end;
     ConnectionTypeSocket:
@@ -1174,7 +1443,7 @@ begin
   S := GetAttribute(Attribute);
   Year := StrToInt(Copy(S, 1, 4));
   Month := StrToInt(Copy(S, 6, 2));
-  Day := StrToInt(Copy(S, 8, 2));
+  Day := StrToInt(Copy(S, 9, 2));
   Result := EncodeDate(Year, Month, Day);
 end;
 
@@ -2258,14 +2527,18 @@ begin
   Node := Xml.CreateElement('Do', '');
   Xml.DocumentElement := Node;
   Node.SetAttribute('SHIFT', 'OPEN');
-  Node.SetAttribute('T1009', Params.SaleAddress);
-  Node.SetAttribute('T1187', Params.SaleLocation);
-  Node.SetAttribute('T1276', Params.ExtendedProperty);
-  Node.SetAttribute('T1277', Params.ExtendedData);
+  if Params.SaleAddress <> '' then
+    AddChild(Node, 'T1009', Params.SaleAddress);
+  if Params.SaleLocation <> '' then
+    AddChild(Node, 'T1187', Params.SaleLocation);
+  if Params.ExtendedProperty <> '' then
+    AddChild(Node, 'T1276', Params.ExtendedProperty);
+  if Params.ExtendedData <> '' then
+    AddChild(Node, 'T1277', Params.ExtendedData);
   Command := Trim(Xml.Xml.Text);
-  if Params.PrintRequired then
-    Command := Command + '<PRINT/>';
   Result := Send(Command);
+  if Succeeded(Result) and Params.PrintRequired then
+    Result := Print;
 end;
 
 (*
@@ -2294,14 +2567,18 @@ begin
   Node := Xml.CreateElement('Do', '');
   Xml.DocumentElement := Node;
   Node.SetAttribute('SHIFT', 'CLOSE');
-  Node.SetAttribute('T1009', Params.SaleAddress);
-  Node.SetAttribute('T1187', Params.SaleLocation);
-  Node.SetAttribute('T1278', Params.ExtendedProperty);
-  Node.SetAttribute('T1279', Params.ExtendedData);
-  Command := Trim(Xml.Xml.Text);
-  if Params.PrintRequired then
-    Command := Command + '<PRINT/>';
+  if Params.SaleAddress <> '' then
+    AddChild(Node, 'T1009', Params.SaleAddress);
+  if Params.SaleLocation <> '' then
+    AddChild(Node, 'T1187', Params.SaleLocation);
+  if Params.ExtendedProperty <> '' then
+    AddChild(Node, 'T1278', Params.ExtendedProperty);
+  if Params.ExtendedData <> '' then
+    AddChild(Node, 'T1279', Params.ExtendedData);
+  Xml.SaveToXML(Command);
   Result := Send(Command);
+  if Succeeded(Result) and Params.PrintRequired then
+    Result := Print;
 end;
 
 (*
@@ -2315,7 +2592,7 @@ end;
 <Do/>
 *)
 
-function TMitsuDrv.BeginFiscalReceipt(const Params: TMTSReceiptParams): Integer;
+function TMitsuDrv.OpenReceipt(const Params: TMTSOpenReceipt): Integer;
 var
   Node: IXMLNode;
   Xml: IXMLDocument;
@@ -2343,7 +2620,7 @@ end;
 Формат:
 *)
 
-function TMitsuDrv.CancelFiscalReceipt: Integer;
+function TMitsuDrv.CancelReceipt: Integer;
 begin
   Result := Send('<Do CHECK=''CANCEL''/>');
 end;
@@ -2357,7 +2634,7 @@ end;
 • Разрешена команда Отмена открытого чека.
 *)
 
-function TMitsuDrv.BeginPositions: Integer;
+function TMitsuDrv.BeginRecPositions: Integer;
 begin
   Result := Send('<Do CHECK=''BEGIN''/>');
 end;
@@ -2412,11 +2689,34 @@ begin
   Result := Format('%.6f', [Quantity]);
 end;
 
-function TMitsuDrv.AddPosition(const P: TMTSPosition): Integer;
+function TMitsuDrv.AddRecPosition(const P: TMTSPosition): Integer;
+
+  procedure AddIndustryAttribute(Node: IXMLNode; const P: TMTSIndustryAttribute);
+  begin
+    if not P.Enabled then Exit;
+
+    Node := Node.AddChild('T1260');
+    Node.SetAttribute('T1262', P.IdentifierFOIV);
+    Node.SetAttribute('T1263', DateToFDStr(P.DocumentDate));
+    Node.SetAttribute('T1264', P.DocumentNumber);
+    Node.SetAttribute('T1265', P.AttributeValue);
+  end;
+
+  procedure AddVendorData(Node: IXMLNode; const Vendor: TMTSVendorData);
+  begin
+    if not Vendor.Enabled then Exit;
+
+    Node.SetAttribute('T1226', Vendor.INN);
+    Node := Node.AddChild('T1224');
+    Node.SetAttribute('T1225', Vendor.Name);
+    Node.SetAttribute('T1171', Vendor.Phone);
+  end;
+
 var
   Node: IXMLNode;
   Node2: IXMLNode;
   Xml: IXMLDocument;
+  Command: WideString;
 begin
   Xml := NewXMLDocument('');
   Node := Xml.CreateElement('ADD', '');
@@ -2441,17 +2741,702 @@ begin
     AddChild(Node, 'T1191', P.AddAttribute);
   if P.AgentType > 0 then
     AddChild(Node, 'T1222', IntToStr(P.AgentType));
-  if P.SupplierINN <> '' then
-    AddChild(Node, 'T1226', P.SupplierINN);
   if P.Numerator <> 0 then
     AddChild(Node, 'QTY', Format('PART=''%d'' OF=''%d''', [P.Numerator, P.Denominator]));
+
+  AddAgentData(Node, P.AgentData);
+  AddVendorData(Node, P.VendorData);
+  AddIndustryAttribute(Node, P.IndustryAttribute);
+  Xml.SaveToXML(Command);
+  Result := Send(Command);
+end;
+
+procedure TMitsuDrv.AddAgentData(Node: IXmlNode; const P: TMTSAgentData);
+begin
+  if not P.Enabled then Exit;
+
+  Node := Node.AddChild('<T1223>');
+  if P.AgentOperation <> '' then
+    AddChild(Node, '<T1044>', P.AgentOperation);
+  if P.AgentPhone <> '' then
+    AddChild(Node, '<T1073>', P.AgentPhone);
+  if P.PaymentProcessorPhone <> '' then
+    AddChild(Node, '<T1074>', P.PaymentProcessorPhone);
+  if P.AcquirerOperatorPhone <> '' then
+    AddChild(Node, '<T1075>', P.AcquirerOperatorPhone);
+  if P.AcquirerOperatorName <> '' then
+    AddChild(Node, '<T1026>', P.AcquirerOperatorName);
+  if P.AcquirerOperatorAddress <> '' then
+    AddChild(Node, '<T1005>', P.AcquirerOperatorAddress);
+  if P.AcquirerOperatorINN <> '' then
+    AddChild(Node, '<T1016>', P.AcquirerOperatorINN);
+end;
+
 (*
-  AgentToNode(Node, P.AgentInfo);
-  SupplierToNode(Node, P.supplier);
-  IndustryAttributeToNode(Node, P.IndustryAttribute);
+7.4. Дополнительные реквизиты чека
+Формат: <ADD DATA=’ ’>
+<T1192> дополнительный реквизит чека </T1192>
+<T1008>почта или телефон покупателя</T1008>
+<T1256>
+<T1227>ФИО или наименование покупателя</T1227>
+<T1228>ИНН покупателя</T1228>
+<T1243>дата рождения покупателя</T1243>
+<T1244>гражданство покупателя</T1244>
+<T1245>код вида документа, удостоверяющего личность</T1245>
+<T1246>данные документа, удостоверяющего личность</T1246>
+<T1254>адрес покупателя</T1254>
+</T1256>
+
+<T1261>
+<T1262>идентификатор ФОИВ</T1262>
+<T1263>дата документа основания</T1263>
+<T1264>номер документа основания</T1264>
+<T1265>значение отраслевого реквизита</T1265>
+</T1261>
+
+<T1270>
+<T1271>идентификатор операции</T1271>
+<T1272>данные операции</T1272>
+<T1273>дата, время операции</T1273>
+</T1270>
+
+<T1084>
+  <T1085>наименование доп. реквизита пользователя</T1085>
+  <T1086>значение доп. реквизита пользователя</T1086>
+</T1084>
+</ADD>
 *)
 
+function TMitsuDrv.AddRecAttributes(const P: TMTSAttributes): Integer;
+
+  procedure AddCustomerDetail(Node: IXMLNode; const P: TMTSCustomerDetail);
+  begin
+    if not P.Enabled then Exit;
+
+    Node := Node.AddChild('<T1256>');
+    Node.SetAttribute('<T1227>', P.Name);
+    Node.SetAttribute('<T1228>', P.INN);
+    Node.SetAttribute('<T1243>', DateToFDStr(P.BirthDate));
+    Node.SetAttribute('<T1244>', Format('%3d', [P.CountryCode]));
+    Node.SetAttribute('<T1245>', Format('%2d', [P.DocumentCode]));
+    Node.SetAttribute('<T1246>', P.DocumentData);
+    Node.SetAttribute('<T1254>', P.Address);
+  end;
+
+  procedure AddIndustryAttribute(Node: IXMLNode; const P: TMTSIndustryAttribute);
+  begin
+    if not P.Enabled then Exit;
+
+    Node := Node.AddChild('<T1261>');
+    Node.SetAttribute('<T1262>', P.IdentifierFOIV);
+    Node.SetAttribute('<T1263>', DateToFDStr(P.DocumentDate));
+    Node.SetAttribute('<T1264>', P.DocumentNumber);
+    Node.SetAttribute('<T1265>', P.AttributeValue);
+  end;
+
+  procedure AddOperationInfo(Node: IXMLNode; const P: TMTSOperationInfo);
+  begin
+    if not P.Enabled then Exit;
+
+    Node := Node.AddChild('<T1270>');
+    Node.SetAttribute('<T1271>', P.ID);
+    Node.SetAttribute('<T1272>', P.Data);
+    Node.SetAttribute('<T1273>', DateTimeToUnix(P.Date));
+  end;
+
+  procedure AddUserAttribute(Node: IXMLNode; const P: TMTSUserAttribute);
+  begin
+    if not P.Enabled then Exit;
+
+    Node := Node.AddChild('<T1084>');
+    Node.SetAttribute('<T1085>', P.Name);
+    Node.SetAttribute('<T1086>', P.Value);
+  end;
+
+var
+  Node: IXMLNode;
+  Node2: IXMLNode;
+  Xml: IXMLDocument;
+begin
+  Xml := NewXMLDocument('');
+  Node := Xml.CreateElement('ADD', '');
+  Xml.DocumentElement := Node;
+  Node.SetAttribute('DATA', '');
+  Node.SetAttribute('T1192', P.ExtraAttribute);
+  Node.SetAttribute('T1008', P.CustomerPhone);
+  AddCustomerDetail(Node, P.CustomerDetail);
+  AddIndustryAttribute(Node, P.IndustryAttribute);
+  AddOperationInfo(Node, P.OperationInfo);
+  AddUserAttribute(Node, P.UserAttribute);
   Result := Send(Trim(Xml.Xml.Text));
+end;
+
+(*
+7.7. Итоги чека
+Формат: <Do CHECK=’TOTAL’/>
+Ответ: <OK TOTAL=’итог чека’
+ROUND=’округленный итог чека’
+OFF=’сумма округления’
+ITEMS=’количество предметов расчета’/>
+*)
+
+function TMitsuDrv.ReadReceiptTotal(var R: TMTSReceiptTotal): Integer;
+begin
+  Result := Send('<Do CHECK=''TOTAL''/>');
+  if Succeeded(Result) then
+  begin
+    R.Total := GetIntAttribute('TOTAL');
+    R.RoundedTotal := GetIntAttribute('ROUND');
+    R.RoundAmount := GetIntAttribute('OFF');
+    R.ItemsCount := GetIntAttribute('ITEMS');
+  end;
+end;
+
+(*
+7.8. Ввод оплаты
+Формат: <Do CHECK=’PAY’
+PA = 'сумма оплаты наличными'
+PB = 'сумма оплаты безналичными'
+PC = ' сумма оплаты в зачет аванса'
+PD = ' сумма оплаты в кредит'
+PE = 'сумма оплаты иная'
+ROUND='сумма произвольной скидки'>
+<CMT TYPE='тип' Type1='сумма'. . .Type5='сумма'>текст</CMT>
+</Do>
+*)
+
+function TMitsuDrv.PayReceipt(const P: TMTSReceiptPayment): Integer;
+var
+  Node: IXMLNode;
+  Xml: IXMLDocument;
+begin
+  Xml := NewXMLDocument('');
+  Node := Xml.CreateElement('Do', '');
+  Xml.DocumentElement := Node;
+  Node.SetAttribute('CHECK', 'PAY');
+  Node.SetAttribute('PA', P.CashAmount);
+  Node.SetAttribute('PB', P.CardAmount);
+  Node.SetAttribute('PC', P.AdvanceAmount);
+  Node.SetAttribute('PD', P.CreditAmount);
+  Node.SetAttribute('PE', P.OtherAmount);
+  Node.SetAttribute('ROUND', P.DiscountAmount);
+
+  Node := Node.AddChild('CMT');
+  Node.Text := P.CommentText;
+  Node.SetAttribute('TYPE', P.CommentType);
+  Node.SetAttribute('Type1', P.AmountType1);
+  Node.SetAttribute('Type2', P.AmountType2);
+  Node.SetAttribute('Type3', P.AmountType3);
+  Node.SetAttribute('Type4', P.AmountType4);
+  Node.SetAttribute('Type5', P.AmountType5);
+  Result := Send(Trim(Xml.Xml.Text));
+end;
+
+(*
+7.9. Завершение формирование чека
+Формат: <Do CHECK=’END’/>
+Ответ: <OK CHECK='номер чека за смену'
+FD='номер фискального документа'
+FP='фискальный признак документа'>
+
+TOTAL=’итог чека’
+AUTOMAT=’номер автомата’ >
+<ADDRESS>адрес расчетов</ADDRESS>
+<PLACE>место расчетов</PLACE>
+</OK>
+*)
+
+function TMitsuDrv.EndPositions(var R: TMTSEndPositions): Integer;
+begin
+  Result := Send('<Do CHECK=''END''/>');
+  if Succeeded(Result) then
+  begin
+    R.RecNumber := GetIntAttribute('CHECK');
+    R.DocNumber := GetIntAttribute('FD');
+    R.FiscalSign := GetAttribute('FP');
+    R.Date := GetDateAttribute('DATE') + GetTimeAttribute('TIME');
+    R.Total := GetIntAttribute('TOTAL');
+    R.AutomaticNumber := GetIntAttribute('AUTOMAT');
+    R.SaleAddress := GetAttribute('ADDRESS');
+    R.SaleLocation := GetAttribute('PLACE');
+  end;
+end;
+
+(*
+7.10. Закрытие и печать чека
+Формат:
+• Закрывает чек. Завершает формирование печатной формы чека.
+• Для печати чека надо дополнительно подать команду <PRINT/>.
+*)
+
+function TMitsuDrv.CloseReceipt(Print: Boolean): Integer;
+var
+  Command: AnsiString;
+begin
+  Command := '<Do CHECK=''CLOSE''/>';
+  if Print then
+    Command := Command + '<PRINT/>';
+  Result := Send(Command);
+end;
+
+(*
+8.1. Открытие чека коррекции
+Формат: <Do CHECK =’CORR’
+TYPE=’признак расчета’
+TAX=’система налогообложения’>
+<T1009> адрес расчетов </T1009>
+<T1187> место расчетов </T1187>
+<T1036> номер автомата </T1036>
+<T1117> адрес электронной почты отправителя чека </T1117>
+<T1173> тип коррекции </T1173>
+<T1174>
+<T1178> дата совершения корректируемого расчета </T1178>
+<T1179> номер предписания </T1179>
+</T1174>
+</Do>
+*)
+
+function TMitsuDrv.OpenCorrection(const P: TMTSOpenReceipt): Integer;
+
+  procedure AddCorrection(Node: IXMLNode; const P: TMTSCorrection);
+  begin
+    Node := Node.AddChild('T1174');
+    Node.SetAttribute('T1178', DateTimeToUnix(P.Date));
+    Node.SetAttribute('T1179', P.Document);
+  end;
+
+var
+  Node: IXMLNode;
+  Xml: IXMLDocument;
+  Command: AnsiString;
+begin
+  Xml := NewXMLDocument('');
+  Node := Xml.CreateElement('Do', '');
+  Xml.DocumentElement := Node;
+  Node.SetAttribute('CHECK', 'CORR');
+  Node.SetAttribute('TYPE', P.ReceiptType);
+  Node.SetAttribute('TAX', P.TaxSystem);
+  if P.SaleAddress <> '' then
+    AddChild(Node, 'T1009', P.SaleAddress);
+  if P.SaleLocation <> '' then
+    AddChild(Node, 'T1187', P.SaleLocation);
+  if P.AutomaticNumber <> '' then
+    AddChild(Node, 'T1036', P.AutomaticNumber);
+  if P.SenderEmail <> '' then
+    AddChild(Node, 'T1117', P.SenderEmail);
+  AddCorrection(Node, P.Correction);
+  Result := Send(Trim(Xml.Xml.Text));
+end;
+
+(*
+8.2. Закрытие и печать чека коррекции
+Формат: <Do CHECK=’PAY’
+PA=’сумма оплаты наличными’
+PB=’сумма оплаты безналичными’
+PC=’сумма оплаты в зачет аванса’
+PD=’сумма оплаты в кредит’
+PE=’сумма оплаты встречным предоставлением’ >
+</Do>
+*)
+
+function TMitsuDrv.PayCorrection(const P: TMTSReceiptPayment): Integer;
+var
+  Node: IXMLNode;
+  Xml: IXMLDocument;
+begin
+  Xml := NewXMLDocument('');
+  Node := Xml.CreateElement('Do', '');
+  Xml.DocumentElement := Node;
+  Node.SetAttribute('CHECK', 'PAY');
+  Node.SetAttribute('PA', P.CashAmount);
+  Node.SetAttribute('PB', P.CardAmount);
+  Node.SetAttribute('PC', P.AdvanceAmount);
+  Node.SetAttribute('PD', P.CreditAmount);
+  Node.SetAttribute('PE', P.OtherAmount);
+  Result := Send(Trim(Xml.Xml.Text));
+end;
+
+(*
+9.1. Открытие нефискального документа
+Формат: <Do CHECK=’TXT’/>
+*)
+
+function TMitsuDrv.OpenNonfiscal: Integer;
+begin
+  Result := Send('<Do CHECK=''TXT''/>');
+end;
+
+(*
+9.2. Закрытие нефискального документа
+Формат: <Do CHECK=’CLOSE’/>
+<PRINT/>
+*)
+
+function TMitsuDrv.CloseNonfiscal(Print: Boolean): Integer;
+var
+  Command: AnsiString;
+begin
+  Command := '<Do CHECK=''CLOSE''/>';
+  if Print then
+    Command := Command + '<PRINT/>';
+  Result := Send(Command);
+end;
+
+(*
+10.1. Текст
+Формат: <ADD FORM = 'формат'> <TEXT>текст</TEXT></ADD>
+• FORM: формат текста, задается последовательностью 6-ти цифр, по умолчанию '000000':
+1-я цифра – инверсия ч/б:
+0 – нет инверсии: черный текст на белом фоне;
+1 – инверсия: белый текст на черном фоне;
+2-я цифра – размер текста по горизонтали (ширина):
+3-я цифра – размер текста по вертикали (высота):
+0 или 1 – обычный размер;
+от 2 до 8 – масштаб от 2-х до 8-кратного;
+
+4-я цифра – тип шрифта:
+0 – шрифт, заданный настройкой Установка настроек принтера;
+1 – шрифт "А" (стандартный);
+2 – шрифт "B" (компактный);
+5-я цифра – подчеркивание:
+0 – нет;
+1 – подчеркнут только печатаемый текст;
+2 – подчеркивание всей строки от левого поля до правого;
+6-я цифра – выравнивание:
+0 – по левому краю;
+1 – по центру;
+2 – по правому краю.
+• TEXT: текст длиной до 2000 символов в кодировке Windiws-1251. При печати текст разбивается на
+строки с переносами по словам.
+*)
+
+function TMitsuDrv.AddText(const P: TMTSPrintText): Integer;
+var
+  Node: IXMLNode;
+  Xml: IXMLDocument;
+  Format: AnsiString;
+const
+  Inversion: array [Boolean] of string = ('0', '1');
+begin
+  Format := Inversion[P.IsInversion] + IntToStr(P.HorizontalFactor) +
+    IntToStr(P.VerticalFactor) + IntToStr(P.FontType) +
+    IntToStr(P.UnderlineMode) + IntToStr(P.Alignment);
+
+  Xml := NewXMLDocument('');
+  Node := Xml.CreateElement('ADD', '');
+  Xml.DocumentElement := Node;
+  Node.SetAttribute('FORM', Format);
+  AddChild(Node, 'TEXT', P.Text);
+  Result := Send(Trim(Xml.Xml.Text));
+end;
+
+function TMitsuDrv.AddText(const Text: WideString): Integer;
+var
+  Node: IXMLNode;
+  Xml: IXMLDocument;
+begin
+  Xml := NewXMLDocument('');
+  Node := Xml.CreateElement('ADD', '');
+  Xml.DocumentElement := Node;
+  Node.SetAttribute('FORM', '000000');
+  AddChild(Node, 'TEXT', Text);
+  Result := Send(Trim(Xml.Xml.Text));
+end;
+
+(*
+10.2. Штрих-код
+Формат: <ADD BAR='тип кода' X = 'ширина штриха' Y = 'высота кода'>
+<VAL> значение </VAL>
+</ADD>
+• BAR : тип кода, одно из следующих значений:
+0 – UPC-A 3 – EAN8/JAN8 6 – CODABAR
+1 – UPC-E 4 – CODE39 7 – CODE93
+2 – EAN13/JAN13 5 – ITF 8 – CODE128
+• X : ширина штриха кода в пикселях (от 1 до 6);
+• Y : высота кода в пикселях (от 1 до 255);
+• VAL : значение (должно соответствовать стандартам кода)
+*)
+
+function TMitsuDrv.AddBarcode(const P: TMTSBarcode): Integer;
+var
+  Node: IXMLNode;
+  Xml: IXMLDocument;
+begin
+  Xml := NewXMLDocument('');
+  Node := Xml.CreateElement('ADD', '');
+  Xml.DocumentElement := Node;
+  Node.SetAttribute('BAR', P.BarcodeType);
+  Node.SetAttribute('X', P.ModuleWidth);
+  Node.SetAttribute('Y', P.BarcodeHeight);
+  AddChild(Node, 'VAL', P.Data);
+  Result := Send(Trim(Xml.Xml.Text));
+end;
+
+function TMitsuDrv.Print: Integer;
+begin
+  Result := Send('<PRINT/>');
+end;
+
+(*
+10.3. QR код
+Формат: <ADD BAR='9' X='уровень коррекции' Y='размер точек' ALIGN = 'выравнивание'>
+<VAL> значение </VAL>
+<TEXT> текст для печати рядом с QR-кодом </TEXT>
+</ADD>
+• VAL : значение QR кода, обязательный параметр.
+• X : уровень коррекции ошибок: 0 (L), 1 (M), 2 (Q), 3 (H), по умолчанию 2 (Q);
+• Y : размер точек: от 1 до 4, по умолчанию 3;
+• ALIGN : расположение, по умолчанию – как задано в настройке Установка других настроек (опции):
+0 – QR код слева, текст справа;
+1 – QR код по центру, текст отдельно;
+2 – QR код справа, текст слева.
+• TEXT : текст для печати рядом с QR кодом
+*)
+
+function TMitsuDrv.AddQRCode(const P: TMTSQRCode): Integer;
+var
+  Node: IXMLNode;
+  Xml: IXMLDocument;
+begin
+  Xml := NewXMLDocument('');
+  Node := Xml.CreateElement('ADD', '');
+  Xml.DocumentElement := Node;
+  Node.SetAttribute('BAR', 9);
+  Node.SetAttribute('ALIGN', P.Alignment);
+  Node.SetAttribute('X', P.CorrectionLevel);
+  Node.SetAttribute('Y', P.ModuleWidth);
+  AddChild(Node, 'VAL', P.Data);
+  AddChild(Node, 'TEXT', P.Text);
+  Result := Send(Trim(Xml.Xml.Text));
+end;
+
+(*
+10.4. Рисунок
+Формат: <ADD PIC='номер рисунка' POS = 'выравнивание'/>
+• PIC: номер рисунка (0-22), из числа ранее загруженных в память кассы.
+• POS: расположение рисунка в строке:31
+0 – по левому краю;
+1 – по центру;
+2 – по правому краю.
+*)
+
+function TMitsuDrv.AddPicture(const P: TMTSPicture): Integer;
+var
+  Node: IXMLNode;
+  Xml: IXMLDocument;
+begin
+  Xml := NewXMLDocument('');
+  Node := Xml.CreateElement('ADD', '');
+  Xml.DocumentElement := Node;
+  Node.SetAttribute('PIC', P.PicNumber);
+  Node.SetAttribute('POS', P.Alignment);
+  Result := Send(Trim(Xml.Xml.Text));
+end;
+
+(*
+10.5. Разделительная линия в чеке
+Формат: <ADD LINE='тип линии'/>
+• LINE : тип линии:
+1 – одинарная тонкая;
+2 – двойная;
+3 – толстая.*)
+
+function TMitsuDrv.AddSeparatorLine(LineType: Integer): Integer;
+var
+  Node: IXMLNode;
+  Xml: IXMLDocument;
+begin
+  Xml := NewXMLDocument('');
+  Node := Xml.CreateElement('ADD', '');
+  Xml.DocumentElement := Node;
+  Node.SetAttribute('LINE', LineType);
+  Result := Send(Trim(Xml.Xml.Text));
+end;
+
+(*
+10.6. Прогон бумаги в чеке
+Формат: <ADD FEED='количество пикселей'/>
+• FEED: размер прогона чековой ленты в пикселях (0–255).
+Добавляется в печатную форму чека или текстового документа.
+*)
+
+function TMitsuDrv.AddBlankPixels(PixelCount: Integer): Integer;
+begin
+  Result := Send(Format('<ADD FEED=''%d''/>', [PixelCount]));
+end;
+
+(*
+10.7. Пустые строки в чеке
+Формат: <ADD BLANK='число строк'/>
+• BLANK: число пустых строк (0–255).
+Добавляются в печатную форму чека или текстового документа.
+*)
+
+function TMitsuDrv.AddBlankLines(LineCount: Integer): Integer;
+begin
+  Result := Send(Format('<ADD BLANK=''%d''/>', [LineCount]));
+end;
+
+(*
+10.8. Прогон бумаги
+Формат: < FEED n='количество пикселей'/>
+• FEED: размер прогона чековой ленты в пикселях (0–255), в режиме реального времени
+*)
+
+function TMitsuDrv.FeedPixels(PixelCount: Integer): Integer;
+begin
+  Result := Send(Format('<FEED n=''%d''/>', [PixelCount]));
+end;
+
+(*
+10.9. Отрезка ленты
+Формат: <CUT/>
+• Отрезка бумаги в режиме реального времени.
+*)
+
+function TMitsuDrv.CutPaper: Integer;
+begin
+  Result := Send('<CUT/>');
+end;
+
+(*
+10.11. Перезапуск фискального накопителя
+Формат: <DEVICE JOB='1'/>
+• Инициализация ФН по питанию, если произошел таймаут ответа ФН.
+*)
+
+function TMitsuDrv.RestartFD: Integer;
+begin
+  Result := Send('<DEVICE JOB=''1''/>');
+end;
+
+(*
+10.12. Инициализация принтера
+Формат: <DEVICE JOB='2'/>
+• Инициализация печатающего устройства после «зависания»
+*)
+
+function TMitsuDrv.InitPrinter: Integer;
+begin
+  Result := Send('<DEVICE JOB=''2''/>');
+end;
+
+(*
+10.13. Состояние принтера
+Формат: <DEVICE JOB='3'/>
+• Ответ <OK/>, если состояние принтера в норме.
+• Ответ <ERROR No='код ошибки'/> с кодом от 500 до 511
+*)
+
+function TMitsuDrv.ReadPrinterStatus: Integer;
+begin
+  Result := Send('<DEVICE JOB=''3''/>');
+end;
+
+(*
+10.14. Открыть денежный ящик
+Формат: <DEVICE JOB='4'/>
+*)
+
+function TMitsuDrv.OpenCashDrawer: Integer;
+begin
+  Result := Send('<DEVICE JOB=''4''/>');
+end;
+
+(*
+10.15. Состояние денежного ящика
+Формат: <DEVICE JOB='5'/>
+Ответ: <OK DRAWER='код состояния'/>
+• Код состояния = '0' – закрыт, '1' – открыт (зависит от подключения сенсора).
+*)
+
+function TMitsuDrv.ReadCashDrawerStatus(var Status: Integer): Integer;
+begin
+  Result := Send('<DEVICE JOB=''5''/>');
+  if Succeeded(Result) then
+  begin
+    Status := GetIntAttribute('DRAWER');
+  end;
+end;
+
+(*
+11.1. Проверка кода маркировки в ФН
+Формат: <Do Mark=’TRY’><KM>КОД</KM></Do>
+Ответ: <OK T2004='результат' RES='причина' />
+• KM : код маркировки в шестнадцатеричном виде, обязательный параметр.
+• T2004 : результат проверки КМ в ФН – число в 16-ричном представлении, битовая маска:
+0x00 – КМ не может быть проверен в ФН с использованием ключа проверки КП
+0x01 – КМ проверен, результат отрицательный
+0x03 – КМ проверен, результат положительный
+Бит Значение 0 1
+0 КМ проверен в ФН с использованием ключа проверки КП? нет да
+1 КМ проверен, результат положительный? нет да
+• RES : код причины отказа в проверке КМ в ФН, возможные значения:
+0 – КМ проверен в ФН
+1 – КМ данного типа не подлежит проверки в ФН
+2 – ФН не содержит ключ проверки кода проверки этого КМ
+3 – Проверка невозможна, отсутствуют идентификаторы применения GS1 91 и / или 92 или их формат неверный.
+4 – Проверка КМ в ФН невозможна по иной причине.
+*)
+
+function TMitsuDrv.CheckMarkCode(const Mark: AnsiString; var R: TMTSMarkCheck): Integer;
+begin
+  Result := Send(Format('<Do Mark=''TRY''><KM>%s</KM></Do>', [Mark]));
+  if Succeeded(Result) then
+  begin
+    R.Status := GetIntAttribute('T2004');
+    R.Reason := GetIntAttribute('RES');
+  end;
+end;
+
+(*
+12.1. Отчет о текущем состоянии расчетов
+Формат: <MAKE REPORT='Z'/>
+или: <MAKE REPORT='Z'>
+<T1009>адрес расчетов</T1009>
+<T1187>место расчетов</T1187>
+<T1280> дополнительный реквизит ОТР </T1280>
+<T1281> дополнительные данные ОТР </T1281>
+</Make>
+Ответ: <OK
+PENDING='количество неотправленных в ОФД документов'
+FIRST='дата первого неотправленного в ОФД документа'
+FD='номер фискального документа'
+FP='фискальный признак документа'/>
+*)
+
+function TMitsuDrv.MakeCalcReport(var R: TMTSCalcReport): Integer;
+begin
+  Result := Send('<MAKE REPORT=''Z''/>');
+  if Succeeded(Result) then
+  begin
+    R.PendingCount := GetIntAttribute('PENDING');
+    R.FirstDocDate := GetDateAttribute('FIRST');
+    R.FDocNumber := GetIntAttribute('FD');
+    R.FiscalSign := GetIntAttribute('FP');
+  end;
+end;
+
+(*
+12.2. Отчет об итогах смены (X-отчет)
+Формат: <MAKE REPORT='X'/>
+Ответ: <OK SHIFT=' номер смены '
+STATE='состояние смены'
+COUNT='количество чеков за смену'
+KeyValid=’срок действия ключей’>
+</OK>
+*)
+
+function TMitsuDrv.MakeXReport(var R: TMTSDayStatus): Integer;
+begin
+  Result := Send('<MAKE REPORT=''X''/>');
+  if Succeeded(Result) then
+  begin
+    R.DayNumber := GetIntAttribute('SHIFT');
+    R.DayStatus := GetIntAttribute('STATE');
+    R.RecNumber := GetIntAttribute('COUNT');
+    R.KeyExpDays := GetIntAttribute('KeyValid');
+  end;
 end;
 
 end.

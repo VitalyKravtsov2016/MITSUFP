@@ -1,33 +1,37 @@
 [Closed Files]
-File_0=SourceModule,'D:\projects\MITSUFP\Src\MitsuDrv1C\Units\FFDTypes.pas',0,1,173,2,197,0,0
-File_1=SourceModule,'D:\projects\MITSUFP\Src\MitsuDrv1C\Units\MitsuDrv1C.pas',0,1,2140,5,2153,0,0
-File_2=SourceModule,'D:\projects\MITSUFP\Src\MitsuDrv1C\Units\Positions1C3.pas',0,1,393,11,403,0,0
-File_3=SourceModule,'D:\projects\MITSUFP\Src\MitsuDrv1C\Units\Driver1Cst30.pas',0,1,1,1,1,0,0
-File_4=SourceModule,'D:\projects\MITSUFP\Src\MitsuDrv1C\Units\Devices1C3.pas',0,1,933,23,963,0,0
-File_5=SourceModule,'D:\projects\MITSUFP\Src\MitsuDrv1C\Units\Types1C_1.pas',0,1,1,1,1,0,0
-File_6=SourceModule,'D:\projects\MITSUFP\Src\MitsuDrv1C\Units\Devices3.pas',0,1,1,1,1,0,0
-File_7=SourceModule,'D:\projects\MITSUFP\Src\MitsuDrv1C\Units\Params1C.pas',0,1,1,31,9,0,0
-File_8=SourceModule,'D:\projects\MITSUFP\Src\MitsuDrv1C\Units\Types1C.pas',0,1,1,1,1,0,0
+File_0=SourceModule,'D:\projects\MITSUFP\Src\MitsuDrv1C\Units\Devices1C3.pas',0,1,1670,1,1671,0,0
+File_1=SourceModule,'D:\projects\MITSUFP\Test\MisuDrvTest\Units\duMitsuDrv.pas',0,1,1,1,1,0,0
+File_2=SourceModule,'D:\projects\MITSUFP\Test\MisuDrvTest\Units\duMitsuDrv1C.pas',0,1,219,24,239,0,0
+File_3=SourceModule,'D:\projects\MITSUFP\Src\Shared\StringUtils.pas',0,1,13,27,35,0,0
+File_4=SourceModule,'D:\projects\MITSUFP\Src\MitsuDrv1C\Units\GS1Util.pas',0,1,1,23,6,0,0
+File_5=SourceModule,'D:\projects\MITSUFP\Src\MitsuDrv1C\Units\GS1Barcode.pas',0,1,1,1,1,0,0
+File_6=SourceModule,'D:\projects\MITSUFP\Src\MitsuDrv1C\Units\Types1C_1.pas',0,1,249,36,275,0,0
 
 [Modules]
-Module0=D:\projects\MITSUFP\Src\MitsuDrv1C\Units\MitsuDrv.pas
-Module1=c:\program files (x86)\borland\delphi7\Source\Xml\XMLIntf.pas
-Module2=D:\projects\MITSUFP\Test\MisuDrvTest\Units\duMitsuDrv.pas
-Count=3
+Module0=D:\projects\MITSUFP\Src\MitsuDrv1C\Units\MitsuDrv1C.pas
+Module1=D:\projects\MITSUFP\Src\MitsuDrv1C\Units\Positions1C3.pas
+Module2=D:\projects\MITSUFP\Src\MitsuDrv1C\Units\MitsuDrv.pas
+Module3=D:\projects\MITSUFP\Src\MitsuDrv1C\Units\XmlUtils.pas
+Count=4
 EditWindowCount=1
 TypeLibWindowCount=2
+
+[D:\projects\MITSUFP\Src\MitsuDrv1C\Units\MitsuDrv1C.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[D:\projects\MITSUFP\Src\MitsuDrv1C\Units\Positions1C3.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
 
 [D:\projects\MITSUFP\Src\MitsuDrv1C\Units\MitsuDrv.pas]
 ModuleType=SourceModule
 FormState=0
 FormOnTop=0
 
-[c:\program files (x86)\borland\delphi7\Source\Xml\XMLIntf.pas]
-ModuleType=SourceModule
-FormState=0
-FormOnTop=0
-
-[D:\projects\MITSUFP\Test\MisuDrvTest\Units\duMitsuDrv.pas]
+[D:\projects\MITSUFP\Src\MitsuDrv1C\Units\XmlUtils.pas]
 ModuleType=SourceModule
 FormState=0
 FormOnTop=0
@@ -61,11 +65,12 @@ FormState=0
 FormOnTop=0
 
 [EditWindow0]
-ViewCount=3
-CurrentView=1
+ViewCount=4
+CurrentView=0
 View0=0
 View1=1
 View2=2
+View3=3
 CodeExplorer=CodeExplorer@EditWindow0
 MessageView=MessageView@EditWindow0
 Create=1
@@ -73,7 +78,7 @@ Visible=1
 State=2
 Left=360
 Top=140
-Width=1560
+Width=1302
 Height=682
 MaxLeft=-8
 MaxTop=107
@@ -90,24 +95,31 @@ BottomPanelClients=MessageView@EditWindow0
 BottomPanelData=000004000000000000000000000000000000000000000000000100000000000000000B0000004D65737361676556696577FFFFFFFF
 
 [View0]
-Module=D:\projects\MITSUFP\Test\MisuDrvTest\Units\duMitsuDrv.pas
-CursorX=21
-CursorY=521
-TopLine=505
+Module=D:\projects\MITSUFP\Src\MitsuDrv1C\Units\MitsuDrv1C.pas
+CursorX=104
+CursorY=2131
+TopLine=2116
 LeftCol=1
 
 [View1]
-Module=D:\projects\MITSUFP\Src\MitsuDrv1C\Units\MitsuDrv.pas
-CursorX=25
-CursorY=2444
-TopLine=2425
+Module=D:\projects\MITSUFP\Src\MitsuDrv1C\Units\Positions1C3.pas
+CursorX=20
+CursorY=792
+TopLine=782
 LeftCol=1
 
 [View2]
-Module=c:\program files (x86)\borland\delphi7\Source\Xml\XMLIntf.pas
-CursorX=11
-CursorY=91
-TopLine=59
+Module=D:\projects\MITSUFP\Src\MitsuDrv1C\Units\MitsuDrv.pas
+CursorX=23
+CursorY=2730
+TopLine=2718
+LeftCol=1
+
+[View3]
+Module=D:\projects\MITSUFP\Src\MitsuDrv1C\Units\XmlUtils.pas
+CursorX=2
+CursorY=203
+TopLine=184
 LeftCol=1
 
 [TypeLibEditWindow0]
@@ -170,9 +182,9 @@ Count=0
 Create=1
 Visible=1
 State=2
-Left=268
-Top=225
-Width=1652
+Left=2
+Top=0
+Width=1918
 Height=123
 MaxLeft=-1
 MaxTop=-1
@@ -229,7 +241,7 @@ ClientHeight=60
 
 [PropertyInspector]
 Create=1
-Visible=1
+Visible=0
 State=0
 Left=-13
 Top=174

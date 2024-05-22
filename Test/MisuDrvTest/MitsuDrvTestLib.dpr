@@ -5,7 +5,7 @@ library MitsuDrvTestLib;
 uses
   TestFramework,
   GUITestRunner,
-  duMitsuDrv in 'Units\duMitsuDrv.pas',
+  duMitsuDrv1C in 'Units\duMitsuDrv1C.pas',
   MitsuDrv in '..\..\Src\MitsuDrv1C\Units\MitsuDrv.pas',
   PrinterPort in '..\..\Src\Shared\PrinterPort.pas',
   SerialPort in '..\..\Src\Shared\SerialPort.pas',

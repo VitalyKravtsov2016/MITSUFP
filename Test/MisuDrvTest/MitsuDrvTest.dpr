@@ -3,7 +3,7 @@ program MitsuDrvTest;
 uses
   TestFramework,
   GUITestRunner,
-  duMitsuDrv in 'Units\duMitsuDrv.pas',
+  duMitsuDrv1C in 'Units\duMitsuDrv1C.pas',
   MitsuDrv in '..\..\Src\MitsuDrv1C\Units\MitsuDrv.pas',
   PrinterPort in '..\..\Src\Shared\PrinterPort.pas',
   SerialPort in '..\..\Src\Shared\SerialPort.pas',
@@ -33,7 +33,12 @@ uses
   Params1C in '..\..\Src\MitsuDrv1C\Units\Params1C.pas',
   Types1C in '..\..\Src\MitsuDrv1C\Units\Types1C.pas',
   Positions1C3 in '..\..\Src\MitsuDrv1C\Units\Positions1C3.pas',
-  FFDTypes in '..\..\Src\MitsuDrv1C\Units\FFDTypes.pas';
+  FFDTypes in '..\..\Src\MitsuDrv1C\Units\FFDTypes.pas',
+  duMitsuDrv in 'Units\duMitsuDrv.pas',
+  GS1Util in '..\..\Src\MitsuDrv1C\Units\GS1Util.pas',
+  GS1Barcode in '..\..\Src\MitsuDrv1C\Units\GS1Barcode.pas';
+
+{$R *.res}
 
 begin
   TGUITestRunner.RunTest(RegisteredTests);
