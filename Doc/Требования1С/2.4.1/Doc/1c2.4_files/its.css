@@ -1,0 +1,38 @@
+a
+{text-decoration-skip-ink:none}
+
+.msocomtxt,
+.iss_disk_only
+{display:none}
+
+* a:not([href]),
+* a:not([href]):hover
+{color:inherit;text-decoration:inherit}
+
+* a:not([href]):focus,
+a.bookmark:focus
+{outline:0}
+
+pre
+{font-family:Courier New, Courier, monospace}
+
+mark
+{background-color:yellow;color:inherit}
+
+html.loading
+{background:#fff url('/img/loading.gif') no-repeat!important;background-position:17px 17px!important;margin:0!important;padding:0!important;cursor:progress!important;background-color:#fff!important}
+
+html.loading > *
+{visibility:hidden!important}
+
+#w_share,
+#w_webpush
+{margin:12px 0!important;padding:12px 20px!important;border-top:2pt #d7d7d7 solid;border-bottom:2pt #d7d7d7 solid}
+
+#w_webpush
+{display:none}
+
+#w_webpush #webpush_button
+{background-image:url('/img/template/button-bcg-grey.gif');background-position:bottom;background-repeat:repeat-x;height:20px;border:1px solid #a0a0a0;color:#404040;font-family:Verdana,Tahoma,sans-serif;font-size:12px;width:auto!important}
+
+@media print { #w_share, #w_webpush {display:none} }

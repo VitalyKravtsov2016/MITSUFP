@@ -1,0 +1,522 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ru">
+   
+<head>
+<title>Требования к разработкекомпонент подключения оборудования</title>
+<meta content="ru" http-equiv="Content-Language">
+<meta content="text/html; charset=windows-1251" http-equiv="Content-Type">
+<style type="text/css">
+
+TD {
+FONT-SIZE: 10pt;
+}
+TH {
+FONT-SIZE: 10pt; TEXT-ALIGN: center;
+}
+A:link {
+	COLOR: #cc0000; FONT-WEIGHT: bold; TEXT-DECORATION: none
+}
+A:visited {
+	COLOR: #cc0000; FONT-WEIGHT: bold; TEXT-DECORATION: none
+}
+A:hover {
+	TEXT-DECORATION: underline
+}
+H1 {
+	TEXT-ALIGN: left; FONT-FAMILY: Arial, Tahoma; FONT-SIZE: 18pt; FONT-WEIGHT: bold
+}
+H2 {
+	TEXT-ALIGN: left; FONT-FAMILY: Arial, Tahoma; FONT-SIZE: 14pt; FONT-WEIGHT: bold
+}
+H3 {
+	TEXT-ALIGN: left; FONT-FAMILY: Arial, Tahoma; FONT-SIZE: 12pt; FONT-WEIGHT: bold
+}
+
+H4 {
+	TEXT-ALIGN: left; FONT-FAMILY: Arial, Tahoma; FONT-SIZE: 11pt; FONT-WEIGHT: bold
+}
+
+H5 {
+	TEXT-ALIGN: left; FONT-FAMILY: Arial, Tahoma; FONT-SIZE: 11pt; FONT-WEIGHT: bold
+}
+
+BODY {
+	FONT-FAMILY: Verdana; FONT-SIZE: 10pt;
+}
+.withBorder {
+	TEXT-ALIGN: left; FONT-FAMILY: Verdana; BORDER-TOP: #ffd700 1px solid; BORDER-RIGHT: #ffd700 1px solid
+}
+.withBorder TD {
+	BORDER-BOTTOM: #ffd700 1px solid; BORDER-LEFT: #ffd700 1px solid
+}
+.withBorder TH {
+	BORDER-BOTTOM: #ffd700 1px solid; BORDER-LEFT: #ffd700 1px solid; BACKGROUND-COLOR: #ffffee
+}
+UL.TOC LI {
+	LIST-STYLE-TYPE: none
+}
+.Programtext {
+	PADDING-BOTTOM: 10px; BACKGROUND-COLOR: #f0f0f0; PADDING-LEFT: 10px; PADDING-RIGHT: 10px; FONT-FAMILY: Courier; COLOR: #0000ff; FONT-SIZE: 10pt; PADDING-TOP: 10px
+}
+PRE.Query {
+	FONT-FAMILY: Courier; COLOR: #000080; FONT-SIZE: 10pt
+}
+PRE.xml {
+	FONT-FAMILY: Courier; COLOR: #000080; FONT-SIZE: 10pt
+}
+PRE.vbcode {
+	FONT-FAMILY: Courier; COLOR: #000080; FONT-SIZE: 10pt
+}
+PRE {
+	FONT-SIZE: 10pt
+}
+.Marker {
+	BACKGROUND-COLOR: #ffff00
+}
+.heading {
+	BORDER-BOTTOM: #ffd700 1px solid; BORDER-LEFT: #ffd700 1px solid; BACKGROUND-COLOR: #ffffee; FONT-WEIGHT: bold
+}
+.tip {
+	PADDING-BOTTOM: 15px; BORDER-RIGHT-WIDTH: 0px; BACKGROUND-COLOR: #eeffee; PADDING-LEFT: 15px; WIDTH: 95%; PADDING-RIGHT: 15px; BORDER-TOP-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; PADDING-TOP: 15px
+}
+.tip TD {
+	PADDING-BOTTOM: 15px; BORDER-RIGHT-WIDTH: 0px; BACKGROUND-COLOR: #eeffee; PADDING-LEFT: 15px; WIDTH: 95%; PADDING-RIGHT: 15px; BORDER-TOP-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; PADDING-TOP: 15px
+}
+.important {
+	PADDING-BOTTOM: 15px; BORDER-RIGHT-WIDTH: 0px; BACKGROUND-COLOR: #ffeeee; PADDING-LEFT: 15px; WIDTH: 95%; PADDING-RIGHT: 15px; BORDER-TOP-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; PADDING-TOP: 15px
+}
+.important TD {
+	PADDING-BOTTOM: 15px; BORDER-RIGHT-WIDTH: 0px; BACKGROUND-COLOR: #ffeeee; PADDING-LEFT: 15px; WIDTH: 95%; PADDING-RIGHT: 15px; BORDER-TOP-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; PADDING-TOP: 15px
+}
+.note {
+	PADDING-BOTTOM: 15px; BORDER-RIGHT-WIDTH: 0px; BACKGROUND-COLOR: #eeeeff; PADDING-LEFT: 15px; WIDTH: 95%; PADDING-RIGHT: 15px; BORDER-TOP-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; PADDING-TOP: 15px
+}
+.note TD {
+	PADDING-BOTTOM: 15px; BORDER-RIGHT-WIDTH: 0px; BACKGROUND-COLOR: #eeeeff; PADDING-LEFT: 15px; WIDTH: 95%; PADDING-RIGHT: 15px; BORDER-TOP-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; PADDING-TOP: 15px
+}
+.k {
+	COLOR: red
+}
+.c {
+	COLOR: green
+}
+.s {
+	COLOR: black
+}
+.n {
+	COLOR: black
+}
+.p {
+	COLOR: brown
+}
+.list {
+	TEXT-ALIGN: right; 
+}
+.date {
+	TEXT-ALIGN: right; COLOR: green; 
+}
+
+A.cbData {
+	BORDER-BOTTOM: #969696 1px solid; TEXT-ALIGN: right; MARGIN: 0px; DISPLAY: block; FONT-FAMILY:
+		 Courier New; BACKGROUND: #e6e6e6; FONT-SIZE: 8pt; TEXT-DECORATION: none
+}
+
+.Programtext {
+	MARGIN-TOP: 0pt
+}
+.Query {
+	MARGIN-TOP: 0pt
+}
+.xml {
+	MARGIN-TOP: 0pt
+}
+.vbcode {
+	MARGIN-TOP: 0pt
+}
+</style>
+
+</head>
+
+<body>
+
+<a name="top"></a>
+
+<p class="date">22.05.2018</p>
+<h1>Требования к разработке компонент подключения оборудования (версия 2.4)</h1>
+
+<H3 id=chapter270>Изменения в требования к разработке драйверов для ККТ с функцией передачи в ОФД</H3>
+
+
+<P>В текущие требования для драйверов для ККТ с передачей данных вноситься следующие изменения.<br>
+<b><br>
+GoodCodeData</b> - Код товарной номенклатуры. XML Структура.</P>
+<TABLE id="GoodCodeData" class=withBorder border=0 cellSpacing=0 cellPadding=3 width="80%">
+<TBODY>
+<TR>
+<TH width="33%" colspan="2">Наименование атрибута</TH>
+<TH width="13%">Типы данных</TH>
+<TH width="53%">Описание атрибута</TH></TR>
+<TR>
+<TD rowspan="7">GoodCodeData</TD>
+</TR>
+<TR>
+<TD  width="22%">StampType</TD>
+<TD style="TEXT-ALIGN: center">string </TD>
+<TD height="24">Тип маркировки. Список значений:<br>
+&quot;02&quot; – изделия из меха<br>
+&quot;03&quot; – лекарственные препараты<br>
+&quot;05&quot; - табачная продукция</TD></TR>
+<TR>
+<TD width="22%">Stamp</TD>
+<TD style="TEXT-ALIGN: center">string </TD>
+<TD>
+<p>Контрольный идентификационный знак (КиЗ)</TD></TR>
+<TR>
+<TD width="22%">GTIN</TD>
+<TD style="TEXT-ALIGN: center">string </TD>
+<TD>Глобальный идентификатор торговой единицы (GTIN)</TD></TR>
+<TR>
+<TD width="22%">SerialNumber</TD>
+<TD style="TEXT-ALIGN: center">string </TD>
+<TD>Серийный номер</TD></TR>
+<TR>
+<TD width="22%">MarkingCode</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Код контрольной марки</TD></TR>
+<TR>
+<TD width="22%">State</TD>
+<TD style="TEXT-ALIGN: center">int </TD>
+<TD>Код изменение состояние товарной номенклатуры<span lang="en-us">:<br>
+</span>1 – выбытие через ККТ ККТ (розничная продажа)
+<br>
+2 – выбытие на списание/утилизацию
+<br>
+3 – выбытие при недостаче (утеря)
+</TD></TR>
+</TBODY></TABLE>
+
+
+<H3 id=chapter280>Требования к разработке драйверов регистраторов выбытия как 
+расширения требований для ККТ с функцией передачи в ОФД</H3>
+
+
+<table id="table41" class="withBorder" border="0" cellpadding="3" cellspacing="0">
+<tbody>
+<tr>
+<th colspan="6" width="100%">Описание методов</th></tr>
+<tr>
+<th rowspan="2" width="23%">Название (alias)</th>
+<th colspan="3" width="44%">Параметры</th>
+<th rowspan="2" width="11%">Тип возвращаемого значения</th>
+<th rowspan="2" width="20%">Описание метода </th></tr>
+<tr>
+<th width="18%">Имя</th>
+<th width="7%">Тип</th>
+<th width="18%">Описание</th></tr>
+<tr>
+<td width="23%" rowspan="2">ОткрытьСессиюРегистрацииКМ (OpenSessionRegistrationKM)</td>
+<td width="18%">ИДУстройства (DeviceID)</td>
+<td style="TEXT-ALIGN: center" width="7%">STRING [IN] </td>
+<td width="18%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" width="11%" rowspan="2">BOOL</td>
+<td width="20%" rowspan="2">Открывает сессию регистрацию контрольных марок</td></tr>
+<tr>
+<td width="18%"><b><a href="#SessionRegistrationParameters">ПараметрыСессииРегистрации<BR/>
+(SessionRegistrationParameters) <BR/>XML таблица </a></b></td>
+<td style="TEXT-ALIGN: center" width="7%">STRING [OUT]</td>
+<td width="18%">Параметры сессии регистрации</td>
+</tr>
+<tr>
+<td width="23%" rowspan="3">ВыполнитьПроверкуКМ (ExecuteCheckKM)</td>
+<td width="18%">ИДУстройства (DeviceID)</td>
+<td style="TEXT-ALIGN: center" width="7%">STRING [IN] </td>
+<td width="18%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" width="11%" rowspan="3">BOOL</td>
+<td width="20%" rowspan="3">Выполнить проверку контрольных марок</td></tr>
+<tr>
+<td width="18%"><b><a href="#ControlMarks">КонтрольныеМарки<BR/>
+(ControlMarks)<BR/>XML таблица </a></b></td>
+<td style="TEXT-ALIGN: center" width="7%">STRING [IN]</td>
+<td width="18%">Проверяемые контрольные марки</td>
+</tr>
+<tr>
+<td width="18%"><b><a href="#CheckResults">РезультатыПроверки<BR/>
+(CheckResults)<BR/>XML таблица </a></b></td>
+<td style="TEXT-ALIGN: center" width="7%">STRING [OUT] </td>
+<td width="18%">Результат проверки контрольных марок</td>
+</tr>
+<tr>
+<td width="23%">ЗакрытьСессиюРегистрацииКМ(CloseSessionRegistrationKM)</td>
+<td width="18%">ИДУстройства (DeviceID)</td>
+<td style="TEXT-ALIGN: center" width="7%">STRING [IN] </td>
+<td width="18%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" width="11%">BOOL</td>
+<td width="20%">Закрывает сессию регистрацию контрольных марок</td></tr>
+</tbody></table>
+
+<h4>Описание структуры SessionRegistrationParameters</h4>
+<p>Текст в формате XML<span lang="en-us">.</span></p>
+
+<table id="SessionRegistrationParameters" class="withBorder" border="0" cellpadding="3" cellspacing="0">
+<tbody>
+<tr>
+<th width="139">Секция</th>
+<th width="20%">Наименование атрибута</th>
+<th width="108">Обязательное наличие в структуре</th>
+<th width="127">Типы данных</th>
+<th width="472">Описание атрибута</th>
+<th width="431">Описание</th></tr>
+<tr>
+<td colspan="6"><b>SessionRegistrationParameters</b></td>
+</tr>
+<tr>
+<td rowspan="5">
+<p style="text-align: center">Parameters</p></td>
+<td height="23">CashierName</td>
+<td style="TEXT-ALIGN: center" height="23">
+Да</td>
+<td style="TEXT-ALIGN: center" height="23">
+string</td>
+<td height="23">ФИО и должность уполномоченного лица для проведения операции</td>
+<td rowspan="5">Формирование новой сессию регистрации контрольных марок.<BR/>
+	</td></tr>
+
+<tr>
+<td height="23">CashierINN</td>
+<td style="TEXT-ALIGN: center" height="23">
+Нет</td>
+<td style="TEXT-ALIGN: center" height="23">
+string</td>
+<td height="23">ИНН уполномоченного лица для проведения операции</td>
+</tr>
+
+<tr>
+<td height="87">OperationType</td>
+<td style="TEXT-ALIGN: center" height="87">
+Да</td>
+<td style="TEXT-ALIGN: center" height="87">
+int</td>
+<td height="87">
+Тип операции (Таблица 25 документа ФФД):<br >
+1 - приход&nbsp;денежных средств<br >
+2 - возврат прихода денежных средств<br >
+3 - расход&nbsp;денежных средств<br >
+4 - возврат расхода денежных средств</td>
+</tr>
+
+<tr>
+<td>SaleAddres</td>
+<td style="TEXT-ALIGN: center">
+Нет</td>
+<td style="TEXT-ALIGN: center">
+string</td>
+<td>Адрес проведения расчетов</td>
+</tr>
+
+<tr>
+<td>SaleLocation</td>
+<td style="TEXT-ALIGN: center">
+Нет</td>
+<td style="TEXT-ALIGN: center">
+string</td>
+<td>Место проведения расчетов</td>
+</tr>
+
+</tbody></table>
+
+<p>Пример текстового XML:</p>
+<pre class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;SessionRegistrationParameters&gt;
+	&lt;Parameters PaymentType=&quot;1&quot; CashierName=&quot;Иванов И.И&quot; AddressSettle=&quot;г.Москва, Дмитровское ш. д.9&quot; PlaceSettle=&quot;Торговый островок на 1 этаже&quot;/&gt;
+&lt;/SessionRegistrationParameters&gt;
+
+</pre>
+
+
+<h4>Описание структуры ControlMarks</h4>
+<p>Текст в формате XML.</p>
+
+<table id="ControlMarks" class="withBorder" border="0" cellpadding="3" cellspacing="0">
+<tbody>
+<tr>
+<th width="139">Секция</th>
+<th width="20%">Наименование атрибута</th>
+<th width="108">Обязательное наличие в структуре</th>
+<th width="127">Типы данных</th>
+<th width="472">Описание атрибута</th>
+<th width="431">Описание</th></tr>
+<tr>
+<td colspan="6"><b>ControlMarks</b></td>
+</tr>
+<tr>
+<td rowspan="3">
+<p style="text-align: center">Record</p></td>
+<td height="23"><span lang="en-us">GUID</span></td>
+<td style="TEXT-ALIGN: center" height="23">
+Да</td>
+<td style="TEXT-ALIGN: center" height="23">
+string</td>
+<td height="23">
+Идентификатор записи</td>
+<td rowspan="3">Запись о регистрации запроса для проверки/выбытия<BR/>
+</td></tr>
+
+<tr>
+<td height="23">MarkingCode</td>
+<td style="TEXT-ALIGN: center" height="23">
+Да</td>
+<td style="TEXT-ALIGN: center" height="23">
+string</td>
+<td height="23">
+Код контрольной марки</td>
+</tr>
+
+<tr>
+<td height="23">
+State</td>
+<td style="TEXT-ALIGN: center" height="23">
+Да</td>
+<td style="TEXT-ALIGN: center" height="23">
+int</td>
+<td height="23">
+Состояние в которое предполагается перевод контрольной марки<br>
+0 – без изменения
+<br>
+1 – выбытие через ККТ (розничная продажа)
+<br>
+2 – выбытие на списание/утилизацию
+<br>
+3 – выбытие при недостаче (утеря)
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Пример текстового XML:</p>
+<pre class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;ControlMarks&gt;
+<span lang="en-us">	</span>&lt;Record GUID=&quot;<span lang="en-us">523426342345</span>&quot; MarkingCode=&quot;<span lang="en-us">0181234567891234210000000000002\x1d2401234\x1d100123456789ABCDEF1234\x1d17170911911129\x1d92XEBB/hQ82r1oVhm13mKoy1KbwTYdzzd3k3+BV0oDe4XoPBvnjE/gHUHAO8NK+Co2ZShR48gGgxdPjCqD7pSdAg=="</span> State=&quot;1&quot;/&gt;
+&lt;/ControlMarks&gt;
+
+</pre>
+
+<h4>Описание структуры CheckResults</h4>
+<p>Текст в формате XML.</p>
+
+<table id="CheckResults" class="withBorder" border="0" cellpadding="3" cellspacing="0">
+<tbody>
+<tr>
+<th width="139">Секция</th>
+<th width="11%">Наименование атрибута</th>
+<th width="128">Обязательное наличие в структуре</th>
+<th width="164">Типы данных</th>
+<th width="563">Описание атрибута</th>
+<th width="431">Описание</th></tr>
+<tr>
+<td colspan="6"><b>CheckResults</b></td>
+</tr>
+<tr>
+<td rowspan="5">
+<p style="text-align: center">Record</p></td>
+<td height="23">
+<span lang="en-us">GUID</span></td>
+<td style="TEXT-ALIGN: center" height="23">
+Да</td>
+<td style="TEXT-ALIGN: center" height="23">
+string</td>
+<td height="23">
+Идентификатор записи</td>
+<td rowspan="5">Запись о результатах запроса на регистрацию<BR/>
+</td></tr>
+
+<tr>
+<td height="23">
+<span lang="EN-US" style="font-size: 10.0pt; line-height: 107%; font-family: Verdana; color: black; ">
+SaleEnable</span></td>
+<td style="TEXT-ALIGN: center" height="23">
+Да</td>
+<td style="TEXT-ALIGN: center" height="23">
+<span lang="en-us">bool</span></td>
+<td height="23">
+Разрешение на продажу товара </td>
+</tr>
+
+<tr>
+<td height="23">
+State</td>
+<td style="TEXT-ALIGN: center" height="23">
+Да</td>
+<td style="TEXT-ALIGN: center" height="23">
+int</td>
+<td height="23">
+Статус контрольной марки<span lang="en-us">:</span> <br>
+1 - GENERATED «Сформирован».Не выдан регистратору.
+<br>
+2 - ISSUED «Готов». Выдан регистратору, но не применен.
+<br>
+3 - USED «Выдан». КМ выдан ТС для нанесения. Применение не подтверждено.
+<br>
+4 - UTILISED «Выпущен». КМ нанесен на товар или упаковку, правильность нанесения кода подтверждена, маркированный товар произведен.
+<br>
+5 - ELIMINATED «Не использован». КМ не был выдан ТС к моменту закрытия заказа.
+<br>
+6 - PACKED «Упакован». Товар или упаковка с данным КМ находится в составе логистической единицы.
+<br>
+7 - UNPACKED «Распакован». Маркированный объект находится в обороте или в употреблении в виде товарной единицы.
+<br>
+8 - DROPPED_OUT Выбыл по определенным, известным участникам обращения товара, причинам на этапе производства (например, отобран, как опытный образец для испытаний), оптового или розничного оборота (уничтожен безвозвратно в составе логистической единицы, похи- щенной, испорченной в совокупности со всем содержимым и т.п.).
+<br>
+9 - SOLD_OUT «Выбыл через розничную сеть».
+<br>
+10 - SALE_IN_PROGRESS «В состоянии выбытия» (мерный товар).
+<br>
+11 - LOST «Утерян».
+<br>
+12 - USAGE_PAUSED «Оборот приостановлен».
+<br>
+13 - USAGE_FORBIDDEN «Оборот запрещен».
+<br>
+14 - CONSUMED «Потреблен».
+<br>
+15 - DUPLICATED «Дублирован».
+</td>
+</tr>
+
+<tr>
+<td height="23">
+<span lang="en-us">Error</span></td>
+<td style="TEXT-ALIGN: center" height="23">
+Да</td>
+<td style="TEXT-ALIGN: center" height="23">
+<span lang="en-us">bool</span></td>
+<td height="23">
+При проверки контрольной марки произошла ошибка</td>
+</tr>
+
+<tr>
+<td height="23">
+<span lang="EN-US" style="font-size: 10.0pt; line-height: 107%; font-family: Verdana; color: black; ">
+TextError</span></td>
+<td style="TEXT-ALIGN: center" height="23">
+Нет</td>
+<td style="TEXT-ALIGN: center" height="23">
+string</td>
+<td height="23">
+Текст ошибки при проверки контрольной марки</td>
+</tr>
+
+</tbody></table>
+
+<p>Пример текстового XML:</p>
+<pre class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;CheckResults&gt;
+<span lang="en-us">	</span>&lt;Record GUID=&quot;<span lang="en-us">523426342345</span>&quot; SaleEnable="<span lang="en-us">True</span>" State=&quot;2&quot; Error="False"/&gt;
+&lt;/CheckResults&gt;
+
+</pre>
+
+
+</body>
+
+</html>

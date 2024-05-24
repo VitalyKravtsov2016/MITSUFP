@@ -6,21 +6,20 @@ uses
   // VCL
   Windows, ActiveX, SysUtils, Variants, Registry, ComObj2,
   // This
-  AddIn1CTypes, AddIn1CInterface, untLogger, LogFile, AxCtrls2,
-  TextEncoding
-  ;
+  AddIn1CTypes, AddIn1CInterface, LogFile, AxCtrls,
+  TextEncoding;
 
 type
   { TActiveXControl1C }
 
-  TActiveXControl1C = class(TActiveXControl2, IInitDone, ILanguageExtender)
+  TActiveXControl1C = class(TActiveXControl, IInitDone, ILanguageExtender)
   private
+    FLogger: TLogFile;
     FProps: TAddinProps;
     FMethods: TAddinFuncs;
-    FLogger: TLogger;
-    function GetLogger: TLogger;
+    function GetLogFile: TLogFile;
     procedure UpdateAddinLists;
-    property Logger: TLogger read GetLogger;
+    property Logger: TLogFile read GetLogFile;
     procedure PutNParam(var pArray: PSafeArray; lIndex: Integer; var varPut: OleVariant);
     function GetNParam(var pArray : PSafeArray; lIndex: Integer ): OleVariant;
     function vtToStr(vt: Word):string;
@@ -587,11 +586,11 @@ begin
     DISPATCH_PROPERTYPUT, DispParams, nil, nil, nil);
 end;
 
-function TActiveXControl1C.GetLogger: TLogger;
+function TActiveXControl1C.GetLogFile: TLogFile;
 begin
   if FLogger = nil then
   begin
-    FLogger := TLogger.Create(Self.ClassName);
+    FLogger := TLogFile.Create;
   end;
   Result := FLogger;
 end;

@@ -1,0 +1,1450 @@
+
+<!-- saved from url=(0091)http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#chapter0 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1251"><title>Требования к разработке драйверов подключаемого оборудования. Версия 1.0</title>
+<meta content="ru" http-equiv="Content-Language">
+
+<style>TD {
+	FONT-SIZE: 80%
+}
+TH {
+	FONT-SIZE: 80%
+}
+A:link {
+	COLOR: #cc0000; FONT-WEIGHT: bold; TEXT-DECORATION: none
+}
+A:visited {
+	COLOR: #cc0000; FONT-WEIGHT: bold; TEXT-DECORATION: none
+}
+A:hover {
+	TEXT-DECORATION: underline
+}
+H1 {
+	TEXT-ALIGN: left; FONT-FAMILY: Arial, Tahoma; COLOR: #003366; FONT-SIZE: 18pt; FONT-WEIGHT: bold
+}
+H2 {
+	TEXT-ALIGN: left; FONT-FAMILY: Arial, Tahoma; FONT-SIZE: 14pt; FONT-WEIGHT: bold
+}
+H3 {
+	TEXT-ALIGN: left; FONT-FAMILY: Arial, Tahoma; FONT-SIZE: 12pt; FONT-WEIGHT: bold
+}
+BODY {
+	FONT-FAMILY: Verdana; FONT-SIZE: 80%
+}
+.withBorder {
+	TEXT-ALIGN: left; FONT-FAMILY: Verdana; BORDER-TOP: #ffd700 1px solid; BORDER-RIGHT: #ffd700 1px solid
+}
+.withBorder TD {
+	BORDER-BOTTOM: #ffd700 1px solid; BORDER-LEFT: #ffd700 1px solid
+}
+.withBorder TH {
+	BORDER-BOTTOM: #ffd700 1px solid; BORDER-LEFT: #ffd700 1px solid; BACKGROUND-COLOR: #ffffee
+}
+UL.TOC LI {
+	LIST-STYLE-TYPE: none
+}
+.Programtext {
+	PADDING-BOTTOM: 10px; BACKGROUND-COLOR: #f0f0f0; PADDING-LEFT: 10px; PADDING-RIGHT: 10px; FONT-FAMILY: Courier; COLOR: #0000ff; FONT-SIZE: 10pt; PADDING-TOP: 10px
+}
+PRE.Query {
+	FONT-FAMILY: Courier; COLOR: #000080; FONT-SIZE: 10pt
+}
+PRE.xml {
+	FONT-FAMILY: Courier; COLOR: #000080; FONT-SIZE: 10pt
+}
+PRE.vbcode {
+	FONT-FAMILY: Courier; COLOR: #000080; FONT-SIZE: 10pt
+}
+PRE {
+	FONT-SIZE: 10pt
+}
+.Marker {
+	BACKGROUND-COLOR: #ffff00
+}
+.heading {
+	BORDER-BOTTOM: #ffd700 1px solid; BORDER-LEFT: #ffd700 1px solid; BACKGROUND-COLOR: #ffffee; FONT-WEIGHT: bold
+}
+.tip {
+	PADDING-BOTTOM: 15px; BORDER-RIGHT-WIDTH: 0px; BACKGROUND-COLOR: #eeffee; PADDING-LEFT: 15px; WIDTH: 95%; PADDING-RIGHT: 15px; BORDER-TOP-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; PADDING-TOP: 15px
+}
+.tip TD {
+	PADDING-BOTTOM: 15px; BORDER-RIGHT-WIDTH: 0px; BACKGROUND-COLOR: #eeffee; PADDING-LEFT: 15px; WIDTH: 95%; PADDING-RIGHT: 15px; BORDER-TOP-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; PADDING-TOP: 15px
+}
+.important {
+	PADDING-BOTTOM: 15px; BORDER-RIGHT-WIDTH: 0px; BACKGROUND-COLOR: #ffeeee; PADDING-LEFT: 15px; WIDTH: 95%; PADDING-RIGHT: 15px; BORDER-TOP-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; PADDING-TOP: 15px
+}
+.important TD {
+	PADDING-BOTTOM: 15px; BORDER-RIGHT-WIDTH: 0px; BACKGROUND-COLOR: #ffeeee; PADDING-LEFT: 15px; WIDTH: 95%; PADDING-RIGHT: 15px; BORDER-TOP-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; PADDING-TOP: 15px
+}
+.note {
+	PADDING-BOTTOM: 15px; BORDER-RIGHT-WIDTH: 0px; BACKGROUND-COLOR: #eeeeff; PADDING-LEFT: 15px; WIDTH: 95%; PADDING-RIGHT: 15px; BORDER-TOP-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; PADDING-TOP: 15px
+}
+.note TD {
+	PADDING-BOTTOM: 15px; BORDER-RIGHT-WIDTH: 0px; BACKGROUND-COLOR: #eeeeff; PADDING-LEFT: 15px; WIDTH: 95%; PADDING-RIGHT: 15px; BORDER-TOP-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; PADDING-TOP: 15px
+}
+.k {
+	COLOR: red
+}
+.c {
+	COLOR: green
+}
+.s {
+	COLOR: black
+}
+.n {
+	COLOR: black
+}
+.p {
+	COLOR: brown
+}
+.list {
+	TEXT-ALIGN: right; FONT-SIZE: 80%
+}
+.date {
+	TEXT-ALIGN: right; COLOR: green; FONT-SIZE: 80%
+}
+</style>
+
+<meta name="GENERATOR" content="MSHTML 9.00.8112.16447">
+<script>
+ function copySource(oButton){
+   if(window.clipboardData){
+     window.clipboardData.setData('Text',oButton.nextSibling.innerText);
+     alert('Текст помещен в буфер обмена');
+   }else{
+     alert('Данная функция поддерживается только в браузере Internet Explorer');
+   }
+ }
+ </script>
+
+<style>A.cbData {
+	BORDER-BOTTOM: #969696 1px solid; TEXT-ALIGN: right; MARGIN: 0px; DISPLAY: block; FONT-FAMILY: Courier New; BACKGROUND: #e6e6e6; FONT-SIZE: 8pt; TEXT-DECORATION: none
+}
+</style>
+
+<style>.Programtext {
+	MARGIN-TOP: 0pt
+}
+.Query {
+	MARGIN-TOP: 0pt
+}
+.xml {
+	MARGIN-TOP: 0pt
+}
+.vbcode {
+	MARGIN-TOP: 0pt
+}
+</style>
+
+
+</head><body onload="doc_onload_hook()"><a name="top"></a>
+<script src="ajax.js" type="text/javascript"></script>
+<script src="main.js" type="text/javascript"></script>
+<script src="interface.js" type="text/javascript"></script>
+<script type="text/javascript">doc_immediate_hook();</script>
+<style>
+.msocomtxt{display:none;}
+* a:not([href]){color:inherit;text-decoration:inherit;}
+</style>
+<a name="top"></a>
+
+
+<p class="date">15.08.2012</p>
+<h1>Требования к разработке драйверов подключаемого оборудования (версия 1.1)</h1>
+<ul class="TOC">
+<li><a href="i8104829.htm">Изменения в стандарте</a> 
+</li><li><a href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#chapter1">Введение</a> 
+</li><li><a href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#chapter2">Общие требования к разрабатываемому драйверу и его архитектуре</a> 
+</li><li><a href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#chapter22">Обязательные функции и методы, связанные с использованием драйвера подключаемого оборудования в системе</a> 
+</li><li><a href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#chapter23">Описание методов специфичных для типов подключаемого оборудования</a> 
+<ul>
+<li><a href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#chapter231">Требования к разработке драйверов для электронных весов</a> 
+</li><li><a href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#chapter232">Требования к разработке драйверов для электронных весов с печатью этикеток в режиме "OFFLINE"</a> 
+</li><li><a href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#chapter233">Требования к разработке драйверов для дисплеев покупателя</a> 
+</li><li><a href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#chapter234">Требования к разработке драйверов для терминалов сбора данных</a> 
+</li><li><a href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#chapter235">Требования к разработке драйверов для фискальных регистраторов</a> 
+</li><li><a href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#chapter236">Требования к разработке драйверов для контрольно-кассовых машин в режиме "OFFLINE</a> 
+</li><li><a href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#chapter237">Требования к разработке драйверов устройств ввода (сканеры штрихкода, считыватели магнитных карт и т.д.)</a> 
+</li><li><a href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#chapter238">Требования к разработке драйверов для эквайринговых терминалов</a> </li></ul></li></ul>
+<h2 id="chapter0">Изменения в стандарте</h2>
+<table id="table0" class="withBorder" border="0" cellspacing="0" cellpadding="3" width="65%">
+<tbody>
+<tr>
+<th width="6%">Версия</th>
+<th width="34%">Раздел</th>
+<th width="59%">Изменения</th></tr>
+<tr>
+<td style="TEXT-ALIGN: center">1.1</td>
+<td><a href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#chapter2"><span style="FONT-WEIGHT: 400">Общие требования к разрабатываемому драйверу и его архитектуре</span></a></td>
+<td>Реорганизация раздела. Обновлены общие требования к разрабатываемому драйверу.</td></tr>
+<tr>
+<td style="TEXT-ALIGN: center" height="74">1.1</td>
+<td height="74"><a href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#chapter22"><span style="FONT-WEIGHT: 400">Обязательные функции и методы, связанные с использованием драйвера подключаемого оборудования в системе</span></a></td>
+<td height="74">- Для метода "ПолучитьОписание" добавлены дополнительные параметры "ИнтеграционнаяБиблиотека", "ОсновнойДрайверУстановлен"<br>- Добавлены методы "ПолучитьДополнительныеДействия", "ВыполнитьДополнительноеДействие" </td></tr>
+<tr>
+<td style="TEXT-ALIGN: center">1.1</td>
+<td><a href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#chapter238"><span style="FONT-WEIGHT: 400">Требования к разработке драйверов для эквайринговых терминалов</span></a></td>
+<td>- Для методов отвечающие за работу с экваринговыми операциями добавлен параметр "НомерЧека"<br>- Добавлена функция "ПечатьКвитанцийНаТерминале"</td></tr></tbody></table>
+<h2 id="chapter1">Введение</h2>
+<p>Схема подключения оборудования к автоматизированным системам на платформе «1С:Предприятие 8.2» минимизирует количество промежуточных компонентов между устройством и конфигурацией системы программ «1С:Предприятие 8.2», что повышает надежность автоматизированной системы.<br><br>Требования к драйверам подключаемого оборудования описывают единые методы и свойства, используемые как конфигурацией, так и драйвером оборудования. Конфигурации непосредственно взаимодействуют с драйверами оборудования низкого уровня, используя стандартные команды, за счет чего достигается стандартный результат (рис. 1). </p>
+<p align="center"><img src="sheme001.jpg" width="630" height="300" border="0"></p>
+<p align="center"><i><br>Рис. 1. Изменение схемы взаимодействия конфигураций системы программ «1С:Предприятие 8.2» с подключаемым оборудованием (справа) по сравнению со схемой подключения оборудования для «1С:Предприятия 8.1»</i></p>
+<p>Оборудование подключается к системе с помощью драйвера разработанного по технологии создания внешних компонент. Технология определяет интерфейс взаимодействия между платформой и драйвером. Реализация драйвера возможна по технологии создания внешних компонент с использованием стандартных компонентных объектов для Windows (COM-интерфейс) и собственной технологии фирмы 1С – NativeAPI (динамическая библиотека для Windows или Linux). С помощью технологии NativeAPI можно создавать внешние компоненты, которые могут подключаться как в клиентском приложении, так и на сервере "1С:Предприятия", в том числе и в версиях для Linux. </p>
+<p>Интерфейс внешней компоненты можно условно разделить на три части.</p>
+<ul>
+<li><b>Первая часть</b> - общие требования к разрабатываемому драйверу и его архитектуре. 
+</li><li><b>Вторая часть</b> - системная, определяет набор служебных функций и методов, связанных с использованием драйвера подключаемого оборудования в системе – его подключение и настройка, получение описания, тестирование и обслуживание ошибок. 
+</li><li><b>Третья часть</b> - функциональная, определяет обязательный набор функций и методов, специфичный для данного типа подключаемого оборудования. </li></ul><br>
+<h2 id="chapter2">1. Общие требования к разрабатываемому драйверу и его архитектуре</h2>
+<p>Разрабатываемый драйвер должен:</p>
+<ul>
+<li>быть разработан в виде внешней компоненты<span lang="en-us"> </span>по технологии создания внешних компонент приведены в статье <a href="http://its.1c.ru/db/translate/?db=metbud81&path=src/developers/additional/guides/../../Platform/i8103221.htm" target="_top">"Технология создания внешних компонент"</a>; 
+</li><li>внешняя компонента для работы с подключаемым оборудованием должна содержать только один объект, реализующий расширение встроенного языка, и возвращать методом <b>«RegisterExtensionAs»</b> имя расширения, совпадающее с второй частью <b>ProgID</b> компоненты. Пример: для компоненты с ProgID «AddIn.Scanner» функция должна возвращать «Scanner»<span lang="en-us">;</span> 
+</li><li>при создание компонент с использованием технологии COM - объект должен являться неуправляемым (Unmanaged Component), то есть написанным на неуправляемом коде<span lang="en-us">;</span> 
+</li><li>обеспечить возможность реализации функционала в полном объеме (должны быть реализованы и работать все методы) для подключаемого типа оборудования; 
+</li><li>предоставлять русскоязычные и англоязычные названия методов (например ПолучитьВес() - GetWeight() и др.); 
+</li><li>поддерживать работу с несколькими экземплярами устройств, в рамках процедур в которых используется данное оборудование; 
+</li><li>при возникновении ошибки в работе предоставлять подробное описание произошедшей ошибки, позволяющее пользователю понять причину ее возникновения и возможный способ устранения; 
+</li><li>при возникновении внештатных ситуаций (некорректные действия пользователя, отсутствие запрашиваемого метода или функции, передача некорректных значений и др.) корректно обрабатывать их. Не должно быть аварийных завершений работы драйвера и прочих действий драйвера, которые могут привести к нарушению нормальной работы пользователя. 
+</li><li>принимать/возвращать и обрабатывать таблицы значений в виде XML документа (текст в формате XML с кодировкой UTF-8 передаваемый с помощью параметра типа STRING).<span lang="en-us"> </span>Данный способ передачи сложных массив данных выбран для обеспечения независимости от технологии, на которой реализуется внешняя компонента драйвер (Windows COM или NativeAPI). </li></ul>
+<p>Драйвер может быть разработан в виде одного файла или разбит на две части:</p>
+<ul>
+<li><b>Интеграционная библиотека</b> - промежуточная библиотека для связи "1С Предприятия" с основной поставкой драйвера. Имеет интерфейс, разработанный в соответствии с ниже изложенными общими требованиями к драйверу и технологии разработки внешних компонент, но не реализует функционала драйвера подключаемого оборудования. Интеграционная библиотека реализует функционал поиска установленной основной поставки драйвера, его инициализацию и переадресацию вызовов. 
+</li><li><b>Основная поставка драйвера</b> - драйвер поставщика, реализованный по произвольный технологии. Протокол взаимодействия драйвера с интеграционной библиотекой не регламентируется данными требованиями. Поставка драйвера осуществляется посредством инсталляции из дистрибутива. </li></ul>
+<p>При поставке драйвера одним файлом используемые run-time библиотеки должны статически включаться в компоненту, так как на компьютере пользователя их может не оказаться или они могут быть другой версии. Так же все другие необходимые библиотеки должны быть включены в драйвер. </p>
+<p>В случае поставки драйвера в виде нескольких файлов наличие интеграционной библиотеки является необходимым условием работы драйвера с программами "1С:Предприятие". </p><br>
+<h2 id="chapter22"><span lang="en-us">2</span>. Обязательные функции и методы, связанные с использованием драйвера подключаемого оборудования в системе</h2>
+<p>Данный раздел содержит список обязательных функций и методов, связанных с использованием драйвера подключаемого оборудования в системе – его подключение и настройка, получение описания, тестирование и обслуживание ошибок.</p>
+<p>Драйвер поддерживает два основных этапа работы с оборудованием в конфигурации:</p>
+<ul>
+<li>Регистрация и настройка оборудования 
+</li><li>Использование оборудования пользователем в процессе работы </li></ul>
+<p><b>Регистрация и настройка оборудования</b></p>
+<ol>
+<li>Получение описания драйвера вызовом метода <b>«ПолучитьОписание(GetDescription)»</b><span lang="en-us">.</span> 
+</li><li>Получения доступных параметров для настройки драйвера методом <b>«ПолучитьПараметры(GetParameters)»</b><span lang="en-us">.</span> 
+</li><li>Построение формы настройки драйвера на основании списка доступных параметров. 
+</li><li>Сохранение параметров настройки драйвера в базе данных конфигурации. </li></ol>
+<p><b>Использование оборудования пользователем в процессе работы</b></p>
+<ol>
+<li>Инициализация устройства сохраненными в базе параметрами методом<b> «УстановитьПараметр(SetParameter)»</b><span lang="en-us">.</span> 
+</li><li>Подключение оборудования с помощью метода <b>«Подключить(<span lang="en-us">O</span>pen)»</b> с текущими значениями параметров<span lang="en-us"> </span>установленых вызовами метода <b>«УстановитьПараметр(SetParameter)»</b>. Метод <b>«Подключить(Open)»</b> возвращается идентификатор подключенного экземпляра устройства 
+</li><li>Вызов обязательных функций и методов, специфичных для данного типа подключаемого оборудования с использованием идентификатора подключенного экземпляра устройства. 
+</li><li>Получение кода ошибки и описания ошибки методом <b>«ПолучитьОшибку(GetLastError)»</b> в случае ее возникновения. 
+</li><li>Отключение устройства методом <b>«Отключить(Close)» </b>по идентификатору подключенного экземпляра устройства. </li></ol>
+<table id="table1" class="withBorder" border="0" cellspacing="0" cellpadding="3" width="95%">
+<tbody>
+<tr>
+<th width="100%" colspan="6">Описание методов</th></tr>
+<tr>
+<th rowspan="2" width="28%">Название (alias)</th>
+<th width="43%" colspan="3">Параметры</th>
+<th rowspan="2" width="8%">Тип возвращаемого значения</th>
+<th rowspan="2" width="20%">Описание метода </th></tr>
+<tr>
+<th width="18%">Имя</th>
+<th width="10%">Тип</th>
+<th width="15%">Описание</th></tr>
+<tr>
+<td width="28%">ПолучитьНомерВерсии (GetVersion)</td>
+<td width="18%">
+<p style="TEXT-ALIGN: center">-</p></td>
+<td width="10%">
+<p style="TEXT-ALIGN: center">-</p></td>
+<td width="15%">
+<p style="TEXT-ALIGN: center">-</p></td>
+<td width="8%">
+<p style="TEXT-ALIGN: center">STRING</p></td>
+<td width="20%">Возвращает номер версии драйвера.</td></tr>
+<tr>
+<td rowspan="7" width="28%">ПолучитьОписание (GetDescription) </td>
+<td width="18%">Наименование (Name) </td>
+<td style="TEXT-ALIGN: center" width="10%">STRING [OUT]</td>
+<td width="15%">Наименование драйвера</td>
+<td rowspan="7" width="8%">
+<p style="TEXT-ALIGN: center">BOOL</p></td>
+<td rowspan="7" width="20%">Возвращает информацию о драйвере, такие как название и описание, поддерживаемый тип оборудования.</td></tr>
+<tr>
+<td width="18%">Описание (Description) </td>
+<td style="TEXT-ALIGN: center" width="10%">STRING [OUT]</td>
+<td width="15%">Описание драйвера</td></tr>
+<tr>
+<td width="18%">ТипОборудования (EquipmentType) </td>
+<td style="TEXT-ALIGN: center" width="10%">STRING [OUT]</td>
+<td width="15%">Строка, определяющая тип оборудования*</td></tr>
+<tr>
+<td width="18%">РевизияИнтерфейса (InterfaceRevision) </td>
+<td style="TEXT-ALIGN: center" width="10%">LONG [OUT]</td>
+<td width="15%">Поддерживаемая версия требований** для данного типа оборудования</td></tr>
+<tr>
+<td width="18%">ИнтеграционнаяБиблиотека<br><span id="result_box8" lang="en" class="short_text"><span class="hps">(I</span></span><span class="hps"><span id="result_box8" lang="en" class="short_text">ntegration</span></span><span id="result_box8" lang="en" class="short_text"><span class="hps">Library)</span></span></td>
+<td style="TEXT-ALIGN: center" width="10%">BOOL [OUT]</td>
+<td width="15%">Флаг возвращает является ли компонент интеграционной библиотекой драйвера или самостоятельным драйвером</td></tr>
+<tr>
+<td width="18%">ОсновнойДрайверУстановлен<br>(MainDriver<span lang="en-us">I</span>nstalled)</td>
+<td style="TEXT-ALIGN: center" width="10%">BOOL [OUT]</td>
+<td width="15%">Для интеграционной библиотеки возвращает флаг установки основной поставки драйвера</td></tr>
+<tr>
+<td width="18%">ПолучитьURLCкачивания (GetDownloadURL) </td>
+<td style="TEXT-ALIGN: center" width="10%">STRING [OUT]</td>
+<td width="15%">Возвращает адрес для скачивания основной поставки драйвера</td></tr>
+<tr>
+<td height="148" width="28%">ПолучитьОшибку (GetLastError)</td>
+<td height="148" width="18%">ОписаниеОшибки (ErrorDescription) </td>
+<td height="148" width="10%">
+<p style="TEXT-ALIGN: center">STRING [OUT]</p></td>
+<td height="148" width="15%">Описание ошибки</td>
+<td height="148" width="8%">
+<p style="TEXT-ALIGN: center">LONG</p></td>
+<td height="148" width="20%">Возвращает код и описание последней произошедшей ошибки.</td></tr>
+<tr>
+<td width="28%">ПолучитьПараметры (GetParameters) </td>
+<td width="18%"><b><a href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#table_1">ТаблицаПараметров <br>(TableParameters) <br>XML таблица </a></b></td>
+<td width="10%">
+<p style="TEXT-ALIGN: center">STRING [OUT]</p></td>
+<td width="15%">Список параметров</td>
+<td width="8%">
+<p style="TEXT-ALIGN: center">BOOL</p></td>
+<td width="20%">Возвращает список параметры настройки драйвера и их типы, значение по умолчанию и возможные значения.</td></tr>
+<tr>
+<td rowspan="2" width="28%">УстановитьПараметр (SetParameter) </td>
+<td width="18%">Имя (Name) </td>
+<td width="10%">
+<p style="TEXT-ALIGN: center">STRING [IN]</p></td>
+<td width="15%">Имя параметра</td>
+<td rowspan="2" width="8%">
+<p style="TEXT-ALIGN: center">BOOL</p></td>
+<td rowspan="2" width="20%">Установка значения параметра по имени</td></tr>
+<tr>
+<td width="18%">Значение (Value) </td>
+<td width="10%">
+<p style="TEXT-ALIGN: center">VARIANT [IN] </p></td>
+<td width="15%">Значение параметра</td></tr>
+<tr>
+<td width="28%">Подключить (Open) </td>
+<td width="18%">ИДУстройства (DeviceID) </td>
+<td width="10%">
+<p style="TEXT-ALIGN: center">STRING [OUT]</p></td>
+<td width="15%">Идентификатор устройства</td>
+<td width="8%">
+<p style="TEXT-ALIGN: center">BOOL</p></td>
+<td width="20%">Подключает оборудование с текущими значениями параметров, установленных функцией «УстановитьПараметр». Возвращает идентификатор подключенного экземпляра устройства</td></tr>
+<tr>
+<td width="28%">Отключить (Close) </td>
+<td width="18%">ИДУстройства (DeviceID) </td>
+<td style="TEXT-ALIGN: center" width="10%">STRING [<span lang="en-us">IN</span>]</td>
+<td width="15%">Идентификатор устройства</td>
+<td width="8%">
+<p style="TEXT-ALIGN: center">BOOL</p></td>
+<td width="20%">Отключает оборудование</td></tr>
+<tr>
+<td rowspan="2" width="28%">ТестУстройства (DeviceTest)</td>
+<td width="18%">Описание (Description) </td>
+<td style="TEXT-ALIGN: center" width="10%">STRING [OUT]</td>
+<td width="15%">Описание результата выполнения теста</td>
+<td rowspan="2" width="8%">
+<p style="TEXT-ALIGN: center">BOOL</p></td>
+<td rowspan="2" width="20%">Выполняет пробное подключение и опрос устройства с текущими значениями параметров установленных функцией «УстановитьПараметр». При успешном выполнении подключения в описании возвращается информация об устройстве</td></tr>
+<tr>
+<td width="18%">АктивированДемоРежим (DemoModeIsActivated) </td>
+<td style="TEXT-ALIGN: center" width="10%">STRING [OUT]</td>
+<td width="15%">Возвращает описание ограничений демонстрационного режима при его наличии и пустой результат при его отсутствии. Пример: драйвер является платным, и для полноценной работы нужен ключ защиты. </td></tr>
+<tr>
+<td width="28%">ПолучитьДополнительныеДействия (Get<span lang="en-us">A</span>dditionalActions)</td>
+<td width="18%"><b><a href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#table_1_4">ТаблицаДействий<br>(TableActions) <br>XML таблица </a></b></td>
+<td style="TEXT-ALIGN: center" width="10%">
+<p style="TEXT-ALIGN: center">STRING [OUT]</p></td>
+<td width="15%">Список дополнительных действий</td>
+<td width="8%">
+<p style="TEXT-ALIGN: center">BOOL</p></td>
+<td width="20%">Получает список дополнительных действий, которые будут отображаться как дополнительные пункты меню в форме настройке оборудования. Если дополнительные действия не нужны, возвращает пустую строку. </td></tr>
+<tr>
+<td width="28%">ВыполнитьДополнительноеДействие (<span class="hps"><span lang="en-us">DoA</span></span><span id="result_box0" lang="en" class="short_text"><span class="hps">dditionalAction</span></span>)</td>
+<td width="18%">ИмяДействия (<span lang="en-us">ActionName</span>)</td>
+<td style="TEXT-ALIGN: center" width="10%">STRING [<span lang="en-us">IN</span>]</td>
+<td width="15%">Имя действия</td>
+<td width="8%">
+<p style="TEXT-ALIGN: center">BOOL</p></td>
+<td width="20%">Команда на выполнения дополнительного действия с определенными именем</td></tr></tbody></table>
+<p>* - Строка, определяющая тип оборудования имеет одно из значений: “СканерШтрихкода“, “СчитывательМагнитныхКарт“, “ФискальныйРегистратор“, “ДисплейПокупателя“, “ТерминалСбораДанных“, “ЭквайринговыйТерминал“, “ЭлектронныеВесы“, “ВесыСПечатьюЭтикеток“, “ККМOffline“.<br>** - Версия требований – версия текущего документа (Версия 1.00&nbsp;соответствует число 1000. Версия 1.<span lang="en-us">12</span> соответствует число 101<span lang="en-us">2</span>. Текущая версия 1.1 соответствует число 1001).</p>
+<h5 id="table_1">ТаблицаПараметров (TableParameters)</h5>
+<p>Текст в формате XML с кодировкой UTF-8 передаваемый с помощью параметра типа STRING. Содержится описание всех параметров драйвера и описание визуального интерфейса настройки драйвера. </p>
+<p>Необходимые для работы параметры могут быть структурированы для вывода на форму конфигурации "1С:Предприятия" - распределены по закладкам и группам на закладке. Закладки и группы могут иметь наименования, которые отобразятся на форме. Для параметров могут быть заданы определенные значения, которые сформируют выпадающий список для выбора. Наконец, поля параметры, зависимых от других параметров, могут активироваться по необходимости. </p>
+<table id="table2" class="withBorder" border="0" cellspacing="0" cellpadding="3" width="65%">
+<tbody>
+<tr>
+<th width="24%">Наименование атрибута</th>
+<th width="17%">Наличие в структуре</th>
+<th width="16%">Типы данных</th>
+<th width="40%">Описание атрибута</th></tr>
+<tr>
+<td>Имя (Name) </td>
+<td style="TEXT-ALIGN: center">Обязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Имя параметра, для которого создается поле ввода, не должно содержать пробелов и недопустимых символов, в соответствии с правилами формирования имен объектов "1С:Предприятия" и быть уникальным в рамках таблицы параметров</td></tr>
+<tr>
+<td>Заголовок (Caption) </td>
+<td style="TEXT-ALIGN: center">Обязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Произвольная надпись перед полем ввода</td></tr>
+<tr>
+<td>ТипЗначение (TypeValue) </td>
+<td style="TEXT-ALIGN: center">Обязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Одно из нижеуказанных типов данных:<br>“String“, “Number“, “Boolean”</td></tr>
+<tr>
+<td>ФорматПоля (FieldFormat) </td>
+<td style="TEXT-ALIGN: center">Необязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Строка форматирования значения параметра</td></tr>
+<tr>
+<td>ЗначениеПоУмолчанию (DefaultValue) </td>
+<td style="TEXT-ALIGN: center">Необязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Значение параметра по умолчанию</td></tr>
+<tr>
+<td>СписокВыбора (ChoiceList) </td>
+<td style="TEXT-ALIGN: center">Необязательное</td>
+<td style="TEXT-ALIGN: center">LIST</td>
+<td>Содержит список доступных для выбора значений параметра</td></tr>
+<tr>
+<td>ЗаголовокЗакладки (PageCaption) </td>
+<td style="TEXT-ALIGN: center">Необязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Наименование закладки, по которому будут группироваться поля ввода</td></tr>
+<tr>
+<td>ЗаголовокГруппы (GroupCaption) </td>
+<td style="TEXT-ALIGN: center">Необязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Наименование группы, по которому будут группироваться поля ввода</td></tr>
+<tr>
+<td height="35">ИмяМастерПараметра (MasterParameterName)</td>
+<td style="TEXT-ALIGN: center" height="35">Необязательное</td>
+<td style="TEXT-ALIGN: center" height="35">STRING</td>
+<td height="35">Имя параметра управляющего активностью данного поля</td></tr>
+<tr>
+<td>ОперацияСМастерПараметром (MasterParameter<span lang="en-us">Operation</span>)</td>
+<td style="TEXT-ALIGN: center">Необязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td><span class="hps">Операция сравнение с&nbsp; мастер параметром<span lang="en-us">:</span></span> <span id="result_box" lang="en" class="short_text"><span class="hps">Equall</span><span>,</span> </span><span class="short_text"><span lang="en-us">N</span></span><span class="hps"><span id="result_box" lang="en" class="short_text">otEqual</span></span></td></tr>
+<tr>
+<td>ЗначениеМастерПараметра (MasterParameterValue)</td>
+<td style="TEXT-ALIGN: center">Необязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Значение мастер параметра, при котором выполняется условие операции ОперацияСМастерПараметром. При выполнении условия поле ввода становиться доступным. Если&nbsp; ИмяМастерПараметра и ЗначениеМастерПараметра не определены поле всегда активно</td></tr></tbody></table>
+<p>Пример текстового XML описывающего параметры драйвера</p><a class="cbData" title="#" onclick="copySource(this); return false;" href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#">Копировать в буфер обмена</a><pre class="xml"> &lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+ &lt;Settings&gt;
+ &lt;Parameter Name="Model" Caption="Модель" /&gt; 
+      &lt;Page Caption="Параметры"&gt;    
+         &lt;Group Caption="Параметры подключения"&gt;
+            &lt;Parameter Name="Port" Caption="Порт" TypeValue="Number" DefaultValue="0"&gt;
+                 &lt;ChoiceList&gt;
+                      &lt;Item Value="0"&gt;Клавиатура&lt;/Item&gt;
+                      &lt;Item Value="1"&gt;COM1&lt;/Item&gt;
+                      &lt;Item Value="2"&gt;COM2&lt;/Item&gt;
+                &lt;/ChoiceList&gt;
+           &lt;/Parameter&gt;
+           &lt;Parameter Name="Parity" Caption="Четность" TypeValue="Number"<span lang="en-us"> </span>DefaultValue="<span lang="en-us">True</span>"/&gt;
+       &lt;Parameter Name="Speed" Caption="Скорость" TypeValue="Number" FieldFormat="" 
+                  DefaultValue="1" MasterParameterOperation="" ParameterMasterName="" ParameterMasterValue=""/&gt;
+         &lt;/Group&gt;
+      &lt;/Page&gt;
+ &lt;/Settings&gt;
+
+</pre>
+<p>В результате будет сформирована следующая форма для ввода параметров:</p>
+<p><img src="screen01.jpg" width="289" height="237" border="0"></p>
+<h5 id="table_1_4">ТаблицаДействий (TableActions)</h5>
+<p>Текст в формате XML с кодировкой UTF-8 передаваемый с помощью параметра типа STRING. Содержится описание дополнительных возможных действий для настройки и управлением драйвером. <br>Данные действия будут отображаться пунктами меню в разделе "Функции" после пункта меню "Тест устройства" на форме настройке экземпляра подключаемого оборудования. При выборе определенного пункта меню будет вызван метод драйвера "ВыполнитьДополнительноеДействие" с параметром "ИмяДействия", соответвующему данному пункту меню. При выполнении данного действия драйвер может создавать дополнительные диалоговые окна в соответствии с <a href="http://its.1c.ru/db/translate/?db=metbud81&path=src/developers/additional/guides/../../Platform/i8103221.htm" target="_top">"Технологией создания внешних компонент"</a>.</p>
+<table id="table2" class="withBorder" border="0" cellspacing="0" cellpadding="3" width="65%">
+<tbody>
+<tr>
+<th width="24%">Наименование атрибута</th>
+<th width="17%">Наличие в структуре</th>
+<th width="16%">Типы данных</th>
+<th width="40%">Описание атрибута</th></tr>
+<tr>
+<td>Имя (Name) </td>
+<td style="TEXT-ALIGN: center">Обязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Имя действия, для которого создается пункт меню, не должно содержать пробелов и недопустимых символов, в соответствии с правилами формирования имен объектов "1С:Предприятия" и быть уникальным в рамках таблицы параметров</td></tr>
+<tr>
+<td>Заголовок (Caption) </td>
+<td style="TEXT-ALIGN: center">Обязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Заголовок пункта меню</td></tr></tbody></table>
+<p>Пример текстового XML описывающего параметры драйвера</p><a class="cbData" title="#" onclick="copySource(this); return false;" href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#">Копировать в буфер обмена</a><pre class="xml"> &lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+ &lt;Actions&gt;
+ <span lang="en-us">     </span>&lt;Action Name="Setting<span lang="en-us">L</span>og" Caption="Параметры журналирования" /&gt; 
+ &lt;/Actions&gt;
+
+</pre>
+<p>В результате будет сформирована следующие пункты меню для форма для ввода параметров:</p>
+<p><img src="screen02.jpg" border="0"></p><br>
+<h2 id="chapter23"><span lang="en-us">3</span>. Описание методов специфичных для типов подключаемого оборудования</h2>
+<h3 id="chapter231"><span lang="en-us">3</span>.1. Требования к разработке драйверов для электронных весов</h3>
+<p>Конфигурациями поддерживаются следующие возможности работы с весами on-line:</p>
+<ol>
+<li>Ввод значения веса тары, используемой для упаковки взвешиваемого товара. 
+</li><li>Получение значения веса товара за вычетом веса тары. </li></ol>
+<table id="table3" class="withBorder" border="0" cellspacing="0" cellpadding="3" width="95%">
+<tbody>
+<tr>
+<th width="100%" colspan="6">Описание методов</th></tr>
+<tr>
+<th rowspan="2" width="28%">Название (alias)</th>
+<th width="41%" colspan="3">Параметры</th>
+<th rowspan="2" width="11%">Тип возвращаемого значения</th>
+<th rowspan="2" width="20%">Описание метода </th></tr>
+<tr>
+<th width="18%">Имя</th>
+<th width="10%">Тип</th>
+<th width="13%">Описание</th></tr>
+<tr>
+<td rowspan="2" width="28%">УстановитьВесТары (Calibrate)</td>
+<td width="18%">ИДУстройства (DeviceID)</td>
+<td width="10%">
+<p style="TEXT-ALIGN: center">STRING [IN]</p></td>
+<td width="13%">Идентификатор устройства</td>
+<td rowspan="2" width="11%">
+<p style="TEXT-ALIGN: center">BOOL</p></td>
+<td rowspan="2" width="20%">Производит установку веса тары на весах. Если значение «ВесТары» имеет значение 0 – в качестве значение принимается текущее значение веса на весах</td></tr>
+<tr>
+<td width="18%">ВесТары (TareWeight)</td>
+<td width="10%">
+<p style="TEXT-ALIGN: center">DOUBLE [IN]</p></td>
+<td width="13%">Вес тары</td></tr>
+<tr>
+<td rowspan="3" width="28%">ПолучитьВес (GetWeight)</td>
+<td width="18%">ИДУстройства (DeviceID)</td>
+<td width="10%">
+<p style="TEXT-ALIGN: center">STRING [IN]</p></td>
+<td width="13%">Идентификатор устройства</td>
+<td rowspan="3" width="11%">
+<p style="TEXT-ALIGN: center">BOOL</p></td>
+<td rowspan="3" width="20%">Получает текущий вес товара на весах</td></tr>
+<tr>
+<td width="18%">ТекущийВес (Weight) </td>
+<td width="10%">
+<p style="TEXT-ALIGN: center">DOUBLE [IN]</p></td>
+<td width="13%">Текущий вес товара на весах</td></tr></tbody></table><br>
+<h3 id="chapter232"><span lang="en-us">3</span>.2. Требования к разработке драйверов для электронных весов с печатью этикеток в режиме "OFFLINE"</h3>
+<p>Работа с электронными весами с печатью этикеток заключается в выгрузке таблицы товаров. Таблица формируется на основе базы данных средствами конфигурации. Обработка выгрузки таблицы товаров в электронные весы должна предусматривать выгрузку несколькими итерациями путем последовательных вызовом метода <b>«ВыгрузитьТовары (UploadGoods)»</b> с пакетами данных.</p>
+<table id="table4" class="withBorder" border="0" cellspacing="0" cellpadding="3" width="95%">
+<tbody>
+<tr>
+<th width="100%" colspan="6">Описание методов</th></tr>
+<tr>
+<th rowspan="2" width="28%">Название (alias)</th>
+<th width="41%" colspan="3">Параметры</th>
+<th rowspan="2" width="11%">Тип возвращаемого значения</th>
+<th rowspan="2" width="20%">Описание метода </th></tr>
+<tr>
+<th width="18%">Имя</th>
+<th width="10%">Тип</th>
+<th width="13%">Описание</th></tr>
+<tr>
+<td rowspan="2" width="28%">ВыгрузитьТовары (UploadGoods)</td>
+<td width="18%">ИДУстройства (DeviceID)</td>
+<td width="10%">
+<p style="TEXT-ALIGN: center">STRING [IN]</p></td>
+<td width="13%">Идентификатор устройства</td>
+<td rowspan="2" width="11%">
+<p style="TEXT-ALIGN: center">BOOL</p></td>
+<td rowspan="2" width="20%">Выгружает товары в весы</td></tr>
+<tr>
+<td width="18%"><a href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#table_2"><b>ТаблицаТоваров<br>(ProductsTable)<br>XML таблица </b></a></td>
+<td width="10%">
+<p style="TEXT-ALIGN: center">STRING [IN]</p></td>
+<td width="13%">Таблица товаров</td></tr>
+<tr>
+<td rowspan="2" width="28%">ОчиститьТовары (ClearGoods) </td>
+<td width="18%">ИДУстройства (DeviceID)</td>
+<td width="10%">
+<p style="TEXT-ALIGN: center">STRING [IN]</p></td>
+<td width="13%">Идентификатор устройства</td>
+<td rowspan="2" width="11%">
+<p style="TEXT-ALIGN: center">BOOL</p></td>
+<td rowspan="2" width="20%">Удаляет товары в весах</td></tr></tbody></table>
+<h5 id="table_2">ТаблицаТоваров (ProductsTable)</h5>
+<p>Текст в формате XML с кодировкой UTF-8 передаваемый с помощью параметра типа STRING.</p>
+<table id="table5" class="withBorder" border="0" cellspacing="0" cellpadding="3" width="65%">
+<tbody>
+<tr>
+<th width="24%">Наименование атрибута</th>
+<th width="17%">Наличие в структуре</th>
+<th width="16%">Типы данных</th>
+<th width="40%">Описание атрибута</th></tr>
+<tr>
+<td>ПЛУ (PLU) </td>
+<td style="TEXT-ALIGN: center">Обязательное</td>
+<td style="TEXT-ALIGN: center">LONG</td>
+<td>PLU товара (Индекс товара в весах)</td></tr>
+<tr>
+<td>КодТовара (Code)</td>
+<td style="TEXT-ALIGN: center">Обязательное</td>
+<td style="TEXT-ALIGN: center">LONG</td>
+<td>Код весового товара</td></tr>
+<tr>
+<td>НаименованиеТовара (Name) </td>
+<td style="TEXT-ALIGN: center">Обязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Наименование товара</td></tr>
+<tr>
+<td>Цена (Price) </td>
+<td style="TEXT-ALIGN: center">Обязательное</td>
+<td style="TEXT-ALIGN: center">DOUBLE</td>
+<td>Цена за килограмм (в формате &lt;Рубли&gt;,&lt;Копейки&gt;)</td></tr>
+<tr>
+<td>ОписаниеТовара (Description) </td>
+<td style="TEXT-ALIGN: center">Необязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Текстовое описание товара (Состав товара, список ингредиентов и пр.)</td></tr>
+<tr>
+<td>СрокХранения (ShelfLife) </td>
+<td style="TEXT-ALIGN: center">Необязательное</td>
+<td style="TEXT-ALIGN: center">LONG</td>
+<td>Длительность хранения/срок годности товара, в днях</td></tr></tbody></table>
+<p>Пример текстового XML </p><a class="cbData" title="#" onclick="copySource(this); return false;" href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#">Копировать в буфер обмена</a><pre class="xml"> 
+ &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+ &lt;Table&gt;
+    &lt;Record PLU="1" Code="1003" Name="Яблоки Антоновка" Price="95,50" ShelfLife="7"/&gt;
+    &lt;Record PLU="2" Code="1023" Name="Салат Болгарский" Price="500,00" 
+<span lang="en-us">            </span>Description="Состав: свекла, морковь, ветчина, мясо, сыр, яйцо, лук репчатый, майонез" ShelfLife="5"/&gt;
+ &lt;/Table&gt;
+</pre><br>
+<h3 id="chapter233"><span lang="en-us">3.</span>3. Требования к разработке драйверов для дисплеев покупателя</h3>
+<p>При оформлении документов продажи необходимая информация может отображаться на дисплее покупателя. Состав информации определяется в конфигурации. Поддерживаются многострочные дисплеи и разбиение строк на области.</p>
+<table id="table6" class="withBorder" border="0" cellspacing="0" cellpadding="3" width="95%">
+<tbody>
+<tr>
+<th width="100%" colspan="6">Описание методов</th></tr>
+<tr>
+<th rowspan="2" width="28%">Название (alias)</th>
+<th width="41%" colspan="3">Параметры</th>
+<th rowspan="2" width="11%">Тип возвращаемого значения</th>
+<th rowspan="2" width="20%">Описание метода </th></tr>
+<tr>
+<th width="18%">Имя</th>
+<th width="10%">Тип</th>
+<th width="13%">Описание</th></tr>
+<tr>
+<td rowspan="2" width="28%">ВывестиСтрокуНаДисплейПокупателя (StringOutputOnCustomerDisplay)</td>
+<td width="18%">ИДУстройства (DeviceID)</td>
+<td width="10%">
+<p style="TEXT-ALIGN: center">STRING [IN]</p></td>
+<td width="13%">Идентификатор устройства</td>
+<td rowspan="2" width="11%">
+<p style="TEXT-ALIGN: center">BOOL</p></td>
+<td rowspan="2" width="20%">Выводит переданные строки на дисплей покупателя. Одна строка соответствует одной строке дисплея. Если строка пуста, то информация в данной строке на дисплее не меняется</td></tr>
+<tr>
+<td width="18%">Строки (Strings) </td>
+<td width="10%">
+<p style="TEXT-ALIGN: center">STRING [IN]</p></td>
+<td width="13%">Cтроки, содержащий информацию для отображения на дисплее</td></tr>
+<tr>
+<td width="28%">ОчиститьДисплейПокупателя (ClearCustomerDisplay)</td>
+<td width="18%">ИДУстройства (DeviceID)</td>
+<td width="10%">
+<p style="TEXT-ALIGN: center">STRING [IN]</p></td>
+<td width="13%">Идентификатор устройства</td>
+<td width="11%">
+<p style="TEXT-ALIGN: center">BOOL</p></td>
+<td width="20%">Очищает дисплей покупателя</td></tr>
+<tr>
+<td rowspan="3" width="28%">ПолучитьПараметрыВывода (GetOutputOptions) </td>
+<td width="18%">ИДУстройства (DeviceID)</td>
+<td width="10%">
+<p style="TEXT-ALIGN: center">STRING [IN]</p></td>
+<td width="13%">Идентификатор устройства</td>
+<td rowspan="3" width="11%">
+<p style="TEXT-ALIGN: center">BOOL</p></td>
+<td rowspan="3" width="20%">Получить размерность дисплея покупателя</td></tr>
+<tr>
+<td width="18%">СтолбцовНаДисплее (DeviceColumn) </td>
+<td width="10%">
+<p style="TEXT-ALIGN: center">LONG [OUT]</p></td>
+<td width="13%">Возвращает количество столбцов на дисплеи (символов в строке) </td></tr>
+<tr>
+<td width="18%">СтрокНаДисплее (DeviceRows) </td>
+<td width="10%">
+<p style="TEXT-ALIGN: center">LONG [OUT]</p></td>
+<td width="13%">Возвращает количество строк на дисплее</td></tr></tbody></table><br>
+<h3 id="chapter234"><span lang="en-us">3.</span>4. Требования к разработке драйверов для терминалов сбора данных</h3>
+<p>Работа с терминалами сбора данных заключается в выгрузке таблицы товаров из конфигурации и загрузке таблицы данных об отобранных товарах. Таблица формируется на основе базы данных средствами конфигурации. Обработка выгрузки таблицы товаров должна предусматривать выгрузку несколькими итерациями путем последовательных вызовом метода <b>«ВыгрузитьТаблицу (UploadTable)» </b>с пакетами данных<span lang="en-us"> </span>определенного размера (например по 100 записей). Загрузка таблицы товаров производится однократно методом «<b>ЗагрузитьТаблицу (DownloadTable)»</b>. </p>
+<table id="table7" class="withBorder" border="0" cellspacing="0" cellpadding="3" width="95%">
+<tbody>
+<tr>
+<th width="100%" colspan="6">Описание методов</th></tr>
+<tr>
+<th rowspan="2" width="28%">Название (alias)</th>
+<th width="40%" colspan="3">Параметры</th>
+<th rowspan="2" width="11%">Тип возвращаемого значения</th>
+<th rowspan="2" width="20%">Описание метода </th></tr>
+<tr>
+<th width="14%">Имя</th>
+<th width="13%">Тип</th>
+<th width="13%">Описание</th></tr>
+<tr>
+<td rowspan="2" width="28%">ВыгрузитьТаблицу (UploadTable)</td>
+<td width="14%">ИДУстройства (DeviceID)</td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [IN] </td>
+<td width="13%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" rowspan="2" width="11%">BOOL</td>
+<td rowspan="2" width="20%">Выгружает таблицу товаров в ТСД</td></tr>
+<tr>
+<td width="14%"><a href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#table_3"><b>ТаблицаТоваров<br>(UploadTable)<br>XML таблица </b></a></td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [<span lang="en-us">IN</span>]</td>
+<td width="13%">Выгружаемая таблица</td></tr>
+<tr>
+<td rowspan="2" width="28%">ЗагрузитьТаблицу (DownloadTable) </td>
+<td width="14%">ИДУстройства (DeviceID)</td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [IN] </td>
+<td width="13%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" width="11%">BOOL</td>
+<td width="20%">Загружает таблицу из ТСД</td></tr>
+<tr>
+<td width="14%"><a href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#table_4"><b>ТаблицаЗагрузки<br>(DownloadTable)<br>XML таблица </b></a></td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [OUT]</td>
+<td width="13%">Загружаемая таблица</td>
+<td style="TEXT-ALIGN: center" rowspan="2" width="11%">BOOL</td>
+<td rowspan="2" width="20%">Очищает загруженную ранее таблицу товаров в ТСД</td></tr>
+<tr>
+<td width="28%">ОчиститьТаблицу (ClearTable) </td>
+<td width="14%">ИДУстройства (DeviceID)</td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [IN] </td>
+<td width="13%">Идентификатор устройства</td></tr></tbody></table><a name="table_3"></a>
+<h5>ТаблицаТоваров (UploadTable)</h5>
+<p>Текст в формате XML с кодировкой UTF-8 передаваемый с помощью параметра типа STRING.</p>
+<table id="table8" class="withBorder" border="0" cellspacing="0" cellpadding="3" width="65%">
+<tbody>
+<tr>
+<th width="24%">Наименование атрибута</th>
+<th width="17%">Наличие в структуре</th>
+<th width="16%">Типы данных</th>
+<th width="40%">Описание атрибута</th></tr>
+<tr>
+<td>Штрихкод (BarCode)</td>
+<td style="TEXT-ALIGN: center">Обязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Штрих код номенклатуры</td></tr>
+<tr>
+<td>Наименование (Name)</td>
+<td style="TEXT-ALIGN: center">Необязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Наименование товара</td></tr>
+<tr>
+<td>ЕдиницаИзмерения (UnitOfMeasurement)</td>
+<td style="TEXT-ALIGN: center">Необязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Единица измерения номенклатуры</td></tr>
+<tr>
+<td height="32">ХарактеристикаНоменклатуры (CharacteristicOfNomenclature) </td>
+<td style="TEXT-ALIGN: center" height="32">Необязательное</td>
+<td style="TEXT-ALIGN: center" height="32">STRING</td>
+<td height="32">Характеристика номенклатуры</td></tr>
+<tr>
+<td>СерияНоменклатуры (SeriesOfNomenclature) </td>
+<td style="TEXT-ALIGN: center">Необязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Серия номенклатуры</td></tr>
+<tr>
+<td>Качество (Quality) </td>
+<td style="TEXT-ALIGN: center">Необязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Качество товара</td></tr>
+<tr>
+<td>Цена (Price)</td>
+<td style="TEXT-ALIGN: center">Необязательное</td>
+<td style="TEXT-ALIGN: center">DOUBLE</td>
+<td>Цена товара</td></tr>
+<tr>
+<td>Количество(Quantity)</td>
+<td style="TEXT-ALIGN: center">Необязательное</td>
+<td style="TEXT-ALIGN: center">DOUBLE</td>
+<td>Количество товара</td></tr></tbody></table>
+<p>Пример текстового XML </p><a class="cbData" title="#" onclick="copySource(this); return false;" href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#">Копировать в буфер обмена</a><pre class="xml"> 
+&lt;?xml version="1.0" encoding="UTF-8"?&gt; 
+&lt;Table&gt;
+    &lt;Record BarCode="4008110271538" Name="Блокнот для заметок" UnitOfMeasurement="Штуки" CharacteristicOfNomenclature="" <br> <span lang="en-us">           </span>SeriesOfNomenclature="" Quality="" Price="25,30" Quantity="7"/&gt;
+    &lt;Record BarCode="2900001355643" Name="Финики в банке" UnitOfMeasurement="Штуки" CharacteristicOfNomenclature="" 
+<span lang="en-us">            </span>SeriesOfNomenclature="" Quality="Зеленые" Price="95,50" Quantity="7"/&gt;
+&lt;/Table&gt;
+</pre><a name="table_4"></a>
+<h5>ТаблицаЗагрузки (DownloadTable)</h5>
+<p>Текст в формате XML с кодировкой UTF-8 передаваемый с помощью параметра типа STRING.</p>
+<table id="table9" class="withBorder" border="0" cellspacing="0" cellpadding="3" width="65%">
+<tbody>
+<tr>
+<th width="24%">Наименование атрибута</th>
+<th width="17%">Наличие в структуре</th>
+<th width="16%">Типы данных</th>
+<th width="40%">Описание атрибута</th></tr>
+<tr>
+<td>Штрихкод (BarCode)</td>
+<td style="TEXT-ALIGN: center">Обязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Штрих код номенклатуры</td></tr>
+<tr>
+<td>Количество (Quantity)</td>
+<td style="TEXT-ALIGN: center">Обязательное</td>
+<td style="TEXT-ALIGN: center">DOUBLE</td>
+<td>Количество товара</td></tr></tbody></table>
+<p>Пример текстового XML</p><a class="cbData" title="#" onclick="copySource(this); return false;" href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#">Копировать в буфер обмена</a><pre class="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt; 
+&lt;Table&gt;
+    &lt;Record BarCode="4008110271538" Quantity="4"/&gt; 
+    &lt;Record BarCode="2900001355643" Quantity="2"/&gt; 
+&lt;/Table&gt;
+</pre><br>
+<h3 id="chapter235"><span lang="en-us">3.</span>5. Требования к разработке драйверов для фискальных регистраторов</h3>
+<p>При работе с фискальными регистраторами (принтерами чеков для ЕНВД) поддерживаются основные операции:</p>
+<ul>
+<li>Печать чеков внесения/выемки денежных средств 
+</li><li>Печать чека ККМ 
+</li><li>Печать отчетов за смену с гашением (Z-отчет) и без гашения (X-отчет) </li></ul>
+<h5>Алгоритм печати чека ККМ.</h5>
+<p>При формировании чеков ККМ, конфигурация посылает команду на открытие нового чека. В зависимости от переданного параметра чек открывается в фискальном или нефискальном режиме.</p>
+<p>В режиме открытого чека производится печать фискальной или не фискальной строки. При печати фискальной строки рассчитываются скидки. Если рассчитанное по формуле "<b>Цена</b>*<b>Количество</b> – <b>Сумма по строке"</b> значение отлично от 0, то в чеке печатается абсолютное значение скидки в денежном выражении. Если значение скидки меньше нуля, вместо слова "Скидка" выводится слово «Наценка».</p>
+<p>Поддерживается аннулирование ранее открытого чека при помощи параметра <b>"АннулироватьОткрытыйЧек"</b> метода <b>"ОткрытьЧек"</b>.</p>
+<p>Поддерживается печать штрихкода в открытом чеке, если это позволяет сделать модель устройства. </p>
+<p>По окончании печати строк чека производится расчет по чеку. Расчет по чеку может производиться несколькими видами оплат. При открытом фискальном чеке происходит печать итогов и сумм оплаты.</p>
+<table id="table10" class="withBorder" border="0" cellspacing="0" cellpadding="3" width="95%">
+<tbody>
+<tr>
+<th width="100%" colspan="6">Описание методов</th></tr>
+<tr>
+<th rowspan="2" width="23%">Название (alias)</th>
+<th width="44%" colspan="3">Параметры</th>
+<th rowspan="2" width="11%">Тип возвращаемого значения</th>
+<th rowspan="2" width="20%">Описание метода </th></tr>
+<tr>
+<th width="18%">Имя</th>
+<th width="13%">Тип</th>
+<th width="13%">Описание</th></tr>
+<tr>
+<td rowspan="6" width="23%">ОткрытьЧек (OpenCheck)</td>
+<td width="18%">ИДУстройства (DeviceID)</td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [IN] </td>
+<td width="13%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" rowspan="6" width="11%">BOOL</td>
+<td rowspan="6" width="20%">Открывает новый чек</td></tr>
+<tr>
+<td width="18%">ФискальныйЧек (IsFiscalCheck)</td>
+<td style="TEXT-ALIGN: center" width="13%">BOOL [IN]</td>
+<td width="13%">Признак фискального чека</td></tr>
+<tr>
+<td width="18%">ЧекВозврата (IsReturnCheck)</td>
+<td width="13%">
+<p style="TEXT-ALIGN: center">BOOL [IN]</p></td>
+<td width="13%">Признак чека возврата</td></tr>
+<tr>
+<td width="18%">АннулироватьОткрытыйЧек (CancelOpenedCheck)</td>
+<td style="TEXT-ALIGN: center" width="13%">BOOL [IN]</td>
+<td width="13%">Признак автоматического аннулирования ранее открытого чека</td></tr>
+<tr>
+<td width="18%">НомерЧека (CheckNumber) </td>
+<td style="TEXT-ALIGN: center" width="13%">LONG [OUT]</td>
+<td width="13%">Номер нового чека</td></tr>
+<tr>
+<td width="18%">НомерСмены (SessionNumber) </td>
+<td style="TEXT-ALIGN: center" width="13%">LONG [OUT]</td>
+<td width="13%">Номер открытой смены</td></tr>
+<tr>
+<td rowspan="7" width="23%">НапечататьФискСтроку (PrintFiscalString) </td>
+<td width="18%">ИДУстройства (DeviceID)</td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [IN] </td>
+<td width="13%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" rowspan="7" width="11%">BOOL</td>
+<td rowspan="7" width="20%">Печатает строку товарной позиции с переданными реквизитами. </td></tr>
+<tr>
+<td width="18%">Наименование (Name) </td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [IN] </td>
+<td width="13%">Наименование товара</td></tr>
+<tr>
+<td width="18%">Количество (Quantity) </td>
+<td style="TEXT-ALIGN: center" width="13%">DOUBLE [IN]</td>
+<td width="13%">Количество товара</td></tr>
+<tr>
+<td width="18%">Цена (Price) </td>
+<td style="TEXT-ALIGN: center" width="13%">DOUBLE [IN]</td>
+<td width="13%">Цена единицы товара (в формате <span lang="en-us">&lt;</span>Рубли,Копейки<span lang="en-us">&gt;</span>)</td></tr>
+<tr>
+<td width="18%">Сумма (Amount) </td>
+<td style="TEXT-ALIGN: center" width="13%">DOUBLE [IN]</td>
+<td width="13%">Конечная сумма по позиции чека (с учетом всех скидок/наценок; в формате <span lang="en-us">&lt;</span>Рубли,Копейки<span lang="en-us">&gt;</span>)</td></tr>
+<tr>
+<td width="18%">Отдел (Department) </td>
+<td style="TEXT-ALIGN: center" width="13%"><span lang="en-us">LONG</span> [IN]</td>
+<td width="13%">Отдел, по которому ведется продажа</td></tr>
+<tr>
+<td width="18%">НДС (Tax) </td>
+<td style="TEXT-ALIGN: center" width="13%">DOUBLE [IN]</td>
+<td width="13%">НДС в процентах (от 0 до 99,99)</td></tr>
+<tr>
+<td rowspan="2" width="23%">НапечататьНефискСтроку (PrintNonFiscalString) </td>
+<td width="18%">ИДУстройства (DeviceID)</td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [IN] </td>
+<td width="13%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" rowspan="2" width="11%">BOOL</td>
+<td rowspan="2" width="20%">Выводит произвольную текстовую строку на чековую ленту</td></tr>
+<tr>
+<td width="18%">СтрокаТекста (TextString) </td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [IN] </td>
+<td width="13%">Строка с произвольным текстом</td></tr>
+<tr>
+<td rowspan="3" width="23%">НапечататьШтрихКод (PrintBarCode) </td>
+<td width="18%">ИДУстройства (DeviceID)</td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [IN] </td>
+<td width="13%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" rowspan="3" width="11%">BOOL</td>
+<td rowspan="3" width="20%">Печать штрихкода осуществляется с автоматическим размером с выравнивание по центру чека. Тип штрихкода может иметь одно из следующих значений: EAN8,EAN13. В случае если модель устройства не поддерживает печать штрихкода выдается ошибка.</td></tr>
+<tr>
+<td width="18%">ТипШтрихкода (BarcodeType) </td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [IN] </td>
+<td width="13%">Строка, определяющая тип штрихкода</td></tr>
+<tr>
+<td width="18%">Штрихкод (Barcode) </td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [IN] </td>
+<td width="13%">Значение штрихкода</td></tr>
+<tr>
+<td rowspan="5" width="23%">ЗакрытьЧек (CloseCheck) </td>
+<td width="18%">ИДУстройства (DeviceID)</td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [IN] </td>
+<td width="13%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" rowspan="5" width="11%">BOOL</td>
+<td rowspan="5" width="20%">Закрывает чек. Сумма всех видов оплат должна быть больше суммы открытого чека.</td></tr>
+<tr>
+<td width="18%">НаличнаяОплата (Cash) </td>
+<td style="TEXT-ALIGN: center" width="13%">DOUBLE [IN]</td>
+<td width="13%">Сумма наличной оплаты</td></tr>
+<tr>
+<td width="18%">ОплатаКартой (PayByCard) </td>
+<td style="TEXT-ALIGN: center" width="13%">DOUBLE [IN]</td>
+<td width="13%">Сумма оплаты картой</td></tr>
+<tr>
+<td width="18%">ОплатаКредитом (PayByCredit) </td>
+<td style="TEXT-ALIGN: center" width="13%">DOUBLE [IN]</td>
+<td width="13%">Сумма оплаты кредитом</td></tr>
+<tr>
+<td width="18%">ОплатаСертификатом (PayByCertificate) </td>
+<td style="TEXT-ALIGN: center" width="13%">DOUBLE [IN]</td>
+<td width="13%">Сумма оплаты сертификатом</td></tr>
+<tr>
+<td width="23%">ОтменитьЧек (CancelCheck) </td>
+<td width="18%">ИДУстройства (DeviceID)</td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [IN] </td>
+<td width="13%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" width="11%">BOOL</td>
+<td width="20%">Отменяет ранее открытый чек (требует административные привилегии)</td></tr>
+<tr>
+<td rowspan="2" width="23%">НапечататьЧекВнесенияВыемки (CashInOutcome)</td>
+<td width="18%">ИДУстройства (DeviceID)</td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [IN] </td>
+<td width="13%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" rowspan="2" width="11%">BOOL</td>
+<td rowspan="2" width="20%">Печатает на ФР чек внесения/ выемки (зависит от переданной суммы). Сумма &gt;= 0 - внесение, Сумма &lt; 0 - выемка.</td></tr>
+<tr>
+<td width="18%">Сумма (Amount) </td>
+<td style="TEXT-ALIGN: center" width="13%">DOUBLE [IN]</td>
+<td width="13%">Сумма внесения /выемки в формате <span lang="en-us">&lt;</span>Рубли,Копейки<span lang="en-us">&gt;</span> </td></tr>
+<tr>
+<td width="23%">НапечататьОтчетБезГашения (PrintXReport) </td>
+<td width="18%">ИДУстройства (DeviceID)</td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [IN] </td>
+<td width="13%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" width="11%">BOOL</td>
+<td width="20%">Печатает на ФР отчет за смену без гашения (не закрывает кассовую смену)</td></tr>
+<tr>
+<td height="40" width="23%">НапечататьОтчетСГашением (PrintZReport)</td>
+<td height="40" width="18%">ИДУстройства (DeviceID)</td>
+<td style="TEXT-ALIGN: center" height="40" width="13%">STRING [IN] </td>
+<td height="40" width="13%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" height="40" width="11%">BOOL</td>
+<td height="40" width="20%">Печатает на ФР отчет за смену с гашением (закрывает кассовую смену, требует административные привилегии)</td></tr>
+<tr>
+<td width="23%">ОткрытьДенежныйЯщик (OpenCashDrawer)</td>
+<td width="18%">ИДУстройства (DeviceID)</td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [IN] </td>
+<td width="13%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" width="11%">BOOL</td>
+<td width="20%">Производит открытие денежного ящика, подключенного к фискальному регистратору.</td></tr>
+<tr>
+<td rowspan="2" width="23%">ПолучитьШиринуСтроки (GetLineLength) </td>
+<td width="18%">ИДУстройства (DeviceID)</td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [IN] </td>
+<td width="13%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" rowspan="2" width="11%">BOOL</td>
+<td rowspan="2" width="20%">Получить ширину строки чека в символах</td></tr>
+<tr>
+<td width="18%">ШиринаСтроки (LineLength) </td>
+<td style="TEXT-ALIGN: center" width="13%">LONG [OUT]</td>
+<td width="13%">Ширина строки в символах</td></tr></tbody></table><br>
+<h3 id="chapter236"><span lang="en-us">3</span>.6. Требования к разработке драйверов для контрольно-кассовых машин в режиме "OFFLINE"</h3>
+<p>Работа с контрольно-кассовыми машинами в режиме "OFFLINE" Заключается в выгрузке таблицы товаров из конфигурации и загрузке таблицы данных о продажах, зарегистрированных на кассе в течение смены. Таблица товаров формируется на основе базы данных средствами конфигурации. Обработка выгрузки таблицы товаров в кассы ККМ должна предусматривать выгрузку несколькими итерациями путем последовательных вызовом метода <b>«ВыгрузитьТовары (<span lang="en-us">Upload</span>Goods)»</b> с пакетами данных. Загрузка таблицы товаров производится однократно методом <b>«ЗагрузитьОтчет (<span lang="en-us">Down</span>l<span lang="en-us">oad</span>Report)»</b>.</p>
+<table id="table11" class="withBorder" border="0" cellspacing="0" cellpadding="3" width="95%">
+<tbody>
+<tr>
+<th width="100%" colspan="6">Описание методов</th></tr>
+<tr>
+<th rowspan="2" width="28%">Название (alias)</th>
+<th height="25" width="40%" colspan="3">Параметры</th>
+<th rowspan="2" width="11%">Тип возвращаемого значения</th>
+<th rowspan="2" width="20%">Описание метода </th></tr>
+<tr>
+<th width="14%">Имя</th>
+<th width="13%">Тип</th>
+<th width="12%">Описание</th></tr>
+<tr>
+<td rowspan="2" width="28%">ВыгрузитьТовары (UploadGoods)</td>
+<td width="14%">ИДУстройства (DeviceID)</td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [IN] </td>
+<td width="12%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" rowspan="2" width="11%">BOOL</td>
+<td rowspan="2" width="20%">Выгружает товары в ККМ</td></tr>
+<tr>
+<td width="14%"><a href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#table_6"><b>ТаблицаТоваров<br>(GoodsTable)<br>XML таблица </b></a></td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [<span lang="en-us">IN</span>]</td>
+<td width="12%">Таблица значений с информацией о товарах </td></tr>
+<tr>
+<td rowspan="2" width="28%">ЗагрузитьОтчет (DownloadReport) </td>
+<td width="14%">ИДУстройства (DeviceID)</td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [IN] </td>
+<td width="12%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" rowspan="2" width="11%">BOOL</td>
+<td rowspan="2" width="20%">Загружает отчет о проданных товарах из ККМ</td></tr>
+<tr>
+<td width="14%"><a href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#table_7"><b>ТаблицаПродаж<br>(ReportTable)<br>XML таблица </b></a></td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [OUT]</td>
+<td width="12%">Таблица значений с информацией о продажах</td></tr>
+<tr>
+<td rowspan="2" width="28%">ОтчетЗагружен (LoadSuccess)</td>
+<td width="14%">ИДУстройства (DeviceID)</td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [IN] </td>
+<td width="12%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" rowspan="2" width="11%">BOOL</td>
+<td rowspan="2" width="20%">Драйверу устанавливается флаг в «Истина», если отчет был успешно обработан, и в «Ложь» в противном случае.</td></tr>
+<tr>
+<td width="14%">ФлагСостояния (StateFlag) </td>
+<td style="TEXT-ALIGN: center" width="13%">BOOL [IN] </td>
+<td width="12%">Признак успеха обработки отчета</td></tr>
+<tr>
+<td width="28%">ОчиститьТаблицу (ClearTable) </td>
+<td width="14%">ИДУстройства (DeviceID)</td>
+<td style="TEXT-ALIGN: center" width="13%">STRING [IN] </td>
+<td width="12%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" width="11%">BOOL</td>
+<td width="20%">Очищает базу товаров ККМ</td></tr></tbody></table>
+<h5 id="table_6">ТаблицаТоваров (GoodsTable)</h5>
+<p>Текст в формате XML с кодировкой UTF-8 передаваемый с помощью параметра типа STRING.</p>
+<table id="table12" class="withBorder" border="0" cellspacing="0" cellpadding="3" width="65%">
+<tbody>
+<tr>
+<th width="24%">Наименование атрибута</th>
+<th width="16%">Наличие в структуре</th>
+<th width="16%">Типы данных</th>
+<th width="40%">Описание атрибута</th></tr>
+<tr>
+<td>PLU</td>
+<td style="TEXT-ALIGN: center">Обязательное</td>
+<td style="TEXT-ALIGN: center">LONG</td>
+<td>PLU товара</td></tr>
+<tr>
+<td>Штрихкод (BarCode) </td>
+<td style="TEXT-ALIGN: center">Обязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Штрих код. Допустимо несколько штрих кодов через запятую. </td></tr>
+<tr>
+<td>Наименование (Name) </td>
+<td style="TEXT-ALIGN: center">Обязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Наименование номенклатуры</td></tr>
+<tr>
+<td>Группа (Group) </td>
+<td style="TEXT-ALIGN: center" height="19">Необязательное</td>
+<td style="TEXT-ALIGN: center" height="19">STRING</td>
+<td height="19">Группа номенклатуры</td></tr>
+<tr>
+<td>ЕдиницаИзмерения (UnitOfMeasurement) </td>
+<td style="TEXT-ALIGN: center">Необязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Единица измерения номенклатуры</td></tr>
+<tr>
+<td>ХарактеристикаНоменклатуры (CharacteristicOfNomenclature) </td>
+<td style="TEXT-ALIGN: center">Необязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Характеристика номенклатуры</td></tr>
+<tr>
+<td>СерияНоменклатуры (SeriesOfNomenclature) </td>
+<td style="TEXT-ALIGN: center">Необязательное</td>
+<td style="TEXT-ALIGN: center">STRING</td>
+<td>Серия номенклатуры</td></tr>
+<tr>
+<td height="21">Качество (Quality) </td>
+<td style="TEXT-ALIGN: center" height="21">Необязательное</td>
+<td style="TEXT-ALIGN: center" height="21">STRING</td>
+<td height="21">Качество товара</td></tr>
+<tr>
+<td>Цена (Price) </td>
+<td style="TEXT-ALIGN: center">Обязательное</td>
+<td style="TEXT-ALIGN: center">DOUBLE</td>
+<td>Цена товара</td></tr>
+<tr>
+<td>Остаток (Remainder) </td>
+<td style="TEXT-ALIGN: center">Необязательное</td>
+<td style="TEXT-ALIGN: center">DOUBLE</td>
+<td>Остаток товаров</td></tr>
+<tr>
+<td>ВесовойТовар (IsWeightGoods)</td>
+<td style="TEXT-ALIGN: center">Необязательное</td>
+<td style="TEXT-ALIGN: center"><span lang="en-us">BOOL</span></td>
+<td>Признак весового товара</td></tr></tbody></table>
+<p>Пример текстового XML </p><a class="cbData" title="#" onclick="copySource(this); return false;" href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#">Копировать в буфер обмена</a><pre class="xml"> 
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;  
+&lt;Table&gt; 
+    &lt;Record PLU="40" BarCode="4008110271538" Name="Блокнот для заметок" Group="Разное"<span lang="en-us"> </span>UnitOfMeasurement="Штуки" 
+<span lang="en-us">            </span>CharacteristicOfNomenclature="" SeriesOfNomenclature="" Quality="" Price="25,30" Remainder="7" /&gt; 
+    &lt;Record PLU="423" BarCode="2900001355643,2900001355679" Name="Яблоки антоновка" Group="Фрукты"<span lang="en-us"> </span>UnitOfMeasurement="Штуки" 
+<span lang="en-us">            </span>CharacteristicOfNomenclature="" SeriesOfNomenclature="" Quality="Зеленые" Price="95,50" Remainder="7" IsWeightGoods="True"/&gt; 
+&lt;/Table&gt; 
+</pre>
+<h5 id="table_7">ТаблицаПродаж (ReportTable)</h5>
+<p>Текст в формате XML с кодировкой UTF-8 передаваемый с помощью параметра типа STRING.</p>
+<table id="table13" class="withBorder" border="0" cellspacing="0" cellpadding="3" width="65%">
+<tbody>
+<tr>
+<th width="24%">Наименование атрибута</th>
+<th width="16%">Наличие в структуре</th>
+<th width="16%">Типы данных</th>
+<th width="40%">Описание атрибута</th></tr>
+<tr>
+<td>PLU</td>
+<td style="TEXT-ALIGN: center">Обязательное</td>
+<td style="TEXT-ALIGN: center">LONG</td>
+<td>PLU товара</td></tr>
+<tr>
+<td>Цена (Price) </td>
+<td style="TEXT-ALIGN: center">Обязательное</td>
+<td style="TEXT-ALIGN: center">DOUBLE</td>
+<td>Цена, по которой продан товар </td></tr>
+<tr>
+<td>Количество (Quantity)</td>
+<td style="TEXT-ALIGN: center">Обязательное</td>
+<td style="TEXT-ALIGN: center">DOUBLE</td>
+<td>Количество проданного товара</td></tr>
+<tr>
+<td>Скидка (Discount) </td>
+<td style="TEXT-ALIGN: center" height="19">Обязательное</td>
+<td style="TEXT-ALIGN: center" height="19">DOUBLE</td>
+<td height="19">Процент предоставленной скидки</td></tr>
+<tr>
+<td>Сумма (Amount) </td>
+<td style="TEXT-ALIGN: center">Обязательное</td>
+<td style="TEXT-ALIGN: center">DOUBLE</td>
+<td>Сумма проданного товара (конечная цена с учетом всех скидок/наценок</td></tr></tbody></table>
+<p>Пример текстового XML </p><a class="cbData" title="#" onclick="copySource(this); return false;" href="http://its.1c.ru/db/content/metbud81/src/developers/additional/guides/i8104829.htm#">Копировать в буфер обмена</a><pre class="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt; 
+&lt;Table&gt;
+    &lt;Record PLU="40"  Price="20"  Quantity="2" Discount="0" Сумма="40"/&gt; 
+    &lt;Record PLU="423" Price="100"  Quantity="1" Discount="5" Сумма="95"/&gt; 
+&lt;/Table&gt;
+</pre><br>
+<h3 id="chapter237"><span lang="en-us">3</span>.7. Требования к разработке драйверов устройств ввода (сканеры штрихкода, считыватели магнитных карт и т.д.)</h3>
+<p>Данные устройства реализуют функцию автоматического считывания закодированной различными способами информации и асинхронной передачи ее в конфигурацию "1С:Предприятия". Драйвера устройств такого типа не предусматривают специфических для оборудования методов, которые можно вызывать из конфигураций. <br><br>Работа с драйвером строится следующим образом:</p>
+<ol>
+<li>При инициализации объекта компоненты ему передается указатель на интерфейс "1С:Предприятия", с помощью которого можно вызывать метод<span lang="en-us">:</span> <br><i><b>HRESULT ExternalEvent(BSTR bstrWho, BSTR bstrWhat, BSTR bstrData)</b></i> 
+</li><li>При каждом успешном считывании кода сканером или считывателем драйвер должен вызывать метод <i><b>HRESULT ExternalEvent(BSTR bstrWho, BSTR bstrWhat, BSTR bstrData)</b></i>. 
+</li><li>Переданные данные размещаются в очереди сообщений. Сообщения из очереди обрабатываются только после обработки всех системных сообщений "1С:Предприятия". При переполнении очереди полученные сообщения игнорируются. </li></ol>
+<p>Описание методов, доступных для асинхронного вызова из драйвера*</p>
+<table id="table14" class="withBorder" border="0" cellspacing="0" cellpadding="3" width="95%">
+<tbody>
+<tr>
+<th width="100%" colspan="6">Описание методов</th></tr>
+<tr>
+<th rowspan="2" width="19%">Название (alias)</th>
+<th width="44%" colspan="3">Параметры</th>
+<th rowspan="2" width="10%">Тип возвращаемого значения</th>
+<th rowspan="2" width="24%">Описание метода </th></tr>
+<tr>
+<th width="8%">Имя</th>
+<th width="9%">Тип</th>
+<th width="27%">Описание</th></tr>
+<tr>
+<td rowspan="3" width="19%">ExternalEvent</td>
+<td width="8%">bstrWho</td>
+<td style="TEXT-ALIGN: center" width="9%">BSTR [IN]</td>
+<td width="27%">Уникальный идентификатор подключенного устройства **</td>
+<td rowspan="3" width="10%">
+<p style="TEXT-ALIGN: center">HRESULT</p></td>
+<td rowspan="3" width="24%">Помещает данные, полученные от сканера/считывателя в очередь сообщений </td></tr>
+<tr>
+<td width="8%">bstrWhat</td>
+<td style="TEXT-ALIGN: center" width="9%">BSTR [IN]</td>
+<td width="27%">Тип сообщения/тип данных ***</td></tr>
+<tr>
+<td width="8%">bstrData</td>
+<td style="TEXT-ALIGN: center" width="9%">BSTR [IN]</td>
+<td width="27%">Считанные устройством данные</td></tr>
+<tr>
+<td width="19%">SetEventBufferDepth</td>
+<td width="8%">lDepth</td>
+<td style="TEXT-ALIGN: center" width="9%">BSTR [IN]</td>
+<td width="27%">Максимальное число сообщений в очереди</td>
+<td width="10%">
+<p style="TEXT-ALIGN: center">HRESULT</p></td>
+<td width="24%">Устанавливает длину очереди сообщений</td></tr></tbody></table>
+<p>* Описание остальных функций, доступных для вызова из драйвера см. в документе «Технология создания внешних компонент»<br>** В параметре <b>bstrWho</b> драйвер передает уникальный идентификатор подключенного устройства.<br>*** Параметр <b>bstrWhat</b> используется для поддержки событий различных типов. Для сканеров должен содержать строку <b>«Штрихкод»</b> (<b>«IsBarcode»</b>). Для считывателей магнитных карт, соответственно: <b>«ДанныеКарты» </b>(<b>«IsTracksData»)</b>. В случае ошибки этот параметр должен содержать значение <b>"ОшибкаДрайвера"</b> (<b>«DriverError»</b>). В этом случае параметр <b>bstrData</b> должен содержать описание ошибки.<br></p><br>
+<h3 id="chapter238"><span lang="en-us">3</span>.8. Требования к разработке драйверов для эквайринговых терминалов</h3>
+<p>При работе с эквайринговыми системами поддерживаются следующие операции:</p>
+<ul>
+<li>Оплата картой 
+</li><li>Отмена платежа по карте 
+</li><li>Возврат платежа по карте 
+</li><li>Блокирование суммы на счете карты 
+</li><li>Списание заблокированной суммы со счета карты 
+</li><li>Отмена блокировки суммы на счете карты 
+</li><li>Аварийная отмена операции 
+</li><li>Получение итогов дня по картам </li></ul>
+<h5>Оплата картой</h5>
+<p>При необходимости оплатить покупку платежной картой Система вызывает метод <b>"ОплатитьПлатежнойКартой"</b>, передавая во входном параметре сумму к оплате для списания с карты и номер считанной карты. Если считывание карты будет производиться на терминале (PIN-Pad’e) банка, то в параметре номера считанной карты передается пустая строка. Драйвер в ответ возвращает результат выполнения функции, код RRN, код авторизации и текст слип-чека. Текс слип-чека может быть самостоятельно распечатан терминалом на встроенном принтере или распечатан на ФР (Определяется методом <b>ПечатьКвитанцийНаТерминале</b>). После выполнения функции в параметре номера считанной карты возвращается номер прочитанной на терминале (PIN-Pad’e) банка карты*.</p>
+<h5>Отмена платежа по карте</h5>
+<p>Если происходит отмена платежа, то Система вызывает метод <b>"ОтменитьПлатежПоПплатежнойКарте"</b>, передавая во входных параметрах сумму, которая была указана для списания с карты, номер считанной карты, код RRN операции, по которой совершается отмена, и код авторизации. Драйвер в ответ возвращает результат выполнения функции. Если считывание карты будет производиться на терминале (PIN-Pad’e) банка, то в параметре номера считанной карты передается пустая строка. После выполнения функции в параметре номера считанной карты возвращается номер прочитанной на терминале (PIN-Pad’e) банка карты*.</p>
+<h5>Возврат платежа по карте</h5>
+<p>При возврате платежа Система вызывает метод <b>"ВернутьПлатежПоПлатежнойКарте"</b>, передавая во входном параметре сумму к возврату на карту, номер считанной карты, код RRN операции, по которой совершается возврат, и код авторизации. Драйвер в ответ возвращает результат выполнения функции, а в выходные параметры записывает код RRN, код авторизации. Если считывание карты будет производиться на терминале (PIN-Pad’e) банка, то в параметре номера считанной карты передается пустая строка. После выполнения функции в параметре номера считанной карты возвращается номер прочитанной на терминале (PIN-Pad’e) банка карты*.</p>
+<h5>Блокирование суммы на счете карты</h5>
+<p>При необходимости заблокировать сумму на счете платежной карты Система вызывает метод <b>"ПреавторизацияПоПлатежнойКарте"</b>, передавая во входном параметре сумму для блокировки и номер считанной карты. Если считывание карты будет производиться на терминале (PIN-Pad’e) банка, то в параметре номера считанной карты передается пустая строка. Драйвер в ответ возвращает результат выполнения функции, код RRN, код авторизации и текст слип-чека. Текс слип-чека может быть самостоятельно распечатан терминалом на встроенном принтере или распечатан на ФР (Определяется методом <b>ПечатьКвитанцийНаТерминале</b>). После выполнения функции в параметре номера считанной карты возвращается номер прочитанной на терминале (PIN-Pad’e) банка карты*.</p>
+<h5>Списание заблокированной суммы со счета карты</h5>
+<p>При необходимости списания заблокированной суммы со счета платежной карты Система вызывает метод <b>"ЗавершитьПреавторизациюПоПлатежнойКарте"</b>, передавая во входном параметре сумму для списания с карты, номер считанной карты, код RRN операции блокировки и код авторизации. Если считывание карты будет производиться на терминале (PIN-Pad’e) банка, то в параметре номера считанной карты передается пустая строка. Драйвер в ответ возвращает результат выполнения функции, код RRN, код авторизации и текст слип-чека. Текс слип-чека может быть самостоятельно распечатан терминалом на встроенном принтере или распечатан на ФР (Определяется методом <b>ПечатьКвитанцийНаТерминале</b>). После выполнения функции в параметре номера считанной карты возвращается номер прочитанной на терминале (PIN-Pad’e) банка карты*.</p>
+<h5>Отмена блокировки суммы на счете карты</h5>
+<p>Для отмены блокирования суммы на счете платежной карты Система вызывает метод <b>"ОтменитьПреавторизациюПоПлатежнойКарте"</b>, передавая во входном параметре сумму для списания с карты, номер считанной карты, код RRN операции блокировки и код авторизации. Если считывание карты будет производиться на терминале (PIN-Pad’e) банка, то в параметре номера считанной карты передается пустая строка. Драйвер в ответ возвращает результат выполнения функции, код RRN, код авторизации и текст слип-чека. Текс слип-чека может быть самостоятельно распечатан терминалом на встроенном принтере или распечатан на ФР (Определяется методом <b>ПечатьКвитанцийНаТерминале</b>). После выполнения функции в параметре номера считанной карты возвращается номер прочитанной на терминале (PIN-Pad’e) банка карты*.</p>
+<p><b>Аварийная отмена операции </b></p>
+<p>Если операция по платежной карте прошла успешно и слип-чек должен быть распечатан на ФР (определяется методом <b>ПечатьКвитанцийНаТерминале</b>), но возникла ошибка печати, то операция по карте должна быть аварийно отменена. </p>
+<h5>Получение итогов дня по картам</h5>
+<p>Для получения текста отчета Система вызывает метод <b>"ИтогиДняПоКартам"</b>. Драйвер возвращает результат выполнения функции и текст отчета.</p>
+<p>* Если по требованиям банка полный номер не может быть предоставлен, то в параметре часть цифр заменяется звездочками. </p>
+<table id="table15" class="withBorder" border="0" cellspacing="0" cellpadding="3" width="95%">
+<tbody>
+<tr>
+<th width="100%" colspan="6">Описание методов</th></tr>
+<tr>
+<th rowspan="2" width="28%">Название (alias)</th>
+<th width="43%" colspan="3">Параметры</th>
+<th rowspan="2" width="11%">Тип возвращаемого значения</th>
+<th rowspan="2" width="16%">Описание метода </th></tr>
+<tr>
+<th width="15%">Имя</th>
+<th width="12%">Тип</th>
+<th width="16%">Описание</th></tr>
+<tr>
+<td rowspan="7" width="28%">ОплатитьПлатежнойКартой (PayByPaymentCard)</td>
+<td width="15%">ИДУстройства (DeviceID)</td>
+<td width="12%">STRING [IN] </td>
+<td width="16%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" rowspan="7" width="11%">BOOL</td>
+<td rowspan="7" width="16%">Метод осуществляет авторизацию оплаты по карте</td></tr>
+<tr>
+<td width="15%">НомерКарты (CardNumber)</td>
+<td width="12%">STRING [IN/OUT]</td>
+<td width="16%">Номер Карты / Данные карты*</td></tr>
+<tr>
+<td height="46" width="15%">Сумма (Amount)</td>
+<td height="46" width="12%">STRING [<span lang="en-us">IN</span>]</td>
+<td height="46" width="16%">Сумма к оплате по карте</td></tr>
+<tr>
+<td width="15%">НомерЧека (ReceiptNumber)</td>
+<td width="12%">STRING [IN/OUT]</td>
+<td width="16%">Номер чека</td></tr>
+<tr>
+<td width="15%">КодRRN (RRNCode)</td>
+<td width="12%">STRING [OUT]</td>
+<td width="16%">Уникальный код транзакции RRN </td></tr>
+<tr>
+<td width="15%">КодАвторизации (AuthorizationCode)</td>
+<td width="12%">STRING [OUT]</td>
+<td width="16%">Код авторизации транзакции</td></tr>
+<tr>
+<td width="15%">ТекстКвитанции (Slip)</td>
+<td width="12%">STRING [OUT]</td>
+<td width="16%">Текст квитанции, сформированный Эквайринговым ПО</td></tr>
+<tr>
+<td rowspan="7" width="28%">ВернутьПлатежПоПлатежнойКарте (ReturnPaymentByPaymentCard)</td>
+<td width="15%">ИДУстройства (DeviceID)</td>
+<td width="12%">STRING [IN] </td>
+<td width="16%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" rowspan="7" width="11%">BOOL</td>
+<td rowspan="7" width="16%">Метод осуществляет возврат платежа по карте</td></tr>
+<tr>
+<td width="15%">НомерКарты (CardNumber)</td>
+<td width="12%">STRING [IN/OUT]</td>
+<td width="16%">Номер Карты / Данные карты*</td></tr>
+<tr>
+<td width="15%">Сумма (Amount)</td>
+<td width="12%">STRING [<span lang="en-us">IN</span>]</td>
+<td width="16%">Сумма к оплате по карте</td></tr>
+<tr>
+<td width="15%">НомерЧека (ReceiptNumber)</td>
+<td width="12%">STRING [IN/OUT]</td>
+<td width="16%">Номер чека</td></tr>
+<tr>
+<td width="15%">КодRRN (RRNCode)</td>
+<td width="12%">STRING [IN/OUT]</td>
+<td width="16%">Уникальный код транзакции RRN </td></tr>
+<tr>
+<td width="15%">КодАвторизации (AuthorizationCode)</td>
+<td width="12%">STRING [<span lang="en-us">IN</span>]</td>
+<td width="16%">Код авторизации транзакции</td></tr>
+<tr>
+<td width="15%">ТекстКвитанции (Slip)</td>
+<td width="12%">STRING [OUT]</td>
+<td width="16%">Текст квитанции, сформированный Эквайринговым ПО</td></tr>
+<tr>
+<td rowspan="7" width="28%">ОтменитьПлатежПоПлатежнойКарте (CancelPaymentByPaymentCard)</td>
+<td width="15%">ИДУстройства (DeviceID)</td>
+<td width="12%">STRING [IN] </td>
+<td width="16%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" rowspan="7" width="11%">BOOL</td>
+<td rowspan="7" width="16%">Метод осуществляет отмену платежа по карте</td></tr>
+<tr>
+<td height="35" width="15%">НомерКарты (CardNumber)</td>
+<td height="35" width="12%">STRING [IN/OUT]</td>
+<td height="35" width="16%">Номер Карты / Данные карты*</td></tr>
+<tr>
+<td width="15%">Сумма (Amount)</td>
+<td width="12%">STRING [<span lang="en-us">IN</span>]</td>
+<td width="16%">Сумма к оплате по карте</td></tr>
+<tr>
+<td width="15%">НомерЧека (ReceiptNumber)</td>
+<td width="12%">STRING [IN/OUT]</td>
+<td width="16%">Номер чека</td></tr>
+<tr>
+<td width="15%">КодRRN (RRNCode)</td>
+<td width="12%">STRING [<span lang="en-us">IN</span>]</td>
+<td width="16%">Уникальный код транзакции RRN </td></tr>
+<tr>
+<td width="15%">КодАвторизации (AuthorizationCode)</td>
+<td width="12%">STRING [<span lang="en-us">IN</span>]</td>
+<td width="16%">Код авторизации транзакции</td></tr>
+<tr>
+<td width="15%">ТекстКвитанции (Slip)</td>
+<td width="12%">STRING [OUT]</td>
+<td width="16%">Текст квитанции, сформированный Эквайринговым ПО</td></tr>
+<tr>
+<td rowspan="7" width="28%">ПреавторизацияПоПлатежнойКарте (AuthorisationByPaymentCard)</td>
+<td width="15%">ИДУстройства (DeviceID)</td>
+<td width="12%">STRING [IN] </td>
+<td width="16%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" rowspan="7" width="11%">BOOL</td>
+<td rowspan="7" width="16%">Метод осуществляет пре-авторизацию – блокирование суммы на счете карты</td></tr>
+<tr>
+<td width="15%">НомерКарты (CardNumber)</td>
+<td width="12%">STRING [IN/OUT]</td>
+<td width="16%">Номер Карты / Данные карты*</td></tr>
+<tr>
+<td width="15%">Сумма (Amount)</td>
+<td width="12%">STRING [<span lang="en-us">IN</span>]</td>
+<td width="16%">Сумма к оплате по карте</td></tr>
+<tr>
+<td width="15%">НомерЧека (ReceiptNumber)</td>
+<td width="12%">STRING [IN/OUT]</td>
+<td width="16%">Номер чека</td></tr>
+<tr>
+<td width="15%">КодRRN (RRNCode)</td>
+<td width="12%">STRING [OUT]</td>
+<td width="16%">Уникальный код транзакции RRN </td></tr>
+<tr>
+<td width="15%">КодАвторизации (AuthorizationCode)</td>
+<td width="12%">STRING [OUT]</td>
+<td width="16%">Код авторизации транзакции</td></tr>
+<tr>
+<td width="15%">ТекстКвитанции (Slip)</td>
+<td width="12%">STRING [OUT]</td>
+<td width="16%">Текст квитанции, сформированный Эквайринговым ПО</td></tr>
+<tr>
+<td rowspan="7" width="28%">ЗавершитьПреавторизациюПоПлатежнойКарте (AuthConfirmationByPaymentCard)</td>
+<td width="15%">ИДУстройства (DeviceID)</td>
+<td width="12%">STRING [IN] </td>
+<td width="16%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" rowspan="7" width="11%">BOOL</td>
+<td rowspan="7" width="16%">Метод завершает пре-авторизацию – списывает сумму со счета карты</td></tr>
+<tr>
+<td width="15%">НомерКарты (CardNumber)</td>
+<td width="12%">STRING [IN/OUT]</td>
+<td width="16%">Номер Карты / Данные карты*</td></tr>
+<tr>
+<td width="15%">Сумма (Amount)</td>
+<td width="12%">STRING [<span lang="en-us">IN</span>]</td>
+<td width="16%">Сумма к оплате по карте</td></tr>
+<tr>
+<td width="15%">НомерЧека (ReceiptNumber)</td>
+<td width="12%">STRING [IN/OUT]</td>
+<td width="16%">Номер чека</td></tr>
+<tr>
+<td width="15%">КодRRN (RRNCode)</td>
+<td width="12%">STRING [<span lang="en-us">IN</span>]</td>
+<td width="16%">Уникальный код транзакции RRN </td></tr>
+<tr>
+<td width="15%">КодАвторизации (AuthorizationCode)</td>
+<td width="12%">STRING [<span lang="en-us">IN</span>]</td>
+<td width="16%">Код авторизации транзакции</td></tr>
+<tr>
+<td width="15%">ТекстКвитанции (Slip)</td>
+<td width="12%">STRING [OUT]</td>
+<td width="16%">Текст квитанции, сформированный Эквайринговым ПО</td></tr>
+<tr>
+<td rowspan="7" width="28%">ОтменитьПреавторизациюПоПлатежнойКарте (CancelAuthorisationByPaymentCard)</td>
+<td width="15%">ИДУстройства (DeviceID)</td>
+<td width="12%">STRING [IN] </td>
+<td width="16%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" rowspan="7" width="11%">BOOL</td>
+<td rowspan="7" width="16%">Метод отменяет пре-авторизацию – разблокирует сумм на счете карты</td></tr>
+<tr>
+<td width="15%">НомерКарты (CardNumber)</td>
+<td width="12%">STRING [IN/OUT]</td>
+<td width="16%">Номер Карты / Данные карты*</td></tr>
+<tr>
+<td width="15%">Сумма (Amount)</td>
+<td width="12%">STRING [IN] </td>
+<td width="16%">Сумма к оплате по карте</td></tr>
+<tr>
+<td width="15%">НомерЧека (ReceiptNumber)</td>
+<td width="12%">STRING [IN/OUT]</td>
+<td width="16%">Номер чека</td></tr>
+<tr>
+<td width="15%">КодRRN (RRNCode)</td>
+<td width="12%">STRING [IN] </td>
+<td width="16%">Уникальный код транзакции RRN </td></tr>
+<tr>
+<td width="15%">КодАвторизации (AuthorizationCode)</td>
+<td width="12%">STRING [IN] </td>
+<td width="16%">Код авторизации транзакции</td></tr>
+<tr>
+<td width="15%">ТекстКвитанции (Slip)</td>
+<td width="12%">STRING [OUT]</td>
+<td width="16%">Текст квитанции, сформированный Эквайринговым ПО</td></tr>
+<tr>
+<td width="28%">АварийнаяОтменаОперации (EmergencyReversal)</td>
+<td width="15%">ИДУстройства (DeviceID)</td>
+<td width="12%">STRING [IN] </td>
+<td width="16%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" width="11%">BOOL</td>
+<td width="16%">Метод отменяет последнюю транзакцию</td></tr>
+<tr>
+<td rowspan="2" width="28%">ИтогиДняПоКартам (Settlement)</td>
+<td width="15%">ИДУстройства (DeviceID)</td>
+<td width="12%">STRING [IN] </td>
+<td width="16%">Идентификатор устройства</td>
+<td style="TEXT-ALIGN: center" rowspan="2" width="11%">BOOL</td>
+<td rowspan="2" width="16%">Производится сверка итогов дня</td></tr>
+<tr>
+<td width="15%">ТекстКвитанции (Slip)</td>
+<td width="12%">STRING [OUT]</td>
+<td width="16%">Текст квитанции, сформированный Эквайринговым ПО</td></tr>
+<tr>
+<td width="15%">ПечатьКвитанцийНаТерминале (PrintSlipOnTerminal)</td>
+<td style="FONT-SIZE: 80%" width="18%">
+<p style="TEXT-ALIGN: center">-</p></td>
+<td style="FONT-SIZE: 80%" width="10%">
+<p style="TEXT-ALIGN: center">-</p></td>
+<td style="FONT-SIZE: 80%" width="13%">
+<p style="TEXT-ALIGN: center">-</p></td>
+<td width="12%">
+<p style="TEXT-ALIGN: center"><span lang="en-us">BOOL</span></p></td>
+<td width="16%">Возвращает будет ли&nbsp; терминал самостоятельно печатает квитанции на своем принтере для операций</td></tr></tbody></table>
+<p>* Если информация, считанная с карты, передается в эквайринговую систему из конфигурации "1С:Предприятия", содержание этого поля должно отвечать требованиям конкретной эквайринговой системы и может, кроме непосредственно номера карты, содержать дополнительную информацию, считанную с карты.</p></body></html>

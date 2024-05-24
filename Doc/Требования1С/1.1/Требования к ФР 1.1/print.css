@@ -1,0 +1,3 @@
+html															{overflow:auto !important}
+#__mainspace__, .mainspace									{height:auto !important}
+.header, .navchain, #navchain-border, .tabsfooter, .footer	{display:none !important}

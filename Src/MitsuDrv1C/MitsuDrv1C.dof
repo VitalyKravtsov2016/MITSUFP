@@ -10,7 +10,7 @@ F=0
 G=1
 H=1
 I=1
-J=0
+J=1
 K=0
 L=1
 M=0
@@ -90,7 +90,7 @@ MaxStackSize=1048576
 ImageBase=4194304
 ExeDescription=
 [Directories]
-OutputDir=Bin
+OutputDir=..\bin
 UnitOutputDir=Dcu
 PackageDLLOutputDir=
 PackageDCPOutputDir=
@@ -113,9 +113,9 @@ RootDir=
 IncludeVerInfo=1
 AutoIncBuild=0
 MajorVer=4
-MinorVer=12
+MinorVer=15
 Release=0
-Build=497
+Build=835
 Debug=0
 PreRelease=0
 Special=0
@@ -126,14 +126,17 @@ CodePage=1251
 [Version Info Keys]
 CompanyName=ØÒÐÈÕ-Ì
 FileDescription=Äנאיגונ ÔÐ
-FileVersion=4.12.0.497
+FileVersion=4.15.0.835
 InternalName=Äנאיגונ ÔÐ
 LegalCopyright=Copyright © 2010, ØÒÐÈÕ-Ì
 LegalTrademarks=
 OriginalFilename=DrvFR.dll
 ProductName=Äנאיגונ ÔÐ
-ProductVersion=4.12
+ProductVersion=4.15
 Comments=http://www.shtrih-m.ru
+[Excluded Packages]
+C:\Program Files (x86)\Borland\Delphi7\Projects\Bpl\JvControlsDesign70.bpl=JVCL Visual Controls
+C:\Program Files (x86)\Borland\Delphi7\Projects\Bpl\JvDlgsDesign70.bpl=JVCL Dialog Components
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
@@ -145,7 +148,7 @@ Item2=../DCU
 [HistoryLists\hlOutputDirectorry]
 Count=5
 Item0=..\bin
-Item1=..\
-Item2=../../../Bin
-Item3=..\..\Bin
-Item4=Bin
+Item1=Bin
+Item2=..\
+Item3=../../../Bin
+Item4=..\..\Bin

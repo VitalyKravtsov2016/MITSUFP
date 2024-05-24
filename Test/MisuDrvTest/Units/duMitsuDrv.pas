@@ -525,8 +525,8 @@ begin
   Position.ItemType := 1;
   Position.PaymentType := 4;
   Position.ExciseTaxTotal := 0;
-  Position.CountryCode := FFD_CC_RUSSIA;
-  Position.DeclarationNumber := 0;
+  Position.CountryCode := Format('%.3d', [FFD_CC_RUSSIA]);
+  Position.CustomsDeclaration := '';
   Position.Name := 'Item 1';
   Position.Numerator := 0;
   Position.Denominator := 0;

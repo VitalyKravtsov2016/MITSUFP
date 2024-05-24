@@ -14,7 +14,6 @@ uses
   SocketPort in '..\..\Src\Shared\SocketPort.pas',
   DriverError in '..\..\Src\Shared\DriverError.pas',
   StringUtils in '..\..\Src\Shared\StringUtils.pas',
-  LogFile in 'Units\LogFile.pas',
   MitsuDrv1C in '..\..\Src\MitsuDrv1C\Units\MitsuDrv1C.pas',
   FileUtils in '..\..\Src\Shared\FileUtils.pas',
   ByteUtils in '..\..\Src\Shared\ByteUtils.pas',
@@ -36,7 +35,9 @@ uses
   FFDTypes in '..\..\Src\MitsuDrv1C\Units\FFDTypes.pas',
   duMitsuDrv in 'Units\duMitsuDrv.pas',
   GS1Util in '..\..\Src\MitsuDrv1C\Units\GS1Util.pas',
-  GS1Barcode in '..\..\Src\MitsuDrv1C\Units\GS1Barcode.pas';
+  GS1Barcode in '..\..\Src\MitsuDrv1C\Units\GS1Barcode.pas',
+  LogFile in '..\..\Src\Shared\LogFile.pas',
+  OleMain1C30 in '..\..\Src\MitsuDrv1C\Units\OleMain1C30.pas';
 
 {$R *.res}
 

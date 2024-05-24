@@ -1,0 +1,55 @@
+.toctree {width:29.5%;}
+.docdiv {left:31%; width:68%;}
+.tabs2 {margin:0 1% 0 31%;}
+* {cursor:progress;}
+.classtree {position:absolute; left:1%; top:0; width:29.5%; height:100%; overflow:auto; background-color:#ffffff; border:1px solid #ffe289}
+.classlist {position:absolute; left:31%; top:-7px; width:68%;   height:100%; overflow:auto; background-color:#ffffff; border:1px solid #ffe289}
+.doctree {width:29.5%;}
+.doctree, .toctree {position:absolute; left:1%; top:0; height:100%; overflow:auto; background-color:#ffffff; border:1px solid #ffe289}
+.docframe {height:100%; width:100%; overflow:hidden; background-color:#ffffff}
+.docframe iframe {width:100%; height:100%; overflow:auto; background-color:white}
+.recommend {margin:0 0 4pt 32px; padding-bottom:2pt; padding-left: 6px; border-left:6px solid #ffe087; font-size:90%}
+.recommend p  {margin: 0 0 6pt 0}
+.recommend ul {margin: 0 0 6pt 6pt!important; list-style-position: inside; list-style-image: url(/images/db/search/rec-bullet.gif);}
+.foundlist {position:absolute; left:1%; top:5pt; width:98%; height:100%; overflow:auto; background-color:#ffffff; border:1px solid #ffe289}
+.tree {margin:0; padding:0.5em}
+.tree div.subtree {padding-left: 18px}
+.foundlist div.glresult {padding:3px 0 0 0; padding-left:14px; cursor:pointer; height:21px; background-position:0 3px; background-repeat: no-repeat;}
+.foundlist div.glresult .grtext {margin-left:2px; padding-left:24px; background:url('/images/db/search/sall.gif') no-repeat top left}
+.foundlist div.glresult .brtext {margin-left:2px; padding-left:20px; background:url('/images/db/tree/node.gif') no-repeat top left}
+.foundlist div.glresult .rtext  {margin-left:2px; padding-left:20px; background:url('/images/db/search/sdb.gif') no-repeat top left}
+.foundlist div.glresult .ertext {margin-left:2px; padding-left:20px; background:url('/images/db/search/sdb.gif') no-repeat top left}
+.foundlist div.collapsed {background-image:url('/images/db/tree/collapsed.gif')}
+.foundlist div.expanded   {background-image:url('/images/db/tree/expanded.gif')}
+.foundlist div.gllist {margin-left:18px}
+.tree div.btext {margin-left:2px; padding-left:2px}
+.tree div.btext a, .tree div.btext a:hover, .tree div.btext a:visited {text-decoration:none; color:#514B4F; display:block; padding-left:20px;}
+.tree div.btext a.node {background:url('/images/db/tree/node.gif') no-repeat top left}
+.tree div.btext a.leaf {background:url('/images/db/tree/leaf.gif') no-repeat top left}
+.tree div.branch {padding:1pt 0 3pt 1px; cursor:pointer; background-repeat: no-repeat;}
+.tree div.collapsed {margin-left:-14px; padding-left:14px; background-image:url('/images/db/tree/collapsed.gif')}
+.tree div.expanded   {margin-left:-14px; padding-left:14px; background-image:url('/images/db/tree/expanded.gif')}
+.tree div.root {margin-left:0; padding-left:0; background-image:none}
+/*.foundlist > div.glresult, .foundlist > div.gllist {margin-left:8px;}*/
+.tree div.act1 {background-color:#faefb5}
+.tree div.act2 {background-color:#f3e6a3}
+.tree div.act3 {background-color:#f7dd85}
+.tree div.act4 {background-color:#e4c866}
+.tree div.act5 {background-color:#d7bc60}
+.tree div.act6 {background-color:#d7b749}
+
+.list {margin:10pt}
+.list ul, .gllist ul {list-style-type:none; padding:0;}
+.list ul {margin:0;}
+.gllist ul {margin:0 0 0 16px;}
+.list li, .gllist li {margin:0; padding:0; cursor:pointer;}
+.list li.fldr a {background-image:url('/images/db/list/fldr.gif');}
+.list li.doc a, .gllist li.doc a {background-image:url('/images/db/list/doc.gif');}
+.list li.doc a, .list li.doc a:hover, .list li.doc a:visited, .gllist li.doc a, .gllist li.doc a:hover, .gllist li.doc a:visited,
+.list li.fldr a, .list li.fldr a:hover, .list li.fldr a:visited {text-decoration:none; color:#514B4F; display:block; padding-left:24px; background-repeat:no-repeat; background-position:0 3px; line-height:24px;}
+
+.found-limit {list-style-type:disc; font-style:italic; font-size:85%; color:#d00000}
+.found-comment {font-style:italic; font-size:80%; color:#7e747a}
+.found-comment .num {font-size:125%; color:#514B4F} /* 0.8*1.25=1 */
+.found-comment .db {font-size:125%; color:#514B4F} /* 0.8*1.25=1 */
+.found-comment a {font-style:normal; color:#C15016}

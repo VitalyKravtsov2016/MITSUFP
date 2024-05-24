@@ -1,0 +1,1351 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><HTML lang="ru"><HEAD><TITLE>Требования к разработке драйверов подключаемого оборудования. Версия 3.1</TITLE><META content="ru" http-equiv="Content-Language"></META><META content="text/html; charset=windows-1251" http-equiv="Content-Type"></META><STYLE>
+th {text-align: center; font-size: 80%}
+td {font-size:80%;}
+a:link, a:visited
+{
+	color: #cc0000;
+	text-decoration: none;
+}
+
+a:hover 
+{ 
+	text-decoration: underline; 
+}
+
+h1 { font-size: 18pt; font-family: Arial, Tahoma; font-weight: bold; text-align: Left; COLOR: #003366; }
+h2 { font-family: Arial, Tahoma; font-size: 14pt; font-weight: bold; text-align: Left; }
+h3 { font-family: Arial, Tahoma; font-size: 12pt; font-weight: bold; text-align: Left }
+h4 { text-align: left; font-family: Arial, Tahoma; font-size: 11.5pt; font-weight: bold }
+h5 {  text-align: left; font-family: Arial, Tahoma; margin-left: 10pt; font-size: 10.5pt }
+
+.Programtext {
+	PADDING-BOTTOM: 10px; BACKGROUND-COLOR: #f0f0f0; PADDING-LEFT: 10px; PADDING-RIGHT: 10px; font-family: Courier New; COLOR: #0000ff; font-size: 10pt; PADDING-TOP: 10px
+}
+body { font-size: 80%; font-family: Verdana; }
+
+.withBorder { border-top: #FFD700 1px solid; border-right: #FFD700 1px solid; font-family: Verdana; text-align: left; }
+.withBorder td { border-bottom: #FFD700 1px solid; border-left: #FFD700 1px solid; }
+.withBorder th { border-bottom: #FFD700 1px solid; background-color: #ffffee; border-left: #FFD700 1px solid; }
+
+ul.TOC li { list-style-type: none; }
+
+PRE.Query, PRE.xml, PRE.vbcode { font-family: Courier New; color: #000080; font-size: 10pt }
+
+pre
+{
+	font-size: 10pt;
+}
+
+.Marker { background-color: #FFFF00; }
+
+.heading { border-bottom: #FFD700 1px solid; background-color: #ffffee; border-left: #FFD700 1px solid; font-weight: bold; }
+
+.tip, .tip td { background-color: #eeffee; width: 95%; padding: 15px; border-width: 0px; }
+.important, .important td { background-color: #ffeeee; width: 95%; border-width: 0px; padding: 15px; }
+.note, .note td { background-color: #eeeeff; width: 95%; padding: 15px; border-width: 0px; }
+
+.k
+{
+	color: red;
+}
+
+.c
+{
+	color: green;
+}
+
+.s
+{
+	color: black;
+}
+
+.n
+{
+	color: black;
+}
+
+.p
+{
+	color: brown;
+}
+.list { font-size: 80%; text-align:right;}
+.date { font-size: 80%; text-align:right; color: green}
+</STYLE><SCRIPT>
+ function copySource(oButton){
+   if(window.clipboardData){
+     window.clipboardData.setData('Text',oButton.nextSibling.innerText);
+     alert('Текст помещен в буфер обмена');
+   }else{
+     alert('Данная функция поддерживается только в браузере Internet Explorer');
+   }
+ }
+ </SCRIPT><STYLE>
+ a.cbData {
+   display:block;
+   text-align:right;
+   margin:0;
+   background:#E6E6E6;
+   font-size:8pt;
+   font-family:Courier New;
+   border-bottom:1px solid #969696;
+   text-decoration:none;
+}
+ </STYLE><STYLE>
+.Programtext {
+	MARGIN-TOP: 0pt
+}
+.Query {
+	MARGIN-TOP: 0pt
+}
+.xml {
+	MARGIN-TOP: 0pt
+}
+.vbcode {
+	MARGIN-TOP: 0pt
+} 
+</STYLE></HEAD><BODY><A name="top"></A>
+<P class="list date">06.04.2020</P>
+<H1>Требования к разработке драйверов подключаемого оборудования (версия 3.4)</H1>
+<H3 id="chapter270">Требования к разработке драйверов для ККТ с функцией передачи в ОФД<span lang="en-us"> 
+c </span></H3>
+
+<P><font color="#000080"><i>Поддержка: тонкий клиент, web-клиент, мобильный клиент, толстый клиент, мобильное приложение.</i></font></P>
+<H4><FONT color="#ff0000">ВНИМАНИЕ: Данный стандарт определяет требования к ККТ 
+на основании формата фискальных документов версии по <br>
+приказу ФНС России от 14.09.2020 N ЕД-7-20/662@ "Об утверждении дополнительных реквизитов фискальных документов<br>
+и форматов фискальных документов, обязательных к использованию"
+</FONT></H4>
+<TABLE id="table21" class="withBorder" cellspacing="0" cellpadding="3" border="0"><TBODY><TR><TH width="100%" colspan="6">Описание методов</TH></TR><TR><TH rowspan="2" width="23%">Название (alias)</TH>
+<TH width="44%" colspan="3">Параметры</TH>
+<TH rowspan="2" width="11%">Тип возвращаемого значения</TH>
+<TH rowspan="2" width="20%">Описание метода </TH></TR><TR><TH width="18%">Имя</TH>
+<TH width="7%">Тип</TH>
+<TH width="18%">Описание</TH></TR><TR><TD rowspan="2" width="23%">ПолучитьПараметрыККТ (GetDataKKT)</TD>
+<TD width="18%">ИДУстройства (DeviceID)</TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [IN] </TD>
+<TD width="18%">Идентификатор устройства</TD>
+<TD style="TEXT-ALIGN: center" rowspan="2" width="11%">BOOL</TD>
+<TD rowspan="2" width="20%">Получение данных из ККТ для регистрации фискального накопителя и последующей работы</TD></TR><TR><TD width="18%"><B><A href="#TableParametersKKT">ТаблицаПараметровККТ<BR>(TableParametersKKT) <BR>XML таблица </A></B></TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [OUT]</TD>
+<TD width="18%">Регистрационные данные фискального накопителя </TD></TR><TR><TD rowspan="3" width="23%">ОперацияФН (OperationFN)</TD>
+<TD width="18%">ИДУстройства (DeviceID)</TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [IN] </TD>
+<TD width="18%">Идентификатор устройства</TD>
+<TD style="TEXT-ALIGN: center" rowspan="3" width="11%">BOOL</TD>
+<TD rowspan="3" width="20%">Операция с фискальным накопителем. После проведения операции происходит печать отчета о проведении соответствующей операции.</TD></TR><TR><TD width="18%">ТипОперации (OperationType)</TD>
+<TD style="TEXT-ALIGN: center" width="7%">LONG [IN]</TD>
+<TD width="18%">Тип операции:<BR>1 - Регистрация<BR>2 - Изменение параметров регистрации<BR>3 - Закрытие ФН</TD></TR><TR><TD width="18%"><B><A href="#ParametersFiscal">ПараметрыФискализации<BR>(ParametersFiscal) <BR>XML таблица </A></B></TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [IN] </TD>
+<TD width="18%">Данные для фискализации фискального накопителя</TD></TR><TR><TD rowspan="3" width="23%">ОткрытьСмену (OpenShift) </TD>
+<TD width="18%">ИДУстройства (DeviceID)</TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [IN] </TD>
+<TD width="18%">Идентификатор устройства</TD>
+<TD style="TEXT-ALIGN: center" rowspan="3" width="11%">BOOL</TD>
+<TD rowspan="3" width="20%">Открывает новую смену и печатает на ККТ отчет об открытии смены.</TD></TR><TR><TD width="18%"><A href="#InputParameters">ВходныеПараметры (InputParameters)</A> <B><BR><A href="#InputParameters">XML таблица </A></B></TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [IN]</TD>
+<TD width="18%">Входные параметры операции</TD></TR><TR><TD width="18%"><A href="#OutputParameters">ВыходныеПараметры <BR>(OutputParameters)</A><B> <BR><A href="#OutputParameters">XML таблица</A><A href="#ParametersFiscal"> </A></B></TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [OUT]</TD>
+<TD width="18%">Выходные параметры операции</TD></TR><TR><TD rowspan="3" width="23%">ЗакрытьСмену (CloseShift)</TD>
+<TD width="18%">ИДУстройства (DeviceID)</TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [IN] </TD>
+<TD width="18%">Идентификатор устройства</TD>
+<TD style="TEXT-ALIGN: center" rowspan="3" width="11%">BOOL</TD>
+<TD rowspan="3" width="20%">Закрывает открытую ранее смену и печатает на ККТ отчет о закрытии смены.</TD></TR><TR><TD width="18%"><A href="#InputParameters">ВходныеПараметры (InputParameters)<BR><B>XML таблица </B></A></TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [IN]</TD>
+<TD width="18%">Входные параметры операции</TD></TR><TR><TD width="18%"><A href="#OutputParameters">ВыходныеПараметры <BR>(OutputParameters)</A><B><BR><A href="#OutputParameters">XML таблица</A><A href="#ParametersFiscal"> </A></B></TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [OUT]</TD>
+<TD width="18%">Выходные параметры операции</TD></TR><TR>
+		<TD rowspan="4" width="23%" bgcolor="#FFFF00">СформироватьЧек (ProcessCheck)</TD>
+<TD width="18%" bgcolor="#FFFF00">ИДУстройства (DeviceID)</TD>
+<TD style="TEXT-ALIGN: center" width="7%" bgcolor="#FFFF00">STRING [IN] </TD>
+<TD width="18%" bgcolor="#FFFF00">Идентификатор устройства</TD>
+<TD style="TEXT-ALIGN: center" rowspan="4" width="11%" bgcolor="#FFFF00">BOOL</TD>
+<TD rowspan="4" width="20%" bgcolor="#FFFF00">Формирование чека в пакетном режиме. Передается структура, описывающая тип открываемого чека, фискальные и текстовые строки, штрихкоды, которые будут напечатаны. Также передаются суммы оплат для закрытия чека.<br>
+<br>
+В случае наличия КМ в передаваемых данных ККТ также формирует уведомление о 
+реализации маркированного товара которые были проверены ранее.</TD></TR><TR>
+		<TD width="18%" bgcolor="#FFFF00">Электронно (Electronically)</TD>
+<TD style="TEXT-ALIGN: center" width="7%" bgcolor="#FFFF00">BOOL (IN)</TD>
+<TD width="18%" bgcolor="#FFFF00">Формирование чека в только электроном виде. Печать чека не осуществляется.</TD></TR><TR>
+		<TD width="18%" bgcolor="#FFFF00"><B><A href="#CheckPackage">ДанныеЧека<BR>(CheckPackage) <BR>XML таблица </A></B></TD>
+<TD style="TEXT-ALIGN: center" width="7%" bgcolor="#FFFF00">STRING [IN]</TD>
+<TD width="18%" bgcolor="#FFFF00">XML структура - описание чека.</TD></TR><TR>
+		<TD width="18%" bgcolor="#FFFF00"><A href="#DocumentOutputParameters">ВыходныеПараметрыДокумента<BR>(DocumentOutputParameters<BR>XML таблица</A></TD>
+<TD style="TEXT-ALIGN: center" width="7%" bgcolor="#FFFF00">STRING [OUT]</TD>
+<TD width="18%" bgcolor="#FFFF00">Выходные параметры операции</TD></TR><TR><TD rowspan="3" width="23%"><BR>СформироватьЧекКоррекции (ProcessCorrectionCheck)</TD>
+<TD width="18%">ИДУстройства (DeviceID)</TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [IN] </TD>
+<TD width="18%">Идентификатор устройства</TD>
+<TD style="TEXT-ALIGN: center" rowspan="3" width="11%">BOOL</TD>
+<TD rowspan="3" width="20%">Формирование чека коррекции в пакетном режиме. Передается структура, описывающая тип открываемого чека и атрибуты чека.</TD></TR><TR><TD width="18%"><B><A href="#CheckPackage">ДанныеЧека<BR>(CheckPackage) <BR>XML таблица </A></B></TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [IN]</TD>
+<TD width="18%">XML структура - описание чека коррекции.</TD></TR><TR><TD width="18%"><A href="#DocumentOutputParameters">ВыходныеПараметрыДокумента<BR>(DocumentOutputParameters<BR>XML таблица</A></TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [OUT]</TD>
+<TD width="18%">Выходные параметры операции</TD></TR><TR><TD rowspan="2" width="23%">НапечататьТекстовыйДокумент (PrintTextDocument)</TD>
+<TD width="18%">ИДУстройства (DeviceID)</TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [IN] </TD>
+<TD width="18%">Идентификатор устройства</TD>
+<TD style="TEXT-ALIGN: center" rowspan="2" width="11%">BOOL</TD>
+<TD rowspan="2" width="20%">Печать текстового документа (текстовый слип-чек, информационная квитанция)</TD></TR><TR><TD width="18%"><B><A href="#DocumentPackage">ДанныеДокумента<BR>(DocumentPackage) <BR>XML таблица </A></B></TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [IN]</TD>
+<TD width="18%">XML структура - описание текстового документа.</TD></TR><TR><TD rowspan="3" width="23%">НапечататьЧекВнесенияВыемки (CashInOutcome)</TD>
+<TD height="29" width="18%">ИДУстройства (DeviceID)</TD>
+<TD style="TEXT-ALIGN: center" height="29" width="7%">STRING [IN] </TD>
+<TD height="29" width="18%">Идентификатор устройства</TD>
+<TD style="TEXT-ALIGN: center" rowspan="3" width="11%">BOOL</TD>
+<TD rowspan="3" width="20%">Печатает чек внесения/выемки (зависит от переданной суммы). Сумма &gt;= 0 - внесение, Сумма &lt; 0 - выемка.</TD></TR><TR><TD width="18%"><A href="#InputParameters">ВходныеПараметры (InputParameters)<BR><B>XML таблица </B></A></TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [IN] </TD>
+<TD width="18%">Входные параметры операции</TD></TR><TR><TD width="18%">Сумма (Amount) </TD>
+<TD style="TEXT-ALIGN: center" width="7%">DOUBLE [IN]</TD>
+<TD width="18%">Сумма внесения /выемки</TD></TR><TR><TD rowspan="2" width="23%">НапечататьОтчетБезГашения (PrintXReport) </TD>
+<TD width="18%">ИДУстройства (DeviceID)</TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [IN]</TD>
+<TD width="18%">Идентификатор устройства</TD>
+<TD style="TEXT-ALIGN: center" rowspan="2" width="11%">BOOL</TD>
+<TD rowspan="2" width="20%">Печатает на отчет за смену без закрытия кассовой смены</TD></TR><TR><TD width="18%"><A href="#InputParameters">ВходныеПараметры (InputParameters)<BR><B>XML таблица </B></A></TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [IN]</TD>
+<TD width="18%">Входные параметры операции</TD></TR><TR><TD rowspan="2" width="23%">НапечататьКопиюЧека (PrintCheck<SPAN lang="en-us">Copy</SPAN>) </TD>
+<TD width="18%">ИДУстройства (DeviceID)</TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [IN]</TD>
+<TD width="18%">Идентификатор устройства</TD>
+<TD style="TEXT-ALIGN: center" rowspan="2" width="11%">BOOL</TD>
+<TD rowspan="2" width="20%">Печатает печатный дубликат ранее фискализированного чека</TD></TR><TR><TD width="18%">НомерЧека (CheckNumber)</TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [IN]</TD>
+<TD width="18%">Номер фискального чека</TD></TR><TR><TD rowspan="3" width="23%">ПолучитьТекущееСостояние (GetCurrentStatus) </TD>
+<TD width="18%">ИДУстройства (DeviceID)</TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [IN] </TD>
+<TD width="18%">Идентификатор устройства</TD>
+<TD style="TEXT-ALIGN: center" rowspan="3" width="11%">BOOL</TD>
+<TD rowspan="3" width="20%">Получение текущего состояние ККТ.</TD></TR><TR><TD width="18%"><A href="#InputParameters">ВходныеПараметры (InputParameters)<BR><B>XML таблица </B></A></TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [IN] </TD>
+<TD width="18%">Входные параметры операции</TD></TR><TR><TD width="18%"><A href="#OutputParameters">ВыходныеПараметры <BR>(OutputParameters)</A><B><BR><A href="#OutputParameters">XML таблица</A><A href="#ParametersFiscal"> </A></B></TD>
+<TD width="7%">
+<P style="TEXT-ALIGN: center">STRING [OUT]</P></TD>
+<TD width="18%">XML структура - описание параметров состояния.</TD></TR><TR><TD rowspan="3" width="23%">ОтчетОТекущемСостоянииРасчетов<BR>(ReportCurrentStatusOfSettlements)</TD>
+<TD width="18%">ИДУстройства (DeviceID)</TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [IN] </TD>
+<TD width="18%">Идентификатор устройства</TD>
+<TD style="TEXT-ALIGN: center" rowspan="3" width="11%">BOOL</TD>
+<TD rowspan="3" width="20%">Формирует отчет о текущем состоянии расчетов</TD></TR><TR><TD width="18%"><A href="#InputParameters">ВходныеПараметры (InputParameters)<BR><B>XML таблица </B></A></TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [IN] </TD>
+<TD width="18%">Входные параметры операции</TD></TR><TR><TD width="18%"><A href="#OutputParameters">ВыходныеПараметры <BR>(OutputParameters)</A><B><BR><A href="#OutputParameters">XML таблица</A><A href="#ParametersFiscal"> </A></B></TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [OUT] </TD>
+<TD width="18%">Выходные параметры операции</TD></TR>
+
+<TR>
+<TD width="23%">ОткрытьДенежныйЯщик (OpenCashDrawer)</TD>
+<TD width="18%">ИДУстройства (DeviceID)</TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [IN] </TD>
+<TD width="18%">Идентификатор устройства</TD>
+<TD style="TEXT-ALIGN: center" width="11%">BOOL</TD>
+<TD width="20%">Производит открытие денежного ящика, подключенного к фискальному регистратору.</TD></TR>
+
+<TR><TD rowspan="2" width="23%">ПолучитьШиринуСтроки (GetLineLength) </TD>
+<TD width="18%">ИДУстройства (DeviceID)</TD>
+<TD style="TEXT-ALIGN: center" width="7%">STRING [IN] </TD>
+<TD width="18%">Идентификатор устройства</TD>
+<TD style="TEXT-ALIGN: center" rowspan="2" width="11%">BOOL</TD>
+<TD rowspan="2" width="20%">Получить ширину строки чека в символах.</TD></TR><TR><TD width="18%">ШиринаСтроки (LineLength) </TD>
+<TD style="TEXT-ALIGN: center" width="7%">LONG [OUT]</TD>
+<TD width="18%">Ширина строки в символахах</TD></TR>
+
+
+<TR>
+<TD width="23%" bgcolor="#FFFF00">ОткрытьСессиюРегистрацииКМ(OpenSessionRegistrationKM)</TD>
+<TD width="18%" bgcolor="#FFFF00">ИДУстройства (DeviceID)</TD>
+<TD style="TEXT-ALIGN: center" width="7%" bgcolor="#FFFF00">STRING [IN] </TD>
+<TD width="18%" bgcolor="#FFFF00">Идентификатор устройства</TD>
+<TD style="TEXT-ALIGN: center" width="11%" bgcolor="#FFFF00">BOOL</TD>
+<TD width="20%" bgcolor="#FFFF00">Открывает сессию регистрацию контрольных марок</TD></TR>
+
+
+<TR>
+<TD width="23%" bgcolor="#FFFF00">ЗакрытьСессиюРегистрацииКМ(CloseSessionRegistrationKM)</TD>
+<TD width="18%" bgcolor="#FFFF00">ИДУстройства (DeviceID)</TD>
+<TD style="TEXT-ALIGN: center" width="7%" bgcolor="#FFFF00">STRING [IN] </TD>
+<TD width="18%" bgcolor="#FFFF00">Идентификатор устройства</TD>
+<TD style="TEXT-ALIGN: center" width="11%" bgcolor="#FFFF00">BOOL</TD>
+<TD width="20%" bgcolor="#FFFF00">Закрывает сессию регистрацию контрольных марок</TD></TR>
+
+
+<TR><TD width="23%" rowspan="3" style="border-right-color: #FFD700; border-top-color: #FFD700" bgcolor="#FFFF00">
+	ЗапросКМ<br>
+	(RequestKM)</TD>
+<TD width="18%" bgcolor="#FFFF00">ИДУстройства (DeviceID)</TD>
+<TD style="TEXT-ALIGN: center" width="7%" bgcolor="#FFFF00">STRING [IN]</TD>
+<TD width="18%" bgcolor="#FFFF00">Идентификатор устройства</TD>
+<TD style="TEXT-ALIGN: center" width="11%" rowspan="3" bgcolor="#FFFF00">BOOL</TD>
+<TD width="20%" rowspan="3" bgcolor="#FFFF00">Метод производит локальную проверку КМ фискальным накопителем и формирование запроса о коде маркировки в ОИСМ. 
+<br>
+Метод возвращает результаты локальной проверки КМ фискальным накопителем. </TD></TR>
+
+
+
+<TR>
+<TD width="18%" bgcolor="#FFFF00"><A href="#RequestKM">ЗапросКМ(RequestKM)<BR><B>XML таблица </B></A></TD>
+<TD style="TEXT-ALIGN: center" width="7%" bgcolor="#FFFF00">STRING [IN]</TD>
+<TD width="18%" bgcolor="#FFFF00">Входные параметры запроса</TD>
+			</TR>
+
+
+
+<TR>
+<TD width="18%" bgcolor="#FFFF00"><A href="#RequestKMResult">РезультатЗапросаКМ(RequestKMResult)<BR><B>XML таблица </B></A></TD>
+<TD style="TEXT-ALIGN: center" width="7%" bgcolor="#FFFF00">STRING [OUT] </TD>
+<TD width="18%" bgcolor="#FFFF00">Результат запроса</TD>
+			</TR>
+
+
+<TR><TD width="23%" rowspan="2" style="border-right-color: #FFD700; border-top-color: #FFD700" bgcolor="#FFFF00">
+ПолучитьРезультатыЗапросаКМ<br>
+	(GetProcessingKMResult)</TD>
+<TD width="18%" bgcolor="#FFFF00">ИДУстройства (DeviceID)</TD>
+<TD style="TEXT-ALIGN: center" width="7%" bgcolor="#FFFF00">STRING [IN]</TD>
+<TD width="18%" bgcolor="#FFFF00">Идентификатор устройства</TD>
+<TD style="TEXT-ALIGN: center" width="11%" rowspan="2" bgcolor="#FFFF00">BOOL</TD>
+<TD width="20%" rowspan="2" bgcolor="#FFFF00">Метод запрашивает результаты 
+проверки кода маркировки в ОИСМ.</TD></TR>
+
+
+
+<TR>
+<TD width="18%" bgcolor="#FFFF00"><A href="#ProcessingKMResult">РезультатЗапросаКМ(ProcessingKMResult)<BR><B>XML таблица </B></A></TD>
+<TD style="TEXT-ALIGN: center" width="7%" bgcolor="#FFFF00">STRING [OUT] </TD>
+<TD width="18%" bgcolor="#FFFF00">Результат запроса</TD>
+			</TR>
+
+
+</TBODY>
+
+
+</TABLE><H5>Описание структуры TableParametersKKT</H5>
+
+<P>Текст в формате XML, передаваемый с помощью параметра типа STRING.</P>
+
+
+
+<TABLE id="TableParametersKKT" class="withBorder" cellspacing="0" cellpadding="3" width="90%" border="0"><TBODY><TR><TH width="21%">Наименование атрибута</TH>
+<TH width="7%">Обязательное наличие в структуре</TH>
+<TH width="11%">Типы данных</TH>
+<TH width="56%">Описание атрибута</TH></TR><TR><TD>KKTNumber</TD>
+<TD style="TEXT-ALIGN: center">Нет*</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Регистрационный номер ККТ</TD></TR><TR><TD>KKTSerialNumber</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">string </TD>
+<TD>Заводской номер ККТ </TD></TR><TR><TD>FirmwareVersion</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Версия прошивки</TD></TR><TR><TD>Fiscal</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">boolean</TD>
+<TD>Признак регистрации фискального накопителя</TD></TR><TR><TD>FFDVersionFN</TD>
+<TD style="TEXT-ALIGN: center">Нет*</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Версия ФФД ФН (одно из следующих значений "1.0","1.1",<span style="background-color: #FFFF00"> 
+&quot;1.2&quot;</span>)</TD></TR><TR><TD>FFDVersionKKT</TD>
+<TD style="TEXT-ALIGN: center">Нет*</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Версия ФФД ККТ (одно из следующих значений "1.0","1.0.5","1.1",<span style="background-color: #FFFF00"> 
+&quot;1.2&quot;</span>)</TD></TR><TR><TD>FNSerialNumber</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Заводской номер ФН</TD></TR><TR><TD>DocumentNumber</TD>
+<TD style="TEXT-ALIGN: center">Нет*</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Номер документа регистрация фискального накопителя</TD></TR><TR><TD>DateTime</TD>
+<TD style="TEXT-ALIGN: center">Нет*</TD>
+<TD style="TEXT-ALIGN: center">datetime</TD>
+<TD>Дата и время операции регистрации фискального накопителя</TD></TR><TR><TD>CompanyName</TD>
+<TD style="TEXT-ALIGN: center">Нет*</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Название организации</TD></TR><TR><TD height="25">INN</TD>
+<TD style="TEXT-ALIGN: center" height="25">Нет*</TD>
+<TD style="TEXT-ALIGN: center" height="25">string</TD>
+<TD height="25">ИНН организация</TD></TR><TR><TD>SaleAddress</TD>
+<TD style="TEXT-ALIGN: center">Нет*</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Адрес проведения расчетов</TD></TR><TR><TD>SaleLocation</TD>
+<TD style="TEXT-ALIGN: center">Нет*</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Место проведения расчетов</TD></TR><TR><TD>TaxationSystems</TD>
+<TD style="TEXT-ALIGN: center">Нет*</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Коды системы налогообложения через разделитель ",".  <BR>Коды системы налогообложения приведены в таблице <A href="#TaxVariant">"Системы налогообложения"</A></TD><TR><TD>IsOffline</TD>
+<TD style="TEXT-ALIGN: center">Нет*</TD>
+<TD style="TEXT-ALIGN: center">boolean</TD>
+<TD>Признак автономного режима</TD></TR><TR><TD>IsEncrypted</TD>
+<TD style="TEXT-ALIGN: center">Нет*</TD>
+<TD style="TEXT-ALIGN: center">boolean</TD>
+<TD>Признак шифрование данных</TD></TR><TR><TD>IsService</TD>
+<TD style="TEXT-ALIGN: center">Нет*</TD>
+<TD style="TEXT-ALIGN: center">boolean</TD>
+<TD>Признак расчетов за услуги</TD></TR><TR><TD>IsExcisable</TD>
+<TD style="TEXT-ALIGN: center">Нет*</TD>
+<TD style="TEXT-ALIGN: center">boolean</TD>
+<TD>Признак продажи подакцизного товара</TD></TR><TR><TD>IsGambling</TD>
+<TD style="TEXT-ALIGN: center">Нет*</TD>
+<TD style="TEXT-ALIGN: center">boolean</TD>
+<TD>Признак проведения азартных игр</TD></TR><TR><TD>IsLottery</TD>
+<TD style="TEXT-ALIGN: center">Нет*</TD>
+<TD style="TEXT-ALIGN: center">boolean</TD>
+<TD>Признак проведения лотереи</TD></TR><TR><TD>BSOSing</TD>
+<TD style="TEXT-ALIGN: center">Нет*</TD>
+<TD style="TEXT-ALIGN: center">boolean</TD>
+<TD>Признак формирования АС БСО</TD></TR><TR><TD bgcolor="#FFFF00">
+		<span style="background-color: #FFFF00">IsOnline</span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет*</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">boolean</TD>
+<TD bgcolor="#FFFF00"><span style="background-color: #FFFF00">Признак ККТ для расчетов в Интернет</span></TD></TR><TR><TD>IsAutomaticPrinter</TD>
+<TD style="TEXT-ALIGN: center">Нет*</TD>
+<TD style="TEXT-ALIGN: center">boolean</TD>
+<TD>Признак установки принтера в автомате</TD></TR><TR><TD>IsAutomatic</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">boolean</TD>
+<TD>Признак автоматического режима</TD></TR><TR><TD bgcolor="#FFFF00">
+		<span lang="en-us">IsMarking</span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет*</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">boolean</TD>
+<TD bgcolor="#FFFF00">Признак применения при осуществлении торговли товарами, подлежащими обязательной маркировке средствами идентификации</TD></TR><TR><TD bgcolor="#FFFF00">
+				<span lang="en-us">IsPawnshop</span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет*</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">boolean</TD>
+<TD bgcolor="#FFFF00">Признак применения при осуществлении ломбардами кредитования граждан</TD></TR><TR><TD bgcolor="#FFFF00">
+				<span lang="en-us">IsAssurance</span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет*</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">boolean</TD>
+<TD bgcolor="#FFFF00">Признак применения при осуществлении деятельности по 
+страхованию</TD></TR><TR><TD bgcolor="#FFFF00">AgentTypes</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет*</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string</TD>
+<TD bgcolor="#FFFF00">Коды признаков агента через разделитель ",".  <BR>Коды приведены в таблице 10 форматов фискальных данных.</TD></TR><TR><TD>AutomaticNumber</TD>
+<TD style="TEXT-ALIGN: center">Нет*</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Номер автомата для автоматического режима</TD></TR><TR><TD>OFDCompany</TD>
+<TD style="TEXT-ALIGN: center">Нет*</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Название организации ОФД</TD></TR><TR><TD>OFDCompanyINN</TD>
+<TD style="TEXT-ALIGN: center">Нет*</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>ИНН организации ОФД</TD></TR><TR><TD>FNSURL</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Адрес сайта уполномоченного органа (ФНС) в сети «Интернет»</TD></TR><TR><TD>SenderEmail</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Адрес электронной почты отправителя чека</TD></TR></TBODY></TABLE><P>* Данные поля обязательны для фискализированных ФН.</P>
+<H5>Описание структуры ParametersFiscal</H5>
+<P>Текст в формате XML, передаваемый с помощью параметра типа STRING.<BR>Данная таблица расширяет таблицу <B>ТаблицаПараметровККТ (TableParametersKKT) </B>следующими атрибутами:</P>
+<TABLE id="ParametersFiscal" class="withBorder" cellspacing="0" cellpadding="3" width="80%" border="0"><TBODY><TR><TH width="25%">Наименование атрибута</TH>
+<TH width="13%">Обязательное наличие в структуре</TH>
+<TH width="12%">Типы данных</TH>
+<TH width="46%">Описание атрибута</TH></TR><TR><TD>CashierName</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>ФИО и должность уполномоченного лица для проведения операции </TD></TR><TR><TD>CashierINN</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>ИНН уполномоченного лица для проведения операции</TD></TR><TR>
+				<TD bgcolor="#FFFF00">FFDVersion</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Да</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string</TD>
+<TD bgcolor="#FFFF00">Версия ФФД на котрую регистрируется ФН (одно из следующих значений "1.0","1.0.5","1.1",<span style="background-color: #FFFF00"> 
+&quot;1.2&quot;</span>)</TD></TR><TR><TD>RegistrationLabelCodes</TD>
+<TD style="TEXT-ALIGN: center">Нет*</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Коды причин изменения сведений о ККТ через разделитель ". <BR>
+<span style="background-color: #FFFF00">(Коды приведены в таблице 93 форматов фискальных данных)</span></TD></TR></TBODY></TABLE><P>* Данное поле обязательно при процедуре изменение параметров регистрации.</P>
+<H4 id="InputParameters">Описание структуры InputParameters</H4>
+<P>Текст в формате XML, передаваемый с помощью параметра типа STRING.</P>
+<TABLE class="withBorder" cellspacing="0" cellpadding="3" width="80%" border="0"><TBODY><TR><TH width="30%" colspan="2">Наименование атрибута</TH>
+<TH width="119">Обязательное наличие в структуре</TH>
+<TH width="94">Типы данных</TH>
+<TH width="464">Описание атрибута</TH></TR><TR><TD colspan="5"><B>InputParameters</B></TD></TR><TR><TD rowspan="4">Parameters</TD>
+<TD width="199">CashierName</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>ФИО и должность уполномоченного лица для проведения операции </TD></TR><TR><TD width="199">CashierINN</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>ИНН уполномоченного лица для проведения операции</TD></TR><TR><TD width="199">SaleAddress</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Адрес проведения расчетов</TD></TR><TR><TD width="199">SaleLocation</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Место проведения расчетов</TD></TR></TBODY></TABLE><P>Пример текстового XML:</P><A TITLE="#" CLASS="cbData" HREF="#" ONCLICK="copySource(this); return false;">Копировать в буфер обмена</a><PRE class="xml"> &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+ &lt;InputParameters&gt; 
+	&lt;Parameters CashierName="Иванов И.П." CashierINN="32456234523452"/&gt;
+ &lt;/InputParameters&gt;
+</PRE>
+<H4 id="OutputParameters">Описание структуры OutputParameters</H4>
+<P>Текст в формате XML, передаваемый с помощью параметра типа STRING.</P>
+<TABLE class="withBorder" cellspacing="0" cellpadding="3" width="80%" border="0"><TBODY><TR><TH rowspan="2" width="347" colspan="2">Наименование атрибута</TH>
+<TH width="327" colspan="4">Обязательное наличие в структуре</TH>
+<TH rowspan="2" width="166">Типы данных</TH>
+<TH rowspan="2" width="442">Описание атрибута</TH></TR><TR><TH width="73">Открытие смены</TH>
+<TH width="81">Закрытие смены</TH>
+<TH width="84">Получить текущее состояние </TH>
+<TH width="75">Отчет о текущем состоянии расчетов</TH></TR><TR><TD colspan="8"><B>OutputParameters</B></TD></TR><TR><TD rowspan="16" width="74">Parameters</TD>
+<TD width="238">ShiftNumber</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center"> </TD>
+<TD style="TEXT-ALIGN: center">int</TD>
+<TD>Номер открытой смены/Номер закрытой смены</TD></TR><TR><TD width="238">CheckNumber</TD>
+<TD style="TEXT-ALIGN: center"> </TD>
+<TD style="TEXT-ALIGN: center"> </TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center"> </TD>
+<TD style="TEXT-ALIGN: center">int</TD>
+<TD>Номер последнего фискального документа</TD></TR><TR><TD width="238">ShiftClosingCheckNumber</TD>
+<TD style="TEXT-ALIGN: center"> </TD>
+<TD style="TEXT-ALIGN: center"> </TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center"> </TD>
+<TD style="TEXT-ALIGN: center">int</TD>
+<TD>Номер последнего чека за смену</TD></TR><TR><TD width="238">DateTime</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center"> </TD>
+<TD style="TEXT-ALIGN: center"> </TD>
+<TD style="TEXT-ALIGN: center">datetime</TD>
+<TD>Дата и время формирования фискального документа</TD></TR><TR><TD width="238">ShiftState</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">int</TD>
+<TD>Состояние смены <BR>1 - Закрыта<BR>2 - Открыта<BR>3 - Истекла</TD></TR><TR><TD height="24" width="238">CountersOperationType1</TD>
+<TD style="TEXT-ALIGN: center" height="24"> </TD>
+<TD style="TEXT-ALIGN: center" height="24">Да</TD>
+<TD style="TEXT-ALIGN: center" height="24"> </TD>
+<TD style="TEXT-ALIGN: center" height="24"> </TD>
+<TD style="TEXT-ALIGN: center" height="24"><A href="#OperationCounters">OperationCounters</A></TD>
+<TD height="24">Счетчики операций по типу "приход" </TD></TR><TR><TD height="24" width="238">CountersOperationType2</TD>
+<TD style="TEXT-ALIGN: center" height="24"> </TD>
+<TD style="TEXT-ALIGN: center" height="24">Да</TD>
+<TD style="TEXT-ALIGN: center" height="24"> </TD>
+<TD style="TEXT-ALIGN: center" height="24"> </TD>
+<TD style="TEXT-ALIGN: center" height="24"><A href="#OperationCounters">OperationCounters</A></TD>
+<TD height="24">Счетчики операций по типу "возврат прихода"</TD></TR><TR><TD height="24" width="238">CountersOperationType3</TD>
+<TD style="TEXT-ALIGN: center" height="24"> </TD>
+<TD style="TEXT-ALIGN: center" height="24">Да</TD>
+<TD style="TEXT-ALIGN: center" height="24"> </TD>
+<TD style="TEXT-ALIGN: center" height="24"> </TD>
+<TD style="TEXT-ALIGN: center" height="24"><A href="#OperationCounters">OperationCounters</A></TD>
+<TD height="24">Счетчики операций по типу "расход"</TD></TR><TR><TD height="24" width="238">CountersOperationType4</TD>
+<TD style="TEXT-ALIGN: center" height="24"> </TD>
+<TD style="TEXT-ALIGN: center" height="24">Да</TD>
+<TD style="TEXT-ALIGN: center" height="24"> </TD>
+<TD style="TEXT-ALIGN: center" height="24"> </TD>
+<TD style="TEXT-ALIGN: center" height="24"><A href="#OperationCounters">OperationCounters</A></TD>
+<TD height="24">Счетчики операций по типу "возврат расхода"</TD></TR><TR><TD width="238">Cash<SPAN lang="en-us">B</SPAN>alance</TD>
+<TD style="TEXT-ALIGN: center"> </TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center"><SPAN lang="en-us">double</SPAN></TD>
+<TD>Остаток наличных денежных средств в кассе</TD></TR><TR><TD width="238">BacklogDocumentsCounter</TD>
+<TD style="TEXT-ALIGN: center"> </TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">int</TD>
+<TD>Количество непереданных документов</TD></TR><TR><TD width="238">BacklogDocumentFirstNumber</TD>
+<TD style="TEXT-ALIGN: center"> </TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">int</TD>
+<TD>Номер первого непереданного документа</TD></TR><TR><TD width="238">BacklogDocumentFirstDateTime</TD>
+<TD style="TEXT-ALIGN: center"> </TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">datetime</TD>
+<TD>Дата и время первого из непереданных документов</TD></TR><TR><TD width="238">FNError</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center"> </TD>
+<TD style="TEXT-ALIGN: center"> </TD>
+<TD style="TEXT-ALIGN: center">bool</TD>
+<TD>Признак необходимости срочной замены ФН</TD></TR><TR><TD width="238">FNOverflow</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center"> </TD>
+<TD style="TEXT-ALIGN: center"> </TD>
+<TD style="TEXT-ALIGN: center">bool</TD>
+<TD>Признак переполнения памяти ФН </TD></TR><TR><TD width="238">FNFail</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center"> </TD>
+<TD style="TEXT-ALIGN: center"> </TD>
+<TD style="TEXT-ALIGN: center">bool</TD>
+<TD>Признак исчерпания ресурса ФН </TD></TR></TBODY></TABLE><H4 id="OperationCounters">Описание структуры OperationCounters</H4>
+<TABLE class="withBorder" cellspacing="0" cellpadding="3" width="98%" border="0"><TBODY><TR><TH width="33%" colspan="2">Наименование атрибута</TH>
+<TH width="108">Обязательное наличие в структуре</TH>
+<TH width="217">Типы данных</TH>
+<TH width="380">Описание атрибута</TH></TR><TR><TD colspan="5"><B>OperationCounters</B></TD></TR><TR><TD rowspan="4">Parameters</TD>
+<TD>CheckCount</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">int</TD>
+<TD>Количество чеков по операции данного типа</TD></TR><TR><TD>TotalChecksAmount</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center"><SPAN lang="en-us">double</SPAN></TD>
+<TD>Итоговая сумма чеков по операциям данного типа</TD></TR><TR><TD>
+				CorrectionCheck<SPAN lang="en-us">Count</SPAN></TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">int</TD>
+<TD>Количество чеков коррекции по операции данного типа</TD></TR><TR><TD>
+				TotalCorrectionChecksAmount</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center"><SPAN lang="en-us">double</SPAN></TD>
+<TD>Итоговая сумма чеков коррекции по операциям данного типа</TD></TR></TBODY></TABLE><H4 id="DocumentOutputParameters">Описание структуры DocumentOutputParameters</H4>
+<TABLE class="withBorder" cellspacing="0" cellpadding="3" width="95%" border="0"><TBODY><TR><TH width="33%" colspan="2">Наименование атрибута</TH>
+-<TH width="9%">Обязательное наличие в структуре</TH>
+<TH width="20%">Типы данных</TH>
+<TH width="35%">Описание атрибута</TH></TR><TR><TD colspan="5"><B>DocumentOutputParameters</B></TD></TR><TR>
+	<TD rowspan="6">Parameters</TD>
+<TD>ShiftNumber</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">int</TD>
+<TD>Номер открытой смены/Номер закрытой смены</TD></TR><TR><TD>CheckNumber</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">int</TD>
+<TD>Номер фискального документа</TD></TR><TR><TD>ShiftClosingCheckNumber</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">int</TD>
+<TD>Номер чека за смену</TD></TR><TR><TD>AddressSiteInspections</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Адрес сайта проверки</TD></TR><TR><TD>FiscalSign</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Фискальный признак</TD></TR><TR><TD>DateTime</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">datetime</TD>
+<TD>Дата и время формирования документа</TD></TR></TBODY></TABLE>
+
+<H4>Описание структуры CheckPackage</H4>
+<P>Текст в формате XML содержит описание передаваемого для формирования чека. Структура описывает параметры и последовательность формирования фискального чека.</P>
+<TABLE id="CheckPackage" class="withBorder" cellspacing="0" cellpadding="3" border="0" width="1504"><TBODY><TR>
+	<TH width="96">Секцияя</TH>
+<TH width="20%" colspan="3">Наименование атрибута</TH>
+<TH width="130">Обязательное наличие в структуре</TH>
+<TH width="106">Типы данных</TH>
+<TH width="189">Описание атрибута</TH>
+<TH width="207">Описание</TH></TR><TR><TD colspan="8"><B>CheckPackage</B></TD></TR><TR>
+	<TD rowspan="18">
+<P style="TEXT-ALIGN: center">Parameters</P></TD>
+<TD height="23" colspan="3">CashierName</TD>
+<TD style="TEXT-ALIGN: center" height="23">Да</TD>
+<TD style="TEXT-ALIGN: center" height="23">string</TD>
+<TD height="23">ФИО и должность уполномоченного лица для проведения операции</TD>
+<TD rowspan="18">Формирование нового чека с заданным атрибутами. При формирование чека ККТ должен проверять, что передаваемый код системы налогообложения доступен для данного фискализированного ФН.<BR></TD></TR><TR>
+		<TD height="23" colspan="3">CashierINN</TD>
+<TD style="TEXT-ALIGN: center" height="23">Нет</TD>
+<TD style="TEXT-ALIGN: center" height="23">string</TD>
+<TD height="23">ИНН уполномоченного лица для проведения операции</TD></TR><TR>
+		<TD height="87" colspan="3">OperationType</TD>
+<TD style="TEXT-ALIGN: center" height="87">Да</TD>
+<TD style="TEXT-ALIGN: center" height="87">int</TD>
+<TD height="87">Тип операции (Таблица 25 документа ФФД):<BR>1 - приход денежных средств<BR>2 - возврат прихода денежных средств<BR>3 - расход денежных средств<BR>4 - возврат расхода денежных средств</TD></TR><TR>
+		<TD colspan="3">CorrectionData</TD>
+<TD style="TEXT-ALIGN: center">Да*</TD>
+<TD style="TEXT-ALIGN: center"><A href="#CorrectionData">Вложенная структура</A></TD>
+<TD>Данные по операции коррекции.<BR>Данное поле обязательно только для чека коррекции.</TD></TR><TR>
+		<TD colspan="3">TaxationSystem</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">int</TD>
+<TD>Код системы налогообложения. Коды системы налогообложения приведены в таблице <A href="#TaxVariant">"Системы налогообложения"</A>.</TD></TR><TR>
+		<TD colspan="3" bgcolor="#FFFF00">CustomerDetail</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00"><A href="#CustomerDetail">Вложенная структура</A></TD>
+<TD bgcolor="#FFFF00"><span lang="en-us">C</span>ведения о покупателе (клиенте)</TD></TR><TR><TD colspan="3">CustomerEmail</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Email покупателя (клиента)</TD></TR><TR><TD colspan="3">CustomerPhone</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Телефонный номер покупателя (клиента)</TD></TR><TR><TD colspan="3">SenderEmail</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Адрес электронной почты отправителя чека </TD></TR><TR><TD colspan="3">SaleAddress</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Адрес проведения расчетов</TD></TR><TR><TD colspan="3">SaleLocation</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Место проведения расчетов</TD></TR><TR><TD colspan="3">AgentType</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">int</TD>
+<TD>Признак агента.<BR><SPAN>См. таблицу</SPAN><A href="#SignSubject"> "Признаки агента"</A></TD></TR><TR>
+		<TD colspan="3"><FONT size="2">AgentData</FONT></TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center"><A href="#AgentData">Вложенная структура</A></TD>
+<TD>Данные агента</TD></TR><TR><TD colspan="3"><FONT size="2">VendorData</FONT></TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center"><A href="#VendorData">Вложенная структура</A></TD>
+<TD>Данные поставщика</TD></TR><TR><TD colspan="3">UserAttribute</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center"><A href="#UserAttribute">Вложенная структура</A></TD>
+<TD>Дополнительный реквизит пользователя</TD></TR><TR><TD colspan="3">AdditionalAttribute</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Дополнительный реквизит чека</TD></TR><TR><TD colspan="3" bgcolor="#FFFF00">OperationalAttribute</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00"><A href="#OperationalAttribute">Вложенная структура</A></TD>
+<TD bgcolor="#FFFF00">Операционный реквизит чека</TD></TR><TR>
+				<TD colspan="3" bgcolor="#FFFF00">IndustryAttribute</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00"><A href="#IndustryAttribute">Вложенная структура</A></TD>
+<TD bgcolor="#FFFF00">Отраслевой реквизит чека</TD></TR><TR><TD rowspan="26">
+<P style="TEXT-ALIGN: center">Positions</P></TD>
+<TD rowspan="23" width="94">FiscalString</TD>
+<TD colspan="2">Name</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">string </TD>
+<TD>Наименование товара</TD>
+<TD rowspan="23">Регистрирует фискальную строку с переданными реквизитами. <BR>При печати длинных фискальных строк необходимо делать перенос на следующую строку.</TD></TR><TR>
+				<TD colspan="2">Quantity</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">double</TD>
+<TD>Количество товара</TD></TR><TR><TD colspan="2">PriceWithDiscount</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">double</TD>
+<TD>Цена единицы товара с учетом скидок/наценок</TD></TR><TR><TD colspan="2">AmountWithDiscount</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">double</TD>
+<TD>Конечная сумма по предмету расчета с учетом всех скидок/наценок</TD></TR><TR>
+				<TD colspan="2">DiscountAmount</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">double</TD>
+<TD>Сумма скидок и наценок (если значение &gt; 0 то в чеке выводиться скидка, если значение &lt; 0 то наценка</TD></TR><TR>
+				<TD colspan="2">Department</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">int</TD>
+<TD>Отдел, по которому ведется продажа</TD></TR><TR><TD colspan="2"><SPAN lang="EN-US" style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana; BACKGROUND-IMAGE: none; BACKGROUND-REPEAT: repeat; BACKGROUND-ATTACHMENT: scroll; BACKGROUND-POSITION: 0% 0%; LINE-HEIGHT: 115%">VATRate</SPAN></TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Ставка НДС:<BR>"none" - БЕЗ НДС<BR>"20" - НДС 20<BR>"18" - НДС 18<BR>"10" - НДС 10<BR>"0" - НДС 0<BR>"20/120" - расчетная ставка 20/120<BR>"18/118" - расчетная ставка 18/118<BR>"10/110" - расчетная ставка 10/110</TD></TR><TR>
+				<TD colspan="2">VATAmount</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">double</TD>
+<TD>Сумма НДС за предмет расчета<SPAN lang="en-us">.<BR></SPAN>В ККТ должен быть отключен расчет налогов, и в чеке выводиться сумма НДС рассчитанная в 1С.<BR>Итоговые суммы НДС по чеку должны рассчитывать по строкам.</TD></TR><TR>
+				<TD colspan="2"><FONT size="2">PaymentMethod</FONT></TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">int</TD>
+<TD>Признак способа расчета. <SPAN><BR>См. таблицу</SPAN> <A href="#SignMethodCalculation">"Признаки способа расчета"</A></TD></TR><TR>
+				<TD colspan="2"><FONT size="2">CalculationSubject</FONT></TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">int</TD>
+<TD>Признак предмета расчета. <SPAN><BR>См. таблицу</SPAN> <A href="#SignCalculationObject">"Признаки предмета расчета"</A></TD></TR><TR>
+				<TD colspan="2">CalculationAgent</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">int</TD>
+<TD>Признак агента по предмету расчета<BR><SPAN>См. таблицу</SPAN><A href="#SignSubjectCalculationAgent"> "Признаки агента по предмету расчета"</A></TD></TR><TR>
+				<TD colspan="2">AgentData</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center"><A href="#AgentData">Вложенная структура</A></TD>
+<TD>Данные агента</TD></TR><TR><TD colspan="2"><FONT size="2">VendorData</FONT></TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center"><A href="#AgentData">Вложенная структура</A></TD>
+<TD>Данные поставщика</TD></TR><TR>
+		<TD bgcolor="#FFFF00" colspan="2">MeasureOfQuantity</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string</TD>
+<TD bgcolor="#FFFF00">Мера количества предмета
+расчета.<br>
+Значение из таблицы 114 (ФФД)</TD></TR><TR>
+		<TD bgcolor="#FFFF00" rowspan="2">FractionalQuantity</TD>
+		<TD bgcolor="#FFFF00">
+<span class="VIiyi" jsaction="mouseup:BR6jm" jsname="jqKxS" lang="en">
+<span jsaction="agoMJf:PFBcW;usxOmf:aWLT7;jhKsnd:P7O7bd,F8DmGf;Q4AGo:Gm7gYd,qAKMYb;uFUCPb:pvnm0e,pfE8Hb,PFBcW;f56efd:dJXsye;EnoYf:KNzws,ZJsZZ,JgVSJc;zdMJQc:cCQNKb,ZJsZZ,zchEXc;Ytrrj:JJDvdc;tNR8yc:GeFvjb;oFN6Ye:hij5Wb" jscontroller="Zl5N8" jsmodel="SsMkhd" jsname="txFAF" class="JLqJ4b ChMk0b" data-language-for-alternatives="en" data-language-to-translate-into="ru" data-phrase-index="0" jsdata="uqLsIf;_;$31">
+<span jsaction="click:qtZ4nf,GFf3ac,tMZCfe; contextmenu:Nqw7Te,QP7LD; mouseout:Nqw7Te; mouseover:qtZ4nf,c2aHje" jsname="W297wb">
+Numerator</span></span></span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">
+int</TD>
+<TD bgcolor="#FFFF00" rowspan="2">Дробное количество
+маркированного товара</TD></TR><TR>
+		<TD bgcolor="#FFFF00">
+<span class="VIiyi" jsaction="mouseup:BR6jm" jsname="jqKxS" lang="en">
+<span jsaction="agoMJf:PFBcW;usxOmf:aWLT7;jhKsnd:P7O7bd,F8DmGf;Q4AGo:Gm7gYd,qAKMYb;uFUCPb:pvnm0e,pfE8Hb,PFBcW;f56efd:dJXsye;EnoYf:KNzws,ZJsZZ,JgVSJc;zdMJQc:cCQNKb,ZJsZZ,zchEXc;Ytrrj:JJDvdc;tNR8yc:GeFvjb;oFN6Ye:hij5Wb" jscontroller="Zl5N8" jsmodel="SsMkhd" jsname="txFAF" class="JLqJ4b ChMk0b" data-language-for-alternatives="en" data-language-to-translate-into="ru" data-phrase-index="0" jsdata="uqLsIf;_;$33">
+<span jsaction="click:qtZ4nf,GFf3ac,tMZCfe; contextmenu:Nqw7Te,QP7LD; mouseout:Nqw7Te; mouseover:qtZ4nf,c2aHje" jsname="W297wb">
+Denominator</span></span></span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">
+int</TD>
+			</TR><TR>
+			<TD bgcolor="#FFD700" colspan="2">
+			GoodCodeData</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFD700">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFD700">
+<A href="#GoodCodeData" style="color: #cc0000; text-decoration: none">Вложенная структура</A></TD>
+<TD bgcolor="#FFD700">Код товара</TD></TR><TR><TD colspan="2" bgcolor="#FFFF00">
+			<span class="VIiyi" jsaction="mouseup:BR6jm" jsname="jqKxS" lang="en">
+			<span jsaction="agoMJf:PFBcW;usxOmf:aWLT7;jhKsnd:P7O7bd,F8DmGf;Q4AGo:Gm7gYd,qAKMYb;uFUCPb:pvnm0e,pfE8Hb,PFBcW;f56efd:dJXsye;EnoYf:KNzws,ZJsZZ,JgVSJc;zdMJQc:cCQNKb,ZJsZZ,zchEXc;Ytrrj:JJDvdc;tNR8yc:GeFvjb;oFN6Ye:hij5Wb" jscontroller="Zl5N8" jsmodel="SsMkhd" jsname="txFAF" class="JLqJ4b ChMk0b" data-language-for-alternatives="en" data-language-to-translate-into="ru" data-phrase-index="0" jsdata="uqLsIf;_;$38">
+			<span jsaction="click:qtZ4nf,GFf3ac,tMZCfe; contextmenu:Nqw7Te,QP7LD; mouseout:Nqw7Te; mouseover:qtZ4nf,c2aHje" jsname="W297wb">
+				MarkingCode</span></span></span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string</TD>
+<TD bgcolor="#FFFF00">Код контрольной марки<span lang="en-us">.</span><br>
+Кодируется текстом в кодировке Base64.</TD></TR><TR><TD colspan="2">CountryOfOrigin</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Цифровой код страны происхождения товара в соответствии с Общероссийским классификатором стран мира</TD></TR><TR>
+		<TD colspan="2">CustomsDeclaration</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Регистрационный номер таможенной декларации</TD></TR><TR><TD colspan="2">AdditionalAttribute</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Дополнительный реквизит предмета расчета</TD></TR><TR><TD colspan="2">ExciseAmount</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">double</TD>
+<TD>Сумма акциза с учетом копеек, включенная в стоимость предмета расчета</TD></TR><TR>
+				<TD colspan="2" bgcolor="#FFFF00">IndustryAttribute</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00"><A href="#IndustryAttribute">Вложенная структура</A></TD>
+<TD bgcolor="#FFFF00">Отраслевой реквизит предмета расчета</TD></TR><TR>
+		<TD width="94">TextString</TD>
+<TD colspan="2">Text</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Строка с произвольным текстом</TD>
+<TD>Печать текстовой строки.</TD></TR><TR><TD rowspan="2" width="94">Barcode</TD>
+<TD colspan="2">Type</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Строка, определяющая тип штрихкода</TD>
+<TD rowspan="2">Печать штрихкода. Осуществляется с автоматическим размером с выравниванием по центру чека. Тип штрихкода может иметь одно из следующих значений: EAN8, EAN13, CODE39, QR. В случае, если модель устройства не поддерживает печать штрихкода<span lang="en-us">
+</span>вышеуказанных типов, 
+драйвер должен вернуть ошибку. <BR></TD></TR><TR><TD colspan="2">
+				ValueBase64</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">string </TD>
+<TD>Значение штрихкода.<br>
+Штрихкод кодируется текстом в кодировке Base64.</TD></TR><TR><TD rowspan="5">
+<P style="TEXT-ALIGN: center">Payments</P></TD>
+<TD colspan="3">Cash</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">decimal</TD>
+<TD>Сумма оплаты наличными денежными средствами</TD>
+<TD rowspan="5">Параметры закрытия чека. Сумма всех видов оплат должна быть больше суммы открытого чека. <BR></TD></TR><TR>
+		<TD colspan="3">ElectronicPayment</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">decimal</TD>
+<TD>Сумма оплаты безналичными средствами платежа</TD></TR><TR><TD colspan="3">PrePayment</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">decimal</TD>
+<TD>Сумма зачтенной предоплаты или аванса</TD></TR><TR>
+		<TD height="54" colspan="3">PostPayment</TD>
+<TD style="TEXT-ALIGN: center" height="54">Нет</TD>
+<TD style="TEXT-ALIGN: center" height="54">decimal</TD>
+<TD height="54">Сумма оплаты в кредит (постоплаты)</TD></TR><TR><TD colspan="3">Barter</TD>
+<TD style="TEXT-ALIGN: center">Нет</TD>
+<TD style="TEXT-ALIGN: center">decimal</TD>
+<TD>Сумма оплаты встречным предоставлением</TD></TR></TBODY></TABLE>
+
+<P>Данное поле обязательно только для чека коррекции. Передается только при вызове метода 
+<i><b>СформироватьЧекКоррекции (ProcessCorrectionCheck).</b></i></P>
+
+<P><B>CorrectionData</B> - Данные коррекции. XML Структура.</P>
+<TABLE id="CorrectionData" class="withBorder" cellspacing="0" cellpadding="3" width="80%" border="0"><TBODY><TR><TH width="33%" colspan="2">Наименование атрибута</TH>
+<TH width="140">Типы данных</TH>
+<TH width="548">Описание атрибута</TH></TR><TR><TD rowspan="5"><FONT size="2">CorrectionData</FONT></TD></TR><TR><TD height="24" width="187">Type</TD>
+<TD style="TEXT-ALIGN: center" height="24">int </TD>
+<TD height="24">Тип коррекции<BR>0 - самостоятельно<BR>1 - по предписанию</TD></TR><TR><TD width="187">Description</TD>
+<TD style="TEXT-ALIGN: center">string </TD>
+<TD>Описание коррекции</TD></TR><TR><TD width="187">Datе</TD>
+<TD style="TEXT-ALIGN: center">datetime</TD>
+<TD>Дата совершения корректируемого расчета</TD></TR><TR><TD width="187">Number</TD>
+<TD style="TEXT-ALIGN: center">string </TD>
+<TD>Номер предписания налогового органа</TD></TR></TBODY></TABLE>
+
+<P><B>CustomerDetail</B> - Cведения о покупателе (клиенте). XML Структура.</P>
+<TABLE id="CustomerDetail" class="withBorder" cellspacing="0" cellpadding="3" width="80%" border="0"><TBODY><TR><TH width="33%" colspan="2">Наименование атрибутаа</TH>
+<TH width="140">Типы данных</TH>
+<TH width="548">Описание атрибута</TH></TR><TR>
+				<TD rowspan="8" bgcolor="#FFFF00"><B>CustomerDetail</B></TD></TR><TR>
+				<TD height="24" width="187" bgcolor="#FFFF00">
+				Info</TD>
+<TD style="TEXT-ALIGN: center" height="24" bgcolor="#FFFF00">string</TD>
+<TD height="24" bgcolor="#FFFF00">Наименование организации или фамилия, имя, отчество (при наличии)</TD></TR><TR>
+				<TD width="187" bgcolor="#FFFF00">
+				INN</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string</TD>
+<TD bgcolor="#FFFF00">ИНН организации или покупателя (клиента)</TD></TR><TR>
+				<TD width="187" bgcolor="#FFFF00">
+				<span class="VIiyi" jsaction="mouseup:BR6jm" jsname="jqKxS" lang="en">
+				<span jsaction="agoMJf:PFBcW;usxOmf:aWLT7;jhKsnd:P7O7bd,F8DmGf;Q4AGo:Gm7gYd,qAKMYb;uFUCPb:pvnm0e,pfE8Hb,PFBcW;f56efd:dJXsye;EnoYf:KNzws,ZJsZZ,JgVSJc;zdMJQc:cCQNKb,ZJsZZ,zchEXc;Ytrrj:JJDvdc;tNR8yc:GeFvjb;oFN6Ye:hij5Wb" jscontroller="Zl5N8" jsmodel="SsMkhd" jsname="txFAF" class="JLqJ4b ChMk0b" data-language-for-alternatives="en" data-language-to-translate-into="ru" data-phrase-index="0" jsdata="uqLsIf;_;$274">
+				<span jsaction="click:qtZ4nf,GFf3ac,tMZCfe; contextmenu:Nqw7Te,QP7LD; mouseout:Nqw7Te; mouseover:qtZ4nf,c2aHje" jsname="W297wb">
+				DateOfBirth</span></span></span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00"><span lang="en-us">date</span></TD>
+<TD bgcolor="#FFFF00">Дата рождения покупателя (клиента)</TD></TR><TR>
+				<TD width="187" bgcolor="#FFFF00">Citizenship </TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string</TD>
+<TD bgcolor="#FFFF00">Числовой код страны, гражданином которой является покупатель (клиент). 
+<br>
+Код страны указывается в соответствии с Общероссийским классификатором стран мира ОКСМ. </TD></TR><TR>
+				<TD width="187" bgcolor="#FFFF00">DocumentTypeCode</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string</TD>
+<TD bgcolor="#FFFF00">Числовой код вида документа, 
+удостоверяющего личность (ФФД, Таблица 116)</TD></TR><TR>
+				<TD width="187" bgcolor="#FFFF00">DocumentData</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string</TD>
+<TD bgcolor="#FFFF00">Данные документа, удостоверяющего личность</TD></TR><TR>
+				<TD width="187" bgcolor="#FFFF00">Address</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string </TD>
+<TD bgcolor="#FFFF00">Адрес покупателя (клиента)</TD></TR></TBODY></TABLE>
+
+
+
+
+<P><B>AgentData</B> - Данные агента. XML Структура.</P>
+
+
+<TABLE id="AgentData" class="withBorder" cellspacing="0" cellpadding="3" width="80%" border="0"><TBODY><TR><TH width="33%" colspan="2">Наименование атрибута</TH>
+<TH width="140">Типы данных</TH>
+<TH width="548">Описание атрибута</TH></TR><TR><TD rowspan="8">AgentData</TD></TR><TR><TD height="24" width="164">AgentOperation</TD>
+<TD style="TEXT-ALIGN: center" height="24">string </TD>
+<TD height="24">Операция платежного агента</TD></TR><TR><TD width="164">AgentPhone</TD>
+<TD style="TEXT-ALIGN: center">string </TD>
+<TD>Телефон платежного агента. <br>
+Допустимо несколько значений через разделитель &quot;,&quot;. </TD></TR><TR><TD width="164">PaymentProcessorPhone</TD>
+<TD style="TEXT-ALIGN: center">string </TD>
+<TD>Телефон оператора по приему платежей.<br>
+Допустимо несколько значений через разделитель &quot;,&quot;.&nbsp; </TD></TR><TR><TD width="164">AcquirerOperatorPhone</TD>
+<TD style="TEXT-ALIGN: center">string </TD>
+<TD>Телефон оператора перевода.<br>
+Допустимо несколько значений через разделитель &quot;,&quot;.&nbsp; </TD></TR><TR><TD width="164">AcquirerOperatorName</TD>
+<TD style="TEXT-ALIGN: center">string </TD>
+<TD>Наименование оператора перевода</TD></TR><TR><TD width="164">AcquirerOperatorAddress</TD>
+<TD style="TEXT-ALIGN: center">string </TD>
+<TD>Адрес оператора перевода</TD></TR><TR><TD width="164"><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana; LINE-HEIGHT: 115%">AcquirerOperatorINN</SPAN></TD>
+<TD style="TEXT-ALIGN: center">string </TD>
+<TD>ИНН оператора перевода</TD></TR></TBODY></TABLE>
+
+<P><B>VendorData</B> - Данные поставщика. XML Структура.</P>
+<TABLE id="VendorData" class="withBorder" cellspacing="0" cellpadding="3" width="80%" border="0"><TBODY><TR><TH width="33%" colspan="2">Наименование атрибутаа</TH>
+<TH width="140">Типы данных</TH>
+<TH width="548">Описание атрибута</TH></TR><TR><TD rowspan="4"><FONT size="2">VendorData</FONT></TD></TR><TR><TD height="24" width="187">VendorPhone</TD>
+<TD style="TEXT-ALIGN: center" height="24">string </TD>
+<TD height="24">Телефон поставщика.<br>
+Допустимо несколько значений через разделитель &quot;,&quot;.&nbsp; </TD></TR><TR><TD width="187">VendorName</TD>
+<TD style="TEXT-ALIGN: center">string </TD>
+<TD>Наименование поставщика</TD></TR><TR><TD width="187">VendorINN</TD>
+<TD style="TEXT-ALIGN: center">string </TD>
+<TD>ИНН поставщика</TD></TR></TBODY></TABLE>
+
+<P><B>OperationalAttribute</B> - Операционный реквизит. XML Структура.</P>
+<TABLE id="OperationalAttribute" class="withBorder" cellspacing="0" cellpadding="3" width="80%" border="0"><TBODY><TR><TH width="33%" colspan="2">Наименование атрибутаа</TH>
+<TH width="140">Типы данных</TH>
+<TH width="548">Описание атрибута</TH></TR><TR>
+				<TD rowspan="4" bgcolor="#FFFF00"><FONT size="2">OperationalAttribute</FONT></TD></TR><TR>
+				<TD height="24" width="187" bgcolor="#FFFF00">
+				<span class="VIiyi" jsaction="mouseup:BR6jm" jsname="jqKxS" lang="en">
+				<span jsaction="agoMJf:PFBcW;usxOmf:aWLT7;jhKsnd:P7O7bd,F8DmGf;Q4AGo:Gm7gYd,qAKMYb;uFUCPb:pvnm0e,pfE8Hb,PFBcW;f56efd:dJXsye;EnoYf:KNzws,ZJsZZ,JgVSJc;zdMJQc:cCQNKb,ZJsZZ,zchEXc;Ytrrj:JJDvdc;tNR8yc:GeFvjb;oFN6Ye:hij5Wb" jscontroller="Zl5N8" jsmodel="SsMkhd" jsname="txFAF" class="JLqJ4b ChMk0b" data-language-for-alternatives="en" data-language-to-translate-into="ru" data-phrase-index="0" jsdata="uqLsIf;_;$250">
+				<span jsaction="click:qtZ4nf,GFf3ac,tMZCfe; contextmenu:Nqw7Te,QP7LD; mouseout:Nqw7Te; mouseover:qtZ4nf,c2aHje" jsname="W297wb">
+				DateTime</span></span></span></TD>
+<TD style="TEXT-ALIGN: center" height="24" bgcolor="#FFFF00">datetime</TD>
+<TD height="24" bgcolor="#FFFF00">Дата, время операции</TD></TR><TR>
+				<TD width="187" bgcolor="#FFFF00">
+				<span class="VIiyi" jsaction="mouseup:BR6jm" jsname="jqKxS" lang="en">
+				<span jsaction="agoMJf:PFBcW;usxOmf:aWLT7;jhKsnd:P7O7bd,F8DmGf;Q4AGo:Gm7gYd,qAKMYb;uFUCPb:pvnm0e,pfE8Hb,PFBcW;f56efd:dJXsye;EnoYf:KNzws,ZJsZZ,JgVSJc;zdMJQc:cCQNKb,ZJsZZ,zchEXc;Ytrrj:JJDvdc;tNR8yc:GeFvjb;oFN6Ye:hij5Wb" jscontroller="Zl5N8" jsmodel="SsMkhd" jsname="txFAF" class="JLqJ4b ChMk0b" data-language-for-alternatives="en" data-language-to-translate-into="ru" data-phrase-index="0" jsdata="uqLsIf;_;$274">
+				<span jsaction="click:qtZ4nf,GFf3ac,tMZCfe; contextmenu:Nqw7Te,QP7LD; mouseout:Nqw7Te; mouseover:qtZ4nf,c2aHje" jsname="W297wb">
+				OperationID</span></span></span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00"><span lang="en-us">int</span></TD>
+<TD bgcolor="#FFFF00">Идентификатор операции</TD></TR><TR>
+				<TD width="187" bgcolor="#FFFF00">OperationData</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string </TD>
+<TD bgcolor="#FFFF00">Данные операции</TD></TR></TBODY></TABLE>
+
+
+<P><B>IndustryAttribute</B> - Отраслевой реквизит. XML Структура.</P>
+<TABLE id="IndustryAttribute" class="withBorder" cellspacing="0" cellpadding="3" width="80%" border="0"><TBODY><TR><TH width="33%" colspan="2">Наименование атрибутаа</TH>
+<TH width="140">Типы данных</TH>
+<TH width="548">Описание атрибута</TH></TR><TR>
+				<TD rowspan="5" bgcolor="#FFFF00"><FONT size="2">
+				IndustryAttribute</FONT></TD></TR><TR>
+				<TD height="24" width="187" bgcolor="#FFFF00">
+			IdentifierFOIV</TD>
+<TD style="TEXT-ALIGN: center" height="24" bgcolor="#FFFF00">string </TD>
+<TD height="24" bgcolor="#FFFF00">Идентификатор ФОИВ</TD></TR><TR>
+				<TD width="187" bgcolor="#FFFF00">DocumentDate</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00"><span lang="en-us">date</span> </TD>
+<TD bgcolor="#FFFF00">Дата документа основания</TD></TR><TR>
+				<TD width="187" bgcolor="#FFFF00">DocumentNumber</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string </TD>
+<TD bgcolor="#FFFF00">Номер документа основания</TD></TR><TR>
+				<TD width="187" bgcolor="#FFFF00">
+							AttributeValue</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string </TD>
+<TD bgcolor="#FFFF00">Значение отраслевого реквизита</TD></TR></TBODY></TABLE>
+
+
+<P><B>GoodCodeData</B> - Код товарной номенклатуры. XML Структура. Значение всех 
+элементов передаются в <span lang="en-us">Base64.</span></P>
+<TABLE id="GoodCodeData" class="withBorder" cellspacing="0" cellpadding="3" width="80%" border="0"><TBODY><TR><TH width="33%" colspan="2">Наименование атрибута</TH>
+<TH width="13%">Обязательное наличие в <br>
+структуре</TH>
+<TH width="13%">Типы данных</TH>
+<TH width="41%">Описание атрибута</TH></TR><TR><TD rowspan="17">GoodCodeData</TD></TR><TR>
+			<TD width="22%" bgcolor="#FFFF00">NotIdentified</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string </TD>
+<TD bgcolor="#FFFF00"> 	Код товара, формат которого не<br>
+идентифицирован<span lang="en-us"> </span>в <span lang="en-us">Base64</span></TD></TR><TR><TD width="22%" bgcolor="#FFFF00">EAN8</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string </TD>
+<TD bgcolor="#FFFF00"> 	Код товара в формате EAN-8 в <span lang="en-us">Base64</span></TD></TR><TR>
+				<TD width="22%" bgcolor="#FFFF00">EAN13</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string </TD>
+<TD bgcolor="#FFFF00"> 	Код товара в формате EAN-13 в <span lang="en-us">
+Base64</span></TD></TR><TR>
+				<TD width="22%" bgcolor="#FFFF00">ITF14</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string </TD>
+<TD bgcolor="#FFFF00"> 	Код товара в формате ITF-14<span lang="en-us"> </span>
+в <span lang="en-us">Base64</span></TD></TR><TR>
+				<TD width="22%" bgcolor="#FFFF00">
+				<span lang="en-us">GS1.0</span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string </TD>
+<TD bgcolor="#FFFF00"> 	Код товара в формате GS1,
+нанесенный на товар, не
+подлежащий маркировке
+средствами идентификации<span lang="en-us"> </span>в <span lang="en-us">Base64</span></TD></TR><TR><TD width="22%" bgcolor="#FFFF00">
+				<span lang="en-us">GS1.M</span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string </TD>
+<TD bgcolor="#FFFF00"> 	Код товара в формате GS1,
+нанесенный на товар, подлежащий
+маркировке средствами
+идентификации<span lang="en-us"> </span>в <span lang="en-us">Base64</span></TD></TR><TR><TD width="22%" bgcolor="#FFFF00"><span lang="en-us">KMK</span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string </TD>
+<TD bgcolor="#FFFF00"> 	Код товара в формате короткого
+кода маркировки, нанесенный на
+товар, подлежащий маркировке
+средствами идентификации<span lang="en-us"> </span>в <span lang="en-us">Base64</span></TD></TR><TR><TD width="22%" bgcolor="#FFFF00"><span lang="en-us">MI</span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string </TD>
+<TD bgcolor="#FFFF00">Контрольно-идентификационный
+знак мехового изделия</TD></TR><TR><TD width="22%" bgcolor="#FFFF00"><span lang="en-us">EGAIS20</span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string </TD>
+<TD bgcolor="#FFFF00"> 	Код товара в формате ЕГАИС-2.0<span lang="en-us">
+</span>в <span lang="en-us">Base64</span></TD></TR><TR>
+				<TD width="22%" bgcolor="#FFFF00">
+		<span lang="en-us">EGAIS30</span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string </TD>
+<TD bgcolor="#FFFF00"> 	Код товара в формате ЕГАИС-3.0<span lang="en-us">
+</span>в <span lang="en-us">Base64</span></TD></TR><TR>
+				<TD width="22%" bgcolor="#FFFF00"><span lang="en-us">F1</span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string </TD>
+<TD bgcolor="#FFFF00"> 	Код товара в формате Ф.1<span lang="en-us"> </span>в
+<span lang="en-us">Base64</span></TD></TR><TR>
+				<TD width="22%" bgcolor="#FFFF00"><span lang="en-us">F2</span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string </TD>
+<TD bgcolor="#FFFF00"> 	Код товара в формате Ф.2<span lang="en-us"> </span>в
+<span lang="en-us">Base64</span></TD></TR><TR>
+				<TD width="22%" bgcolor="#FFFF00"><span lang="en-us">F3</span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string </TD>
+<TD bgcolor="#FFFF00"> 	Код товара в формате Ф.3<span lang="en-us"> </span>в
+<span lang="en-us">Base64</span></TD></TR><TR>
+				<TD width="22%" bgcolor="#FFFF00"><span lang="en-us">F4</span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string </TD>
+<TD bgcolor="#FFFF00"> 	Код товара в формате Ф.4<span lang="en-us"> </span>в
+<span lang="en-us">Base64</span></TD></TR><TR>
+				<TD width="22%" bgcolor="#FFFF00"><span lang="en-us">F5</span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string </TD>
+<TD bgcolor="#FFFF00"> 	Код товара в формате Ф.5<span lang="en-us"> </span>в
+<span lang="en-us">Base64</span></TD></TR><TR>
+				<TD width="22%" bgcolor="#FFFF00"><span lang="en-us">F6</span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string </TD>
+<TD bgcolor="#FFFF00"> 	Код товара в формате Ф.6<span lang="en-us"> </span>в
+<span lang="en-us">Base64</span></TD></TR></TBODY></TABLE>
+
+
+<P><B>RequestKM</B> - Запрос КМ. XML Структура.</P>
+<TABLE id="RequestKM" class="withBorder" cellspacing="0" cellpadding="3" width="80%" border="0"><TBODY><TR>
+	<TH width="39%" colspan="3">Наименование атрибута</TH>
+<TH width="16%">Обязательное наличие в <br>
+структуре</TH>
+<TH width="9%">Типы данных</TH>
+<TH width="31%">Описание атрибута</TH></TR><TR><TD rowspan="8" width="10%">RequestKM</TD></TR><TR>
+			<TD bgcolor="#FFFF00" colspan="2">
+			<span lang="en-us">GUID</span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Да</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string</TD>
+<TD bgcolor="#FFFF00"> 	Уникальный идентификатор запроса. Формирует 1С.</TD></TR><TR>
+			<TD bgcolor="#FFFF00" colspan="2">
+			<span class="VIiyi" jsaction="mouseup:BR6jm" jsname="jqKxS" lang="en">
+			<span jsaction="agoMJf:PFBcW;usxOmf:aWLT7;jhKsnd:P7O7bd,F8DmGf;Q4AGo:Gm7gYd,qAKMYb;uFUCPb:pvnm0e,pfE8Hb,PFBcW;f56efd:dJXsye;EnoYf:KNzws,ZJsZZ,JgVSJc;zdMJQc:cCQNKb,ZJsZZ,zchEXc;Ytrrj:JJDvdc;tNR8yc:GeFvjb;oFN6Ye:hij5Wb" jscontroller="Zl5N8" jsmodel="SsMkhd" jsname="txFAF" class="JLqJ4b ChMk0b" data-language-for-alternatives="en" data-language-to-translate-into="ru" data-phrase-index="0" jsdata="uqLsIf;_;$38">
+			<span jsaction="click:qtZ4nf,GFf3ac,tMZCfe; contextmenu:Nqw7Te,QP7LD; mouseout:Nqw7Te; mouseover:qtZ4nf,c2aHje" jsname="W297wb">
+			MarkingCode</span></span></span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Да</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string</TD>
+<TD bgcolor="#FFFF00"> 	Код контрольной марки <br>
+Кодируется текстом в кодировке Base64.</TD></TR><TR>
+			<TD bgcolor="#FFFF00" colspan="2">PlannedStatus</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Да</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00"><span lang="en-us">int</span> </TD>
+<TD bgcolor="#FFFF00"> 	Планируемый статус товара.<br>
+Значение от 1 до 5 из таблицы 105 (ФФД)</TD></TR><TR>
+				<TD bgcolor="#FFFF00" colspan="2">
+				Quantity</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Да</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">double</TD>
+<TD bgcolor="#FFFF00"> 	Количество </TD></TR><TR>
+				<TD bgcolor="#FFFF00" height="45" colspan="2">
+				MeasureOfQuantity</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00" height="45">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00" height="45">string</TD>
+<TD bgcolor="#FFFF00" height="45"> 	Мера количества предмета
+расчета.<br>
+Значение из таблицы 114 (ФФД)</TD></TR><TR>
+				<TD width="13%" bgcolor="#FFFF00" rowspan="2">FractionalQuantity</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">
+<span class="VIiyi" jsaction="mouseup:BR6jm" jsname="jqKxS" lang="en">
+<span jsaction="agoMJf:PFBcW;usxOmf:aWLT7;jhKsnd:P7O7bd,F8DmGf;Q4AGo:Gm7gYd,qAKMYb;uFUCPb:pvnm0e,pfE8Hb,PFBcW;f56efd:dJXsye;EnoYf:KNzws,ZJsZZ,JgVSJc;zdMJQc:cCQNKb,ZJsZZ,zchEXc;Ytrrj:JJDvdc;tNR8yc:GeFvjb;oFN6Ye:hij5Wb" jscontroller="Zl5N8" jsmodel="SsMkhd" jsname="txFAF" class="JLqJ4b ChMk0b" data-language-for-alternatives="en" data-language-to-translate-into="ru" data-phrase-index="0" jsdata="uqLsIf;_;$31">
+<span jsaction="click:qtZ4nf,GFf3ac,tMZCfe; contextmenu:Nqw7Te,QP7LD; mouseout:Nqw7Te; mouseover:qtZ4nf,c2aHje" jsname="W297wb">
+Numerator</span></span></span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00"><span lang="en-us">int</span> </TD>
+<TD bgcolor="#FFFF00" rowspan="2"> 	Дробное количество
+маркированного товара</TD></TR><TR>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">
+<span class="VIiyi" jsaction="mouseup:BR6jm" jsname="jqKxS" lang="en">
+<span jsaction="agoMJf:PFBcW;usxOmf:aWLT7;jhKsnd:P7O7bd,F8DmGf;Q4AGo:Gm7gYd,qAKMYb;uFUCPb:pvnm0e,pfE8Hb,PFBcW;f56efd:dJXsye;EnoYf:KNzws,ZJsZZ,JgVSJc;zdMJQc:cCQNKb,ZJsZZ,zchEXc;Ytrrj:JJDvdc;tNR8yc:GeFvjb;oFN6Ye:hij5Wb" jscontroller="Zl5N8" jsmodel="SsMkhd" jsname="txFAF" class="JLqJ4b ChMk0b" data-language-for-alternatives="en" data-language-to-translate-into="ru" data-phrase-index="0" jsdata="uqLsIf;_;$33">
+<span jsaction="click:qtZ4nf,GFf3ac,tMZCfe; contextmenu:Nqw7Te,QP7LD; mouseout:Nqw7Te; mouseover:qtZ4nf,c2aHje" jsname="W297wb">
+Denominator</span></span></span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00"><span lang="en-us">int</span> </TD>
+	</TR></TBODY></TABLE>
+
+<P><B>RequestKMResult</B> - Результат запроса КМ. XML Структура.</P>
+<TABLE id="RequestKMResult" class="withBorder" cellspacing="0" cellpadding="3" width="80%" border="0"><TBODY><TR><TH width="33%" colspan="2">Наименование атрибута</TH>
+<TH width="12%">Обязательное наличие в <br>
+структуре</TH>
+<TH width="13%">Типы данных</TH>
+<TH width="41%">Описание атрибута</TH></TR><TR><TD rowspan="3">RequestKMResult</TD></TR><TR><TD width="18%" bgcolor="#FFFF00">
+				Checking</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Да</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00"><span lang="en-us">bool</span></TD>
+<TD bgcolor="#FFFF00"> 	True - Код маркировки проверен 
+фискальным накопителем с<br>
+использованием ключа проверки КП. <br>
+False - Код маркировки не может быть проверен фискальным<br>
+накопителем с использованием ключа проверки КП.</TD></TR><TR><TD width="18%" bgcolor="#FFFF00">
+			CheckingResult</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Да</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00"><span lang="en-us">bool</span></TD>
+<TD bgcolor="#FFFF00"> 	<span lang="en-us">True - </span>Результат проверки КП КМ фискальным накопителем с 
+использованием ключа проверки КП положительный<br>
+False - Результат проверки КП КМ фискальным накопителем с использованием ключа 
+проверки КП отрицательный.</TD></TR></TBODY></TABLE>
+
+   <p>Пример текстового XML:</p>
+        <pre class="xml"> 
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; 
+&lt;RequestKMResult Checking=&quot;True&quot; CheckingResult=&quot;True&quot;/&gt;
+</pre>
+
+
+<P><B>ProcessingKMResult</B> - Результат запроса о КМ в ОИСМ. XML Структура.</P>
+
+
+<TABLE id="ProcessingKMResult" class="withBorder" cellspacing="0" cellpadding="3" width="80%" border="0"><TBODY><TR><TH width="33%" colspan="2">Наименование атрибута</TH>
+<TH width="12%">Обязательное наличие в <br>
+структуре</TH>
+<TH width="13%">Типы данных</TH>
+<TH width="41%">Описание атрибута</TH></TR><TR><TD rowspan="5">ProcessingKMResult</TD></TR><TR>
+			<TD width="18%" bgcolor="#FFFF00">
+			<span lang="en-us">GUID</span></TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Да</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">string</TD>
+<TD bgcolor="#FFFF00">Уникальный идентификатор запроса.</TD></TR><TR><TD width="18%" bgcolor="#FFFF00">
+				Result</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Да</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00"><span lang="en-us">bool</span></TD>
+<TD bgcolor="#FFFF00">
+True - Результат проверки КП КМ положительный<br>
+False- Результат проверки КП КМ отрицательный</TD></TR><TR><TD width="18%" bgcolor="#FFFF00">
+						StatusInfo</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Нет</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">int</TD>
+<TD bgcolor="#FFFF00"> 	Значение от 1 до 3 из таблицы 106 (ФФД)<br>
+Статус товара корректен если атрибут имеет значение 1.</TD></TR><TR><TD width="18%" bgcolor="#FFFF00">
+				HandleCode</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00">Да</TD>
+<TD style="TEXT-ALIGN: center" bgcolor="#FFFF00"><span lang="en-us">int</span> </TD>
+<TD bgcolor="#FFFF00"> 	Код обработки запроса.<br>
+Значение от 0 до 2 из таблицы 132 (ФФД)</TD></TR></TBODY></TABLE>
+
+
+   <p>Пример текстового XML:</p>
+        <pre class="xml"> 
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; 
+&lt;ProcessingKMResult<span lang="en-us"> </span>GUID=&quot;193DDFC8-15DF-4B14-AE84-1D5B741BC0AC&quot;<span lang="en-us"> </span>Result=&quot;True&quot;<span lang="en-us"> </span>StatusInfo=&quot;1&quot;<span lang="en-us"> </span>HandleCode=&quot;0&quot;/&gt;
+</pre>
+
+<P id="UserAttribute"><B>UserAttribute</B><SPAN style="FONT-WEIGHT: 400"> - Дополнительный реквизит пользователя,  XML Структура.</SPAN></P>
+<TABLE id="table31" class="withBorder" cellspacing="0" cellpadding="3" width="79%" border="0"><TBODY><TR><TH width="10%">Секция</TH>
+<TH width="12%">Наименование атрибута</TH>
+<TH width="11%">Обязательное наличие в структуре</TH>
+<TH width="9%">Типы данных</TH>
+<TH width="57%">Описание атрибута</TH></TR><TR><TD rowspan="2">
+<P style="TEXT-ALIGN: center">UserAttribute</P></TD>
+<TD>Name</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Имя реквизита</TD></TR><TR><TD>Value</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Значение реквизита</TD></TR></TBODY></TABLE><H4>Описание структуры DocumentPackage</H4>
+<P>Текст в формате XML содержит описание текстового документа. Структура описывает последовательность формирования текстового документа.</P>
+<TABLE id="DocumentPackage" class="withBorder" cellspacing="0" cellpadding="3" width="80%" border="0"><TBODY><TR>
+	<TH width="9%">Секция</TH>
+<TH width="21%" colspan="2">Наименование атрибута</TH>
+<TH width="10%">Обязательное наличие в структуре</TH>
+<TH width="8%">Типы данных</TH>
+<TH width="21%">Описание атрибута</TH>
+<TH width="30%">Описание</TH></TR><TR><TD colspan="3"><B>Document</B></TD>
+<TD style="TEXT-ALIGN: center"><B>Да</B></TD>
+<TD style="TEXT-ALIGN: center"> </TD>
+<TD colspan="2"><B>Описание чека</B></TD></TR><TR><TD rowspan="4">
+<P style="TEXT-ALIGN: center">Positions</P></TD></TR><TR><TD width="10%">TextString</TD>
+<TD>Text</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Строка с произвольным текстом</TD>
+<TD>Печать текстовой строки.</TD></TR><TR><TD rowspan="2" width="10%">Barcode</TD>
+<TD>Type</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">string</TD>
+<TD>Строка, определяющая тип штрихкода</TD>
+<TD rowspan="2">Печать штрихкода. Осуществляется с автоматическим размером с выравниванием по центру чека. Тип штрихкода может иметь одно из следующих значений: EAN8, EAN13, CODE39, QR. В случае, если модель устройства не поддерживает печать штрихкода 
+вышеуказанных типов, драйвер 
+должен вернуть ошибку. &nbsp;<BR></TD></TR><TR><TD>
+				ValueBase64</TD>
+<TD style="TEXT-ALIGN: center">Да</TD>
+<TD style="TEXT-ALIGN: center">string </TD>
+<TD>Значение штрихкода.<br>
+Штрихкод кодируется текстом в кодировке Base64.</TD></TR></TBODY></TABLE><A href="#Lookup"></A>
+<H2>Справочные таблицы</H2>
+<H5>Системы налогообложения</H5><A name="TaxVariant"></A>
+<TABLE id="table92" class="withBorder" cellspacing="0" cellpadding="3" width="40%" border="0"><TBODY><TR><TH width="15%">Код</TH>
+<TH width="85%">Описание</TH></TR><TR><TD style="TEXT-ALIGN: center">0</TD>
+<TD>Общая</TD></TR><TR><TD style="TEXT-ALIGN: center">1</TD>
+<TD>Упрощенная (Доход)</TD></TR><TR><TD style="TEXT-ALIGN: center">2</TD>
+<TD>Упрощенная (Доход минус Расход)</TD></TR><TR><TD style="TEXT-ALIGN: center">3</TD>
+<TD>Единый налог на вмененный доход</TD></TR><TR><TD style="TEXT-ALIGN: center">4</TD>
+<TD>Единый сельскохозяйственный налог</TD></TR>
+	<tr>
+		<TD style="TEXT-ALIGN: center">5</TD>
+<TD>Патентная система налогообложения</TD>
+	</tr>
+	</TBODY></TABLE><A name="SignMethodCalculation"></A>
+<H5>Признаки способа расчета</H5>
+<TABLE id="table89" class="withBorder" cellspacing="0" cellpadding="3" width="40%" border="0"><TBODY><TR><TH width="15%">Код</TH>
+<TH width="85%">Описание</TH></TR><TR><TD style="TEXT-ALIGN: center">1</TD>
+<TD>Предоплата полная</TD></TR><TR><TD style="TEXT-ALIGN: center">2</TD>
+<TD>Предоплата частичная</TD></TR><TR><TD style="TEXT-ALIGN: center">3</TD>
+<TD>Аванс</TD></TR><TR><TD style="TEXT-ALIGN: center">4</TD>
+<TD>Полный расчет</TD></TR><TR><TD style="TEXT-ALIGN: center">5</TD>
+<TD>Частичный расчет и кредит</TD></TR><TR><TD style="TEXT-ALIGN: center">6</TD>
+<TD>Передача в кредит</TD></TR><TR><TD style="TEXT-ALIGN: center">7</TD>
+<TD>Оплата кредита</TD></TR></TBODY></TABLE><A name="SignCalculationObject"></A>
+<H5>Признаки предмета расчета</H5>
+<TABLE id="table90" class="withBorder" cellspacing="0" cellpadding="3" width="40%" border="0"><TBODY><TR><TH width="15%">Код</TH>
+<TH width="85%">Описание</TH></TR><TR><TD style="TEXT-ALIGN: center">1</TD>
+<TD>Товар</TD></TR><TR><TD style="TEXT-ALIGN: center">2</TD>
+<TD>Подакцизный товар</TD></TR><TR><TD style="TEXT-ALIGN: center">3</TD>
+<TD>Работа</TD></TR><TR><TD style="TEXT-ALIGN: center">4</TD>
+<TD>Услуга</TD></TR><TR><TD style="TEXT-ALIGN: center">5</TD>
+<TD>Ставка азартной игры</TD></TR><TR><TD style="TEXT-ALIGN: center">6</TD>
+<TD>Выигрыш азартной игры</TD></TR><TR><TD style="TEXT-ALIGN: center">7</TD>
+<TD>Лотерейный билет</TD></TR><TR><TD style="TEXT-ALIGN: center">8</TD>
+<TD>Выигрыш лотереи</TD></TR><TR><TD style="TEXT-ALIGN: center">9</TD>
+<TD>Предоставление результатов интеллектуальной деятельности</TD></TR><TR>
+				<TD style="TEXT-ALIGN: center">10</TD>
+<TD>Платеж</TD></TR><TR>
+		<TD style="TEXT-ALIGN: center">11</TD>
+<TD>Агентское вознаграждение<span lang="en-us"> </span></TD></TR><TR>
+		<TD style="TEXT-ALIGN: center">12</TD>
+<TD >Выплата</TD></TR><TR><TD style="TEXT-ALIGN: center">13</TD>
+<TD>Иной предмет расчета</TD></TR><TR><TD style="TEXT-ALIGN: center">14</TD>
+<TD>Имущественное право</TD></TR><TR><TD style="TEXT-ALIGN: center">15</TD>
+<TD>Внереализационный доход</TD></TR><TR><TD style="TEXT-ALIGN: center">16</TD>
+<TD>Страховые взносы</TD></TR><TR><TD style="TEXT-ALIGN: center">17</TD>
+<TD>Торговый сбор</TD></TR><TR><TD style="TEXT-ALIGN: center">18</TD>
+<TD>Курортный сбор</TD></TR>
+<TR><TD style="TEXT-ALIGN: center">19</TD><TD>Залог</TD></TR>
+<TR><TD style="TEXT-ALIGN: center"><span lang="en-us">20</span></TD>
+	<TD >Расход</TD></TR>
+<TR><TD style="TEXT-ALIGN: center" ><span lang="en-us">21</span></TD>
+	<TD >Взносы на обязательное пенсионное страхование ИП</TD></TR>
+<TR><TD style="TEXT-ALIGN: center" ><span lang="en-us">22</span></TD>
+	<TD >Взносы на обязательное пенсионное страхование</TD></TR>
+<TR><TD style="TEXT-ALIGN: center" ><span lang="en-us">23</span></TD>
+	<TD >Взносы на обязательное медицинское страхование ИП</TD></TR>
+<TR><TD style="TEXT-ALIGN: center" ><span lang="en-us">244</span></TD>
+	<TD >Взносы на обязательное медицинское страхование</TD></TR>
+<TR><TD style="TEXT-ALIGN: center" ><span lang="en-us">25</span></TD>
+	<TD >Взносы на обязательное социальное страхование</TD></TR>
+<TR><TD style="TEXT-ALIGN: center" >26</TD>
+	<TD >Платеж казино</TD></TR>
+</TBODY></TABLE>
+
+
+
+
+<A name="SignSubject"></A>
+
+<H5>Признак агента</H5>
+<TABLE id="table91" class="withBorder" width="40%"><TBODY><TR><TH width="15%">Код</TH>
+<TH width="83%">Описание</TH></TR><TR><TD style="TEXT-ALIGN: center">0</TD>
+<TD>Банковский платежный агент</TD></TR><TR><TD style="TEXT-ALIGN: center" height="21">1</TD>
+<TD>Банковский платежный субагент</TD></TR><TR><TD style="TEXT-ALIGN: center">2</TD>
+<TD>Платежный агент</TD></TR><TR><TD style="TEXT-ALIGN: center">3</TD>
+<TD>Платежный субагент</TD></TR><TR><TD style="TEXT-ALIGN: center">4</TD>
+<TD>Поверенный</TD></TR><TR><TD style="TEXT-ALIGN: center">5</TD>
+<TD>Комиссионер</TD></TR><TR><TD style="TEXT-ALIGN: center">6</TD>
+<TD>Агент</TD></TR></TBODY></TABLE><A name="SignSubjectCalculationAgent"></A>
+<H5>Признаки агента по предмету расчета</H5>
+<TABLE id="table91" class="withBorder" width="40%"><TBODY><TR><TH width="15%">Код</TH>
+<TH width="83%">Описание</TH></TR><TR><TD style="TEXT-ALIGN: center" height="19">0</TD>
+<TD height="19">Банковский платежный агент</TD></TR><TR>
+		<TD style="TEXT-ALIGN: center" height="19">1</TD>
+<TD>Банковский платежный субагент</TD></TR><TR><TD style="TEXT-ALIGN: center">2</TD>
+<TD>Платежный агент</TD></TR><TR><TD style="TEXT-ALIGN: center">3</TD>
+<TD>Платежный субагент</TD></TR><TR><TD style="TEXT-ALIGN: center">4</TD>
+<TD>Поверенный</TD></TR><TR><TD style="TEXT-ALIGN: center">5</TD>
+<TD>Комиссионер</TD></TR><TR><TD style="TEXT-ALIGN: center">6</TD>
+<TD>Агент</TD></TR></TBODY></TABLE><A name="StampType"></A>
+<H5>Код типа маркированной продукции </H5>
+<TABLE id="table120" class="withBorder" width="40%"><TBODY><TR><TH width="15%">Код</TH>
+<TH width="83%">Описание</TH></TR><TR><TD style="TEXT-ALIGN: center">1</TD>
+<TD>Изделия из меха</TD></TR><TR><TD style="TEXT-ALIGN: center" height="21">2</TD>
+<TD height="21">Табачная продукция</TD></TR><TR><TD style="TEXT-ALIGN: center">3</TD>
+<TD>Обувные товары</TD></TR><TR><TD style="TEXT-ALIGN: center">4</TD>
+<TD>Товары легкой промышленности и одежды</TD></TR><TR><TD style="TEXT-ALIGN: center">
+				5</TD>
+<TD>Шины и автопокрышки</TD></TR><TR><TD style="TEXT-ALIGN: center">6</TD>
+<TD>Молоко и молочная продукция</TD></TR><TR><TD style="TEXT-ALIGN: center">7</TD>
+<TD>Фотокамеры и лампы-вспышки</TD></TR><TR><TD style="TEXT-ALIGN: center">8</TD>
+<TD>Велосипеды</TD></TR><TR><TD style="TEXT-ALIGN: center">9</TD>
+<TD>Кресла-коляски</TD></TR><TR><TD style="TEXT-ALIGN: center">10</TD>
+<TD>Духи и туалетная вода</TD></TR></TBODY></TABLE></BODY></HTML>

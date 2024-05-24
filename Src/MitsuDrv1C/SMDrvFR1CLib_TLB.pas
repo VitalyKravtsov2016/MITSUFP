@@ -12,7 +12,7 @@ unit SMDrvFR1CLib_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 01.05.2024 12:19:37 from Type Library described below.
+// File generated on 23.05.2024 17:51:29 from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\projects\MITSUFP\Src\MitsuDrv1C\MitsuDrv1C.tlb (1)

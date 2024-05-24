@@ -6,20 +6,20 @@ interface
 
 uses
   // VCL
-  ActiveX, DrvFRLib_TLB, StdVcl, SysUtils, ActiveXView,
+  ActiveX, StdVcl, SysUtils, ActiveXView,
   // This
-  ComObj, ComServ, untLogger, Driver1Cst30, StringUtils, ActiveXControl1C,
-  AddIn1CInterface, AxCtrls, classes, TranslationUtil, LogFile;
+  ComObj, ComServ, LogFile, MitsuDrv_1C, StringUtils, ActiveXControl1C,
+  AddIn1CInterface, AxCtrls, classes, TranslationUtil, DrvFR1CLib_TLB;
 
 type
   TDrvFR1C30 = class(TActiveXControl1C, IDrvFR1C30)
   private
-    FLogger: TLogger;
-    FDriver: TDriver1Cst30;
-    function GetLogger: TLogger;
-    function GetDriver: TDriver1Cst30;
-    property Logger: TLogger read GetLogger;
-    property Driver: TDriver1Cst30 read GetDriver;
+    FLogger: TLogFile;
+    FDriver: TMitsuDrv1C;
+    function GetLogFile: TLogFile;
+    function GetDriver: TMitsuDrv1C;
+    property Logger: TLogFile read GetLogFile;
+    property Driver: TMitsuDrv1C read GetDriver;
   protected
     function GetInterfaceRevision: Integer; safecall;
     function GetDescription(out DriverDescription: WideString): WordBool; safecall;
@@ -138,10 +138,10 @@ begin
   Result := Driver.GetDescription(DriverDescription);
 end;
 
-function TDrvFR1C30.GetDriver: TDriver1Cst30;
+function TDrvFR1C30.GetDriver: TMitsuDrv1C;
 begin
   if FDriver = nil then
-    FDriver := TDriver1Cst30.Create;
+    FDriver := TMitsuDrv1C.Create;
   Result := FDriver;
 end;
 
@@ -167,10 +167,10 @@ begin
   Logger.Debug(Format('GetLineLength(LineLength: %d): %s', [LineLength, BoolToStr(Result)]));
 end;
 
-function TDrvFR1C30.GetLogger: TLogger;
+function TDrvFR1C30.GetLogFile: TLogFile;
 begin
   if FLogger = nil then
-    FLogger := TLogger.Create(Self.ClassName);
+    FLogger := TLogFile.Create;
   Result := FLogger;
 end;
 
@@ -267,7 +267,8 @@ end;
 
 function TDrvFR1C30.Get_sm_FormatVersion: Integer;
 begin
-  Result := Driver.FormatVersion;
+  Result := 0;
+  //Result := Driver.FormatVersion; !!!
 end;
 
 function TDrvFR1C30.GetProcessingKMResult(const DeviceID: WideString; out ProcessingKMResult: WideString;
@@ -288,7 +289,7 @@ end;
 
 procedure TDrvFR1C30.Set_sm_FormatVersion(Value: Integer);
 begin
-  Driver.FormatVersion := Value;
+  //Driver.FormatVersion := Value; !!!
 end;
 
 function TDrvFR1C30.GetLocalizationPattern(out LocalizationPattern: WideString): WordBool;

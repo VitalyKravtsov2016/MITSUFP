@@ -542,8 +542,8 @@ type
     ItemType: Integer;
     PaymentType: Integer;
     ExciseTaxTotal: Int64;
-    CountryCode: Integer;
-    DeclarationNumber: Integer;
+    CountryCode: WideString;
+    CustomsDeclaration:  WideString;
     Name: WideString;
     Numerator: Integer;
     Denominator: Integer;
@@ -2733,8 +2733,8 @@ begin
   Node.SetAttribute('TYPE', IntToStr(P.ItemType));
   Node.SetAttribute('MODE', IntToStr(P.PaymentType));
   Node.SetAttribute('T1229', IntToStr(P.ExciseTaxTotal));
-  Node.SetAttribute('T1230', IntToStr(P.CountryCode));
-  Node.SetAttribute('T1231', IntToStr(P.DeclarationNumber));
+  Node.SetAttribute('T1230', P.CountryCode);
+  Node.SetAttribute('T1231', P.CustomsDeclaration);;
   if P.MarkCode <> '' then
     AddChild(Node, 'KM', P.MarkCode);
   if P.AddAttribute <> '' then

@@ -348,8 +348,6 @@ function GetCommonShtrihPath: string;
 
 function DRV_SUCCESS(Value: Integer): Boolean;
 
-function IsModelType2(Value: Integer): Boolean;
-
 implementation
 
 function DRV_SUCCESS(Value: Integer): Boolean;
@@ -453,41 +451,6 @@ end;
 function GetBackupTablesPath: string;
 begin
   Result := IncludeTrailingBackslash(GetUserShtrihPath) + 'Tables';
-end;
-
-
-{
-  16 - "ШТРИХ-MPAY-К" | "АСПД MPAY" | "ШТРИХ-МПЕЙ-Ф"
-  19 - Mobile
-  20 - "YARUS М2100К" | "АСПД YARUS М21" | "ЯРУС М2100Ф" // ТТ Сухоставский
-  21 - "YARUS-ТК" | "АСПД YARUS C21" | "ЯРУС ТФ" // ТТ Сухоставский
-  27 - "YARUS-KZ C21" // Казахская ISOFT // с контрольной лентой КЛ-СНГ // ТТ Сухоставский // C2100
-  28 - "YARUS-MD C21" // Молдавская // с контрольной лентой КЛ-СНГ // ТТ Сухоставский // C2100
-  29 - "YARUS М2100К" | "АСПД YARUS M21" // 44 мм; Partner Windows CE 6.0
-  30 - "YARUS М2100К" | "АСПД YARUS M21" // 57 мм; Partner Windows CE 6.0
-  32 - "YARUS-TM C21" // Туркменская // без контрольной ленты // ТТ Сухоставский
-  33 - "YARUS-MD M21" // Молдавская // с контрольной лентой КЛ-СНГ // ТТ Сухоставский // M2100
-  34 - "YARUS-KZ M21" // Казахская ISOFT // с контрольной лентой КЛ-СНГ // ТТ Сухоставский // M2100
-  35 - "YARUS-TM M21" // Туркменская // без контрольной ленты // ТТ Сухоставский
-  36 - "YARUS-TK-KZ C21" // Казахская dzun // без контрольной ленты КЛ-СНГ // ТТ Сухоставский // C2100
-  37 - "YARUS-TK-KZ M21" // Казахская dzun // без контрольной ленты КЛ-СНГ // ТТ Сухоставский // M2100
-  38 - "YARUS-KG C21" // Кыргызкая // с контрольной лентой КЛ-СНГ // ТТ Сухоставский // C2100
-  39 - "YARUS-KG M21" // Кыргызкая // с контрольной лентой КЛ-СНГ // ТТ Сухоставский // M2100
-  40 - "YARUS М2100К" | "АСПД YARUS М21" | "ЯРУС М2100Ф" // Большаков Jibe
-  41 - "YARUS М2100К" | "АСПД YARUS М21" | "ЯРУС М2100Ф" // Ляхович M7100
-  42 - "ШТРИХ-MPAY-КZ" // Казахская ISOFT // с контрольной лентой КЛ-СНГ // MPAY
-  45 - "АЗУР-01Ф" // SZZT KS8223
-  45 - "ШТРИХ-СМАРТПОС-Ф" // TELPO/ALPS/ROCO TPS570A
-  45 - "ШТРИХ-СМАРТПОС-МИНИ-Ф" // TELPO/ALPS/ROCO TPS900 // CLONTEK CS-10
-  46 - "POSCENTER-AND-Ф" // JOLIMARK-IM-78 // 80 мм”
-}
-// 37 - ШТРИХ-ЗНАК-МЗ
-// Модели Андрея Семенова, с другой структурой таблиц
-
-function IsModelType2(Value: Integer): Boolean;
-begin
-  Result := Value in [16, 19, 20, 21, 27, 28, 29, 30, 32, 33, 34, 35, 36, {37,} 38, 39, 40, 41, 42, 45, 45, 45, 46];
-  GlobalLogger.Debug('IsModelType2 ' + IntToStr(Value) + ' ' + SysUtils.BoolToStr(Result, True));
 end;
 
 end.

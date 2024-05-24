@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CheckPackage>
+	<Parameters PaymentType="1" TaxVariant="0" CashierName="Казакова Н.А." CashierVATIN="" CustomerEmail="" CustomerPhone="" CustomerInfo="Иванов" CustomerINN="12412341241241">
+		<AgentData/>
+		<PurveyorData/>
+	</Parameters>
+	<Positions>
+		<FiscalString Name="Картошка" Quantity="12" PriceWithDiscount="20" SumWithDiscount="240" DiscountSum="0" Department="1" Tax="10" SignMethodCalculation="4" TaxSum="21.82" MeasurementUnit="Штука" ExciseAmount="11234.35" CountryOfOrigin="460" CustomsDeclaration="12222555666333">
+			<AgentData/>
+			<PurveyorData/>
+		</FiscalString>
+	</Positions>
+	<Payments Cash="240" ElectronicPayment="0" Credit="0" AdvancePayment="0" CashProvision="0"/>
+</CheckPackage>
