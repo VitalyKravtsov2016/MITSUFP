@@ -9,7 +9,8 @@ MAKE = $(ROOT)\bin\make.exe -$(MAKEFLAGS) -f$**
 DCC = $(ROOT)\bin\dcc32.exe $**
 BRCC = $(ROOT)\bin\brcc32.exe $**
 #------------------------------------------------------------------------------
-PROJECTS = MitsuDrv1C.dll MitsuDrv1CTst.exe MitsuDrvTest.exe MitsuDrvTestLib.exe
+PROJECTS = MitsuDrv1C.dll MitsuDrv1CNative.dll MitsuDrv1CTst.exe \
+  MitsuDrvTest.exe MitsuDrvTestLib.exe
 #------------------------------------------------------------------------------
 default: $(PROJECTS)
 #------------------------------------------------------------------------------
@@ -24,6 +25,9 @@ MitsuDrvTest.exe: ..\Test\MisuDrvTest\MitsuDrvTest.dpr
   $(DCC)
 
 MitsuDrv1CTst.exe: MitsuDrv1CTst\MitsuDrv1CTst.dpr
+  $(DCC)
+
+MitsuDrv1CNative.dll: MitsuDrv1CNative\MitsuDrv1CNative.dpr
   $(DCC)
 
 

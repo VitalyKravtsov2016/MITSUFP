@@ -5,10 +5,8 @@ interface
 uses
   // VCL
   Windows, Classes, SysUtils, SyncObjs, SysConst, Variants, DateUtils, TypInfo,
-  // 3'd
-  TntClasses, TntStdCtrls, TntRegistry,
   // This
-  WException, TntSysUtils;
+  WideException;
 
 const
   CRLF = #13#10;
@@ -39,7 +37,7 @@ type
     procedure WriteRxData(Data: AnsiString);
     procedure WriteTxData(Data: AnsiString);
     procedure LogParam(const ParamName: WideString; const ParamValue: Variant);
-    procedure GetFileNames(const Mask: WideString; FileNames: TTntStrings);
+    procedure GetFileNames(const Mask: WideString; FileNames: TStrings);
 
     function GetFileSize: Int64;
     function GetEnabled: Boolean;
@@ -109,7 +107,7 @@ type
     procedure SetSeparator(const Value: WideString);
     procedure SetDeviceName(const Value: WideString);
     procedure SetTimeStampEnabled(const Value: Boolean);
-    procedure GetFileNames(const Mask: WideString; FileNames: TTntStrings);
+    procedure GetFileNames(const Mask: WideString; FileNames: TStrings);
 
     property Opened: Boolean read GetOpened;
   public
@@ -154,7 +152,34 @@ type
     property TimeStampEnabled: Boolean read GetTimeStampEnabled write SetTimeStampEnabled;
   end;
 
+function Logger: TLogFile;
+function GlobalLogger: TLogFile;
+
 implementation
+
+var
+  FLogFile: TLogFile;
+
+function Logger: TLogFile;
+begin
+  if FLogFile = nil then
+    FLogFile := TLogFile.Create;
+  Result := FLogFile;
+end;
+
+function GlobalLogger: TLogFile;
+begin
+  if FLogFile = nil then
+    FLogFile := TLogFile.Create;
+  Result := FLogFile;
+end;
+
+procedure FreeLogFile;
+begin
+  FLogFile.Free;
+  FLogFile := nil;
+end;
+
 
 const
   SDefaultSeparator   = '------------------------------------------------------------';
@@ -216,7 +241,7 @@ var
 begin
   DecodeDate(Date, Year, Month, Day);
   DecodeTime(Time, Hour, Min, Sec, MSec);
-  Result := Tnt_WideFormat('%.2d.%.2d.%.4d %.2d:%.2d:%.2d.%.3d ',[
+  Result := WideFormat('%.2d.%.2d.%.4d %.2d:%.2d:%.2d.%.3d ',[
     Day, Month, Year, Hour, Min, Sec, MSec]);
 end;
 
@@ -258,7 +283,7 @@ end;
 
 function GetLastErrorText: WideString;
 begin
-  Result := Tnt_WideFormat(SOSError, [GetLastError,  SysErrorMessage(GetLastError)]);
+  Result := WideFormat(SOSError, [GetLastError,  SysErrorMessage(GetLastError)]);
 end;
 
 procedure ODS(const S: WideString);
@@ -419,12 +444,12 @@ end;
 procedure TLogFile.CheckFilesMaxCount;
 var
   FileMask: WideString;
-  FileNames: TTntStringList;
+  FileNames: TStringList;
 begin
   if MaxCount = 0 then Exit;
-  FileNames := TTntStringList.Create;
+  FileNames := TStringList.Create;
   try
-    FileMask := IncludeTrailingBackSlash(FilePath) + Tnt_WideFormat('*%s*.log', [DeviceName]);
+    FileMask := IncludeTrailingBackSlash(FilePath) + WideFormat('*%s*.log', [DeviceName]);
     GetFileNames(FileMask, FileNames);
     FileNames.Sort;
     while FileNames.Count > MaxCount do
@@ -437,7 +462,7 @@ begin
   end;
 end;
 
-procedure TLogFile.GetFileNames(const Mask: WideString; FileNames: TTntStrings);
+procedure TLogFile.GetFileNames(const Mask: WideString; FileNames: TStrings);
 var
   F: TSearchRec;
   Result: Integer;
@@ -525,7 +550,7 @@ var
 begin
   Line := Data;
   if FTimeStampEnabled then
-    Line := Tnt_WideFormat('[%s] [%.8d] %s', [GetTimeStamp, GetCurrentThreadID, Line]);
+    Line := WideFormat('[%s] [%.8d] %s', [GetTimeStamp, GetCurrentThreadID, Line]);
   Line := Line + CRLF;
   Write(Line);
 end;
@@ -616,7 +641,7 @@ begin
           IsPrevCharNormal := False;
           Result := Result + '''';
         end;
-        Result := Result + Tnt_WideFormat('#$%.2x', [Code])
+        Result := Result + WideFormat('#$%.2x', [Code])
       end else
       begin
         if not IsPrevCharNormal then
@@ -779,5 +804,10 @@ begin
     Result := Result + (FileSizeHigh * $100000000);
   end;
 end;
+
+initialization
+
+finalization
+  FreeLogFile;
 
 end.

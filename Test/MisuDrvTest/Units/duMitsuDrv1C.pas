@@ -9,7 +9,7 @@ uses
   // DUnit
   TestFramework,
   // This
-  MitsuDrv, MitsuDrv1C, StringUtils, FileUtils, FFDTypes, Types1C_1;
+  MitsuDrv, MitsuDrv_1C, StringUtils, FileUtils, FFDTypes, XmlDoc1C;
 
 type
   { TMitsuDrv1CTest }
@@ -214,7 +214,7 @@ begin
   InParameters.SaleAddress := 'SaleAddress';
   InParameters.SaleLocation := 'SaleLocation';
   InParameters.PrintRequired := True;
-  T1CXmlReaderWriter.Write(InputXml, InParameters);
+  TXmlDoc1C.Write(InputXml, InParameters);
   CheckEquals(True, Driver.OpenShift(DeviceID, InputXml, OutputXml));
 end;
 
@@ -231,7 +231,7 @@ begin
   InParameters.SaleAddress := 'SaleAddress';
   InParameters.SaleLocation := 'SaleLocation';
   InParameters.PrintRequired := True;
-  T1CXmlReaderWriter.Write(InputXml, InParameters);
+  TXmlDoc1C.Write(InputXml, InParameters);
   CheckEquals(True, Driver.CloseShift(DeviceID, InputXml, OutputXml));
 end;
 
@@ -242,6 +242,7 @@ begin
 end;
 
 initialization
+
   RegisterTest('', TMitsuDrv1CTest.Suite);
 
 end.

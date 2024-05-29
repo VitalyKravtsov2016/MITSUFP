@@ -4,7 +4,7 @@ interface
 
 uses
   // VCL
-  Windows, SysUtils, TntSysUtils;
+  Windows, SysUtils;
 
 type
   { TVersionInfo }
@@ -66,7 +66,7 @@ var
   vi: TVersionInfo;
 begin
   vi := GetFileVersionInfo;
-  Result := Tnt_WideFormat('%d.%d.%d.%d', [vi.MajorVersion, vi.MinorVersion,
+  Result := WideFormat('%d.%d.%d.%d', [vi.MajorVersion, vi.MinorVersion,
     vi.ProductRelease, vi.ProductBuild]);
 end;
 
@@ -75,7 +75,7 @@ var
   vi: TVersionInfo;
 begin
   vi := GetFileVersionInfo;
-  Result := Tnt_WideFormat('%d.%d', [vi.MajorVersion, vi.MinorVersion]);
+  Result := WideFormat('%d.%d', [vi.MajorVersion, vi.MinorVersion]);
 end;
 
 function GetModuleFileName: WideString;
@@ -130,7 +130,7 @@ end;
 
 function VersionInfoToStr(const V: TVersionInfo): WideString;
 begin
-  Result := Tnt_WideFormat('%d.%d.%d.%d', [V.MajorVersion, V.MinorVersion,
+  Result := WideFormat('%d.%d.%d.%d', [V.MajorVersion, V.MinorVersion,
     V.ProductRelease, V.ProductBuild]);
 end;
 

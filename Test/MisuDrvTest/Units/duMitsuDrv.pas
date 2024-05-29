@@ -530,7 +530,7 @@ begin
   Position.Name := 'Item 1';
   Position.Numerator := 0;
   Position.Denominator := 0;
-  Position.MarkCode := '';
+  Position.MarkingCode := '';
   Position.AddAttribute := '';
   Position.AgentType := -1;
 
@@ -815,7 +815,7 @@ begin
   Params.TaxSystem := MTS_TS_GENERAL;
   Driver.Check(Driver.OpenReceipt(Params));
   // Check mark code
-  Driver.Check(Driver.CheckMarkCode(MarkCode, CheckResult));
+  Driver.Check(Driver.MCCheckMarkingCode(MarkCode, CheckResult));
 end;
 
 procedure TMitsuDrvTest.TestPrintCalcReport;

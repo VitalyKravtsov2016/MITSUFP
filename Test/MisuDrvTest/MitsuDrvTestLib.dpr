@@ -10,7 +10,7 @@ uses
   PrinterPort in '..\..\Src\Shared\PrinterPort.pas',
   SerialPort in '..\..\Src\Shared\SerialPort.pas',
   LogFile in '..\..\Src\Shared\LogFile.pas',
-  WException in '..\..\Src\Shared\WException.pas',
+  WideException in '..\..\Src\Shared\WideException.pas',
   DeviceNotification in '..\..\Src\Shared\DeviceNotification.pas',
   PortUtil in '..\..\Src\Shared\PortUtil.pas',
   TextReport in '..\..\Src\Shared\TextReport.pas',

@@ -12,7 +12,7 @@ unit MitsuDrv1CTst_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 29.04.2024 12:30:51 from Type Library described below.
+// File generated on 27.05.2024 11:32:19 from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\projects\MITSUFP\Src\MitsuDrv1CTst\MitsuDrv1CTst.tlb (1)

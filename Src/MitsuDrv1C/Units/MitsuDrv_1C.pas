@@ -8,9 +8,9 @@ uses
   // DCP
   DCPbase64,
   // This
-  MitsuDrv, ByteUtils, Types1C_1, DriverError, VersionInfo,
+  MitsuDrv, ByteUtils, XmlDoc1C, DriverError, VersionInfo,
   ParamList1C, ParamList1CPage, ParamList1CGroup, ParamList1CItem,
-  Param1CChoiceList, LangUtils, FDTypes, Params1C, Positions1C3,
+  Param1CChoiceList, LangUtils, FDTypes, Params1C,
   LogFile, StringUtils, DriverTypes, Types1C;
 
 const
@@ -103,7 +103,7 @@ type
     FDriver: TMitsuDrv;
     FParams: TMitsuParams;
     FParamList: TParamList1C;
-    FReader: T1CXmlReaderWriter;
+    FXmlDocument: TXmlDoc1C;
 
     FResultCode: Integer;
     FResultDescription: string;
@@ -167,10 +167,10 @@ type
     function PrintTextDocument(const DeviceID: WideString; const DocumentPackage: WideString): WordBool;
     function OpenSessionRegistrationKM(const DeviceID: WideString): WordBool;
     function CloseSessionRegistrationKM(const DeviceID: WideString): WordBool;
-    function RequestKM(const DeviceID: WideString; const RequestKM: WideString;
-                       out RequestKMResult: WideString): WordBool; 
+    function RequestKM(const DeviceID: WideString; const RequestKMXml: WideString;
+      out RequestKMResultXml: WideString): WordBool;
     function GetProcessingKMResult(const DeviceID: WideString; out ProcessingKMResult: WideString;
-                                   out RequestStatus: Integer): WordBool; 
+                                   out RequestStatus: Integer): WordBool;
     function ConfirmKM(const DeviceID: WideString; const RequestGUID: WideString;
                        ConfirmationType: Integer): WordBool; 
     function GetLocalizationPattern(out LocalizationPattern: WideString): WordBool;
@@ -319,17 +319,17 @@ begin
   inherited Create;
   FDriver := TMitsuDrv.Create;
   FDevices := TDevices.Create(TDevice);
-  FReader := T1CXmlReaderWriter.Create;
+  FXmlDocument := TXmlDoc1C.Create;
   FParamList := TParamList1C.Create;
   CreateParamList;
 end;
 
 destructor TMitsuDrv1C.Destroy;
 begin
-  FReader.Free;
   FDriver.Free;
   FDevices.Free;
   FParamList.Free;
+  FXmlDocument.Free;
   inherited Destroy;
 end;
 
@@ -506,7 +506,7 @@ begin
   Params.FNFail := TestBit(FDStatus.Flags, FD_NF_30_DAYS_LEFT);
   Params.FNValidityDate := FDStatus.ValidDate;
 
-  FReader.Write(XmlText, Params);
+  FXmlDocument.Write(XmlText, Params);
   Result := XmlText;
 end;
 
@@ -633,7 +633,7 @@ begin
   try
     SelectDevice(DeviceID);
     ReadParametersKKT(Params);
-    FReader.Write(TableParametersKKT, Params);
+    FXmlDocument.Write(TableParametersKKT, Params);
     Logger.Debug('TableParametersKKT  ' + TableParametersKKT);
   except
     on E: Exception do
@@ -659,7 +659,7 @@ begin
   Params := TParametersFiscal.Create;
   try
     SelectDevice(DeviceID);
-    FReader.Read(ParametersFiscal, Params);
+    FXmlDocument.Read(ParametersFiscal, Params);
 
     FNParams.IsMarking := Params.IsMarking;
     FNParams.IsPawnshop := Params.IsPawnshop;
@@ -1619,7 +1619,7 @@ begin
   Result := True;
   try
     SelectDevice(DeviceID);
-    Params := FReader.Read(InputParameters);
+    Params := FXmlDocument.Read(InputParameters);
     // !!!
   except
     on E: Exception do
@@ -1645,7 +1645,7 @@ begin
   Result := True;
   try
     SelectDevice(DeviceID);
-    InParams := FReader.Read(InputParameters);
+    InParams := FXmlDocument.Read(InputParameters);
     Driver.Check(Driver.ReadDayStatus(Status));
     case Status.DayStatus of
       MTS_DAY_STATUS_CLOSED: ;
@@ -1800,7 +1800,7 @@ begin
   Result := True;
   try
     SelectDevice(DeviceID);
-    InParams := FReader.Read(InputParameters);
+    InParams := FXmlDocument.Read(InputParameters);
     OutputParameters := ReadOutputParameters;
   except
     on E: Exception do
@@ -1868,7 +1868,7 @@ begin
   Result := True;
   try
     SelectDevice(DeviceID);
-    InParams := FReader.Read(InputParameters);
+    InParams := FXmlDocument.Read(InputParameters);
     Driver.Check(Driver.ReadDayStatus(Status));
     case Status.DayStatus of
       MTS_DAY_STATUS_OPENED: ;
@@ -1950,7 +1950,7 @@ begin
   Document := TTextDocument.Create;
   try
     SelectDevice(DeviceID);
-    LoadTextDocumentFromXml(Document, Logger, DocumentPackage);
+    FXmlDocument.Read(DocumentPackage, Document);
     PrintDocument(Document);
   except
     on E: Exception do
@@ -1976,7 +1976,7 @@ begin
   Result := True;
   try
     SelectDevice(DeviceID);
-    InParams := FReader.Read(InputParameters);
+    InParams := FXmlDocument.Read(InputParameters);
     // Set cashier
     Cashier.Name := InParams.CashierName;
     Cashier.INN := InParams.CashierINN;
@@ -2036,14 +2036,14 @@ begin
   Driver.LockPort;
   Receipt := TReceipt.Create;
   try
-    LoadReceiptFromXml(Receipt, Logger, InXml);
+    FXmlDocument.Read(InXml, Receipt);
     // Open receipt
-    OpenReceipt.ReceiptType := Receipt.OperationType;
-    OpenReceipt.TaxSystem := Receipt.TaxationSystem;
-    OpenReceipt.SaleAddress := Receipt.SaleAddress;
-    OpenReceipt.SaleLocation := Receipt.SaleLocation;
-    OpenReceipt.AutomaticNumber := Receipt.AutomatNumber;
-    OpenReceipt.SenderEmail := Receipt.SenderEmail;
+    OpenReceipt.ReceiptType := Receipt.Params.OperationType;
+    OpenReceipt.TaxSystem := Receipt.Params.TaxationSystem;
+    OpenReceipt.SaleAddress := Receipt.Params.SaleAddress;
+    OpenReceipt.SaleLocation := Receipt.Params.SaleLocation;
+    OpenReceipt.AutomaticNumber := Receipt.Params.AutomatNumber;
+    OpenReceipt.SenderEmail := Receipt.Params.SenderEmail;
     OpenReceipt.Correction.Date := Receipt.CorrectionData.Date;
     OpenReceipt.Correction.Document := Receipt.CorrectionData.Number;
     if IsCorrection then
@@ -2054,7 +2054,7 @@ begin
       Driver.Check(Driver.OpenReceipt(OpenReceipt));
     end;
     // Add receipt tags
-    Attributes.CustomerPhone := Receipt.CustomerPhone;
+    Attributes.CustomerPhone := Receipt.Params.CustomerPhone;
     // IndustryAttribute
     Attributes.IndustryAttribute.Enabled := Receipt.IndustryAttribute.Enabled;
     Attributes.IndustryAttribute.IdentifierFOIV := Receipt.IndustryAttribute.IdentifierFOIV;
@@ -2213,7 +2213,7 @@ begin
   Position.ExciseTaxTotal := AmountToInt64(Item.ExciseAmount);
   Position.CountryCode := Item.CountryOfOfigin;
   Position.CustomsDeclaration := Item.CustomsDeclaration;
-  Position.MarkCode := Item.Marking;
+  Position.MarkingCode := Item.Marking;
   Position.AddAttribute := Item.AdditionalAttribute;
   //Position.AgentType := Item. !!!
   // AgentData
@@ -2273,7 +2273,7 @@ begin
   Result := True;
   try
     SelectDevice(DeviceID);
-    InParams := FReader.Read(InputParameters);
+    InParams := FXmlDocument.Read(InputParameters);
     // Set cashier
     Cashier.Name := InParams.CashierName;
     Cashier.INN := InParams.CashierINN;
@@ -2294,31 +2294,104 @@ begin
 end;
 
 
-// !!!
+function TMitsuDrv1C.OpenSessionRegistrationKM(
+  const DeviceID: WideString): WordBool;
+begin
+  Logger.Debug('OpenSessionRegistrationKM DeviceID = ' + DeviceID);
+  ClearError;
+  Result := True;
+  try
+    SelectDevice(DeviceID);
+  except
+    on E: Exception do
+    begin
+      Logger.Error('OpenSessionRegistrationKM Error ' + E.Message);
+      Result := False;
+      HandleException(E);
+      Driver.Reset;
+    end;
+  end;
+  Logger.Debug('OpenSessionRegistrationKM.end');
+end;
+
 
 function TMitsuDrv1C.CloseSessionRegistrationKM(
   const DeviceID: WideString): WordBool;
 begin
+  Logger.Debug('CloseSessionRegistrationKM DeviceID = ' + DeviceID);
+  ClearError;
   Result := True;
+  try
+    SelectDevice(DeviceID);
+  except
+    on E: Exception do
+    begin
+      Logger.Error('CloseSessionRegistrationKM Error ' + E.Message);
+      Result := False;
+      HandleException(E);
+      Driver.Reset;
+    end;
+  end;
+  Logger.Debug('CloseSessionRegistrationKM.end');
+end;
+
+function TMitsuDrv1C.RequestKM(const DeviceID, RequestKMXml: WideString;
+  out RequestKMResultXml: WideString): WordBool;
+var
+  P: TMTSTestMark;
+  R: TMTSTestMarkResponse;
+  RequestKM: TRequestKM;
+  RequestKMResult: TRequestKMResult;
+begin
+  Logger.Debug('RequestKM DeviceID = ' + DeviceID);
+  ClearError;
+  Result := True;
+  try
+    SelectDevice(DeviceID);
+    FXmlDocument.Load(RequestKMXml, RequestKM);
+    //
+    P.MarkingCode := RequestKM.MarkingCode;
+    P.Quantity := RequestKM.Quantity;
+    P.MeasureOfQuantity := RequestKM.MeasureOfQuantity;
+    P.PlannedStatus := RequestKM.PlannedStatus;
+    P.Numerator := RequestKM.Numerator;
+    P.Denominator := RequestKM.Denominator;
+    Driver.Check(Driver.MCReadRequest(P, R));
+    // !!!
+    RequestKMResult.Checking := False;
+    RequestKMResult.CheckingResult := False;
+    FXmlDocument.Write(RequestKMResultXml, RequestKMResult);
+  except
+    on E: Exception do
+    begin
+      Logger.Error('RequestKM Error ' + E.Message);
+      Result := False;
+      HandleException(E);
+      Driver.Reset;
+    end;
+  end;
+  Logger.Debug('RequestKM.end');
 end;
 
 
 function TMitsuDrv1C.ConfirmKM(const DeviceID, RequestGUID: WideString;
   ConfirmationType: Integer): WordBool;
 begin
+  Logger.Debug('ConfirmKM DeviceID = ' + DeviceID);
+  ClearError;
   Result := True;
-end;
+  try
+    SelectDevice(DeviceID);
 
-function TMitsuDrv1C.OpenSessionRegistrationKM(
-  const DeviceID: WideString): WordBool;
-begin
-  Result := True;
-end;
-
-function TMitsuDrv1C.GetLocalizationPattern(
-  out LocalizationPattern: WideString): WordBool;
-begin
-  Result := True;
+  except
+    on E: Exception do
+    begin
+      Result := False;
+      HandleException(E);
+      Logger.Error('ConfirmKM Error ' + E.Message);
+    end;
+  end;
+  Logger.Debug('ConfirmKM.end');
 end;
 
 function TMitsuDrv1C.GetProcessingKMResult(const DeviceID: WideString;
@@ -2328,14 +2401,14 @@ begin
   Result := True;
 end;
 
-function TMitsuDrv1C.RequestKM(const DeviceID, RequestKM: WideString;
-  out RequestKMResult: WideString): WordBool;
+function TMitsuDrv1C.SetLocalization(const LanguageCode,
+  LocalizationPattern: WideString): WordBool;
 begin
   Result := True;
 end;
 
-function TMitsuDrv1C.SetLocalization(const LanguageCode,
-  LocalizationPattern: WideString): WordBool;
+function TMitsuDrv1C.GetLocalizationPattern(
+  out LocalizationPattern: WideString): WordBool;
 begin
   Result := True;
 end;

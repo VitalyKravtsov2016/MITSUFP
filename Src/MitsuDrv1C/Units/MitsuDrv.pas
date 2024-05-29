@@ -547,7 +547,7 @@ type
     Name: WideString;
     Numerator: Integer;
     Denominator: Integer;
-    MarkCode: AnsiString;
+    MarkingCode: AnsiString;
     AddAttribute: AnsiString;
     AgentType: Integer;
     AgentData: TMTSAgentData;
@@ -697,6 +697,39 @@ type
     FiscalSign: Integer;
   end;
 
+  { TMTSTestMark }
+
+  TMTSTestMark = record
+    Quantity: Double;
+    MeasureOfQuantity: Integer;
+    PlannedStatus: Integer;
+    Numerator: Integer;
+    Denominator: Integer;
+    MarkingCode: AnsiString;
+  end;
+
+  { TMTSTestMarkResponse }
+
+  TMTSTestMarkResponse = record
+    Mode: Integer;
+    TestResult: Integer;
+    Reason: Integer;
+    Length: Integer;
+    Data: AnsiString;
+  end;
+
+  { TMTSTestMarkResponse2 }
+
+  TMTSTestMarkResponse2 = record
+    Mode: Integer;
+    TestResult: Integer;
+    Reason: Integer;
+    MarCheckStatus: Integer;
+    RequestProcessCode: Integer;
+    ItemCodeStatus: Integer;
+    ItemStatusResponse: Integer;
+  end;
+
   { TMitsuDrv }
 
   TMitsuDrv = class
@@ -817,9 +850,13 @@ type
     function ReadPrinterStatus: Integer;
     function OpenCashDrawer: Integer;
     function ReadCashDrawerStatus(var Status: Integer): Integer;
-    function CheckMarkCode(const Mark: AnsiString; var R: TMTSMarkCheck): Integer;
     function MakeXReport(var R: TMTSDayStatus): Integer;
     function MakeCalcReport(var R: TMTSCalcReport): Integer;
+    function MCCheckMarkingCode(const MarkingCode: AnsiString; var R: TMTSMarkCheck): Integer;
+    function MCReadRequest(const P: TMTSTestMark; var R: TMTSTestMarkResponse): Integer;
+    function MCReadRequestRec(const P: TMTSTestMark; var R: TMTSTestMarkResponse2): Integer;
+    function MCReadRequestData(const P: TMTSTestMark; var R: TMTSTestMarkResponse): Integer;
+    function MCWriteResponse(const Response: AnsiString; var R: TMTSTestMarkResponse): Integer;
 
     property Logger: ILogFile read FLogger;
     property Port: IPrinterPort read GetPort;
@@ -2735,8 +2772,8 @@ begin
   Node.SetAttribute('T1229', IntToStr(P.ExciseTaxTotal));
   Node.SetAttribute('T1230', P.CountryCode);
   Node.SetAttribute('T1231', P.CustomsDeclaration);;
-  if P.MarkCode <> '' then
-    AddChild(Node, 'KM', P.MarkCode);
+  if P.MarkingCode <> '' then
+    AddChild(Node, 'KM', P.MarkingCode);
   if P.AddAttribute <> '' then
     AddChild(Node, 'T1191', P.AddAttribute);
   if P.AgentType > 0 then
@@ -3360,36 +3397,6 @@ begin
 end;
 
 (*
-11.1. Проверка кода маркировки в ФН
-Формат: <Do Mark=’TRY’><KM>КОД</KM></Do>
-Ответ: <OK T2004='результат' RES='причина' />
-• KM : код маркировки в шестнадцатеричном виде, обязательный параметр.
-• T2004 : результат проверки КМ в ФН – число в 16-ричном представлении, битовая маска:
-0x00 – КМ не может быть проверен в ФН с использованием ключа проверки КП
-0x01 – КМ проверен, результат отрицательный
-0x03 – КМ проверен, результат положительный
-Бит Значение 0 1
-0 КМ проверен в ФН с использованием ключа проверки КП? нет да
-1 КМ проверен, результат положительный? нет да
-• RES : код причины отказа в проверке КМ в ФН, возможные значения:
-0 – КМ проверен в ФН
-1 – КМ данного типа не подлежит проверки в ФН
-2 – ФН не содержит ключ проверки кода проверки этого КМ
-3 – Проверка невозможна, отсутствуют идентификаторы применения GS1 91 и / или 92 или их формат неверный.
-4 – Проверка КМ в ФН невозможна по иной причине.
-*)
-
-function TMitsuDrv.CheckMarkCode(const Mark: AnsiString; var R: TMTSMarkCheck): Integer;
-begin
-  Result := Send(Format('<Do Mark=''TRY''><KM>%s</KM></Do>', [Mark]));
-  if Succeeded(Result) then
-  begin
-    R.Status := GetIntAttribute('T2004');
-    R.Reason := GetIntAttribute('RES');
-  end;
-end;
-
-(*
 12.1. Отчет о текущем состоянии расчетов
 Формат: <MAKE REPORT='Z'/>
 или: <MAKE REPORT='Z'>
@@ -3436,6 +3443,203 @@ begin
     R.DayStatus := GetIntAttribute('STATE');
     R.RecNumber := GetIntAttribute('COUNT');
     R.KeyExpDays := GetIntAttribute('KeyValid');
+  end;
+end;
+
+(*
+11.1. Проверка кода маркировки в ФН
+Формат: <Do Mark=’TRY’><KM>КОД</KM></Do>
+Ответ: <OK T2004='результат' RES='причина' />
+• KM : код маркировки в шестнадцатеричном виде, обязательный параметр.
+• T2004 : результат проверки КМ в ФН – число в 16-ричном представлении, битовая маска:
+0x00 – КМ не может быть проверен в ФН с использованием ключа проверки КП
+0x01 – КМ проверен, результат отрицательный
+0x03 – КМ проверен, результат положительный
+Бит Значение 0 1
+0 КМ проверен в ФН с использованием ключа проверки КП? нет да
+1 КМ проверен, результат положительный? нет да
+• RES : код причины отказа в проверке КМ в ФН, возможные значения:
+0 – КМ проверен в ФН
+1 – КМ данного типа не подлежит проверки в ФН
+2 – ФН не содержит ключ проверки кода проверки этого КМ
+3 – Проверка невозможна, отсутствуют идентификаторы применения GS1 91 и / или 92 или их формат неверный.
+4 – Проверка КМ в ФН невозможна по иной причине.
+*)
+
+function TMitsuDrv.MCCheckMarkingCode(const MarkingCode: AnsiString; var R: TMTSMarkCheck): Integer;
+begin
+  Result := Send(Format('<Do Mark=''TRY''><KM>%s</KM></Do>', [MarkingCode]));
+  if Succeeded(Result) then
+  begin
+    R.Status := GetIntAttribute('T2004');
+    R.Reason := GetIntAttribute('RES');
+  end;
+end;
+
+(*
+11.2. Получение запроса для проверки КМ в ОИСМ, до открытия чека
+Формат: <Do Mark=’TEST’ ITEM='количество' UNIT= ‘мера ' ST= 'планируемый статус' >
+<QTY PART='числитель' OF='знаменатель'/>
+<KM>КОД</KM>
+</Do>
+Ответ (А): В автономном режиме, либо при отрицательном результате пров
+<OK Ext='режим' T2004='результат' RES='причина' />
+Ответ (Б): В режиме передачи данных, при положительном результате про
+<OK Ext='режим' T2004='результат' RES='причина'> ЗАПРОС </OK>
+*)
+
+function TMitsuDrv.MCReadRequest(const P: TMTSTestMark;
+  var R: TMTSTestMarkResponse): Integer;
+var
+  Node: IXMLNode;
+  Node2: IXMLNode;
+  Xml: IXMLDocument;
+  Command: AnsiString;
+begin
+  Xml := NewXMLDocument('');
+  Node := Xml.CreateElement('Do', '');
+  Xml.DocumentElement := Node;
+  Node.SetAttribute('Mark', 'TEST');
+  Node.SetAttribute('ITEM', QuantityToStr(P.Quantity));
+  Node.SetAttribute('UNIT', P.MeasureOfQuantity);
+  Node.SetAttribute('ST', P.PlannedStatus);
+  Node2 := Node.AddChild('QTY');
+  Node2.SetAttribute('PART', P.Numerator);
+  Node2.SetAttribute('OF', P.Denominator);
+  Node2 := Node.AddChild('KM');
+  Node2.Text := P.MarkingCode;
+  Xml.SaveToXml(Command);
+  Result := Send(Trim(Command));
+  if Succeeded(Result) then
+  begin
+    R.Mode := GetIntAttribute('Ext');
+    R.TestResult := GetIntAttribute('T2004');
+    R.Reason := GetIntAttribute('RES');
+  end;
+end;
+
+(*
+11.3. Получение запроса на проверку КМ в ОИСМ, в открытом чеке
+Формат: <Do Mark=’GET’ ITEM='количество' UNIT= ‘мера ' ST= 'планируемый статус' >
+<QTY PART='числитель' OF='знаменатель'/><KM>КОД</KM></Do>
+Ответ (А): В автономном режиме, либо при отрицательном результате проверки:
+<OK Ext='режим' T2004='результат' RES='причина' />
+Ответ (Б): В режиме передачи данных, для внешнего клиента обмена с ОИСМ:
+<OK Ext='режим' T2004='результат' RES='причина'> ЗАПРОС </OK>
+Ответ (В): В режиме передачи данных, для внутреннего клиента обмена с ОИСМ:
+<OK Ext='режим' T2004='результат' RES='причина'
+T2005='результат проверки КМ и статуса товара'
+T2105='код обработки запроса '
+T2106='результат проверки сведений о товаре'
+T2109='ответ ОИСМ о статусе товара' >
+*)
+
+function TMitsuDrv.MCReadRequestRec(const P: TMTSTestMark;
+  var R: TMTSTestMarkResponse2): Integer;
+var
+  Node: IXMLNode;
+  Node2: IXMLNode;
+  Xml: IXMLDocument;
+  Command: AnsiString;
+begin
+  Xml := NewXMLDocument('');
+  Node := Xml.CreateElement('Do', '');
+  Xml.DocumentElement := Node;
+  Node.SetAttribute('Mark', 'GET');
+  Node.SetAttribute('ITEM', QuantityToStr(P.Quantity));
+  Node.SetAttribute('UNIT', P.MeasureOfQuantity);
+  Node.SetAttribute('ST', P.PlannedStatus);
+  Node2 := Node.AddChild('QTY');
+  Node2.SetAttribute('PART', P.Numerator);
+  Node2.SetAttribute('OF', P.Denominator);
+  Node2 := Node.AddChild('KM');
+  Node2.Text := P.MarkingCode;
+  Xml.SaveToXml(Command);
+  Result := Send(Trim(Command));
+  if Succeeded(Result) then
+  begin
+    R.Mode := GetIntAttribute('Ext');
+    R.TestResult := GetIntAttribute('T2004');
+    R.Reason := GetIntAttribute('RES');
+    R.MarCheckStatus := GetIntAttribute('T2005');
+    R.RequestProcessCode := GetIntAttribute('T2105');
+    R.ItemCodeStatus := GetIntAttribute('T2106');
+    R.ItemStatusResponse := GetIntAttribute('T2109');
+  end;
+end;
+
+(*
+11.4. Повторное получение запроса (для внешнего клиента обмена с ОИСМ)
+Формат: <Do Mark=’REQ’ ITEM=’количество’ UNIT=’мера‘ ST= ‘планируемый статус’ >
+<QTY PART=’числитель’ OF=’знаменатель’/>
+</Do>
+Ответ: <OK Ext='режим' T2004='результат' RES='причина' LENGTH='длина'> ЗАПРОС </OK>
+*)
+
+function TMitsuDrv.MCReadRequestData(const P: TMTSTestMark;
+  var R: TMTSTestMarkResponse): Integer;
+var
+  Node: IXMLNode;
+  Node2: IXMLNode;
+  Xml: IXMLDocument;
+  Command: AnsiString;
+begin
+  Xml := NewXMLDocument('');
+  Node := Xml.CreateElement('Do', '');
+  Xml.DocumentElement := Node;
+  Node.SetAttribute('Mark', 'REQ');
+  Node.SetAttribute('ITEM', QuantityToStr(P.Quantity));
+  Node.SetAttribute('UNIT', P.MeasureOfQuantity);
+  Node.SetAttribute('ST', P.PlannedStatus);
+  Node2 := Node.AddChild('QTY');
+  Node2.SetAttribute('PART', P.Numerator);
+  Node2.SetAttribute('OF', P.Denominator);
+  Xml.SaveToXml(Command);
+  Result := Send(Trim(Command));
+  if Succeeded(Result) then
+  begin
+    R.Mode := GetIntAttribute('Ext');
+    R.TestResult := GetIntAttribute('T2004');
+    R.Reason := GetIntAttribute('RES');
+    R.Length := GetIntAttribute('LENGTH');
+    R.Data := FAnswerDoc.documentElement.Text;
+  end;
+end;
+
+(*
+11.6. Результат проверки в ОИСМ (внешний клиент)
+Формат: <Do Mark=’LOAD’>ОТВЕТ ОИСМ</Do>
+Ответ: <OK T2005='результат проверки КМ и статуса товара'
+T2105='код обработки запроса '
+T2106='результат проверки сведений о товаре'
+T2109='ответ ОИСМ о статусе товара'
+T2100='тип кода маркировки' >
+*)
+
+function TMitsuDrv.MCWriteResponse(const Response: AnsiString;
+  var R: TMTSTestMarkResponse): Integer;
+var
+  Node: IXMLNode;
+  Node2: IXMLNode;
+  Xml: IXMLDocument;
+  Command: AnsiString;
+begin
+  Xml := NewXMLDocument('');
+  Node := Xml.CreateElement('Do', '');
+  Xml.DocumentElement := Node;
+  Node.SetAttribute('Mark', 'LOAD');
+  Node.Text := StrToHexText(Response);
+  Xml.SaveToXml(Command);
+  Result := Send(Trim(Command));
+  if Succeeded(Result) then
+  begin
+    (*
+    R.CheckStatus := GetIntAttribute('T2005');
+    R.RequestProcessCode := GetIntAttribute('T2105');
+    R.ItemCheckStatus := GetIntAttribute('T2106');
+    R.ItemStatusResponse := GetIntAttribute('T2109');
+    R.MarkingCodeType := GetIntAttribute('T2100');
+    *)
   end;
 end;
 

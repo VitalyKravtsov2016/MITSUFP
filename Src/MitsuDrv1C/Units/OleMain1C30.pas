@@ -8,8 +8,8 @@ uses
   // VCL
   ActiveX, StdVcl, SysUtils, ActiveXView,
   // This
-  ComObj, ComServ, LogFile, MitsuDrv_1C, StringUtils, ActiveXControl1C,
-  AddIn1CInterface, AxCtrls, classes, TranslationUtil, DrvFR1CLib_TLB;
+  MitsuLib_TLB, ComObj, ComServ, LogFile, MitsuDrv_1C, StringUtils,
+  ActiveXControl1C, AddIn1CInterface, AxCtrls, classes, TranslationUtil;
 
 type
   TDrvFR1C30 = class(TActiveXControl1C, IDrvFR1C30)

@@ -20,7 +20,7 @@ uses
   SMDrvFR1CLib_TLB in '..\MitsuDrv1C\SMDrvFR1CLib_TLB.pas',
   BaseForm in '..\Shared\BaseForm.pas',
   AddIn1CInterface in 'Units\AddIn1CInterface.pas',
-  WException in '..\Shared\WException.pas';
+  WideException in '..\Shared\WideException.pas';
 
 {$R *.TLB}
 

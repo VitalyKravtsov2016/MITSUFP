@@ -8,7 +8,7 @@ uses
   // DCP
   DCPbase64,
   // This
-  XmlUtils, StringUtils, LogFile, GS1Util;
+  XmlUtils, StringUtils, GS1Util;
 
 type
   { TRequestKM }
@@ -18,14 +18,15 @@ type
     WaitForResult: Boolean;
     MarkingCode: AnsiString;
     PlannedStatus: Integer;
-    HasQuantity: Boolean;
     Quantity: Double;
-    HasMeasureOfQuantity: Boolean;
     MeasureOfQuantity: Integer;
-    FractionalQuantity: Boolean;
     Numerator: Integer;
     Denominator: Integer;
     NotSendToServer: Boolean;
+
+    HasQuantity: Boolean;
+    HasMeasureOfQuantity: Boolean;
+    HasFractionalQuantity: Boolean;
   end;
 
   { TPayments }
@@ -306,43 +307,46 @@ type
     property Items: TDocItems read FItems;
   end;
 
+  { TReceiptRec }
+
+  TReceiptRec = record
+    ID: string;
+    BPOVersion: Integer;
+    DeliveryRetail: Boolean;
+    SenderEmail: WideString;
+    SaleAddress: WideString;
+    SaleLocation: WideString;
+    CustomerEmail: WideString;
+    CustomerPhone: WideString;
+    CustomerInfo: WideString;
+    CustomerINN: WideString;
+    AgentCompensation: Double;
+    AgentPhone: WideString;
+    CashierINN: WideString;
+    AdditionalAttribute: WideString;
+    CashierName: WideString;
+    OperationType: Integer;
+    TaxationSystem: Integer;
+    FFDVersion: Integer;
+    AutomatNumber: string;
+    ItemNameLength: Integer;
+    AgentType: WideString;
+  end;
+
   { TReceipt }
 
   TReceipt = class
   private
     FItems: TDocItems;
-
-    FID: string;
-    FBPOVersion: Integer;
+    FParams: TReceiptRec;
     FPayments: TPayments;
-    FDeliveryRetail: Boolean;
-    FSenderEmail: WideString;
-    FSaleAddress: WideString;
-    FSaleLocation: WideString;
-    FCustomerEmail: WideString;
-    FCustomerPhone: WideString;
-    FCustomerInfo: WideString;
-    FCustomerINN: WideString;
-    //FAgentCompensation: Double;
-    FCorrectionData: TCorrectionData;
     FAgentData: TAgentData;
     FVendorData: TVendorData;
     FUserAttribute: TUserAttribute;
-    FAgentPhone: WideString;
-    FCashierINN: WideString;
-    FAdditionalAttribute: WideString;
-    FCashierName: WideString;
-    FOperationType: Integer;
-    FTaxationSystem: Integer;
-    FFFDVersion: Integer;
-
     FCustomerDetail: TCustomerDetail;
-    FAutomatNumber: string;
-    FOperationalAttribute: TOperationalAttribute;
+    FCorrectionData: TCorrectionData;
     FIndustryAttribute: TIndustryAttribute;
-
-    FItemNameLength: Integer;
-    FAgentType: WideString;
+    FOperationalAttribute: TOperationalAttribute;
   public
     constructor Create;
     destructor Destroy; override;
@@ -350,52 +354,26 @@ type
     function TotalTaxSum: Currency;
 
     property Items: TDocItems read FItems;
-
-    property SenderEmail: WideString read FSenderEmail;
+    property Params: TReceiptRec read FParams;
     property Payments: TPayments read FPayments;
-    property CustomerEmail: WideString read FCustomerEmail;
-    property CustomerPhone: WideString read FCustomerPhone;
-    property AgentPhone: WideString read FAgentPhone;
-    property TaxationSystem: Integer read FTaxationSystem;
-    property CashierVATIN: Widestring read FCashierINN;
-    property CashierName: Widestring read FCashierName;
     property AgentData: TAgentData read FAgentData;
     property VendorData: TVendorData read FVendorData;
-    property FFDversion: Integer read FFFDVersion write FFFDVersion;
-    property BPOVersion: Integer read FBPOVersion write FBPOVersion;
-    property ItemNameLength: Integer read FItemNameLength write FItemNameLength;
-    property AdditionalAttribute: WideString read FAdditionalAttribute write FAdditionalAttribute;
-    property AgentSign: Widestring read FAgentType write FAgentType;
-    property Id: string read FId write FId;
-    property UserAttribute: TUserAttribute read FUserAttribute write FUserAttribute;
-    property CustomerInfo: WideString read FCustomerInfo write FCustomerInfo;
-    property CustomerINN: WideString read FCustomerINN write FCustomerINN;
-    property OperationType: Integer read FOperationType write FOperationType;
+    property UserAttribute: TUserAttribute read FUserAttribute;
     property CorrectionData: TCorrectionData read FCorrectionData;
-    property SaleAddress: WideString read FSaleAddress write FSaleAddress;
-    property SaleLocation: WideString read FSaleLocation write FSaleLocation;
     property CustomerDetail: TCustomerDetail read FCustomerDetail;
-    property AutomatNumber: string read FAutomatNumber;
-    property OperationalAttribute: TOperationalAttribute read FOperationalAttribute;
     property IndustryAttribute: TIndustryAttribute read FIndustryAttribute;
-    property DeliveryRetail: Boolean read FDeliveryRetail write FDeliveryRetail;
+    property OperationalAttribute: TOperationalAttribute read FOperationalAttribute;
   end;
 
-  { TReceiptXmlReader }
+  { TDocXmlReader }
 
-  TReceiptXmlReader = class
+  TDocXmlReader = class
   private
-    FLogger: ILogFile;
-    FReceipt: TReceipt;
-
-    procedure LoadBarcode(ANode: IXMLNode);
-    procedure LoadParameters(ANode: IXMLNode);
-    procedure LoadPositions(ANode: IXMLNode);
-    procedure LoadFiscalString(ANode: IXMLNode);
-    procedure LoadNonFiscalString(ANode: IXMLNode);
+    class procedure LoadItems(ANode: IXMLNode; Items: TDocItems);
+    class procedure LoadPositions(ANode: IXMLNode; Receipt: TReceipt);
   public
-    constructor Create(AReceipt: TReceipt; ALogger: ILogFile);
-    procedure ReadFromXML(const AXML: WideString);
+    class procedure Read(const AXML: WideString; Receipt: TReceipt); overload;
+    class procedure Read(const AXML: WideString; Document: TTextDocument); overload;
 
     class procedure Load(ANode: IXMLNode; var R: TAgentData); overload;
     class procedure Load(ANode: IXMLNode; var R: TVendorData); overload;
@@ -407,34 +385,15 @@ type
     class procedure Load(ANode: IXMLNode; var R: TFractionalQuantity); overload;
     class procedure Load(ANode: IXMLNode; var R: TGoodCodeData); overload;
     class procedure Load(ANode: IXMLNode; var R: TPayments); overload;
+    class procedure Load(ANode: IXMLNode; var R: TReceiptRec); overload;
+    class procedure Load(ANode: IXMLNode; Item: TFiscalItem); overload;
+    class procedure Load(ANode: IXMLNode; Item: TTextItem); overload;
+    class procedure Load(ANode: IXMLNode; Item: TBarcodeItem); overload;
     class procedure Load(const XmlText: WideString; var R: TRequestKM); overload;
-
-    property Logger: ILogFile read FLogger;
-    property Receipt: TReceipt read FReceipt;
   end;
 
-  { TDocumentXmlReader }
-
-  TDocumentXmlReader = class
-  private
-    FLogger: ILogFile;
-    FDocument: TTextDocument;
-    procedure LoadBarcode(ANode: IXMLNode);
-    procedure LoadNonFiscalString(ANode: IXMLNode);
-    procedure LoadItems(ANode: IXMLNode);
-  public
-    constructor Create(ADocument: TTextDocument; ALogger: ILogFile);
-    procedure ReadFromXML(const AXML: WideString);
-
-    property Logger: ILogFile read FLogger;
-    property Document: TTextDocument read FDocument;
-  end;
-
-procedure LoadReceiptFromXml(Receipt: TReceipt; Logger: ILogFile;
-  const Xml: WideString);
-
-procedure LoadTextDocumentFromXml(Document: TTextDocument; Logger: ILogFile;
-  const Xml: WideString);
+procedure LoadReceiptFromXml(Receipt: TReceipt; const Xml: WideString);
+procedure LoadTextDocumentFromXml(Document: TTextDocument; const Xml: WideString);
 
 implementation
 
@@ -442,7 +401,6 @@ function DecodeBase64(const AData: AnsiString): AnsiString;
 begin
   Result := Base64DecodeStr(AData);
 end;
-
 
 function To1Cbool(AValue: Boolean): WideString;
 begin
@@ -466,27 +424,25 @@ begin
 end;
 
 
-procedure LoadReceiptFromXml(Receipt: TReceipt; Logger: ILogFile;
-  const Xml: WideString);
+procedure LoadReceiptFromXml(Receipt: TReceipt; const Xml: WideString);
 var
-  Reader: TReceiptXmlReader;
+  Reader: TDocXmlReader;
 begin
-  Reader := TReceiptXmlReader.Create(Receipt, Logger);
+  Reader := TDocXmlReader.Create;
   try
-    Reader.ReadFromXML(Xml);
+    Reader.Read(Xml, Receipt);
   finally
     Reader.Free;
   end;
 end;
 
-procedure LoadTextDocumentFromXml(Document: TTextDocument; Logger: ILogFile;
-  const Xml: WideString);
+procedure LoadTextDocumentFromXml(Document: TTextDocument; const Xml: WideString);
 var
-  Reader: TDocumentXmlReader;
+  Reader: TDocXmlReader;
 begin
-  Reader := TDocumentXmlReader.Create(Document, Logger);
+  Reader := TDocXmlReader.Create;
   try
-    Reader.ReadFromXML(Xml);
+    Reader.Read(Xml, Document);
   finally
     Reader.Free;
   end;
@@ -574,10 +530,10 @@ var
 begin
   inherited Create;
   FItems := TDocItems.Create(TDocItem);
-  FFFDVersion := 0;
   CreateGUID(Guid);
-  FID := GUIDToString(Guid);
-  FDeliveryRetail := False;
+  FParams.ID := GUIDToString(Guid);
+  FParams.DeliveryRetail := False;
+  FParams.FFDVersion := 0;
 end;
 
 destructor TReceipt.Destroy;
@@ -603,23 +559,15 @@ begin
   end;
 end;
 
-{ TReceiptXmlReader }
+{ TDocXmlReader }
 
-constructor TReceiptXmlReader.Create(AReceipt: TReceipt; ALogger: ILogFile);
-begin
-  inherited Create;
-  FReceipt := AReceipt;
-  FLogger := ALogger;
-end;
-
-procedure TReceiptXmlReader.ReadFromXML(const AXML: WideString);
+class procedure TDocXmlReader.Read(const AXML: WideString; Receipt: TReceipt);
 var
   i: Integer;
   Doc: IXMLNode;
   Node: IXMLNode;
   Xml: IXMLDocument;
 begin
-  Logger.Debug('TReceipt.ReadFromXML');
   Xml := TXMLDocument.Create(nil);
   try
     Xml.Active := True;
@@ -636,14 +584,22 @@ begin
       Node := Doc.ChildNodes.Nodes[i];
       if Node = nil then
         Continue;
+
       if Node.NodeName = 'Parameters' then
       begin
-        LoadParameters(Node);
+        Load(Node, Receipt.FParams);
+        Load(Node, Receipt.FAgentData);
+        Load(Node, Receipt.FVendorData);
+        Load(Node, Receipt.FUserAttribute);
+        Load(Node, Receipt.FCustomerDetail);
+        Load(Node, Receipt.FCorrectionData);
+        Load(Node, Receipt.FIndustryAttribute);
+        Load(Node, Receipt.FOperationalAttribute);
         Continue;
       end;
       if Node.NodeName = 'Positions' then
       begin
-        LoadPositions(Node);
+        LoadPositions(Node, Receipt);
         Continue;
       end;
       if Node.NodeName = 'Payments' then
@@ -657,6 +613,67 @@ begin
   end;
 end;
 
+class procedure TDocXmlReader.Read(const AXML: WideString;
+  Document: TTextDocument);
+var
+  i: Integer;
+  Doc: IXMLNode;
+  Node: IXMLNode;
+  Xml: IXMLDocument;
+begin
+  Xml := TXMLDocument.Create(nil);
+  try
+    Xml.Active := True;
+    Xml.Version := '1.0';
+    Xml.Encoding := 'UTF-8';
+    Xml.Options := Xml.Options + [doNodeAutoIndent];
+    Xml.LoadFromXML(AXML);
+    Doc := Xml.ChildNodes.FindNode('Document');
+    if Doc = nil then
+      Exit;
+
+    for i := 0 to Doc.ChildNodes.Count - 1 do
+    begin
+      Node := Doc.ChildNodes.Nodes[i];
+      if Node = nil then
+        Continue;
+
+      if Node.NodeName = 'Positions' then
+      begin
+        LoadItems(Node, Document.Items);
+        Continue;
+      end;
+    end;
+  finally
+    Xml := nil;
+  end;
+end;
+
+class procedure TDocXmlReader.LoadItems(ANode: IXMLNode; Items: TDocItems);
+var
+  i: Integer;
+  Node: IXMLNode;
+begin
+  for i := 0 to ANode.ChildNodes.Count - 1 do
+  begin
+    Node := ANode.ChildNodes.Nodes[i];
+    if Node = nil then Continue;
+
+    if Node.NodeName = 'TextString' then
+    begin
+      Load(Node, TTextItem.Create(Items));
+      Continue;
+    end;
+    if Node.NodeName = 'Barcode' then
+    begin
+      Load(Node, TBarcodeItem.Create(Items));
+      Continue;
+    end;
+  end;
+end;
+
+
+
 (*
 <Parameters PaymentType="1" TaxVariant="0" CashierName="Казакова Н.А."
   SenderEmail="info@1c.ru" CustomerEmail="" CustomerPhone="" AgentSign="2"
@@ -668,37 +685,29 @@ end;
 	</Parameters>
 *)
 
-procedure TReceiptXmlReader.LoadParameters(ANode: IXMLNode);
-var
-  Node: IXMLNode;
+class procedure TDocXmlReader.Load(ANode: IXMLNode; var R: TReceiptRec);
 begin
-  Freceipt.FCashierName := LoadString(ANode, 'CashierName', False);
-  Freceipt.FCashierINN := LoadString(ANode, 'CashierINN', False);
-  Freceipt.FOperationType := LoadInteger(ANode, 'OperationType', True);
-  Freceipt.FTaxationSystem := LoadInteger(ANode, 'TaxationSystem', True);
-  Freceipt.FCustomerInfo := LoadString(ANode, 'CustomerInfo', False);
-  Freceipt.FCustomerINN := LoadString(ANode, 'CustomerINN', False);
-  Freceipt.FCustomerEmail := LoadString(ANode, 'CustomerEmail', False);
-  Freceipt.FCustomerPhone := LoadString(ANode, 'CustomerPhone', False);
-  Freceipt.FSenderEmail := LoadString(ANode, 'SenderEmail', False);
-  Freceipt.FSaleAddress := LoadString(ANode, 'SaleAddress', False);
-  Freceipt.FSaleLocation := LoadString(ANode, 'SaleLocation', False);
-  Freceipt.FAgentType := LoadString(ANode, 'AgentType', False);
-  Freceipt.FAdditionalAttribute := LoadString(ANode, 'AdditionalAttribute', False);
-  //FAutomaticNumber := LoadString(ANode, 'AutomatNumber', False);
-  Load(ANode, Freceipt.FCorrectionData);
-  Load(ANode, Freceipt.FAgentData);
-  Load(ANode, Freceipt.FVendorData);
-  Load(ANode, Freceipt.FUserAttribute);
-  Load(ANode, Freceipt.FCustomerDetail);
-  Load(ANode, Freceipt.FOperationalAttribute);
-  Load(ANode, Freceipt.FIndustryAttribute);
+  R.CashierName := LoadString(ANode, 'CashierName', False);
+  R.CashierINN := LoadString(ANode, 'CashierINN', False);
+  R.OperationType := LoadInteger(ANode, 'OperationType', True);
+  R.TaxationSystem := LoadInteger(ANode, 'TaxationSystem', True);
+  R.CustomerInfo := LoadString(ANode, 'CustomerInfo', False);
+  R.CustomerINN := LoadString(ANode, 'CustomerINN', False);
+  R.CustomerEmail := LoadString(ANode, 'CustomerEmail', False);
+  R.CustomerPhone := LoadString(ANode, 'CustomerPhone', False);
+  R.SenderEmail := LoadString(ANode, 'SenderEmail', False);
+  R.SaleAddress := LoadString(ANode, 'SaleAddress', False);
+  R.SaleLocation := LoadString(ANode, 'SaleLocation', False);
+  R.AgentType := LoadString(ANode, 'AgentType', False);
+  R.AdditionalAttribute := LoadString(ANode, 'AdditionalAttribute', False);
+  R.AutomatNumber := LoadString(ANode, 'AutomatNumber', False);
 end;
 
-procedure TReceiptXmlReader.LoadPositions(ANode: IXMLNode);
+class procedure TDocXmlReader.LoadPositions(ANode: IXMLNode; Receipt: TReceipt);
 var
   i: Integer;
   Node: IXMLNode;
+  FiscalItem: TFiscalItem;
 begin
   for i := 0 to ANode.ChildNodes.Count - 1 do
   begin
@@ -708,38 +717,39 @@ begin
 
     if Node.NodeName = 'FiscalString' then
     begin
-      LoadFiscalString(Node);
+      FiscalItem := TFiscalItem.Create(Receipt.Items);
+      Load(Node, FiscalItem);
+      // !!!
+      if Receipt.Params.ItemNameLength > 0 then
+        FiscalItem.FName := Copy(FiscalItem.FName, 1, Receipt.Params.ItemNameLength);
+
       Continue;
     end;
     if Node.NodeName = 'TextString' then
     begin
-      LoadNonFiscalString(Node);
+      Load(Node, TTextItem.Create(Receipt.Items));
       Continue;
     end;
     if Node.NodeName = 'Barcode' then
     begin
-      LoadBarcode(Node);
+      Load(Node, TBarcodeItem.Create(Receipt.Items));
       Continue;
     end;
   end;
 end;
 
-procedure TReceiptXmlReader.LoadBarcode(ANode: IXMLNode);
-var
-  Item: TBarcodeItem;
+class procedure TDocXmlReader.Load(ANode: IXMLNode; Item: TBarcodeItem);
 begin
-  Item := TBarcodeItem.Create(Receipt.Items);
   Item.FBarcodeType := LoadString(ANode, 'Type', True);
   if HasAttribute(ANode, 'Value') then
     Item.FBarcode := LoadString(ANode, 'Value', True);
   if HasAttribute(ANode, 'ValueBase64') then
     Item.FBarcode := DecodeBase64(LoadString(ANode, 'ValueBase64', True));
-  Logger.Debug('FBARCODE ' + Item.FBarcode);
 end;
 
-procedure TReceiptXmlReader.LoadNonFiscalString(ANode: IXMLNode);
+class procedure TDocXmlReader.Load(ANode: IXMLNode; Item: TTextItem);
 begin
-  TTextItem.Create(Receipt.Items).FText := LoadString(ANode, 'Text', True);
+  Item.FText := LoadString(ANode, 'Text', True);
 end;
 
 function TaxToInt(const ATax: WideString): Integer;
@@ -760,17 +770,12 @@ begin
     raise Exception.Create('Invalid Tax Value: ' + ATax);
 end;
 
-procedure TReceiptXmlReader.LoadFiscalString(ANode: IXMLNode);
+class procedure TDocXmlReader.Load(ANode: IXMLNode; Item: TFiscalItem);
 var
-  Item: TFiscalItem;
   T: WideString;
   Node: IXMLNode;
 begin
-  Item := TFiscalItem.Create(Receipt.Items);
   Item.FName := LoadString(ANode, 'Name', True);
-  if Receipt.ItemNameLength > 0 then
-    Item.FName := Copy(Item.FName, 1, Receipt.ItemNameLength);
-
   Item.FQuantity := LoadDouble(ANode, 'Quantity', True);
   Item.FPriceWithDiscount := LoadDouble(ANode, 'PriceWithDiscount', True);
   Item.FSumWithDiscount := LoadDouble(ANode, 'AmountWithDiscount', True);
@@ -807,7 +812,6 @@ begin
     Item.FMarking := DecodeBase64(LoadString(Node, 'MarkingCode', False));
     Item.FMarkingRaw := LoadString(Node, 'MarkingCode', False);
   end;
-  Logger.Debug('LoadFiscalString.2');
   // Данные агента
   Item.FAgentData.Enabled := False;
   Node := ANode.ChildNodes.FindNode('AgentData');
@@ -834,7 +838,6 @@ begin
         Item.FAgentData.Enabled := False;
     end;
   end;
-  Logger.Debug('LoadFiscalString.3');
   // Данные поставщика
   Item.FVendorData.Enabled := False;
   Node := ANode.ChildNodes.FindNode('VendorData');
@@ -850,10 +853,9 @@ begin
         Item.FVendorData.Enabled := False;
     end;
   end;
-  Logger.Debug('LoadFiscalString.4');
 end;
 
-class procedure TReceiptXmlReader.Load(ANode: IXMLNode; var R: TCorrectionData);
+class procedure TDocXmlReader.Load(ANode: IXMLNode; var R: TCorrectionData);
 var
   Node: IXMLNode;
 begin
@@ -869,7 +871,7 @@ begin
   R.Number := LoadString(Node, 'Number', False);
 end;
 
-class procedure TReceiptXmlReader.Load(ANode: IXMLNode; var R: TAgentData);
+class procedure TDocXmlReader.Load(ANode: IXMLNode; var R: TAgentData);
 var
   Node: IXMLNode;
 begin
@@ -896,7 +898,7 @@ begin
     R.Enabled := False;
 end;
 
-class procedure TReceiptXmlReader.Load(ANode: IXMLNode; var R: TVendorData);
+class procedure TDocXmlReader.Load(ANode: IXMLNode; var R: TVendorData);
 var
   Node: IXMLNode;
 begin
@@ -913,7 +915,7 @@ begin
     R.Enabled := False;
 end;
 
-class procedure TReceiptXmlReader.Load(ANode: IXMLNode; var R: TUserAttribute);
+class procedure TDocXmlReader.Load(ANode: IXMLNode; var R: TUserAttribute);
 var
   Node: IXMLNode;
 begin
@@ -929,7 +931,7 @@ begin
     R.Enabled := False;
 end;
 
-class procedure TReceiptXmlReader.Load(ANode: IXMLNode; var R: TCustomerDetail);
+class procedure TDocXmlReader.Load(ANode: IXMLNode; var R: TCustomerDetail);
 var
   Node: IXMLNode;
 begin
@@ -958,7 +960,7 @@ begin
   R.Address := LoadString(Node, 'Address', False);
 end;
 
-class procedure TReceiptXmlReader.Load(ANode: IXMLNode; var R: TOperationalAttribute);
+class procedure TDocXmlReader.Load(ANode: IXMLNode; var R: TOperationalAttribute);
 var
   Node: IXMLNode;
 begin
@@ -977,7 +979,7 @@ begin
   R.OperationData := LoadString(Node, 'OperationData', False);
 end;
 
-class procedure TReceiptXmlReader.Load(ANode: IXMLNode; var R: TIndustryAttribute);
+class procedure TDocXmlReader.Load(ANode: IXMLNode; var R: TIndustryAttribute);
 var
   Node: IXMLNode;
 begin
@@ -1002,7 +1004,7 @@ begin
     R.Enabled := False;
 end;
 
-class procedure TReceiptXmlReader.Load(ANode: IXMLNode; var R: TFractionalQuantity);
+class procedure TDocXmlReader.Load(ANode: IXMLNode; var R: TFractionalQuantity);
 var
   Node: IXMLNode;
 begin
@@ -1016,7 +1018,7 @@ begin
   R.Denominator := LoadInteger(Node, 'Denominator', False);
 end;
 
-class procedure TReceiptXmlReader.Load(ANode: IXMLNode; var R: TGoodCodeData);
+class procedure TDocXmlReader.Load(ANode: IXMLNode; var R: TGoodCodeData);
 var
   Node: IXMLNode;
 begin
@@ -1045,7 +1047,7 @@ begin
   R.GTIN := DecodeBase64(LoadString(Node, 'GTIN', False));
 end;
 
-class procedure TReceiptXmlReader.Load(const XmlText: WideString; var R: TRequestKM);
+class procedure TDocXmlReader.Load(const XmlText: WideString; var R: TRequestKM);
 var
   Node: IXMLNode;
   Xml: IXMLDocument;
@@ -1067,15 +1069,14 @@ begin
     R.PlannedStatus := LoadInteger(Node, 'PlannedStatus', True);
     R.HasQuantity := HasAttribute(Node, 'Quantity');
     R.Quantity := LoadDouble(Node, 'Quantity', False);
-    R.HasQuantity := HasAttribute(Node, 'MeasureOfQuantity');
     R.HasMeasureOfQuantity := HasAttribute(Node, 'MeasureOfQuantity');
     R.MeasureOfQuantity := LoadInteger(Node, 'MeasureOfQuantity', False);
     R.NotSendToServer := LoadBool(Node, 'NotSendToServer', False);
-    R.FractionalQuantity := False;
+    R.HasFractionalQuantity := False;
     Node := Node.ChildNodes.FindNode('FractionalQuantity');
     if Node <> nil then
     begin
-      R.FractionalQuantity := True;
+      R.HasFractionalQuantity := True;
       R.Numerator := LoadInteger(Node, 'Numerator', False);
       R.Denominator := LoadInteger(Node, 'Denominator', False);
     end;
@@ -1084,7 +1085,7 @@ begin
   end;
 end;
 
-class procedure TReceiptXmlReader.Load(ANode: IXMLNode; var R: TPayments);
+class procedure TDocXmlReader.Load(ANode: IXMLNode; var R: TPayments);
 begin
   R.Cash := LoadDecimal(ANode, 'Cash', False);
   R.ElectronicPayment := LoadDecimal(ANode, 'ElectronicPayment', True);
@@ -1193,93 +1194,6 @@ end;
 function TDocItems.GetItem(Index: Integer): TDocItem;
 begin
   Result := inherited Items[Index] as TDocItem;
-end;
-
-{ TDocumentXmlReader }
-
-constructor TDocumentXmlReader.Create(ADocument: TTextDocument;
-  ALogger: ILogFile);
-begin
-  inherited Create;
-  FDocument := ADocument;
-  FLogger := ALogger;
-end;
-
-procedure TDocumentXmlReader.ReadFromXML(const AXML: WideString);
-var
-  i: Integer;
-  Doc: IXMLNode;
-  Node: IXMLNode;
-  Xml: IXMLDocument;
-begin
-  Logger.Debug('TReceipt.ReadFromXML');
-  Xml := TXMLDocument.Create(nil);
-  try
-    Xml.Active := True;
-    Xml.Version := '1.0';
-    Xml.Encoding := 'UTF-8';
-    Xml.Options := Xml.Options + [doNodeAutoIndent];
-    Xml.LoadFromXML(AXML);
-    Doc := Xml.ChildNodes.FindNode('Document');
-    if Doc = nil then
-      Exit;
-
-    for i := 0 to Doc.ChildNodes.Count - 1 do
-    begin
-      Node := Doc.ChildNodes.Nodes[i];
-      if Node = nil then
-        Continue;
-
-      if Node.NodeName = 'Positions' then
-      begin
-        LoadItems(Node);
-        Continue;
-      end;
-    end;
-  finally
-    Xml := nil;
-  end;
-end;
-
-procedure TDocumentXmlReader.LoadItems(ANode: IXMLNode);
-var
-  i: Integer;
-  Node: IXMLNode;
-begin
-  for i := 0 to ANode.ChildNodes.Count - 1 do
-  begin
-    Node := ANode.ChildNodes.Nodes[i];
-    if Node = nil then Continue;
-
-    if Node.NodeName = 'TextString' then
-    begin
-      LoadNonFiscalString(Node);
-      Continue;
-    end;
-    if Node.NodeName = 'Barcode' then
-    begin
-      LoadBarcode(Node);
-      Continue;
-    end;
-  end;
-end;
-
-procedure TDocumentXmlReader.LoadBarcode(ANode: IXMLNode);
-var
-  Item: TBarcodeItem;
-begin
-  Item := TBarcodeItem.Create(Document.Items);
-  Item.FBarcodeType := LoadString(ANode, 'Type', True);
-  if HasAttribute(ANode, 'Value') then
-    Item.FBarcode := LoadString(ANode, 'Value', True);
-  if HasAttribute(ANode, 'ValueBase64') then
-    Item.FBarcode := DecodeBase64(LoadString(ANode, 'ValueBase64', True));
-  Logger.Debug('FBARCODE ' + Item.FBarcode);
-end;
-
-procedure TDocumentXmlReader.LoadNonFiscalString(ANode: IXMLNode);
-begin
-  TTextItem.Create(Document.Items).FText := LoadString(ANode, 'Text', True);
 end;
 
 end.

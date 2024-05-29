@@ -1,0 +1,30 @@
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION 5,17,0,1001
+PRODUCTVERSION 5,17,0,1001 
+FILEFLAGSMASK 0x3fL
+FILEFLAGS 0x0L
+FILEOS 0x4L
+FILETYPE 0x1L
+FILESUBTYPE 0x0L
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "041904E3"
+    BEGIN
+      VALUE "CompanyName", "SHTRIH-M\0"
+      VALUE "FileDescription", "Driver KKT\0"
+      VALUE "FileVersion", "5.17.0.1001\0"
+      VALUE "InternalName", "Driver KKT\0"
+      VALUE "LegalCopyright", "Copyright \251 2010, SHTRIH-M\0"
+      VALUE "OriginalFilename", "DrvFR.dll\0"
+      VALUE "ProductName", "Driver KKT\0"
+      VALUE "ProductVersion","5.17\0"
+      VALUE "Comments", "http://www.shtrih-m.ru\0"
+    END
+  END
+
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 1049,1251
+  END
+END

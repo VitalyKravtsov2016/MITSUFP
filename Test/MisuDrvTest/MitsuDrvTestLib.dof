@@ -138,14 +138,8 @@ Comments=
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlUnitOutputDirectory]
-Count=3
+Count=1
 Item0=Dcu
-Item1=..\dcu
-Item2=../DCU
 [HistoryLists\hlOutputDirectorry]
-Count=5
-Item0=..\bin
-Item1=..\
-Item2=../../../Bin
-Item3=..\..\Bin
-Item4=Bin
+Count=1
+Item0=Bin
