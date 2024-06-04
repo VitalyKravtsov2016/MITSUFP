@@ -45,7 +45,8 @@ begin
   Result := 0;
   for i := 0 to 7 do
   begin
-    if TestBit(Value, i) then SetBit(Result, 7-i);
+    if TestBit(Value, i) then
+      SetBit(Result, 7 - i);
   end;
 end;
 
@@ -60,16 +61,16 @@ end;
 
 { TBits }
 
-procedure TBits.add(Value: Int64; Count: Integer);
+procedure TBits.Add(Value: Int64; Count: Integer);
 var
   i: Integer;
   Index: Integer;
 begin
   Index := SizeInBits;
   SetLength(FBits, SizeInBits + Count);
-  for i := 0 to Count-1 do
+  for i := 0 to Count - 1 do
   begin
-    FBits[Index + i] := (Value shr (count-1-i)) and 1;
+    FBits[Index + i] := (Value shr (Count - 1 - i)) and 1;
   end;
 end;
 
@@ -87,7 +88,7 @@ begin
   while Index < Length(FBits) do
   begin
     Bit := Index mod 8;
-    B := B + (FBits[Index] shl (7-Bit));
+    B := B + (FBits[Index] shl (7 - Bit));
     Inc(Count);
     if Count = 8 then
     begin
@@ -99,7 +100,7 @@ begin
   end;
   if Count <> 0 then
   begin
-    FBytes[SizeInBytes-1] := B;
+    FBytes[SizeInBytes - 1] := B;
   end;
 end;
 

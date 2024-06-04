@@ -42,20 +42,20 @@ end;
 function TParamList1C.ToString: WideString;
 var
   Node: IXMLNode;
-  Xml: IXMLDocument;
+  XML: IXMLDocument;
 begin
   Result := '';
-  Xml := TXMLDocument.Create(nil);
+  XML := TXMLDocument.Create(nil);
   try
-    Xml.Active := True;
-    Xml.Version := '1.0';
-    Xml.Encoding := 'UTF-8';
-    Xml.Options := Xml.Options + [doNodeAutoIndent];
-    Node := Xml.AddChild('Settings');
+    XML.Active := True;
+    XML.Version := '1.0';
+    XML.Encoding := 'UTF-8';
+    XML.Options := XML.Options + [doNodeAutoIndent];
+    Node := XML.AddChild('Settings');
     SaveToXML(Node);
-    Xml.SaveToXML(Result);
+    XML.SaveToXML(Result);
   finally
-    Xml := nil;
+    XML := nil;
   end;
 end;
 

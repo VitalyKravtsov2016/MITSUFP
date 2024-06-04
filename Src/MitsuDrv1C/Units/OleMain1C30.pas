@@ -22,53 +22,73 @@ type
     property Driver: TMitsuDrv1C read GetDriver;
   protected
     function GetInterfaceRevision: Integer; safecall;
-    function GetDescription(out DriverDescription: WideString): WordBool; safecall;
+    function GetDescription(out DriverDescription: WideString)
+      : WordBool; safecall;
     function GetLastError(out ErrorDescription: WideString): Integer; safecall;
     function GetParameters(out TableParameters: WideString): WordBool; safecall;
-    function SetParameter(const Name: WideString; Value: OleVariant): WordBool; safecall;
+    function SetParameter(const Name: WideString; Value: OleVariant)
+      : WordBool; safecall;
     function Open(out DeviceID: WideString): WordBool; safecall;
     function Close(const DeviceID: WideString): WordBool; safecall;
-    function DeviceTest(out Description: WideString; out DemoModeIsActivated: WideString): WordBool; safecall;
-    function GetAdditionalActions(out TableActions: WideString): WordBool; safecall;
-    function DoAdditionalAction(const ActionName: WideString): WordBool; safecall;
-    function GetDataKKT(const DeviceID: WideString; out TableParametersKKT: WideString): WordBool; safecall;
+    function DeviceTest(out Description: WideString;
+      out DemoModeIsActivated: WideString): WordBool; safecall;
+    function GetAdditionalActions(out TableActions: WideString)
+      : WordBool; safecall;
+    function DoAdditionalAction(const ActionName: WideString)
+      : WordBool; safecall;
+    function GetDataKKT(const DeviceID: WideString;
+      out TableParametersKKT: WideString): WordBool; safecall;
     function OperationFN(const DeviceID: WideString; OperationType: Integer;
-                         const ParametersFiscal: WideString): WordBool; safecall;
-    function OpenShift(const DeviceID: WideString; const InputParameters: WideString;
-                       out OutputParameters: WideString): WordBool; safecall;
-    function CloseShift(const DeviceID: WideString; const InputParameters: WideString;
-                        out OutputParameters: WideString): WordBool; safecall;
+      const ParametersFiscal: WideString): WordBool; safecall;
+    function OpenShift(const DeviceID: WideString;
+      const InputParameters: WideString; out OutputParameters: WideString)
+      : WordBool; safecall;
+    function CloseShift(const DeviceID: WideString;
+      const InputParameters: WideString; out OutputParameters: WideString)
+      : WordBool; safecall;
     function ProcessCheck(const DeviceID: WideString; Electronically: WordBool;
-                          const CheckPackage: WideString; out DocumentOutputParameters: WideString): WordBool; safecall;
-    function ProcessCorrectionCheck(const DeviceID: WideString; const CheckPackage: WideString;
-                                    out DocumentOutputParameters: WideString): WordBool; safecall;
-    function PrintTextDocument(const DeviceID: WideString; const DocumentPackage: WideString): WordBool; safecall;
-    function CashInOutcome(const DeviceID: WideString; const InputParameters: WideString;
-                           Amount: Double): WordBool; safecall;
-    function PrintXReport(const DeviceID: WideString; const InputParameters: WideString): WordBool; safecall;
-    function GetCurrentStatus(const DeviceID: WideString; const InputParameters: WideString;
-                              out OutputParameters: WideString): WordBool; safecall;
+      const CheckPackage: WideString; out DocumentOutputParameters: WideString)
+      : WordBool; safecall;
+    function ProcessCorrectionCheck(const DeviceID: WideString;
+      const CheckPackage: WideString; out DocumentOutputParameters: WideString)
+      : WordBool; safecall;
+    function PrintTextDocument(const DeviceID: WideString;
+      const DocumentPackage: WideString): WordBool; safecall;
+    function CashInOutcome(const DeviceID: WideString;
+      const InputParameters: WideString; Amount: Double): WordBool; safecall;
+    function PrintXReport(const DeviceID: WideString;
+      const InputParameters: WideString): WordBool; safecall;
+    function GetCurrentStatus(const DeviceID: WideString;
+      const InputParameters: WideString; out OutputParameters: WideString)
+      : WordBool; safecall;
     function ReportCurrentStatusOfSettlements(const DeviceID: WideString;
-                                              const InputParameters: WideString;
-                                              out OutputParameters: WideString): WordBool; safecall;
+      const InputParameters: WideString; out OutputParameters: WideString)
+      : WordBool; safecall;
     function OpenCashDrawer(const DeviceID: WideString): WordBool; safecall;
-    function GetLineLength(const DeviceID: WideString; out LineLength: Integer): WordBool; safecall;
-    function PrintCheckCopy(const DeviceID: WideString; const CheckNumber: WideString): WordBool; safecall;
-    function CloseSessionRegistrationKM(const DeviceID: WideString): WordBool; safecall;
+    function GetLineLength(const DeviceID: WideString; out LineLength: Integer)
+      : WordBool; safecall;
+    function PrintCheckCopy(const DeviceID: WideString;
+      const CheckNumber: WideString): WordBool; safecall;
+    function CloseSessionRegistrationKM(const DeviceID: WideString)
+      : WordBool; safecall;
 
-    function ConfirmKM(const DeviceID, RequestGUID: WideString; ConfirmationType: Integer): WordBool;
-          safecall;
+    function ConfirmKM(const DeviceID, RequestGUID: WideString;
+      ConfirmationType: Integer): WordBool; safecall;
     function Get_sm_FormatVersion: Integer; safecall;
-    function GetProcessingKMResult(const DeviceID: WideString; out ProcessingKMResult: WideString;
-          out RequestStatus: Integer): WordBool; safecall;
+    function GetProcessingKMResult(const DeviceID: WideString;
+      out ProcessingKMResult: WideString; out RequestStatus: Integer)
+      : WordBool; safecall;
 
-    function OpenSessionRegistrationKM(const DeviceID: WideString): WordBool; safecall;
+    function OpenSessionRegistrationKM(const DeviceID: WideString)
+      : WordBool; safecall;
 
-    function RequestKM(const DeviceID, RequestKM: WideString; out RequestKMResult: WideString): WordBool;
-          safecall;
+    function RequestKM(const DeviceID, RequestKM: WideString;
+      out RequestKMResult: WideString): WordBool; safecall;
     procedure Set_sm_FormatVersion(Value: Integer); safecall;
-    function GetLocalizationPattern(out LocalizationPattern: WideString): WordBool; safecall;
-    function SetLocalization(const LanguageCode, LocalizationPattern: WideString): WordBool; safecall;
+    function GetLocalizationPattern(out LocalizationPattern: WideString)
+      : WordBool; safecall;
+    function SetLocalization(const LanguageCode, LocalizationPattern
+      : WideString): WordBool; safecall;
   public
     procedure SetLang(LangID: Integer); safecall;
     destructor Destroy; override;
@@ -76,9 +96,8 @@ type
 
 implementation
 
-
-function TDrvFR1C30.CashInOutcome(const DeviceID,
-  InputParameters: WideString; Amount: Double): WordBool;
+function TDrvFR1C30.CashInOutcome(const DeviceID, InputParameters: WideString;
+  Amount: Double): WordBool;
 begin
   Result := Driver.CashInOutcome(DeviceID, InputParameters, Amount);
 end;
@@ -101,29 +120,28 @@ begin
   inherited;
 end;
 
-
 function TDrvFR1C30.DeviceTest(out Description: WideString;
   out DemoModeIsActivated: WideString): WordBool;
 begin
   Result := Driver.DeviceTest(Description, DemoModeIsActivated);
 end;
 
-function TDrvFR1C30.DoAdditionalAction(
-  const ActionName: WideString): WordBool;
+function TDrvFR1C30.DoAdditionalAction(const ActionName: WideString): WordBool;
 begin
   Result := Driver.DoAdditionalAction(ActionName);
 end;
 
-function TDrvFR1C30.GetAdditionalActions(
-  out TableActions: WideString): WordBool;
+function TDrvFR1C30.GetAdditionalActions(out TableActions: WideString)
+  : WordBool;
 begin
   Result := Driver.GetAdditionalActions(TableActions);
 end;
 
-function TDrvFR1C30.GetCurrentStatus(const DeviceID,
-  InputParameters: WideString; out OutputParameters: WideString): WordBool;
+function TDrvFR1C30.GetCurrentStatus(const DeviceID, InputParameters
+  : WideString; out OutputParameters: WideString): WordBool;
 begin
-  Result := Driver.GetCurrentStatus(DeviceID, InputParameters, OutputParameters);
+  Result := Driver.GetCurrentStatus(DeviceID, InputParameters,
+    OutputParameters);
 end;
 
 function TDrvFR1C30.GetDataKKT(const DeviceID: WideString;
@@ -132,8 +150,7 @@ begin
   Result := Driver.GetDataKKT(DeviceID, TableParametersKKT);
 end;
 
-function TDrvFR1C30.GetDescription(
-  out DriverDescription: WideString): WordBool;
+function TDrvFR1C30.GetDescription(out DriverDescription: WideString): WordBool;
 begin
   Result := Driver.GetDescription(DriverDescription);
 end;
@@ -150,8 +167,7 @@ begin
   Result := Driver.GetInterfaceRevision;
 end;
 
-function TDrvFR1C30.GetLastError(
-  out ErrorDescription: WideString): Integer;
+function TDrvFR1C30.GetLastError(out ErrorDescription: WideString): Integer;
 begin
   Logger.Debug('GetLastError');
   Result := Driver.GetLastError(ErrorDescription);
@@ -164,7 +180,8 @@ function TDrvFR1C30.GetLineLength(const DeviceID: WideString;
 begin
   Logger.Debug(Format('GetLineLength(DeviceID: %s)', [DeviceID]));
   Result := Driver.GetLineLength(DeviceID, LineLength);
-  Logger.Debug(Format('GetLineLength(LineLength: %d): %s', [LineLength, BoolToStr(Result)]));
+  Logger.Debug(Format('GetLineLength(LineLength: %d): %s',
+    [LineLength, BoolToStr(Result)]));
 end;
 
 function TDrvFR1C30.GetLogFile: TLogFile;
@@ -174,8 +191,7 @@ begin
   Result := FLogger;
 end;
 
-function TDrvFR1C30.GetParameters(
-  out TableParameters: WideString): WordBool;
+function TDrvFR1C30.GetParameters(out TableParameters: WideString): WordBool;
 begin
   Result := Driver.GetParameters(TableParameters);
 end;
@@ -202,20 +218,20 @@ begin
   Result := Driver.OperationFN(DeviceID, OperationType, ParametersFiscal);
 end;
 
-function TDrvFR1C30.PrintCheckCopy(const DeviceID,
-  CheckNumber: WideString): WordBool;
+function TDrvFR1C30.PrintCheckCopy(const DeviceID, CheckNumber: WideString)
+  : WordBool;
 begin
   Result := Driver.PrintCheckCopy(DeviceID, CheckNumber);
 end;
 
-function TDrvFR1C30.PrintTextDocument(const DeviceID,
-  DocumentPackage: WideString): WordBool;
+function TDrvFR1C30.PrintTextDocument(const DeviceID, DocumentPackage
+  : WideString): WordBool;
 begin
   Result := Driver.PrintTextDocument(DeviceID, DocumentPackage);
 end;
 
-function TDrvFR1C30.PrintXReport(const DeviceID,
-  InputParameters: WideString): WordBool;
+function TDrvFR1C30.PrintXReport(const DeviceID, InputParameters: WideString)
+  : WordBool;
 begin
   Result := Driver.PrintXReport(DeviceID, InputParameters);
 end;
@@ -224,20 +240,22 @@ function TDrvFR1C30.ProcessCheck(const DeviceID: WideString;
   Electronically: WordBool; const CheckPackage: WideString;
   out DocumentOutputParameters: WideString): WordBool;
 begin
-  Result := Driver.ProcessCheck(DeviceID, Electronically, CheckPackage, DocumentOutputParameters);
+  Result := Driver.ProcessCheck(DeviceID, Electronically, CheckPackage,
+    DocumentOutputParameters);
 end;
 
 function TDrvFR1C30.ProcessCorrectionCheck(const DeviceID,
-  CheckPackage: WideString;
-  out DocumentOutputParameters: WideString): WordBool;
+  CheckPackage: WideString; out DocumentOutputParameters: WideString): WordBool;
 begin
-  Result := Driver.ProcessCorrectionCheck(DeviceID, CheckPackage, DocumentOutputParameters);
+  Result := Driver.ProcessCorrectionCheck(DeviceID, CheckPackage,
+    DocumentOutputParameters);
 end;
 
 function TDrvFR1C30.ReportCurrentStatusOfSettlements(const DeviceID,
   InputParameters: WideString; out OutputParameters: WideString): WordBool;
 begin
-  Result := Driver.ReportCurrentStatusOfSettlements(DeviceID, InputParameters, OutputParameters);
+  Result := Driver.ReportCurrentStatusOfSettlements(DeviceID, InputParameters,
+    OutputParameters);
 end;
 
 procedure TDrvFR1C30.SetLang(LangID: Integer);
@@ -248,19 +266,20 @@ begin
     SetCustomTranslationLanguage('EN');
 end;
 
-
-function TDrvFR1C30.SetParameter(const Name: WideString;
-  Value: OleVariant): WordBool;
+function TDrvFR1C30.SetParameter(const Name: WideString; Value: OleVariant)
+  : WordBool;
 begin
   Result := Driver.SetParameter(Name, Value);
 end;
 
-function TDrvFR1C30.CloseSessionRegistrationKM(const DeviceID: WideString): WordBool;
+function TDrvFR1C30.CloseSessionRegistrationKM(const DeviceID: WideString)
+  : WordBool;
 begin
   Result := Driver.CloseSessionRegistrationKM(DeviceID);
 end;
 
-function TDrvFR1C30.ConfirmKM(const DeviceID, RequestGUID: WideString; ConfirmationType: Integer): WordBool;
+function TDrvFR1C30.ConfirmKM(const DeviceID, RequestGUID: WideString;
+  ConfirmationType: Integer): WordBool;
 begin
   Result := Driver.ConfirmKM(DeviceID, RequestGUID, ConfirmationType);
 end;
@@ -268,45 +287,52 @@ end;
 function TDrvFR1C30.Get_sm_FormatVersion: Integer;
 begin
   Result := 0;
-  //Result := Driver.FormatVersion; !!!
+  // Result := Driver.FormatVersion; !!!
 end;
 
-function TDrvFR1C30.GetProcessingKMResult(const DeviceID: WideString; out ProcessingKMResult: WideString;
-          out RequestStatus: Integer): WordBool;
+function TDrvFR1C30.GetProcessingKMResult(const DeviceID: WideString;
+  out ProcessingKMResult: WideString; out RequestStatus: Integer): WordBool;
 begin
-  Result := Driver.GetProcessingKMResult(DeviceID, ProcessingKMResult, RequestStatus);
+  Result := Driver.GetProcessingKMResult(DeviceID, ProcessingKMResult,
+    RequestStatus);
 end;
 
-function TDrvFR1C30.OpenSessionRegistrationKM(const DeviceID: WideString): WordBool;
+function TDrvFR1C30.OpenSessionRegistrationKM(const DeviceID: WideString)
+  : WordBool;
 begin
   Result := Driver.OpenSessionRegistrationKM(DeviceID);
 end;
 
-function TDrvFR1C30.RequestKM(const DeviceID, RequestKM: WideString; out RequestKMResult: WideString): WordBool;
+function TDrvFR1C30.RequestKM(const DeviceID, RequestKM: WideString;
+  out RequestKMResult: WideString): WordBool;
 begin
   Result := Driver.RequestKM(DeviceID, RequestKM, RequestKMResult);
 end;
 
 procedure TDrvFR1C30.Set_sm_FormatVersion(Value: Integer);
 begin
-  //Driver.FormatVersion := Value; !!!
+  // Driver.FormatVersion := Value; !!!
 end;
 
-function TDrvFR1C30.GetLocalizationPattern(out LocalizationPattern: WideString): WordBool;
+function TDrvFR1C30.GetLocalizationPattern(out LocalizationPattern: WideString)
+  : WordBool;
 begin
   Result := Driver.GetLocalizationPattern(LocalizationPattern);
 end;
 
-function TDrvFR1C30.SetLocalization(const LanguageCode, LocalizationPattern: WideString): WordBool;
+function TDrvFR1C30.SetLocalization(const LanguageCode, LocalizationPattern
+  : WideString): WordBool;
 begin
   Result := Driver.SetLocalization(LanguageCode, LocalizationPattern);
 end;
 
 initialization
+
 {$IFNDEF WIN64}
   SetTranslationLanguage;
 {$ENDIF}
-  ComServer.SetServerName('AddIn');
-  TActiveXControlFactory.Create(ComServer, TDrvFR1C30, TActiveXView,
-    Class_DrvFR1C30, 1, '', OLEMISC_INVISIBLEATRUNTIME, tmApartment);
+ComServer.SetServerName('AddIn');
+TActiveXControlFactory.Create(ComServer, TDrvFR1C30, TActiveXView,
+  Class_DrvFR1C30, 1, '', OLEMISC_INVISIBLEATRUNTIME, tmApartment);
+
 end.

@@ -11,69 +11,91 @@ uses
   XmlUtils, StringUtils, GS1Util;
 
 const
-  ///////////////////////////////////////////////////////////////////////////////
+  /// ////////////////////////////////////////////////////////////////////////////
   // Day status constants
 
-  D1C_DS_CLOSED   = 1; // 1 - Закрыта
-  D1C_DS_OPENED   = 2; // 2 - Открыта
-  D1C_DS_EXPIRED  = 3; // 3 - Истекла
+  D1C_DS_CLOSED = 1; // 1 - Закрыта
+  D1C_DS_OPENED = 2; // 2 - Открыта
+  D1C_DS_EXPIRED = 3; // 3 - Истекла
 
-  ///////////////////////////////////////////////////////////////////////////////
+  /// ////////////////////////////////////////////////////////////////////////////
   // OperationType constants for method OperationFN
 
-  D1C_FNOT_OPEN   = 1; // Регистрация
+  D1C_FNOT_OPEN = 1; // Регистрация
   D1C_FNOT_CHANGE = 2; // Изменение параметров регистрации
-  D1C_FNOT_CLOSE  = 3; // Закрытие ФН
+  D1C_FNOT_CLOSE = 3; // Закрытие ФН
 
 type
   IDrvFR1C30 = interface(IDispatch)
     ['{E390D34B-02C3-46C8-803C-DB8131AC5331}']
     function GetInterfaceRevision: Integer; safecall;
-    function GetDescription(out DriverDescription: WideString): WordBool; safecall;
+    function GetDescription(out DriverDescription: WideString)
+      : WordBool; safecall;
     function GetLastError(out ErrorDescription: WideString): Integer; safecall;
     function GetParameters(out TableParameters: WideString): WordBool; safecall;
-    function SetParameter(const Name: WideString; Value: OleVariant): WordBool; safecall;
+    function SetParameter(const Name: WideString; Value: OleVariant)
+      : WordBool; safecall;
     function Open(out DeviceID: WideString): WordBool; safecall;
     function Close(const DeviceID: WideString): WordBool; safecall;
-    function DeviceTest(out Description: WideString; out DemoModeIsActivated: WideString): WordBool; safecall;
-    function GetAdditionalActions(out TableActions: WideString): WordBool; safecall;
-    function DoAdditionalAction(const ActionName: WideString): WordBool; safecall;
-    function GetDataKKT(const DeviceID: WideString; out TableParametersKKT: WideString): WordBool; safecall;
+    function DeviceTest(out Description: WideString;
+      out DemoModeIsActivated: WideString): WordBool; safecall;
+    function GetAdditionalActions(out TableActions: WideString)
+      : WordBool; safecall;
+    function DoAdditionalAction(const ActionName: WideString)
+      : WordBool; safecall;
+    function GetDataKKT(const DeviceID: WideString;
+      out TableParametersKKT: WideString): WordBool; safecall;
     function OperationFN(const DeviceID: WideString; OperationType: Integer;
-                         const ParametersFiscal: WideString): WordBool; safecall;
-    function OpenShift(const DeviceID: WideString; const InputParameters: WideString;
-                       out OutputParameters: WideString): WordBool; safecall;
-    function CloseShift(const DeviceID: WideString; const InputParameters: WideString;
-                        out OutputParameters: WideString): WordBool; safecall;
+      const ParametersFiscal: WideString): WordBool; safecall;
+    function OpenShift(const DeviceID: WideString;
+      const InputParameters: WideString; out OutputParameters: WideString)
+      : WordBool; safecall;
+    function CloseShift(const DeviceID: WideString;
+      const InputParameters: WideString; out OutputParameters: WideString)
+      : WordBool; safecall;
     function ProcessCheck(const DeviceID: WideString; Electronically: WordBool;
-                          const CheckPackage: WideString; out DocumentOutputParameters: WideString): WordBool; safecall;
-    function ProcessCorrectionCheck(const DeviceID: WideString; const CheckPackage: WideString;
-                                    out DocumentOutputParameters: WideString): WordBool; safecall;
-    function CashInOutcome(const DeviceID: WideString; const InputParameters: WideString;
-                           Amount: Double): WordBool; safecall;
-    function PrintXReport(const DeviceID: WideString; const InputParameters: WideString): WordBool; safecall;
-    function GetCurrentStatus(const DeviceID: WideString; const InputParameters: WideString;
-                              out OutputParameters: WideString): WordBool; safecall;
+      const CheckPackage: WideString; out DocumentOutputParameters: WideString)
+      : WordBool; safecall;
+    function ProcessCorrectionCheck(const DeviceID: WideString;
+      const CheckPackage: WideString; out DocumentOutputParameters: WideString)
+      : WordBool; safecall;
+    function CashInOutcome(const DeviceID: WideString;
+      const InputParameters: WideString; Amount: Double): WordBool; safecall;
+    function PrintXReport(const DeviceID: WideString;
+      const InputParameters: WideString): WordBool; safecall;
+    function GetCurrentStatus(const DeviceID: WideString;
+      const InputParameters: WideString; out OutputParameters: WideString)
+      : WordBool; safecall;
     function ReportCurrentStatusOfSettlements(const DeviceID: WideString;
-                                              const InputParameters: WideString;
-                                              out OutputParameters: WideString): WordBool; safecall;
+      const InputParameters: WideString; out OutputParameters: WideString)
+      : WordBool; safecall;
     function OpenCashDrawer(const DeviceID: WideString): WordBool; safecall;
-    function GetLineLength(const DeviceID: WideString; out LineLength: Integer): WordBool; safecall;
-    function PrintCheckCopy(const DeviceID: WideString; const CheckNumber: WideString): WordBool; safecall;
-    function PrintTextDocument(const DeviceID: WideString; const DocumentPackage: WideString): WordBool; safecall;
+    function GetLineLength(const DeviceID: WideString; out LineLength: Integer)
+      : WordBool; safecall;
+    function PrintCheckCopy(const DeviceID: WideString;
+      const CheckNumber: WideString): WordBool; safecall;
+    function PrintTextDocument(const DeviceID: WideString;
+      const DocumentPackage: WideString): WordBool; safecall;
     function Get_sm_FormatVersion: Integer; safecall;
     procedure Set_sm_FormatVersion(Value: Integer); safecall;
-    function OpenSessionRegistrationKM(const DeviceID: WideString): WordBool; safecall;
-    function CloseSessionRegistrationKM(const DeviceID: WideString): WordBool; safecall;
+    function OpenSessionRegistrationKM(const DeviceID: WideString)
+      : WordBool; safecall;
+    function CloseSessionRegistrationKM(const DeviceID: WideString)
+      : WordBool; safecall;
     function RequestKM(const DeviceID: WideString; const RequestKM: WideString;
-                       out RequestKMResult: WideString): WordBool; safecall;
-    function GetProcessingKMResult(const DeviceID: WideString; out ProcessingKMResult: WideString;
-                                   out RequestStatus: Integer): WordBool; safecall;
-    function ConfirmKM(const DeviceID: WideString; const RequestGUID: WideString;
-                       ConfirmationType: Integer): WordBool; safecall;
-    function GetLocalizationPattern(out LocalizationPattern: WideString): WordBool; safecall;
-    function SetLocalization(const LanguageCode: WideString; const LocalizationPattern: WideString): WordBool; safecall;
-    property sm_FormatVersion: Integer read Get_sm_FormatVersion write Set_sm_FormatVersion;
+      out RequestKMResult: WideString): WordBool; safecall;
+    function GetProcessingKMResult(const DeviceID: WideString;
+      out ProcessingKMResult: WideString; out RequestStatus: Integer)
+      : WordBool; safecall;
+    function ConfirmKM(const DeviceID: WideString;
+      const RequestGUID: WideString; ConfirmationType: Integer)
+      : WordBool; safecall;
+    function GetLocalizationPattern(out LocalizationPattern: WideString)
+      : WordBool; safecall;
+    function SetLocalization(const LanguageCode: WideString;
+      const LocalizationPattern: WideString): WordBool; safecall;
+    property sm_FormatVersion: Integer read Get_sm_FormatVersion
+      write Set_sm_FormatVersion;
   end;
 
   { TParametersKKT }
@@ -84,16 +106,21 @@ type
     KKTSerialNumber: WideString; // Заводской номер ККТ
     FirmwareVersion: WideString; // Версия прошивки
     Fiscal: Boolean; // Признак регистрации фискального накопителя
-    FFDVersionFN: WideString; // Версия ФФД ФН (одно из следующих значений "1.0","1.1")
-    FFDVersionKKT: WideString; // Версия ФФД ККТ (одно из следующих значений "1.0","1.0.5","1.1")
+    FFDVersionFN: WideString;
+    // Версия ФФД ФН (одно из следующих значений "1.0","1.1")
+    FFDVersionKKT: WideString;
+    // Версия ФФД ККТ (одно из следующих значений "1.0","1.0.5","1.1")
     FNSerialNumber: WideString; // Заводской номер ФН
-    DocumentNumber: WideString; // Номер документа регистрация фискального накопителя
-    DateTime: TDateTime; // Дата и время операции регистрации фискального накопителя
+    DocumentNumber: WideString;
+    // Номер документа регистрация фискального накопителя
+    DateTime: TDateTime;
+    // Дата и время операции регистрации фискального накопителя
     CompanyName: WideString; // Название организации
     CompanyINN: WideString; // ИНН организация
     SaleAddress: WideString; // Адрес проведения расчетов
     SaleLocation: WideString; // Место проведения расчетов
-    TaxSystems: WideString; // Коды системы налогообложения через разделитель ",".
+    TaxSystems: WideString;
+    // Коды системы налогообложения через разделитель ",".
     IsOffline: Boolean; // Признак автономного режима
     IsEncrypted: Boolean; // Признак шифрование данных
     IsService: Boolean; // Признак расчетов за услуги
@@ -107,27 +134,37 @@ type
     AutomaticNumber: WideString; // Номер автомата для автоматического режима
     OFDCompany: WideString; // Название организации ОФД
     OFDCompanyINN: WideString; // ИНН организации ОФД
-    FNSURL: WideString; // Адрес сайта уполномоченного органа (ФНС) в сети «Интернет»
+    FNSURL: WideString;
+    // Адрес сайта уполномоченного органа (ФНС) в сети «Интернет»
     SenderEmail: WideString; // Адрес электронной почты отправителя чека
     // 3.4
-    IsOnline: Boolean;  // Признак ККТ для расчетов в Интернет
-    IsMarking: Boolean; // Признак применения при осуществлении торговли товарами, подлежащими обязательной маркировке средствами идентификации
-    IsPawnshop: Boolean; // Признак применения при осуществлении ломбардами кредитования граждан
-    IsInsurance: Boolean; // Признак применения при осуществлении деятельности по страхованию
+    IsOnline: Boolean; // Признак ККТ для расчетов в Интернет
+    IsMarking: Boolean;
+    // Признак применения при осуществлении торговли товарами, подлежащими обязательной маркировке средствами идентификации
+    IsPawnshop: Boolean;
+    // Признак применения при осуществлении ломбардами кредитования граждан
+    IsInsurance: Boolean;
+    // Признак применения при осуществлении деятельности по страхованию
     // 4.1
-    IsVendingMachine: Boolean; // Признак применения в автоматическом торговом автомате
-    IsCatering: Boolean; // Признак применения при оказании услуг общественного питания
-    IsWholesale: Boolean; // Признак применения о оптовой торговле с организациями и ИП
+    IsVendingMachine: Boolean;
+    // Признак применения в автоматическом торговом автомате
+    IsCatering: Boolean;
+    // Признак применения при оказании услуг общественного питания
+    IsWholesale: Boolean;
+    // Признак применения о оптовой торговле с организациями и ИП
   end;
 
   { TParametersFiscal }
 
   TParametersFiscal = class(TParametersKKT)
   public
-    CashierName: WideString; // ФИО и должность уполномоченного лица для проведения операции
+    CashierName: WideString;
+    // ФИО и должность уполномоченного лица для проведения операции
     CashierINN: WideString; // ИНН уполномоченного лица для проведения операции
-    FFDVersion: WideString; // Версия ФФД на который регистрируется ФН (одно из следующих значений "1.0","1.0.5","1.1", "1.2")
-    RegistrationLabelCodes: WideString; // Коды причин изменения сведений о ККТ через разделитель ".
+    FFDVersion: WideString;
+    // Версия ФФД на который регистрируется ФН (одно из следующих значений "1.0","1.0.5","1.1", "1.2")
+    RegistrationLabelCodes: WideString;
+    // Коды причин изменения сведений о ККТ через разделитель ".
   end;
 
   { TInputParametersRec }
@@ -145,26 +182,35 @@ type
   TOperationCountersRec = record
     CheckCount: Integer; // Количество чеков по операции данного типа
     TotalChecksAmount: Double; // Итоговая сумма чеков по операциям данного типа
-    CorrectionCheckCount: Integer; // Количество чеков коррекции по операции данного типа
-    TotalCorrectionChecksAmount: Double; //	Итоговая сумма чеков коррекции по операциям данного типа
+    CorrectionCheckCount: Integer;
+    // Количество чеков коррекции по операции данного типа
+    TotalCorrectionChecksAmount: Double;
+    // Итоговая сумма чеков коррекции по операциям данного типа
   end;
 
   { TOutputParametersRec }
 
   TOutputParametersRec = record
-    ShiftNumber: Integer; //Номер открытой смены/Номер закрытой смены
+    ShiftNumber: Integer; // Номер открытой смены/Номер закрытой смены
     CheckNumber: Integer; // Номер последнего фискального документа
     ShiftClosingCheckNumber: Integer; // Номер последнего чека за смену
     DateTime: TDateTime; // Дата и время формирования фискального документа
-    ShiftState: Integer; //	Состояние смены 1 - Закрыта, 2 - Открыта, 3 - Истекла
-    CountersOperationType1: TOperationCountersRec; // OperationCounters	Счетчики операций по типу "приход"
-    CountersOperationType2: TOperationCountersRec; // Счетчики операций по типу "возврат прихода"
-    CountersOperationType3: TOperationCountersRec; // Счетчики операций по типу "расход"
-    CountersOperationType4: TOperationCountersRec; // Счетчики операций по типу "возврат расхода"
+    ShiftState: Integer;
+    // Состояние смены 1 - Закрыта, 2 - Открыта, 3 - Истекла
+    CountersOperationType1: TOperationCountersRec;
+    // OperationCounters	Счетчики операций по типу "приход"
+    CountersOperationType2: TOperationCountersRec;
+    // Счетчики операций по типу "возврат прихода"
+    CountersOperationType3: TOperationCountersRec;
+    // Счетчики операций по типу "расход"
+    CountersOperationType4: TOperationCountersRec;
+    // Счетчики операций по типу "возврат расхода"
     CashBalance: Double; // Остаток наличных денежных средств в кассе
     BacklogDocumentsCounter: Integer; // Количество непереданных документов
-    BacklogDocumentFirstNumber: Integer; // Номер первого непереданного документа
-    BacklogDocumentFirstDateTime: TDateTime; // Дата и время первого из непереданных документов
+    BacklogDocumentFirstNumber: Integer;
+    // Номер первого непереданного документа
+    BacklogDocumentFirstDateTime: TDateTime;
+    // Дата и время первого из непереданных документов
     FNError: Boolean; // Признак необходимости срочной замены ФН
     FNOverflow: Boolean; // Признак переполнения памяти ФН
     FNFail: Boolean; // Признак исчерпания ресурса ФН
@@ -178,8 +224,9 @@ type
     AddressSiteInspections: string; // Адрес сайта проверки
     FiscalSign: string; // Фискальный признак
     DateTime: TDateTime; // Дата и время формирования документа
-    MTNumber: Integer;  // Номер документа "Уведомление о реализации МТ" в который включается данные чека.
-    PrintError: Boolean; //Ошибка при печати бумажной формы чека
+    MTNumber: Integer;
+    // Номер документа "Уведомление о реализации МТ" в который включается данные чека.
+    PrintError: Boolean; // Ошибка при печати бумажной формы чека
   end;
 
   TCorrectionDataRec = record
@@ -191,16 +238,20 @@ type
 
   TAgentDataRec = record
     AgentOperation: string; // Операция платежного агента
-    AgentPhone: string; // Телефон платежного агента. Допустимо несколько значений через разделитель ",".
-    PaymentProcessorPhone: string; // Телефон оператора по приему платежей. Допустимо несколько значений через разделитель ",".
-    AcquirerOperatorPhone: string; // Телефон оператора перевода. Допустимо несколько значений через разделитель ",".
+    AgentPhone: string;
+    // Телефон платежного агента. Допустимо несколько значений через разделитель ",".
+    PaymentProcessorPhone: string;
+    // Телефон оператора по приему платежей. Допустимо несколько значений через разделитель ",".
+    AcquirerOperatorPhone: string;
+    // Телефон оператора перевода. Допустимо несколько значений через разделитель ",".
     AcquirerOperatorName: string; // Наименование оператора перевода
     AcquirerOperatorAddress: string; // Адрес оператора перевода
     AcquirerOperatorINN: string; // ИНН оператора перевода
   end;
 
   TVendorDataRec = record
-    VendorPhone: string; // Телефон поставщика  Допустимо несколько значений через разделитель ",".
+    VendorPhone: string;
+    // Телефон поставщика  Допустимо несколько значений через разделитель ",".
     VendorName: string; // Наименование поставщика
     VendorINN: string; // ИНН поставщика
   end;
@@ -261,7 +312,7 @@ type
 
   TCorrectionData = record
     Enabled: Boolean;
-    AType: Integer;  // Тип коррекции 0 - самостоятельно 1 - по предписанию
+    AType: Integer; // Тип коррекции 0 - самостоятельно 1 - по предписанию
     Description: WideString; // Описание коррекции
     Date: TDateTime; // Дата совершения корректируемого расчета
     Number: WideString; // Номер предписания налогового органа
@@ -271,22 +322,23 @@ type
 
   TAgentData = record
     Enabled: Boolean;
-    AgentOperation: WideString; // 	Операция платежного агента 1044
-    AgentPhone: WideString; //Телефон платежного агента 1073
-    PaymentProcessorPhone: WideString; //Телефон оператора по приему платежей 1074
-    AcquirerOperatorPhone: WideString; //	Телефон оператора перевода 1075
-    AcquirerOperatorName: WideString; // 	Наименование оператора перевода 1026
-    AcquirerOperatorAddress: WideString; //	Адрес оператора перевода 1005
-    AcquirerOperatorINN: WideString; //	ИНН оператора перевода 1016
+    AgentOperation: WideString; // Операция платежного агента 1044
+    AgentPhone: WideString; // Телефон платежного агента 1073
+    PaymentProcessorPhone: WideString;
+    // Телефон оператора по приему платежей 1074
+    AcquirerOperatorPhone: WideString; // Телефон оператора перевода 1075
+    AcquirerOperatorName: WideString; // Наименование оператора перевода 1026
+    AcquirerOperatorAddress: WideString; // Адрес оператора перевода 1005
+    AcquirerOperatorINN: WideString; // ИНН оператора перевода 1016
   end;
 
   { TVendorData }
 
   TVendorData = record
     Enabled: Boolean;
-    VendorPhone: WideString; //	Телефон поставщика 1171
-    VendorName: WideString; //Наименование поставщика 1225
-    VendorINN: WideString; //ИНН поставщика 1226
+    VendorPhone: WideString; // Телефон поставщика 1171
+    VendorName: WideString; // Наименование поставщика 1225
+    VendorINN: WideString; // ИНН поставщика 1226
   end;
 
   { TUserAttribute }
@@ -301,29 +353,32 @@ type
 
   TCheckCorrectionParamsRec3 = record
     Id: string;
-    CashierName: WideString; //ФИО уполномоченного лица для проведения операции 	Формирование нового чека с заданным атрибутами
-    CashierVATIN: WideString; //  	ИНН уполномоченного лица для проведения операции
-    CorrectionType: Integer; //	Тип коррекции
-      // 0 - самостоятельно
-      // 1 - по предписанию
+    CashierName: WideString;
+    // ФИО уполномоченного лица для проведения операции 	Формирование нового чека с заданным атрибутами
+    CashierVATIN: WideString;
+    // ИНН уполномоченного лица для проведения операции
+    CorrectionType: Integer; // Тип коррекции
+    // 0 - самостоятельно
+    // 1 - по предписанию
     TaxVariant: Integer; // Код системы налогообложения
-    PaymentType: Integer; //	Тип расчета
-      //1 - Приход
-      //2 - Возврат прихода
-      //3 - Расход
-      //4 - Возврат расхода
-    CorrectionBaseName: WideString; // 	Наименование основания для коррекции
-    CorrectionBaseDate: TDateTime; //	Дата документа основания для коррекции
+    PaymentType: Integer; // Тип расчета
+    // 1 - Приход
+    // 2 - Возврат прихода
+    // 3 - Расход
+    // 4 - Возврат расхода
+    CorrectionBaseName: WideString; // Наименование основания для коррекции
+    CorrectionBaseDate: TDateTime; // Дата документа основания для коррекции
     CorrectionBaseNumber: WideString; // Номер документа основания для коррекции
     Sum: Currency; // Сумма расчета, указанного в чеке
     SumTAX18: Currency; // Сумма НДС чека по ставке 18%
     SumTAX10: Currency; // Сумма НДС чека по ставке 10%
     SumTAX0: Currency; // Сумма НДС чека по ставке 0%
-    SumTAXNone: Currency; //Сумма НДС чека по без НДС
+    SumTAXNone: Currency; // Сумма НДС чека по без НДС
     SumTAX110: Currency; // Сумма НДС чека по расч. ставке 10/110
     SumTAX118: Currency; // Сумма НДС чека по расч. ставке 18/118
-    Cash: Currency; //Сумма наличной оплаты 	Параметры закрытия чека. Чек коррекции может быть оплачен только одним видом оплаты и без сдачи.
-    ElectronicPayment: Currency; //Сумма электронной оплаты
+    Cash: Currency;
+    // Сумма наличной оплаты 	Параметры закрытия чека. Чек коррекции может быть оплачен только одним видом оплаты и без сдачи.
+    ElectronicPayment: Currency; // Сумма электронной оплаты
     AdvancePayment: Currency; // Сумма предоплатой (зачетом аванса)
     Credit: Currency; // Сумма постоплатой (в кредит)
     CashProvision: Currency; // Сумма встречным предоставлением
@@ -335,25 +390,29 @@ type
 
   TCustomerDetail = record
     Enabled: Boolean;
-    Info: string;   // Наименование организации или фамилия, имя, отчество (при наличии)
-    INN: string;    // ИНН организации или покупателя (клиента)
+    Info: string;
+    // Наименование организации или фамилия, имя, отчество (при наличии)
+    INN: string; // ИНН организации или покупателя (клиента)
     DateOfBirthEnabled: Boolean;
-    DateOfBirth: TDateTime;  // Дата рождения покупателя (клиента) в формате "DD.MM.YYYY"
-    Citizenship: string;  // Числовой код страны, гражданином которой является покупатель (клиент).
-                          //Код страны указывается в соответствии с Общероссийским классификатором стран мира ОКСМ.
+    DateOfBirth: TDateTime;
+    // Дата рождения покупателя (клиента) в формате "DD.MM.YYYY"
+    Citizenship: string;
+    // Числовой код страны, гражданином которой является покупатель (клиент).
+    // Код страны указывается в соответствии с Общероссийским классификатором стран мира ОКСМ.
     DocumentTypeCodeEnabled: Boolean;
-    DocumentTypeCode: Integer; // Числовой код вида документа, удостоверяющего личность (ФФД, Таблица 116)
-    DocumentData: string;      // Данные документа, удостоверяющего личность
-    Address: string;           // Адрес покупателя (клиента)
+    DocumentTypeCode: Integer;
+    // Числовой код вида документа, удостоверяющего личность (ФФД, Таблица 116)
+    DocumentData: string; // Данные документа, удостоверяющего личность
+    Address: string; // Адрес покупателя (клиента)
   end;
 
   { TOperationalAttribute }
 
   TOperationalAttribute = record
     Enabled: Boolean;
-    DateTime: TDateTime;  // Дата, время операции
-    OperationID: Integer;  // Идентификатор операции
-    OperationData: string;  // Данные операции
+    DateTime: TDateTime; // Дата, время операции
+    OperationID: Integer; // Идентификатор операции
+    OperationData: string; // Данные операции
   end;
 
   { TIndustryAttribute }
@@ -361,8 +420,8 @@ type
   TIndustryAttribute = record
     Enabled: Boolean;
     IdentifierFOIV: string; // Идентификатор ФОИВ
-    DocumentDate: TDateTime;   // Дата документа основания в формате "DD.MM.YYYY"
-    DocumentNumber: string;  // Номер документа основания
+    DocumentDate: TDateTime; // Дата документа основания в формате "DD.MM.YYYY"
+    DocumentNumber: string; // Номер документа основания
     AttributeValue: string; // Значение отраслевого реквизита
   end;
 
@@ -388,23 +447,28 @@ type
   TGoodCodeData = record
     Enabled: Boolean;
     ItemCodeData: TItemCodeData;
-    NotIdentified: AnsiString; //Код товара, формат которого не идентифицирован в Base64
-    EAN8: AnsiString; //Код товара в формате EAN-8 в Base64
-    EAN13: AnsiString; //Код товара в формате EAN-13 в Base64
-    ITF14: AnsiString; //Код товара в формате ITF-14 в Base64
-    GS1_0: AnsiString; //Код товара в формате GS1, нанесенный на товар, не подлежащий маркировке средствами идентификации в Base64
-    GS1_M: AnsiString; //Код товара в формате GS1, нанесенный на товар, подлежащий маркировке средствами идентификации в Base64
-    KMK: AnsiString; //Код товара в формате короткого кода маркировки, нанесенный на товар, подлежащий маркировке средствами идентификации в Base64
-    MI: AnsiString; //Контрольно-идентификационный знак мехового изделия
-    EGAIS20: AnsiString; //Код товара в формате ЕГАИС-2.0 в Base64
-    EGAIS30: AnsiString; //Код товара в формате ЕГАИС-3.0 в Base64
-    F1: AnsiString; //Код товара в формате Ф.1 в Base64
-    F2: AnsiString; //Код товара в формате Ф.2 в Base64
-    F3: AnsiString; //Код товара в формате Ф.3 в Base64
-    F4: AnsiString; //Код товара в формате Ф.4 в Base64
-    F5: AnsiString; //Код товара в формате Ф.5 в Base64
-    F6: AnsiString; //Код товара в формате Ф.6 в Base64
-    GTIN: AnsiString; // GTIN для формирования кода маркировки при продаже товаров в объемно-сортовом учете. При передаче этого поля формируется тег 2000 в Base64.
+    NotIdentified: AnsiString;
+    // Код товара, формат которого не идентифицирован в Base64
+    EAN8: AnsiString; // Код товара в формате EAN-8 в Base64
+    EAN13: AnsiString; // Код товара в формате EAN-13 в Base64
+    ITF14: AnsiString; // Код товара в формате ITF-14 в Base64
+    GS1_0: AnsiString;
+    // Код товара в формате GS1, нанесенный на товар, не подлежащий маркировке средствами идентификации в Base64
+    GS1_M: AnsiString;
+    // Код товара в формате GS1, нанесенный на товар, подлежащий маркировке средствами идентификации в Base64
+    KMK: AnsiString;
+    // Код товара в формате короткого кода маркировки, нанесенный на товар, подлежащий маркировке средствами идентификации в Base64
+    MI: AnsiString; // Контрольно-идентификационный знак мехового изделия
+    EGAIS20: AnsiString; // Код товара в формате ЕГАИС-2.0 в Base64
+    EGAIS30: AnsiString; // Код товара в формате ЕГАИС-3.0 в Base64
+    F1: AnsiString; // Код товара в формате Ф.1 в Base64
+    F2: AnsiString; // Код товара в формате Ф.2 в Base64
+    F3: AnsiString; // Код товара в формате Ф.3 в Base64
+    F4: AnsiString; // Код товара в формате Ф.4 в Base64
+    F5: AnsiString; // Код товара в формате Ф.5 в Base64
+    F6: AnsiString; // Код товара в формате Ф.6 в Base64
+    GTIN: AnsiString;
+    // GTIN для формирования кода маркировки при продаже товаров в объемно-сортовом учете. При передаче этого поля формируется тег 2000 в Base64.
   end;
 
   { TDocItem }
@@ -483,19 +547,26 @@ type
     property AgentData: TAgentData read FAgentData write FAgentData;
     property VendorData: TVendorData read FVendorData write FVendorData;
     property AgentSign: WideString read FAgentType write FAgentType;
-    property CountryOfOfigin: WideString read FCountryOfOfigin write FCountryOfOfigin;
-    property CustomsDeclaration: WideString read FCustomsDeclaration write FCustomsDeclaration;
+    property CountryOfOfigin: WideString read FCountryOfOfigin
+      write FCountryOfOfigin;
+    property CustomsDeclaration: WideString read FCustomsDeclaration
+      write FCustomsDeclaration;
     property ExciseAmount: Double read FExciseAmount write FExciseAmount;
-    property AdditionalAttribute: WideString read FAdditionalAttribute write FAdditionalAttribute;
-    property MeasurementUnit: WideString read FMeasurementUnit write FMeasurementUnit;
+    property AdditionalAttribute: WideString read FAdditionalAttribute
+      write FAdditionalAttribute;
+    property MeasurementUnit: WideString read FMeasurementUnit
+      write FMeasurementUnit;
     property TaxSumm: Double read FTaxSumm;
     property MarkingRaw: string read FMarkingRaw write FMarkingRaw;
 
-    property MeasureOfQuantity: Integer read FMeasureOfQuantity write FMeasureOfQuantity;
-    property FractionalQuantity: TFractionalQuantity read FFractionalQuantity write FFractionalQuantity;
+    property MeasureOfQuantity: Integer read FMeasureOfQuantity
+      write FMeasureOfQuantity;
+    property FractionalQuantity: TFractionalQuantity read FFractionalQuantity
+      write FFractionalQuantity;
     property GoodCodeData: TGoodCodeData read FGoodCodeData write FGoodCodeData;
     property MarkingCode: AnsiString read FMarkingCode write FMarkingCode;
-    property IndustryAttribute: TIndustryAttribute read FIndustryAttribute write FIndustryAttribute;
+    property IndustryAttribute: TIndustryAttribute read FIndustryAttribute
+      write FIndustryAttribute;
   end;
 
   { TTextItem }
@@ -532,7 +603,7 @@ type
   { TReceiptRec }
 
   TReceiptRec = record
-    ID: string;
+    Id: string;
     BPOVersion: Integer;
     DeliveryRetail: Boolean;
     SenderEmail: WideString;
@@ -584,7 +655,8 @@ type
     property CorrectionData: TCorrectionData read FCorrectionData;
     property CustomerDetail: TCustomerDetail read FCustomerDetail;
     property IndustryAttribute: TIndustryAttribute read FIndustryAttribute;
-    property OperationalAttribute: TOperationalAttribute read FOperationalAttribute;
+    property OperationalAttribute: TOperationalAttribute
+      read FOperationalAttribute;
   end;
 
   { TXmlDoc1C }
@@ -595,22 +667,31 @@ type
     class procedure LoadPositions(ANode: IXMLNode; Receipt: TReceipt);
   public
     class procedure Read(const AXML: WideString; Receipt: TReceipt); overload;
-    class procedure Read(const AXML: WideString; Document: TTextDocument); overload;
+    class procedure Read(const AXML: WideString;
+      Document: TTextDocument); overload;
     class function Read(const Xml: WideString): TInputParametersRec; overload;
-    class procedure Read(const Xml: WideString; Params: TParametersKKT); overload;
-    class procedure Read(const Xml: WideString; Params: TParametersFiscal); overload;
-    class procedure Write(var XmlText: WideString; Params: TParametersKKT); overload;
-    class procedure Write(var XmlText: WideString; Params: TParametersFiscal); overload;
-    class procedure Write(var XmlText: WideString; Params: TInputParametersRec); overload;
-    class procedure Write(var XmlText: WideString; Params: TOutputParametersRec); overload;
-    class procedure Write(var XmlText: WideString; const P: TRequestKMResult); overload;
+    class procedure Read(const Xml: WideString;
+      Params: TParametersKKT); overload;
+    class procedure Read(const Xml: WideString;
+      Params: TParametersFiscal); overload;
+    class procedure Write(var XmlText: WideString;
+      Params: TParametersKKT); overload;
+    class procedure Write(var XmlText: WideString;
+      Params: TParametersFiscal); overload;
+    class procedure Write(var XmlText: WideString;
+      Params: TInputParametersRec); overload;
+    class procedure Write(var XmlText: WideString;
+      Params: TOutputParametersRec); overload;
+    class procedure Write(var XmlText: WideString;
+      const P: TRequestKMResult); overload;
 
     class procedure Load(ANode: IXMLNode; var R: TAgentData); overload;
     class procedure Load(ANode: IXMLNode; var R: TVendorData); overload;
     class procedure Load(ANode: IXMLNode; var R: TUserAttribute); overload;
     class procedure Load(ANode: IXMLNode; var R: TCorrectionData); overload;
     class procedure Load(ANode: IXMLNode; var R: TCustomerDetail); overload;
-    class procedure Load(ANode: IXMLNode; var R: TOperationalAttribute); overload;
+    class procedure Load(ANode: IXMLNode;
+      var R: TOperationalAttribute); overload;
     class procedure Load(ANode: IXMLNode; var R: TIndustryAttribute); overload;
     class procedure Load(ANode: IXMLNode; var R: TFractionalQuantity); overload;
     class procedure Load(ANode: IXMLNode; var R: TGoodCodeData); overload;
@@ -619,7 +700,8 @@ type
     class procedure Load(ANode: IXMLNode; Item: TFiscalItem); overload;
     class procedure Load(ANode: IXMLNode; Item: TTextItem); overload;
     class procedure Load(ANode: IXMLNode; Item: TBarcodeItem); overload;
-    class procedure Load(const XmlText: WideString; var R: TRequestKM); overload;
+    class procedure Load(const XmlText: WideString; var R: TRequestKM);
+      overload;
   end;
 
 function To1Cbool(AValue: Boolean): WideString;
@@ -648,15 +730,14 @@ function QuantityToStr(AValue: Double): string;
 var
   SaveSeparator: Char;
 begin
-  SaveSeparator := DecimalSeparator;
-  DecimalSeparator := '.';
+  SaveSeparator := FormatSettings.DecimalSeparator;
+  FormatSettings.DecimalSeparator := '.';
   try
     Result := SysUtils.Format('%.*f', [6, AValue]);
   finally
-    DecimalSeparator := SaveSeparator;
+    FormatSettings.DecimalSeparator := SaveSeparator;
   end;
 end;
-
 
 procedure LoadReceiptFromXml(Receipt: TReceipt; const Xml: WideString);
 var
@@ -670,7 +751,8 @@ begin
   end;
 end;
 
-procedure LoadTextDocumentFromXml(Document: TTextDocument; const Xml: WideString);
+procedure LoadTextDocumentFromXml(Document: TTextDocument;
+  const Xml: WideString);
 var
   Reader: TXmlDoc1C;
 begin
@@ -760,12 +842,12 @@ end;
 
 constructor TReceipt.Create;
 var
-  Guid: TGUID;
+  GUID: TGUID;
 begin
   inherited Create;
   FItems := TDocItems.Create(TDocItem);
-  CreateGUID(Guid);
-  FParams.ID := GUIDToString(Guid);
+  CreateGUID(GUID);
+  FParams.Id := GUIDToString(GUID);
   FParams.DeliveryRetail := False;
   FParams.FFDVersion := 0;
 end;
@@ -847,8 +929,7 @@ begin
   end;
 end;
 
-class procedure TXmlDoc1C.Read(const AXML: WideString;
-  Document: TTextDocument);
+class procedure TXmlDoc1C.Read(const AXML: WideString; Document: TTextDocument);
 var
   i: Integer;
   Doc: IXMLNode;
@@ -891,7 +972,8 @@ begin
   for i := 0 to ANode.ChildNodes.Count - 1 do
   begin
     Node := ANode.ChildNodes.Nodes[i];
-    if Node = nil then Continue;
+    if Node = nil then
+      Continue;
 
     if Node.NodeName = 'TextString' then
     begin
@@ -906,17 +988,15 @@ begin
   end;
 end;
 
-
-
 (*
-<Parameters PaymentType="1" TaxVariant="0" CashierName="Казакова Н.А."
+  <Parameters PaymentType="1" TaxVariant="0" CashierName="Казакова Н.А."
   SenderEmail="info@1c.ru" CustomerEmail="" CustomerPhone="" AgentSign="2"
   AddressSettle="г.Москва, Дмитровское ш. д.9">
   <AgentData PayingAgentOperation="operation" PayingAgentPhone="tel"
   ReceivePaymentsOperatorPhone="tel" MoneyTransferOperatorPhone="tel"
   MoneyTransferOperatorName="name" MoneyTransferOperatorAddress="addr"/>
   <PurveyorData PurveyorPhone="12343332" PurveyorName="123fffff" PurveyorVATIN="123456789"/>
-	</Parameters>
+  </Parameters>
 *)
 
 class procedure TXmlDoc1C.Load(ANode: IXMLNode; var R: TReceiptRec);
@@ -955,7 +1035,8 @@ begin
       Load(Node, FiscalItem);
       // !!!
       if Receipt.Params.ItemNameLength > 0 then
-        FiscalItem.FName := Copy(FiscalItem.FName, 1, Receipt.Params.ItemNameLength);
+        FiscalItem.FName := Copy(FiscalItem.FName, 1,
+          Receipt.Params.ItemNameLength);
 
       Continue;
     end;
@@ -1018,8 +1099,10 @@ begin
   else
     Item.FDiscountSum := LoadDouble(ANode, 'DiscountAmount', True);
 
-  Item.FSignMethodCalculation := LoadIntegerDef(ANode, 'PaymentMethod', False, 4);
-  Item.FSignCalculationObject := LoadIntegerDef(ANode, 'CalculationSubject', False, 1);
+  Item.FSignMethodCalculation := LoadIntegerDef(ANode, 'PaymentMethod',
+    False, 4);
+  Item.FSignCalculationObject := LoadIntegerDef(ANode, 'CalculationSubject',
+    False, 1);
   T := LoadString(ANode, 'VATRate', True);
   Item.FTax := TaxToInt(T);
   Item.FTaxSumm := LoadDouble(ANode, 'VATAmount', False);
@@ -1054,13 +1137,19 @@ begin
     if Node.AttributeNodes.Count > 0 then
     begin
       Item.FAgentData.Enabled := True;
-      Item.FAgentData.AgentOperation := LoadString(Node, 'AgentOperation', False);
+      Item.FAgentData.AgentOperation :=
+        LoadString(Node, 'AgentOperation', False);
       Item.FAgentData.AgentPhone := LoadString(Node, 'AgentPhone', False);
-      Item.FAgentData.PaymentProcessorPhone := LoadString(Node, 'PaymentProcessorPhone', False);
-      Item.FAgentData.AcquirerOperatorPhone := LoadString(Node, 'AcquirerOperatorPhone', False);
-      Item.FAgentData.AcquirerOperatorName := LoadString(Node, 'AcquirerOperatorName', False);
-      Item.FAgentData.AcquirerOperatorAddress := LoadString(Node, 'AcquirerOperatorAddress', False);
-      Item.FAgentData.AcquirerOperatorINN := LoadString(Node, 'AcquirerOperatorINN', False);
+      Item.FAgentData.PaymentProcessorPhone :=
+        LoadString(Node, 'PaymentProcessorPhone', False);
+      Item.FAgentData.AcquirerOperatorPhone :=
+        LoadString(Node, 'AcquirerOperatorPhone', False);
+      Item.FAgentData.AcquirerOperatorName :=
+        LoadString(Node, 'AcquirerOperatorName', False);
+      Item.FAgentData.AcquirerOperatorAddress :=
+        LoadString(Node, 'AcquirerOperatorAddress', False);
+      Item.FAgentData.AcquirerOperatorINN :=
+        LoadString(Node, 'AcquirerOperatorINN', False);
 
       if (Item.FAgentData.AgentOperation = '') and
         (Item.FAgentData.AgentPhone = '') and
@@ -1083,7 +1172,9 @@ begin
       Item.FVendorData.VendorPhone := LoadString(Node, 'VendorPhone', False);
       Item.FVendorData.VendorName := LoadString(Node, 'VendorName', False);
       Item.FVendorData.VendorINN := LoadString(Node, 'VendorINN', False);
-      if (Item.FVendorData.VendorPhone = '') and (Item.FVendorData.VendorName = '') and (Item.FVendorData.VendorINN = '') then
+      if (Item.FVendorData.VendorPhone = '') and
+        (Item.FVendorData.VendorName = '') and (Item.FVendorData.VendorINN = '')
+      then
         Item.FVendorData.Enabled := False;
     end;
   end;
@@ -1120,14 +1211,12 @@ begin
   R.PaymentProcessorPhone := LoadString(Node, 'PaymentProcessorPhone', False);
   R.AcquirerOperatorPhone := LoadString(Node, 'AcquirerOperatorPhone', False);
   R.AcquirerOperatorName := LoadString(Node, 'AcquirerOperatorName', False);
-  R.AcquirerOperatorAddress := LoadString(Node, 'AcquirerOperatorAddress', False);
+  R.AcquirerOperatorAddress :=
+    LoadString(Node, 'AcquirerOperatorAddress', False);
   R.AcquirerOperatorINN := LoadString(Node, 'AcquirerOperatorINN', False);
-  if (R.AgentOperation = '') and
-    (R.AgentPhone = '') and
-    (R.PaymentProcessorPhone = '') and
-    (R.AcquirerOperatorPhone = '') and
-    (R.AcquirerOperatorName = '') and
-    (R.AcquirerOperatorAddress = '') and
+  if (R.AgentOperation = '') and (R.AgentPhone = '') and
+    (R.PaymentProcessorPhone = '') and (R.AcquirerOperatorPhone = '') and
+    (R.AcquirerOperatorName = '') and (R.AcquirerOperatorAddress = '') and
     (R.AcquirerOperatorINN = '') then
     R.Enabled := False;
 end;
@@ -1223,9 +1312,8 @@ begin
     Exit;
 
   R.Enabled := HasAttribute(Node, 'IdentifierFOIV') or
-    HasAttribute(Node, 'DocumentDate') or
-    HasAttribute(Node, 'DocumentNumber') or
-    HasAttribute(Node, 'AttributeValue');
+    HasAttribute(Node, 'DocumentDate') or HasAttribute(Node, 'DocumentNumber')
+    or HasAttribute(Node, 'AttributeValue');
 
   if not R.Enabled then
     Exit;
@@ -1234,7 +1322,8 @@ begin
   R.DocumentDate := LoadDateTime(Node, 'DocumentDate', False);
   R.DocumentNumber := LoadString(Node, 'DocumentNumber', False);
   R.AttributeValue := LoadString(Node, 'AttributeValue', False);
-  if (R.IdentifierFOIV = '') and (R.DocumentNumber = '') and (R.AttributeValue = '') then
+  if (R.IdentifierFOIV = '') and (R.DocumentNumber = '') and
+    (R.AttributeValue = '') then
     R.Enabled := False;
 end;
 
@@ -1330,63 +1419,63 @@ end;
 
 (*
 
-function RequestKMToXML(const AGUID: string; const AWaitForResult: Boolean; const AMarkingCode: AnsiString; const APlannedStatus: Integer; const AQuantity: Double; const AMeasureOfQuantity: string; const AFractionalQuantity: Boolean; const ANumerator: Integer; const ADenominator: Integer): string;
-var
+  function RequestKMToXML(const AGUID: string; const AWaitForResult: Boolean; const AMarkingCode: AnsiString; const APlannedStatus: Integer; const AQuantity: Double; const AMeasureOfQuantity: string; const AFractionalQuantity: Boolean; const ANumerator: Integer; const ADenominator: Integer): string;
+  var
   Xml: IXMLDocument;
   Node: IXMLNode;
-begin
+  begin
   Xml := TXMLDocument.Create(nil);
   try
-    Xml.Active := True;
-    Xml.Version := '1.0';
-    Xml.Encoding := 'UTF-8';
-    Xml.Options := Xml.Options + [doNodeAutoIndent];
-    Node := Xml.AddChild('Parameters');
+  Xml.Active := True;
+  Xml.Version := '1.0';
+  Xml.Encoding := 'UTF-8';
+  Xml.Options := Xml.Options + [doNodeAutoIndent];
+  Node := Xml.AddChild('Parameters');
 
-    Node.Attributes['GUID'] := AGUID;
-    Node.Attributes['WaitForResult'] := To1Cbool(AWaitForResult);
-    Node.Attributes['MarkingCode'] := AMarkingCode;
-    Node.Attributes['PlannedStatus'] := APlannedStatus.ToString;
-    Node.Attributes['Quantity'] := QuantityToStr(AQuantity);
-    if AMeasureOfQuantity <> '' then
-      Node.Attributes['MeasureOfQuantity'] := AMeasureOfQuantity;
-    if AFractionalQuantity then
-    begin
-      Node := Node.AddChild('FractionalQuantity');
-      Node.Attributes['Numerator'] := ANumerator.ToString;
-      Node.Attributes['Denominator'] := ADenominator.ToString;
-    end;
-    Result := Xml.XML.Text;
-  finally
-    Xml := nil;
+  Node.Attributes['GUID'] := AGUID;
+  Node.Attributes['WaitForResult'] := To1Cbool(AWaitForResult);
+  Node.Attributes['MarkingCode'] := AMarkingCode;
+  Node.Attributes['PlannedStatus'] := APlannedStatus.ToString;
+  Node.Attributes['Quantity'] := QuantityToStr(AQuantity);
+  if AMeasureOfQuantity <> '' then
+  Node.Attributes['MeasureOfQuantity'] := AMeasureOfQuantity;
+  if AFractionalQuantity then
+  begin
+  Node := Node.AddChild('FractionalQuantity');
+  Node.Attributes['Numerator'] := ANumerator.ToString;
+  Node.Attributes['Denominator'] := ADenominator.ToString;
   end;
-end;
+  Result := Xml.XML.Text;
+  finally
+  Xml := nil;
+  end;
+  end;
 
-function ProcessingKMResultToXML(const AGUID: string; const AResult: Boolean; const AResultCode: Integer; const AHasStatusInfo: Boolean; const AStatusInfo: Integer; const AHandleCode: Integer): string;
-var
+  function ProcessingKMResultToXML(const AGUID: string; const AResult: Boolean; const AResultCode: Integer; const AHasStatusInfo: Boolean; const AStatusInfo: Integer; const AHandleCode: Integer): string;
+  var
   Xml: IXMLDocument;
   Node: IXMLNode;
-begin
+  begin
   Xml := TXMLDocument.Create(nil);
   try
-    Xml.Active := True;
-    Xml.Version := '1.0';
-    Xml.Encoding := 'UTF-8';
-    Xml.Options := Xml.Options + [doNodeAutoIndent];
-    Node := Xml.AddChild('ProcessingKMResult');
-    Node.Attributes['GUID'] := AGUID;
-    Node.Attributes['Result'] := To1Cbool(AResult);
-    Node.Attributes['ResultCode'] := AResultCode.ToString;
-    if AHasStatusInfo then
-      Node.Attributes['StatusInfo'] := AStatusInfo.ToString;
-    Node.Attributes['HandleCode'] := AHandleCode.ToString;
-    Result := Xml.XML.Text;
+  Xml.Active := True;
+  Xml.Version := '1.0';
+  Xml.Encoding := 'UTF-8';
+  Xml.Options := Xml.Options + [doNodeAutoIndent];
+  Node := Xml.AddChild('ProcessingKMResult');
+  Node.Attributes['GUID'] := AGUID;
+  Node.Attributes['Result'] := To1Cbool(AResult);
+  Node.Attributes['ResultCode'] := AResultCode.ToString;
+  if AHasStatusInfo then
+  Node.Attributes['StatusInfo'] := AStatusInfo.ToString;
+  Node.Attributes['HandleCode'] := AHandleCode.ToString;
+  Result := Xml.XML.Text;
   finally
-    Xml := nil;
+  Xml := nil;
   end;
-end;
+  end;
 
-{ TRequestKM }
+  { TRequestKM }
 
 *)
 
@@ -1415,16 +1504,16 @@ end;
 class function TXmlDoc1C.Read(const Xml: WideString): TInputParametersRec;
 var
   Node: IXMLNode;
-  XmlDoc: IXMLDocument;
+  XMLDoc: IXMLDocument;
 begin
-  XmlDoc := TXMLDocument.Create(nil);
+  XMLDoc := TXMLDocument.Create(nil);
   try
-    XmlDoc.Active := True;
-    XmlDoc.Version := '1.0';
-    XmlDoc.Encoding := 'UTF-8';
-    XmlDoc.Options := XmlDoc.Options + [doNodeAutoIndent];
-    XmlDoc.LoadFromXML(Xml);
-    Node := XmlDoc.ChildNodes.FindNode('InputParameters');
+    XMLDoc.Active := True;
+    XMLDoc.Version := '1.0';
+    XMLDoc.Encoding := 'UTF-8';
+    XMLDoc.Options := XMLDoc.Options + [doNodeAutoIndent];
+    XMLDoc.LoadFromXML(Xml);
+    Node := XMLDoc.ChildNodes.FindNode('InputParameters');
     if Node = nil then
       raise Exception.Create('Wrong XML input parameters Table');
 
@@ -1438,7 +1527,7 @@ begin
     Result.SaleLocation := LoadString(Node, 'SaleLocation', False);
     Result.PrintRequired := LoadBool(Node, 'PrintRequired', False);
   finally
-    XmlDoc := nil;
+    XMLDoc := nil;
   end;
 end;
 
@@ -1446,25 +1535,25 @@ class procedure TXmlDoc1C.Write(var XmlText: WideString;
   Params: TInputParametersRec);
 var
   Node: IXMLNode;
-  XmlDoc: IXMLDocument;
+  XMLDoc: IXMLDocument;
 begin
-  XmlDoc := TXMLDocument.Create(nil);
+  XMLDoc := TXMLDocument.Create(nil);
   try
-    XmlDoc.Active := True;
-    XmlDoc.Version := '1.0';
-    XmlDoc.Encoding := 'UTF-8';
-    XmlDoc.Options := XmlDoc.Options + [doNodeAutoIndent];
-    Node := XmlDoc.AddChild('InputParameters');
-    XmlDoc.DocumentElement := Node;
+    XMLDoc.Active := True;
+    XMLDoc.Version := '1.0';
+    XMLDoc.Encoding := 'UTF-8';
+    XMLDoc.Options := XMLDoc.Options + [doNodeAutoIndent];
+    Node := XMLDoc.AddChild('InputParameters');
+    XMLDoc.DocumentElement := Node;
     Node := Node.AddChild('Parameters');
     Node.Attributes['CashierName'] := Params.CashierName;
     Node.Attributes['CashierINN'] := Params.CashierINN;
     Node.Attributes['SaleAddress'] := Params.SaleAddress;
     Node.Attributes['SaleLocation'] := Params.SaleLocation;
     Node.Attributes['PrintRequired'] := Params.PrintRequired;
-    XmlDoc.SaveToXML(XmlText);
+    XMLDoc.SaveToXML(XmlText);
   finally
-    XmlDoc := nil;
+    XMLDoc := nil;
   end;
 end;
 
@@ -1472,16 +1561,16 @@ class procedure TXmlDoc1C.Read(const Xml: WideString;
   Params: TParametersFiscal);
 var
   Node: IXMLNode;
-  XmlDoc: IXMLDocument;
+  XMLDoc: IXMLDocument;
 begin
-  XmlDoc := TXMLDocument.Create(nil);
+  XMLDoc := TXMLDocument.Create(nil);
   try
-    XmlDoc.Active := True;
-    XmlDoc.Version := '1.0';
-    XmlDoc.Encoding := 'UTF-8';
-    XmlDoc.Options := XmlDoc.Options + [doNodeAutoIndent];
-    XmlDoc.LoadFromXML(Xml);
-    Node := XmlDoc.ChildNodes.FindNode('ParametersFiscal');
+    XMLDoc.Active := True;
+    XMLDoc.Version := '1.0';
+    XMLDoc.Encoding := 'UTF-8';
+    XMLDoc.Options := XMLDoc.Options + [doNodeAutoIndent];
+    XMLDoc.LoadFromXML(Xml);
+    Node := XMLDoc.ChildNodes.FindNode('ParametersFiscal');
     if Node = nil then
       raise Exception.Create('Wrong XML parameters Table');
 
@@ -1518,26 +1607,26 @@ begin
     Params.CashierName := LoadString(Node, 'CashierName', False);
     Params.CashierINN := LoadString(Node, 'CashierINN', False);
     Params.FFDVersion := LoadString(Node, 'FFDVersion', False);
-    Params.RegistrationLabelCodes := LoadString(Node, 'RegistrationLabelCodes', False);
+    Params.RegistrationLabelCodes :=
+      LoadString(Node, 'RegistrationLabelCodes', False);
   finally
-    XmlDoc := nil;
+    XMLDoc := nil;
   end;
 end;
 
-class procedure TXmlDoc1C.Read(const Xml: WideString;
-  Params: TParametersKKT);
+class procedure TXmlDoc1C.Read(const Xml: WideString; Params: TParametersKKT);
 var
   Node: IXMLNode;
-  XmlDoc: IXMLDocument;
+  XMLDoc: IXMLDocument;
 begin
-  XmlDoc := TXMLDocument.Create(nil);
+  XMLDoc := TXMLDocument.Create(nil);
   try
-    XmlDoc.Active := True;
-    XmlDoc.Version := '1.0';
-    XmlDoc.Encoding := 'UTF-8';
-    XmlDoc.Options := XmlDoc.Options + [doNodeAutoIndent];
-    XmlDoc.LoadFromXML(Xml);
-    Node := XmlDoc.ChildNodes.FindNode('Parameters');
+    XMLDoc.Active := True;
+    XMLDoc.Version := '1.0';
+    XMLDoc.Encoding := 'UTF-8';
+    XMLDoc.Options := XMLDoc.Options + [doNodeAutoIndent];
+    XMLDoc.LoadFromXML(Xml);
+    Node := XMLDoc.ChildNodes.FindNode('Parameters');
     if Node = nil then
       raise Exception.Create('Wrong XML parameters Table');
 
@@ -1571,7 +1660,7 @@ begin
     Params.FNSURL := LoadString(Node, 'FNSURL', False);
     Params.SenderEmail := LoadString(Node, 'SenderEmail', False);
   finally
-    XmlDoc := nil;
+    XMLDoc := nil;
   end;
 end;
 
@@ -1586,9 +1675,9 @@ class procedure TXmlDoc1C.Write(var XmlText: WideString;
 var
   i: Integer;
   Node: IXMLNode;
-  Xml: IXmlDocument;
+  Xml: IXMLDocument;
 begin
-  Xml := TXmlDocument.Create(nil);
+  Xml := TXMLDocument.Create(nil);
   try
     Xml.Active := True;
     Xml.Version := '1.0';
@@ -1625,7 +1714,8 @@ begin
     Node.Attributes['IsVendingMachine'] := To1Cbool(Params.IsVendingMachine);
     Node.Attributes['IsCateringServices'] := To1Cbool(Params.IsCatering);
     Node.Attributes['IsWholesaleTrade'] := To1Cbool(Params.IsWholesale);
-    Node.Attributes['IsAutomaticPrinter'] := To1Cbool(Params.IsAutomaticPrinter);
+    Node.Attributes['IsAutomaticPrinter'] :=
+      To1Cbool(Params.IsAutomaticPrinter);
     Node.Attributes['IsAutomatic'] := To1Cbool(Params.IsAutomatic);
     Node.Attributes['AutomaticNumber'] := Params.AutomaticNumber;
     Node.Attributes['OFDCompany'] := Params.OFDCompany;
@@ -1638,7 +1728,8 @@ begin
   end;
 end;
 
-class procedure TXmlDoc1C.Write(var XmlText: WideString; Params: TOutputParametersRec);
+class procedure TXmlDoc1C.Write(var XmlText: WideString;
+  Params: TOutputParametersRec);
 var
   Node: IXMLNode;
   Xml: IXMLDocument;
@@ -1651,30 +1742,48 @@ begin
     Xml.Options := Xml.Options + [doNodeAutoIndent];
     Node := Xml.AddChild('OutputParameters').AddChild('Parameters');
 
-    Node.Attributes['ShiftNumber'] := IntToStr(Params.ShiftNumber); // Integer; //Номер открытой смены/Номер закрытой смены
-    Node.Attributes['CheckNumber'] := IntToStr(Params.CheckNumber); // Integer; // Номер последнего фискального документа
-    Node.Attributes['ShiftClosingCheckNumber'] := IntToStr(Params.ShiftClosingCheckNumber); // Integer; // Номер последнего чека за смену
-    Node.Attributes['DateTime'] := DateTimeToXML(Params.DateTime); // TDateTime; // Дата и время формирования фискального документа
-    Node.Attributes['ShiftState'] := IntToStr(Params.ShiftState); // Integer; //	Состояние смены 1 - Закрыта, 2 - Открыта, 3 - Истекла
-{   Node.Attributes['CountersOperationType1'] := Params.; // TOperationCountersRec; // OperationCounters	Счетчики операций по типу "приход"
-    Node.Attributes['CountersOperationType2'] := Params.; // TOperationCountersRec; // Счетчики операций по типу "возврат прихода"
-    Node.Attributes['CountersOperationType3'] := Params.; // TOperationCountersRec; // Счетчики операций по типу "расход"
-    Node.Attributes['CountersOperationType4'] := Params.; // TOperationCountersRec; // Счетчики операций по типу "возврат расхода"}
-    Node.Attributes['CashBalance'] := Params.CashBalance; // Double; // Остаток наличных денежных средств в кассе
-    Node.Attributes['BacklogDocumentsCounter'] := IntToStr(Params.BacklogDocumentsCounter); // Integer; // Количество непереданных документов
-    Node.Attributes['BacklogDocumentFirstNumber'] := Params.BacklogDocumentFirstNumber; // Integer; // Номер первого непереданного документа
-    Node.Attributes['BacklogDocumentFirstDateTime'] := DateTimeToXML(Params.BacklogDocumentFirstDateTime); // TDateTime; // Дата и время первого из непереданных документов
-    Node.Attributes['FNError'] := To1Cbool(Params.FNError); // Boolean; // Признак необходимости срочной замены ФН
-    Node.Attributes['FNOverflow'] := To1Cbool(Params.FNOverflow); // Boolean; // Признак переполнения памяти ФН
-    Node.Attributes['FNFail'] := To1Cbool(Params.FNFail); // Boolean; // Признак исчерпания ресурса ФН
-    Node.Attributes['FNValidityDate'] := DateTimeToXML(Params.FNValidityDate); // TDateTime;
+    Node.Attributes['ShiftNumber'] := IntToStr(Params.ShiftNumber);
+    // Integer; //Номер открытой смены/Номер закрытой смены
+    Node.Attributes['CheckNumber'] := IntToStr(Params.CheckNumber);
+    // Integer; // Номер последнего фискального документа
+    Node.Attributes['ShiftClosingCheckNumber'] :=
+      IntToStr(Params.ShiftClosingCheckNumber);
+    // Integer; // Номер последнего чека за смену
+    Node.Attributes['DateTime'] := DateTimeToXML(Params.DateTime);
+    // TDateTime; // Дата и время формирования фискального документа
+    Node.Attributes['ShiftState'] := IntToStr(Params.ShiftState);
+    // Integer; //	Состояние смены 1 - Закрыта, 2 - Открыта, 3 - Истекла
+    { Node.Attributes['CountersOperationType1'] := Params.; // TOperationCountersRec; // OperationCounters	Счетчики операций по типу "приход"
+      Node.Attributes['CountersOperationType2'] := Params.; // TOperationCountersRec; // Счетчики операций по типу "возврат прихода"
+      Node.Attributes['CountersOperationType3'] := Params.; // TOperationCountersRec; // Счетчики операций по типу "расход"
+      Node.Attributes['CountersOperationType4'] := Params.; // TOperationCountersRec; // Счетчики операций по типу "возврат расхода" }
+    Node.Attributes['CashBalance'] := Params.CashBalance;
+    // Double; // Остаток наличных денежных средств в кассе
+    Node.Attributes['BacklogDocumentsCounter'] :=
+      IntToStr(Params.BacklogDocumentsCounter);
+    // Integer; // Количество непереданных документов
+    Node.Attributes['BacklogDocumentFirstNumber'] :=
+      Params.BacklogDocumentFirstNumber;
+    // Integer; // Номер первого непереданного документа
+    Node.Attributes['BacklogDocumentFirstDateTime'] :=
+      DateTimeToXML(Params.BacklogDocumentFirstDateTime);
+    // TDateTime; // Дата и время первого из непереданных документов
+    Node.Attributes['FNError'] := To1Cbool(Params.FNError);
+    // Boolean; // Признак необходимости срочной замены ФН
+    Node.Attributes['FNOverflow'] := To1Cbool(Params.FNOverflow);
+    // Boolean; // Признак переполнения памяти ФН
+    Node.Attributes['FNFail'] := To1Cbool(Params.FNFail);
+    // Boolean; // Признак исчерпания ресурса ФН
+    Node.Attributes['FNValidityDate'] := DateTimeToXML(Params.FNValidityDate);
+    // TDateTime;
     Xml.SaveToXML(XmlText);
   finally
     Xml := nil;
   end;
 end;
 
-class procedure TXmlDoc1C.Write(var XmlText: WideString; const P: TRequestKMResult);
+class procedure TXmlDoc1C.Write(var XmlText: WideString;
+  const P: TRequestKMResult);
 var
   Xml: IXMLDocument;
   Node: IXMLNode;
@@ -1688,7 +1797,7 @@ begin
     Node := Xml.AddChild('RequestKMResult');
     Node.Attributes['Checking'] := To1Cbool(P.Checking);
     Node.Attributes['CheckingResult'] := To1Cbool(P.CheckingResult);
-    Xml.SaveToXml(XmlText);
+    Xml.SaveToXML(XmlText);
   finally
     Xml := nil;
   end;

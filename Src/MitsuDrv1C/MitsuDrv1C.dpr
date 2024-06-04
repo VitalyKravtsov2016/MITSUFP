@@ -2,6 +2,7 @@ library MitsuDrv1C;
 
 uses
   Forms,
+  ComServ,
   OleMain1C30 in 'Units\OleMain1C30.pas',
   MitsuLib_TLB in 'MitsuLib_TLB.pas',
   LogFile in '..\Shared\LogFile.pas',
@@ -36,13 +37,11 @@ uses
   GS1Util in 'Units\GS1Util.pas',
   GS1Barcode in 'Units\GS1Barcode.pas',
   ActiveXControl1C in 'Units\ActiveXControl1C.pas',
-  ComObj2 in 'Units\ComObj2.pas',
   AddIn1CTypes in 'Units\AddIn1CTypes.pas',
   AddIn1CInterface in 'Units\AddIn1CInterface.pas',
-  AxCtrls2 in 'Units\AxCtrls2.pas',
   TextEncoding in 'Units\TextEncoding.pas',
   TranslationUtil in '..\Shared\TranslationUtil.pas',
-  ComServ2 in 'Units\ComServ2.pas';
+  gnugettext in '..\Shared\gnugettext.pas';
 
 {$E dll}
 
@@ -54,10 +53,9 @@ exports
   DllInstall;
 
 {$R *.TLB}
-
 {$R *.RES}
-
 {$R Addin1c.res}
 
 begin
+
 end.

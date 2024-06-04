@@ -53,7 +53,8 @@ type
     procedure SaveToXML(XML: IXMLNode);
     constructor Create(AOwner: TParamList1CItems);
     destructor Destroy; override;
-    procedure AddChoiceListItem(const Name: WideString; const Value: Widestring);
+    procedure AddChoiceListItem(const Name: WideString;
+      const Value: WideString);
 
     property Name: WideString read FName write FName;
     property Description: WideString read FDescription write FDescription;
@@ -63,9 +64,12 @@ type
     property FieldFormat: WideString read FFieldFormat write FFieldFormat;
     property DefaultValue: WideString read FDefaultValue write FDefaultValue;
     property ChoiceList: TParam1CChoiceList read FChoiceList write FChoiceList;
-    property MasterParameterName: WideString read FMasterParameterName write FMasterParameterName;
-    property MasterParameterOperation: WideString read FMasterParameterOperation write FMasterParameterOperation;
-    property MasterparameterValue: WideString read FMasterparameterValue write FMasterparameterValue;
+    property MasterParameterName: WideString read FMasterParameterName
+      write FMasterParameterName;
+    property MasterParameterOperation: WideString read FMasterParameterOperation
+      write FMasterParameterOperation;
+    property MasterparameterValue: WideString read FMasterparameterValue
+      write FMasterparameterValue;
   end;
 
 implementation
@@ -87,7 +91,8 @@ end;
 
 procedure TParamList1CItems.Clear;
 begin
-  while Count > 0 do Items[0].Free;
+  while Count > 0 do
+    Items[0].Free;
 end;
 
 function TParamList1CItems.GetCount: Integer;
@@ -127,8 +132,7 @@ begin
   end;
 end;
 
-function TParamList1CItems.ItemByName(
-  AName: WideString): TParamList1CItem;
+function TParamList1CItems.ItemByName(AName: WideString): TParamList1CItem;
 var
   i: Integer;
 begin
@@ -145,8 +149,7 @@ end;
 
 { TParamList1CItem }
 
-procedure TParamList1CItem.AddChoiceListItem(const Name,
-  Value: Widestring);
+procedure TParamList1CItem.AddChoiceListItem(const Name, Value: WideString);
 var
   Item: TParam1CChoiceListItem;
 begin
@@ -169,7 +172,7 @@ begin
   inherited Destroy;
 end;
 
-procedure TParamList1CItem.SaveToXML(XML: IXmlNode);
+procedure TParamList1CItem.SaveToXML(XML: IXMLNode);
 var
   Node: IXMLNode;
 begin
@@ -199,8 +202,10 @@ procedure TParamList1CItem.SetOwner(AOwner: TParamList1CItems);
 begin
   if AOwner <> FOwner then
   begin
-    if FOwner <> nil then FOwner.RemoveItem(Self);
-    if AOwner <> nil then AOwner.InsertItem(Self);
+    if FOwner <> nil then
+      FOwner.RemoveItem(Self);
+    if AOwner <> nil then
+      AOwner.InsertItem(Self);
   end;
 end;
 

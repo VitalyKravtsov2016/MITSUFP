@@ -23,7 +23,6 @@ var
 const
   LangParamsFileName = 'locale.ini';
 
-
 function GetLanguageParamsFileName: string;
 begin
   Result := IncludeTrailingBackslash(GetUserShtrihPath) + LangParamsFileName;
@@ -36,10 +35,10 @@ end;
 
 function GetModuleFileName: string;
 var
-  Buffer: array[0..261] of Char;
+  Buffer: array [0 .. 261] of Char;
 begin
-  SetString(Result, Buffer, Windows.GetModuleFileName(HInstance,
-    Buffer, SizeOf(Buffer)));
+  SetString(Result, Buffer, Windows.GetModuleFileName(HInstance, Buffer,
+    SizeOf(Buffer)));
 end;
 
 function GetLanguage: string;

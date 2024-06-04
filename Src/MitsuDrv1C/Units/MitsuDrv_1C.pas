@@ -50,12 +50,12 @@ type
 
   { T1CTax }
 
-  T1CTax = array[1..4] of Single;
-  TTaxNames = array[1..6] of string;
+  T1CTax = array [1 .. 4] of Single;
+  TTaxNames = array [1 .. 6] of string;
 
   { T1CPayNames }
 
-  T1CPayNames = array[1..3] of string;
+  T1CPayNames = array [1 .. 3] of string;
 
   TCashierRec = record
     CashierName: WideString;
@@ -64,7 +64,7 @@ type
 
   { TCashiers }
 
-  TCashiers = array[1..30] of TCashierRec;
+  TCashiers = array [1 .. 30] of TCashierRec;
 
   { T1CDriverParams }
 
@@ -113,10 +113,9 @@ type
     procedure SelectDevice(const DeviceID: string);
     procedure ReadParametersKKT(Params: TParametersKKT);
     procedure CreateParamList;
-    procedure PrinTFiscalItem(Receipt: TReceipt;
-      Item: TFiscalItem);
-    procedure PrintReceipt(Electronically: Boolean;
-      const InXml: WideString; out OutXml: WideString; IsCorrection: Boolean);
+    procedure PrinTFiscalItem(Receipt: TReceipt; Item: TFiscalItem);
+    procedure PrintReceipt(Electronically: Boolean; const InXml: WideString;
+      out OutXml: WideString; IsCorrection: Boolean);
     procedure PrintBarcode(const BarcodeType, Barcode: WideString);
 
     function GetLogger: ILogFile;
@@ -139,47 +138,62 @@ type
     function Open(out DeviceID: WideString): WordBool;
     function Close(const DeviceID: WideString): WordBool;
 
-    function DeviceTest(out Description: WideString; out DemoModeIsActivated: WideString): WordBool;
+    function DeviceTest(out Description: WideString;
+      out DemoModeIsActivated: WideString): WordBool;
     function GetAdditionalActions(out TableActions: WideString): WordBool;
     function DoAdditionalAction(const ActionName: WideString): WordBool;
-    function GetDataKKT(const DeviceID: WideString; out TableParametersKKT: WideString): WordBool;
+    function GetDataKKT(const DeviceID: WideString;
+      out TableParametersKKT: WideString): WordBool;
     function OperationFN(const DeviceID: WideString; OperationType: Integer;
-                         const ParametersFiscal: WideString): WordBool;
-    function OpenShift(const DeviceID: WideString; const InputParameters: WideString;
-                       out OutputParameters: WideString): WordBool;
-    function CloseShift(const DeviceID: WideString; const InputParameters: WideString;
-                        out OutputParameters: WideString): WordBool;
+      const ParametersFiscal: WideString): WordBool;
+    function OpenShift(const DeviceID: WideString;
+      const InputParameters: WideString; out OutputParameters: WideString)
+      : WordBool;
+    function CloseShift(const DeviceID: WideString;
+      const InputParameters: WideString; out OutputParameters: WideString)
+      : WordBool;
     function ProcessCheck(const DeviceID: WideString; Electronically: WordBool;
-                          const CheckPackage: WideString; out DocumentOutputParameters: WideString): WordBool;
-    function ProcessCorrectionCheck(const DeviceID: WideString; const CheckPackage: WideString;
-                                    out DocumentOutputParameters: WideString): WordBool;
-    function CashInOutcome(const DeviceID: WideString; const InputParameters: WideString;
-                           Amount: Double): WordBool;
-    function PrintXReport(const DeviceID: WideString; const InputParameters: WideString): WordBool;
-    function GetCurrentStatus(const DeviceID: WideString; const InputParameters: WideString;
-                              out OutputParameters: WideString): WordBool;
+      const CheckPackage: WideString; out DocumentOutputParameters: WideString)
+      : WordBool;
+    function ProcessCorrectionCheck(const DeviceID: WideString;
+      const CheckPackage: WideString; out DocumentOutputParameters: WideString)
+      : WordBool;
+    function CashInOutcome(const DeviceID: WideString;
+      const InputParameters: WideString; Amount: Double): WordBool;
+    function PrintXReport(const DeviceID: WideString;
+      const InputParameters: WideString): WordBool;
+    function GetCurrentStatus(const DeviceID: WideString;
+      const InputParameters: WideString; out OutputParameters: WideString)
+      : WordBool;
     function ReportCurrentStatusOfSettlements(const DeviceID: WideString;
-                                              const InputParameters: WideString;
-                                              out OutputParameters: WideString): WordBool;
+      const InputParameters: WideString; out OutputParameters: WideString)
+      : WordBool;
     function OpenCashDrawer(const DeviceID: WideString): WordBool;
-    function GetLineLength(const DeviceID: WideString; out LineLength: Integer): WordBool;
-    function PrintCheckCopy(const DeviceID: WideString; const CheckNumber: WideString): WordBool;
-    function PrintTextDocument(const DeviceID: WideString; const DocumentPackage: WideString): WordBool;
+    function GetLineLength(const DeviceID: WideString; out LineLength: Integer)
+      : WordBool;
+    function PrintCheckCopy(const DeviceID: WideString;
+      const CheckNumber: WideString): WordBool;
+    function PrintTextDocument(const DeviceID: WideString;
+      const DocumentPackage: WideString): WordBool;
     function OpenSessionRegistrationKM(const DeviceID: WideString): WordBool;
     function CloseSessionRegistrationKM(const DeviceID: WideString): WordBool;
-    function RequestKM(const DeviceID: WideString; const RequestKMXml: WideString;
-      out RequestKMResultXml: WideString): WordBool;
-    function GetProcessingKMResult(const DeviceID: WideString; out ProcessingKMResult: WideString;
-                                   out RequestStatus: Integer): WordBool;
-    function ConfirmKM(const DeviceID: WideString; const RequestGUID: WideString;
-                       ConfirmationType: Integer): WordBool; 
-    function GetLocalizationPattern(out LocalizationPattern: WideString): WordBool;
-    function SetLocalization(const LanguageCode: WideString; const LocalizationPattern: WideString): WordBool;
+    function RequestKM(const DeviceID: WideString;
+      const RequestKMXml: WideString; out RequestKMResultXml: WideString)
+      : WordBool;
+    function GetProcessingKMResult(const DeviceID: WideString;
+      out ProcessingKMResult: WideString; out RequestStatus: Integer): WordBool;
+    function ConfirmKM(const DeviceID: WideString;
+      const RequestGUID: WideString; ConfirmationType: Integer): WordBool;
+    function GetLocalizationPattern(out LocalizationPattern: WideString)
+      : WordBool;
+    function SetLocalization(const LanguageCode: WideString;
+      const LocalizationPattern: WideString): WordBool;
 
     property Driver: TMitsuDrv read FDriver;
     property Logger: ILogFile read GetLogger;
     property ResultCode: Integer read FResultCode write FResultCode;
-    property ResultDescription: string read FResultDescription write FResultDescription;
+    property ResultDescription: string read FResultDescription
+      write FResultDescription;
   end;
 
 implementation
@@ -211,7 +225,8 @@ resourcestring
   STCPPort = 'TCP порт';
   SDeviceParams = 'Параметры устройства';
   SAdminPassword = 'Пароль администратора';
-  SCloseSession = 'Закрывать смену для программирования налоговых ставок (в случае некорректных значений)';
+  SCloseSession =
+    'Закрывать смену для программирования налоговых ставок (в случае некорректных значений)';
   SBufferStrings = 'Буферизировать строки';
   SBarcodeFirstLine = 'Номер линии для загрузки QR Code';
   SQRCodeHeight = 'Высота QR Code, точек';
@@ -262,7 +277,8 @@ resourcestring
   SODKeyName = 'Название ключа для проверки подписи (опционально)';
   SODRetryCount = 'Количество попыток подтверждения документа';
   SODRetryTimeout = 'Время между попытками подтверждения документа, сек.';
-  SItemnameLength = 'Кол-во используемых символов наименования товара (0 - использовать целиком)';
+  SItemnameLength =
+    'Кол-во используемых символов наименования товара (0 - использовать целиком)';
   SCheckFontNumber = 'Номер шрифта тела чека';
   SEnableNonFiscalHeader = 'Печатать заголовок нефиск. документа';
   SEnableNonFiscalFooter = 'Печатать окончание нефиск. документа';
@@ -275,9 +291,10 @@ resourcestring
   SODKKTRNM = 'РНМ ККТ';
   SODSaleAddress = 'Адрес проведения расчетов';
   SODSaleLocation = 'Место проведения расчетов';
-  SUseRepeatDocument = 'Для печати копии последнего документа использовать команду повтора документа';
+  SUseRepeatDocument =
+    'Для печати копии последнего документа использовать команду повтора документа';
 
-{ TDevices }
+  { TDevices }
 
 function TDevices.GetFreeID: Integer;
 var
@@ -304,10 +321,11 @@ function TDevices.ItemByID(ID: Integer): TDevice;
 var
   i: Integer;
 begin
-  for i := 0 to Count-1 do
+  for i := 0 to Count - 1 do
   begin
     Result := Items[i];
-    if Result.ID = ID then Exit;
+    if Result.ID = ID then
+      Exit;
   end;
   Result := nil;
 end;
@@ -356,10 +374,11 @@ begin
   end
   else
   begin
-    //FResultCode := E_UNKNOWN; !!!
+    // FResultCode := E_UNKNOWN; !!!
     FResultDescription := E.Message;
   end;
-  Logger.Error('HandleException: ' + IntToStr(FResultCode) + ', ' + FResultDescription);
+  Logger.Error('HandleException: ' + IntToStr(FResultCode) + ', ' +
+    FResultDescription);
 end;
 
 function TMitsuDrv1C.GetAdditionalDescription: WideString;
@@ -367,7 +386,8 @@ begin
   Result := Format('%.2xh, %s', [FResultCode, FResultDescription]);
 end;
 
-function TMitsuDrv1C.ReadValuesArray(const AValuesArray: IDispatch): T1CDriverParams;
+function TMitsuDrv1C.ReadValuesArray(const AValuesArray: IDispatch)
+  : T1CDriverParams;
 var
   V: Variant;
 begin
@@ -379,10 +399,12 @@ begin
   if not GetIntParamValue(V, DRVFR_VALUE_INDEX_SPEED, Result.Speed) then
     RaiseInvalidValue('Speed');
 
-  if not GetStrParamValue(V, DRVFR_VALUE_INDEX_USERPASSWORD, Result.UserPassword) then
+  if not GetStrParamValue(V, DRVFR_VALUE_INDEX_USERPASSWORD, Result.UserPassword)
+  then
     RaiseInvalidValue('UserPassword');
 
-  if not GetStrParamValue(V, DRVFR_VALUE_INDEX_ADMINPASSWORD, Result.AdminPassword) then
+  if not GetStrParamValue(V, DRVFR_VALUE_INDEX_ADMINPASSWORD,
+    Result.AdminPassword) then
     RaiseInvalidValue('AdminPassword)');
 
   if not GetIntParamValue(V, DRVFR_VALUE_INDEX_TIMEOUT, Result.Timeout) then
@@ -400,28 +422,35 @@ begin
   if not GetSingleParamValue(V, DRVFR_VALUE_INDEX_TAX4, Result.Tax[4]) then
     RaiseInvalidValue('Tax4');
 
-  if not GetBoolParamValue(V, DRVFR_VALUE_INDEX_CLOSESESSION, Result.CloseSession) then
+  if not GetBoolParamValue(V, DRVFR_VALUE_INDEX_CLOSESESSION,
+    Result.CloseSession) then
     RaiseInvalidValue('CloseSession');
 
-  if not GetBoolParamValue(V, DRVFR_VALUE_INDEX_ENABLELOG, Result.EnableLog) then
+  if not GetBoolParamValue(V, DRVFR_VALUE_INDEX_ENABLELOG, Result.EnableLog)
+  then
     RaiseInvalidValue('EnableLog');
 
-  if not GetStrParamValue(V, DRVFR_VALUE_INDEX_PAYNAME1, Result.PayNames[1]) then
+  if not GetStrParamValue(V, DRVFR_VALUE_INDEX_PAYNAME1, Result.PayNames[1])
+  then
     RaiseInvalidValue('PayName1');
 
-  if not GetStrParamValue(V, DRVFR_VALUE_INDEX_PAYNAME2, Result.PayNames[2]) then
+  if not GetStrParamValue(V, DRVFR_VALUE_INDEX_PAYNAME2, Result.PayNames[2])
+  then
     RaiseInvalidValue('PayName2');
 
-  if not GetBoolParamValue(V, DRVFR_VALUE_INDEX_PRINTLOGO, Result.PrintLogo) then
+  if not GetBoolParamValue(V, DRVFR_VALUE_INDEX_PRINTLOGO, Result.PrintLogo)
+  then
     Result.PrintLogo := DEF_PRINTLOGO;
 
   if not GetIntParamValue(V, DRVFR_VALUE_INDEX_LOGOSIZE, Result.LogoSize) then
     Result.LogoSize := DEF_LOGOSIZE;
 
-  if not GetIntParamValue(V, DRVFR_VALUE_INDEX_CONNECTION_TYPE, Result.ConnectionType) then
+  if not GetIntParamValue(V, DRVFR_VALUE_INDEX_CONNECTION_TYPE,
+    Result.ConnectionType) then
     Result.ConnectionType := DEF_CONNECTION_TYPE;
 
-  if not GetStrParamValue(V, DRVFR_VALUE_INDEX_COMPUTERNAME, Result.ComputerName) then
+  if not GetStrParamValue(V, DRVFR_VALUE_INDEX_COMPUTERNAME, Result.ComputerName)
+  then
     Result.ComputerName := DEF_COMPUTERNAME;
 
   if not GetStrParamValue(V, DRVFR_VALUE_INDEX_IPADDRESS, Result.IPAddress) then
@@ -430,10 +459,12 @@ begin
   if not GetIntParamValue(V, DRVFR_VALUE_INDEX_TCPPORT, Result.TCPPort) then
     Result.TCPPort := DEF_TCPPORT;
 
-  if not GetIntParamValue(V, DRVFR_VALUE_INDEX_PROTOCOLTYPE, Result.ProtocolType) then
+  if not GetIntParamValue(V, DRVFR_VALUE_INDEX_PROTOCOLTYPE, Result.ProtocolType)
+  then
     Result.ProtocolType := DEF_PROTOCOLTYPE;
 
-  if not GetBoolParamValue(V, DRVFR_VALUE_INDEX_BUFFERSTRINGS, Result.BufferStrings) then
+  if not GetBoolParamValue(V, DRVFR_VALUE_INDEX_BUFFERSTRINGS,
+    Result.BufferStrings) then
     Result.BufferStrings := DEF_BUFFERSTRINGS;
 end;
 
@@ -442,9 +473,12 @@ function TMitsuDrv1C.ReadOutputParameters: AnsiString;
   function MTSDayStatusTo1C(DayStatus: Integer): Integer;
   begin
     case DayStatus of
-      MTS_DAY_STATUS_CLOSED: Result := D1C_DS_CLOSED;
-      MTS_DAY_STATUS_OPENED: Result := D1C_DS_OPENED;
-      MTS_DAY_STATUS_EXPIRED: Result := D1C_DS_EXPIRED;
+      MTS_DAY_STATUS_CLOSED:
+        Result := D1C_DS_CLOSED;
+      MTS_DAY_STATUS_OPENED:
+        Result := D1C_DS_OPENED;
+      MTS_DAY_STATUS_EXPIRED:
+        Result := D1C_DS_EXPIRED;
     else
       raise Exception.CreateFmt('Invalid day status value, %d', [DayStatus]);
     end;
@@ -469,33 +503,39 @@ begin
   Params.CheckNumber := FDStatus.LastDoc;
   Params.ShiftState := MTSDayStatusTo1C(DayStatus.DayStatus);
   Params.DateTime := FDStatus.DocDate;
-  Params.CashBalance :=
-    ReceiptTotals.Sale.T1136 +
-    ReceiptTotals.RetBuy.T1136 -
-    ReceiptTotals.RetSale.T1136 -
-    ReceiptTotals.Buy.T1136;
+  Params.CashBalance := ReceiptTotals.Sale.T1136 + ReceiptTotals.RetBuy.T1136 -
+    ReceiptTotals.RetSale.T1136 - ReceiptTotals.Buy.T1136;
 
   Params.ShiftClosingCheckNumber := DayStatus.RecNumber;
   // Счетчики операций по типу "приход"
   Params.CountersOperationType1.CheckCount := ReceiptTotals.Sale.Count;
   Params.CountersOperationType1.TotalChecksAmount := ReceiptTotals.Sale.Total;
-  Params.CountersOperationType1.CorrectionCheckCount := CorrectionTotals.Sale.Count;
-  Params.CountersOperationType1.TotalCorrectionChecksAmount := CorrectionTotals.Sale.Total;
+  Params.CountersOperationType1.CorrectionCheckCount :=
+    CorrectionTotals.Sale.Count;
+  Params.CountersOperationType1.TotalCorrectionChecksAmount :=
+    CorrectionTotals.Sale.Total;
   // Счетчики операций по типу "возврат прихода"
   Params.CountersOperationType2.CheckCount := ReceiptTotals.RetSale.Count;
-  Params.CountersOperationType2.TotalChecksAmount := ReceiptTotals.RetSale.Total;
-  Params.CountersOperationType2.CorrectionCheckCount := CorrectionTotals.RetSale.Count;
-  Params.CountersOperationType2.TotalCorrectionChecksAmount := CorrectionTotals.RetSale.Total;
+  Params.CountersOperationType2.TotalChecksAmount :=
+    ReceiptTotals.RetSale.Total;
+  Params.CountersOperationType2.CorrectionCheckCount :=
+    CorrectionTotals.RetSale.Count;
+  Params.CountersOperationType2.TotalCorrectionChecksAmount :=
+    CorrectionTotals.RetSale.Total;
   // Счетчики операций по типу "расход"
   Params.CountersOperationType3.CheckCount := ReceiptTotals.Buy.Count;
   Params.CountersOperationType3.TotalChecksAmount := ReceiptTotals.Buy.Total;
-  Params.CountersOperationType3.CorrectionCheckCount := CorrectionTotals.Buy.Count;
-  Params.CountersOperationType3.TotalCorrectionChecksAmount := CorrectionTotals.Buy.Total;
+  Params.CountersOperationType3.CorrectionCheckCount :=
+    CorrectionTotals.Buy.Count;
+  Params.CountersOperationType3.TotalCorrectionChecksAmount :=
+    CorrectionTotals.Buy.Total;
   // Счетчики операций по типу "возврат расхода"
   Params.CountersOperationType4.CheckCount := ReceiptTotals.RetBuy.Count;
   Params.CountersOperationType4.TotalChecksAmount := ReceiptTotals.RetBuy.Total;
-  Params.CountersOperationType4.CorrectionCheckCount := CorrectionTotals.RetBuy.Count;
-  Params.CountersOperationType4.TotalCorrectionChecksAmount := CorrectionTotals.RetBuy.Total;
+  Params.CountersOperationType4.CorrectionCheckCount :=
+    CorrectionTotals.RetBuy.Count;
+  Params.CountersOperationType4.TotalCorrectionChecksAmount :=
+    CorrectionTotals.RetBuy.Total;
 
   Params.BacklogDocumentsCounter := FDOStatus.DocCount;
   Params.BacklogDocumentFirstNumber := FDOStatus.FirstDoc;
@@ -520,7 +560,8 @@ begin
   try
     ID := StrToInt(DeviceID);
   except
-    RaiseError(E_INVALIDPARAM, Format('%s %s', [GetRes(@SInvalidParam), '"DeviceID"']));
+    RaiseError(E_INVALIDPARAM, Format('%s %s', [GetRes(@SInvalidParam),
+      '"DeviceID"']));
   end;
 
   Device := FDevices.ItemByID(ID);
@@ -689,14 +730,18 @@ begin
     FNParams.ExtendedProperty := '';
     FNParams.ExtendedData := '';
     FNParams.TaxSystems := Params.TaxSystems;
-    //FNParams.RegNumber := Params.RegNumber; !!!
+    // FNParams.RegNumber := Params.RegNumber; !!!
 
     case OperationType of
-      D1C_FNOT_OPEN: Driver.Check(Driver.FNOpen(FNParams));
-      D1C_FNOT_CHANGE: Driver.Check(Driver.FNChange(FNParams));
-      D1C_FNOT_CLOSE: Driver.Check(Driver.FNClose(FNParams));
+      D1C_FNOT_OPEN:
+        Driver.Check(Driver.FNOpen(FNParams));
+      D1C_FNOT_CHANGE:
+        Driver.Check(Driver.FNChange(FNParams));
+      D1C_FNOT_CLOSE:
+        Driver.Check(Driver.FNClose(FNParams));
     else
-      raise Exception.CreateFmt('Invalid OperationType parameter value, %d', [OperationType]);
+      raise Exception.CreateFmt('Invalid OperationType parameter value, %d',
+        [OperationType]);
     end;
   except
     on E: Exception do
@@ -715,8 +760,8 @@ begin
   Result := 4001;
 end;
 
-function TMitsuDrv1C.GetDescription(
-  out DriverDescription: WideString): WordBool;
+function TMitsuDrv1C.GetDescription(out DriverDescription: WideString)
+  : WordBool;
 var
   Node: IXMLNode;
   Xml: IXMLDocument;
@@ -733,13 +778,17 @@ begin
     Xml.Encoding := 'UTF-8';
     Xml.Options := Xml.Options + [doNodeAutoIndent];
     Node := Xml.AddChild('DriverDescription');
-    {$IFDEF WIN64}
-    Node.Attributes['Name'] := 'Драйвер ККТ с передачей данных в ОФД ' + Version + ' (Win64)';
-    Node.Attributes['Description'] := 'Драйвер ККТ с передачей данных в ОФД ' + Version + ' (Win64)';
-    {$ELSE}
-    Node.Attributes['Name'] := 'Драйвер ККТ с передачей данных в ОФД ' + Version + ' (Win32)';
-    Node.Attributes['Description'] := 'Драйвер ККТ с передачей данных в ОФД ' + Version + ' (Win32)';
-    {$ENDIF}
+{$IFDEF WIN64}
+    Node.Attributes['Name'] := 'Драйвер ККТ с передачей данных в ОФД ' + Version
+      + ' (Win64)';
+    Node.Attributes['Description'] := 'Драйвер ККТ с передачей данных в ОФД ' +
+      Version + ' (Win64)';
+{$ELSE}
+    Node.Attributes['Name'] := 'Драйвер ККТ с передачей данных в ОФД ' + Version
+      + ' (Win32)';
+    Node.Attributes['Description'] := 'Драйвер ККТ с передачей данных в ОФД ' +
+      Version + ' (Win32)';
+{$ENDIF}
     Node.Attributes['EquipmentType'] := 'ККТ';
     Node.Attributes['IntegrationComponent'] := 'true';
     Node.Attributes['MainDriverInstalled'] := 'true';
@@ -755,17 +804,14 @@ begin
   Logger.Debug('GetDescription.end');
 end;
 
-
-function TMitsuDrv1C.GetLastError(
-  out ErrorDescription: WideString): Integer;
+function TMitsuDrv1C.GetLastError(out ErrorDescription: WideString): Integer;
 begin
   ErrorDescription := Format('%.2xh, %s', [FResultCode, FResultDescription]);
   Result := FResultCode;
   Logger.Debug('GetLastError ' + ErrorDescription);
 end;
 
-function TMitsuDrv1C.GetParameters(
-  out TableParameters: WideString): WordBool;
+function TMitsuDrv1C.GetParameters(out TableParameters: WideString): WordBool;
 begin
   Logger.Debug('GetParameters');
   TableParameters := FParamList.ToString;
@@ -793,7 +839,8 @@ resourcestring
   STCPPort = 'TCP порт';
   SDeviceParams = 'Параметры устройства';
   SAdminPassword = 'Пароль администратора';
-  SCloseSession = 'Закрывать смену для программирования налоговых ставок (в случае некорректных значений)';
+  SCloseSession =
+    'Закрывать смену для программирования налоговых ставок (в случае некорректных значений)';
   SBufferStrings = 'Буферизировать строки';
   SBarcodeFirstLine = 'Номер линии для загрузки QR Code';
   SQRCodeHeight = 'Высота QR Code, точек';
@@ -801,7 +848,8 @@ resourcestring
   SCheckClock = 'Синхронизировать часы ККТ перед открытием смены';
   SReceiptFormat = 'Формат чека';
   SEnablePaymentSignPrint = 'Печатать признак и способ расчета (ФФД 1.05)';
-  SDisablePrintReports = 'Не печатать фискальные отчеты и чеки внесения/выемки на бумаге';
+  SDisablePrintReports =
+    'Не печатать фискальные отчеты и чеки внесения/выемки на бумаге';
   SLogParams = 'Настройка лога';
   SEnableLog = 'Вести лог (путь к логу настраивается через тест драйвера)';
   SLogPath = 'Путь к файлу лога';
@@ -863,7 +911,8 @@ resourcestring
   SODIsMarking = 'Признак торговли маркированными товарами';
   SODIsPawnshop = 'Признак ломбардной деятельности';
   SODIsAssurance = 'Признак страховой деятельности';
-  SItemnameLength = 'Кол-во используемых символов наименования товара (0 - использовать целиком)';
+  SItemnameLength =
+    'Кол-во используемых символов наименования товара (0 - использовать целиком)';
   SCheckFontNumber = 'Номер шрифта тела чека';
   SKgKKT = 'Kg ККТ';
   SKgKKTEnabled = 'Работать с Kg KKT';
@@ -882,8 +931,10 @@ begin
   Item.Description := GetRes(@SConnectionType);
   Item.TypeValue := 'Number';
   Item.DefaultValue := '0';
-  for i := Low(Driver.ValidConnectionTypes) to High(Driver.ValidConnectionTypes) do
-    Item.AddChoiceListItem(ConnectionTypeToStr(ConnectionTypes[i]), IntToSTr(ConnectionTypes[i]));
+  for i := Low(Driver.ValidConnectionTypes)
+    to High(Driver.ValidConnectionTypes) do
+    Item.AddChoiceListItem(ConnectionTypeToStr(ConnectionTypes[i]),
+      IntToStr(ConnectionTypes[i]));
   // Порт
   Item := Group.Items.Add;
   Item.Name := 'Port';
@@ -906,21 +957,21 @@ begin
     ChoiceListItem.Name := IntToStr(i);
     ChoiceListItem.Value := IntToStr(i);
   end;
-  //Таймаут
+  // Таймаут
   Item := Group.Items.Add;
   Item.Name := 'Timeout';
   Item.Caption := GetRes(@STimeout);
   Item.Description := GetRes(@STimeout);
   Item.TypeValue := 'Number';
   Item.DefaultValue := '10000';
-  //IP адрес
+  // IP адрес
   Item := Group.Items.Add;
   Item.Name := 'IPAddress';
   Item.Caption := GetRes(@SIPAddress);
   Item.Description := GetRes(@SIPAddress);
   Item.TypeValue := 'String';
   Item.DefaultValue := '192.168.137.111';
-  //TCP Port
+  // TCP Port
   Item := Group.Items.Add;
   Item.Name := 'TCPPort';
   Item.Caption := GetRes(@STCPPort);
@@ -1041,8 +1092,8 @@ begin
 
   Item := Group.Items.Add;
   Item.Name := 'ItemNameLength';
-  Item.Caption := GetRes(@SItemNameLength);
-  Item.Description := GetRes(@SItemNameLength);
+  Item.Caption := GetRes(@SItemnameLength);
+  Item.Description := GetRes(@SItemnameLength);
   Item.TypeValue := 'Number';
   Item.DefaultValue := '0';
 
@@ -1074,7 +1125,7 @@ begin
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
-  {  ORANGE DATA  }
+  { ORANGE DATA }
   // Orange data
   Page := FParamList.Pages.Add;
   Page.Caption := GetRes(@SOrangeData);
@@ -1151,12 +1202,12 @@ begin
   Item.TypeValue := 'Number';
   Item.DefaultValue := '2';
 
-  {  ORANGE DATA 2  }
+  { ORANGE DATA 2 }
   // Orange data
- { Page := FParamList.Pages.Add;
-  Page.Caption := GetRes(@SOrangeData2);
-  Group := Page.Groups.Add;
-  Group.Caption := GetRes(@SOrangeData2);}
+  { Page := FParamList.Pages.Add;
+    Page.Caption := GetRes(@SOrangeData2);
+    Group := Page.Groups.Add;
+    Group.Caption := GetRes(@SOrangeData2); }
 
   Item := Group.Items.Add;
   Item.Name := 'ODFFDVersion';
@@ -1266,7 +1317,7 @@ begin
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
-  {OD Режим работы}
+  { OD Режим работы }
   Group := Page.Groups.Add;
   Group.Caption := GetRes(@SODWorkMode);
 
@@ -1383,7 +1434,8 @@ begin
   Item.DefaultValue := 'False';
 end;
 
-function TMitsuDrv1C.SetParameter(const Name: WideString; Value: OleVariant): WordBool;
+function TMitsuDrv1C.SetParameter(const Name: WideString; Value: OleVariant)
+  : WordBool;
 begin
   Logger.Debug('SetParameter  ' + Name + ' ' + VarToWideStr(Value));
   Result := True;
@@ -1400,153 +1452,153 @@ begin
       FParams.RemoteHost := Value;
     if WideSameStr('TCPPort', Name) then
       FParams.RemotePort := Value;
-(*
-    if WideSameStr('AdminPassword', Name) then
+    (*
+      if WideSameStr('AdminPassword', Name) then
       FParams.AdminPassword := Value;
-    if WideSameStr('QRCodeDotWidth', Name) then
+      if WideSameStr('QRCodeDotWidth', Name) then
       FParams.QRCodeDotWidth := Value;
 
-    if WideSameStr('EnablePaymentSignPrint', Name) then
+      if WideSameStr('EnablePaymentSignPrint', Name) then
       FParams.EnablePaymentSignPrint := (WideSameText('True', Value)) or (WideSameText('1', Value));
 
-    if WideSameStr('ODEnabled', Name) then
+      if WideSameStr('ODEnabled', Name) then
       FParams.ODEnabled := (WideSameText('True', Value)) or (WideSameText('1', Value));
 
-    if WideSameStr('ODServerURL', Name) then
+      if WideSameStr('ODServerURL', Name) then
       FParams.ODServerURL := Value;
 
-    if WideSameStr('ODINN', Name) then
+      if WideSameStr('ODINN', Name) then
       FParams.ODINN := Value;
 
-    if WideSameStr('ODGroup', Name) then
+      if WideSameStr('ODGroup', Name) then
       FParams.ODGroup := Value;
 
-    if WideSameStr('ODCertFileName', Name) then
+      if WideSameStr('ODCertFileName', Name) then
       FParams.ODCertFileName := Value;
 
-    if WideSameStr('ODKeyFileName', Name) then
+      if WideSameStr('ODKeyFileName', Name) then
       FParams.ODKeyFileName := Value;
 
-    if WideSameStr('ODSignKeyFileName', Name) then
+      if WideSameStr('ODSignKeyFileName', Name) then
       FParams.ODSignKeyFileName := Value;
 
-    if WideSameStr('ODKeyName', Name) then
+      if WideSameStr('ODKeyName', Name) then
       FParams.ODKeyName := Value;
 
-    if WideSameStr('ODRetryCount', Name) then
+      if WideSameStr('ODRetryCount', Name) then
       FParams.ODRetryCount := Value;
 
-    if WideSameStr('ODRetryTimeout', Name) then
+      if WideSameStr('ODRetryTimeout', Name) then
       FParams.ODRetryTimeout := Value;
 
-    if WideSameStr('ItemNameLength', Name) then
+      if WideSameStr('ItemNameLength', Name) then
       FParams.ItemNameLength := Value;
 
-    if WideSameStr('CheckFontNumber', Name) then
+      if WideSameStr('CheckFontNumber', Name) then
       FParams.CheckFontNumber := Value;
 
-    if WideSameStr('ODFFDVersion', Name) then
+      if WideSameStr('ODFFDVersion', Name) then
       FParams.ODFFDVersion := StrToInt(Value);
 
-    if WideSameStr('ODTaxOSN', Name) then
+      if WideSameStr('ODTaxOSN', Name) then
       FParams.ODTaxOSN := Value;
 
-    if WideSameStr('ODTaxUSND', Name) then
+      if WideSameStr('ODTaxUSND', Name) then
       FParams.ODTaxUSND := Value;
 
-    if WideSameStr('ODTaxUSNDMR', Name) then
+      if WideSameStr('ODTaxUSNDMR', Name) then
       FParams.ODTaxUSNDMR := Value;
 
-    if WideSameStr('ODTaxENVD', Name) then
+      if WideSameStr('ODTaxENVD', Name) then
       FParams.ODTaxENVD := Value;
 
-    if WideSameStr('ODTaxESN', Name) then
+      if WideSameStr('ODTaxESN', Name) then
       FParams.ODTaxESN := Value;
 
-    if WideSameStr('ODTaxPSN', Name) then
+      if WideSameStr('ODTaxPSN', Name) then
       FParams.ODTaxPSN := Value;
 
-    if WideSameStr('EnableNonFiscalHeader', Name) then
+      if WideSameStr('EnableNonFiscalHeader', Name) then
       FParams.EnableNonFiscalHeader := Value;
 
-    if WideSameStr('EnableNonFiscalFooter', Name) then
+      if WideSameStr('EnableNonFiscalFooter', Name) then
       FParams.EnableNonFiscalFooter := Value;
 
-    if WideSameStr('DisablePrintReports', Name) then
+      if WideSameStr('DisablePrintReports', Name) then
       FParams.DisablePrintReports := Value;
 
-    if WideSameStr('CheckClock', Name) then
+      if WideSameStr('CheckClock', Name) then
       FParams.CheckClock := Value;
 
-    if WideSameStr('ODKKTRetailDelivery', Name) then
+      if WideSameStr('ODKKTRetailDelivery', Name) then
       FParams.ODKKTRetailDelivery := Value;
 
-    if WideSameStr('ODKKTSerialNumber', Name) then
+      if WideSameStr('ODKKTSerialNumber', Name) then
       FParams.ODKKTSerialNumber := Value;
 
-    if WideSameStr('ODKKTRNM', Name) then
+      if WideSameStr('ODKKTRNM', Name) then
       FParams.ODKKTRNM := Value;
 
-    if WideSameStr('ODKKTFNSerialNumber', Name) then
+      if WideSameStr('ODKKTFNSerialNumber', Name) then
       FParams.ODKKTFNSerialNumber := Value;
 
-    if WideSameStr('ODAutomaticNumber', Name) then
+      if WideSameStr('ODAutomaticNumber', Name) then
       FParams.ODAutomaticNumber := Value;
 
-    if WideSameStr('ODIsOffline', Name) then
+      if WideSameStr('ODIsOffline', Name) then
       FParams.ODIsOffline := Value;
 
-    if WideSameStr('ODIsEncrypted', Name) then
+      if WideSameStr('ODIsEncrypted', Name) then
       FParams.ODIsEncrypted := Value;
 
-    if WideSameStr('ODIsService', Name) then
+      if WideSameStr('ODIsService', Name) then
       FParams.ODIsService := Value;
 
-    if WideSameStr('ODIsExcisable', Name) then
+      if WideSameStr('ODIsExcisable', Name) then
       FParams.ODIsExcisable := Value;
 
-    if WideSameStr('ODIsGambling', Name) then
+      if WideSameStr('ODIsGambling', Name) then
       FParams.ODIsGambling := Value;
 
-    if WideSameStr('ODIsLottery', Name) then
+      if WideSameStr('ODIsLottery', Name) then
       FParams.ODIsLottery := Value;
 
-    if WideSameStr('ODBSOSing', Name) then
+      if WideSameStr('ODBSOSing', Name) then
       FParams.ODBSOSing := Value;
 
-    if WideSameStr('ODIsOnline', Name) then
+      if WideSameStr('ODIsOnline', Name) then
       FParams.ODIsOnline := Value;
 
-    if WideSameStr('ODIsAutomaticPrinter', Name) then
+      if WideSameStr('ODIsAutomaticPrinter', Name) then
       FParams.ODIsAutomaticPrinter := Value;
 
-    if WideSameStr('ODIsAutomatic', Name) then
+      if WideSameStr('ODIsAutomatic', Name) then
       FParams.ODIsAutomatic := Value;
 
-    if WideSameStr('ODIsMarking', Name) then
+      if WideSameStr('ODIsMarking', Name) then
       FParams.ODIsMarking := Value;
 
-    if WideSameStr('ODIsPawnshop', Name) then
+      if WideSameStr('ODIsPawnshop', Name) then
       FParams.ODIsPawnshop := Value;
 
-    if WideSameStr('ODIsAssurance', Name) then
+      if WideSameStr('ODIsAssurance', Name) then
       FParams.ODIsAssurance := Value;
 
-    if WideSameStr('ODSaleAddress', Name) then
+      if WideSameStr('ODSaleAddress', Name) then
       FParams.ODSaleAddress := Value;
 
-    if WideSameStr('ODSaleLocation', Name) then
+      if WideSameStr('ODSaleLocation', Name) then
       FParams.ODSaleLocation := Value;
 
-    if WideSameStr('KgKKTEnabled', Name) then
+      if WideSameStr('KgKKTEnabled', Name) then
       FParams.KgKKTEnabled := Value;
 
-    if WideSameStr('KgKKTUrl', Name) then
+      if WideSameStr('KgKKTUrl', Name) then
       FParams.KgKKTUrl := Value;
 
-    if WideSameStr('UseRepeatDocument', Name) then
+      if WideSameStr('UseRepeatDocument', Name) then
       FParams.UseRepeatDocument := Value;
-  *)
+    *)
   except
     on E: Exception do
     begin
@@ -1609,8 +1661,8 @@ begin
   Logger.Debug('Close.end');
 end;
 
-function TMitsuDrv1C.CashInOutcome(const DeviceID,
-  InputParameters: WideString; Amount: Double): WordBool;
+function TMitsuDrv1C.CashInOutcome(const DeviceID, InputParameters: WideString;
+  Amount: Double): WordBool;
 var
   Params: TInputParametersRec;
 begin
@@ -1632,8 +1684,8 @@ begin
   Logger.Debug('CashInOutcome.end');
 end;
 
-function TMitsuDrv1C.CloseShift(const DeviceID,
-  InputParameters: WideString; out OutputParameters: WideString): WordBool;
+function TMitsuDrv1C.CloseShift(const DeviceID, InputParameters: WideString;
+  out OutputParameters: WideString): WordBool;
 var
   Cashier: TMTSCashier;
   Status: TMTSDayStatus;
@@ -1648,26 +1700,27 @@ begin
     InParams := FXmlDocument.Read(InputParameters);
     Driver.Check(Driver.ReadDayStatus(Status));
     case Status.DayStatus of
-      MTS_DAY_STATUS_CLOSED: ;
-      MTS_DAY_STATUS_OPENED,
-      MTS_DAY_STATUS_EXPIRED:
-      begin
-        // Set cashier
-        Cashier.Name := InParams.CashierName;
-        Cashier.INN := InParams.CashierINN;
-        Driver.Check(Driver.WriteCashier(Cashier));
-        // Close fiscal day
-        DayParams.SaleAddress := InParams.SaleAddress;
-        DayParams.SaleLocation := InParams.SaleLocation;
-        DayParams.PrintRequired := InParams.PrintRequired;
-        DayParams.ExtendedProperty := '';
-        DayParams.ExtendedData := '';
-        Driver.Check(Driver.CloseFiscalDay(DayParams));
-        // Wait print complete
-        Driver.Check(Driver.WaitForPrinting);
-      end;
+      MTS_DAY_STATUS_CLOSED:
+        ;
+      MTS_DAY_STATUS_OPENED, MTS_DAY_STATUS_EXPIRED:
+        begin
+          // Set cashier
+          Cashier.Name := InParams.CashierName;
+          Cashier.INN := InParams.CashierINN;
+          Driver.Check(Driver.WriteCashier(Cashier));
+          // Close fiscal day
+          DayParams.SaleAddress := InParams.SaleAddress;
+          DayParams.SaleLocation := InParams.SaleLocation;
+          DayParams.PrintRequired := InParams.PrintRequired;
+          DayParams.ExtendedProperty := '';
+          DayParams.ExtendedData := '';
+          Driver.Check(Driver.CloseFiscalDay(DayParams));
+          // Wait print complete
+          Driver.Check(Driver.WaitForPrinting);
+        end;
     else
-      raise Exception.CreateFmt('Invalid day status value, %d', [Status.DayStatus]);
+      raise Exception.CreateFmt('Invalid day status value, %d',
+        [Status.DayStatus]);
     end;
     OutputParameters := ReadOutputParameters;
   except
@@ -1681,8 +1734,8 @@ begin
   Logger.Debug('CloseShiftFN.end');
 end;
 
-function TMitsuDrv1C.DeviceTest(out Description,
-  DemoModeIsActivated: WideString): WordBool;
+function TMitsuDrv1C.DeviceTest(out Description, DemoModeIsActivated
+  : WideString): WordBool;
 var
   Version: TMTSVersion;
   DeviceName: WideString;
@@ -1711,8 +1764,7 @@ begin
   Logger.Debug('DeviceTest.end');
 end;
 
-function TMitsuDrv1C.DoAdditionalAction(
-  const ActionName: WideString): WordBool;
+function TMitsuDrv1C.DoAdditionalAction(const ActionName: WideString): WordBool;
 begin
   Logger.Debug('DoAdditionalAction ActionName = ' + ActionName);
   ClearError;
@@ -1721,7 +1773,7 @@ begin
     repeat
       if WideSameText(ActionName, 'TaxReport') then
       begin
-      
+
         Break;
       end;
       if WideSameText(ActionName, 'DepartmentReport') then
@@ -1741,8 +1793,8 @@ begin
   Logger.Debug('DoAdditionalAction.end');
 end;
 
-function TMitsuDrv1C.GetAdditionalActions(
-  out TableActions: WideString): WordBool;
+function TMitsuDrv1C.GetAdditionalActions(out TableActions: WideString)
+  : WordBool;
 
   function GetXmlActions: WideString;
   var
@@ -1767,7 +1819,7 @@ function TMitsuDrv1C.GetAdditionalActions(
       Node.Attributes['Name'] := 'DepartmentReport';
       Node.Attributes['Caption'] := 'Отчет по отделам';
 
-      Result := XML.XML.Text;
+      Result := Xml.Xml.Text;
     finally
       Xml := nil;
     end;
@@ -1790,8 +1842,8 @@ begin
   Logger.Debug('GetAdditionalActions.end');
 end;
 
-function TMitsuDrv1C.GetCurrentStatus(const DeviceID,
-  InputParameters: WideString; out OutputParameters: WideString): WordBool;
+function TMitsuDrv1C.GetCurrentStatus(const DeviceID, InputParameters
+  : WideString; out OutputParameters: WideString): WordBool;
 var
   InParams: TInputParametersRec;
 begin
@@ -1871,29 +1923,31 @@ begin
     InParams := FXmlDocument.Read(InputParameters);
     Driver.Check(Driver.ReadDayStatus(Status));
     case Status.DayStatus of
-      MTS_DAY_STATUS_OPENED: ;
+      MTS_DAY_STATUS_OPENED:
+        ;
       MTS_DAY_STATUS_CLOSED:
-      begin
-        // Set cashier
-        Cashier.Name := InParams.CashierName;
-        Cashier.INN := InParams.CashierINN;
-        Driver.Check(Driver.WriteCashier(Cashier));
-        // Open fiscal day
-        DayParams.SaleAddress := InParams.SaleAddress;
-        DayParams.SaleLocation := InParams.SaleLocation;
-        DayParams.PrintRequired := InParams.PrintRequired;
-        DayParams.ExtendedProperty := '';
-        DayParams.ExtendedData := '';
-        Driver.Check(Driver.OpenFiscalDay(DayParams));
-        // Wait print complete
-        Driver.Check(Driver.WaitForPrinting);
-      end;
+        begin
+          // Set cashier
+          Cashier.Name := InParams.CashierName;
+          Cashier.INN := InParams.CashierINN;
+          Driver.Check(Driver.WriteCashier(Cashier));
+          // Open fiscal day
+          DayParams.SaleAddress := InParams.SaleAddress;
+          DayParams.SaleLocation := InParams.SaleLocation;
+          DayParams.PrintRequired := InParams.PrintRequired;
+          DayParams.ExtendedProperty := '';
+          DayParams.ExtendedData := '';
+          Driver.Check(Driver.OpenFiscalDay(DayParams));
+          // Wait print complete
+          Driver.Check(Driver.WaitForPrinting);
+        end;
       MTS_DAY_STATUS_EXPIRED:
-      begin
-        raise Exception.Create('Day expired');
-      end;
+        begin
+          raise Exception.Create('Day expired');
+        end;
     else
-      raise Exception.CreateFmt('Invalid day status value, %d', [Status.DayStatus]);
+      raise Exception.CreateFmt('Invalid day status value, %d',
+        [Status.DayStatus]);
     end;
     OutputParameters := ReadOutputParameters;
   except
@@ -1907,9 +1961,8 @@ begin
   Logger.Debug('OpenShift.end');
 end;
 
-
-function TMitsuDrv1C.PrintCheckCopy(const DeviceID,
-  CheckNumber: WideString): WordBool;
+function TMitsuDrv1C.PrintCheckCopy(const DeviceID, CheckNumber: WideString)
+  : WordBool;
 var
   RecNumber: Integer;
   DocStatus: TDocStatus;
@@ -1922,7 +1975,8 @@ begin
     if CheckNumber = '' then
     begin
       Driver.Check(Driver.Print);
-    end else
+    end
+    else
     begin
       RecNumber := StrToInt(CheckNumber);
       Driver.Check(Driver.ReadDocStatus(RecNumber, DocStatus));
@@ -1939,8 +1993,8 @@ begin
   Logger.Debug('PrintCheckCopy.end');
 end;
 
-function TMitsuDrv1C.PrintTextDocument(const DeviceID,
-  DocumentPackage: WideString): WordBool;
+function TMitsuDrv1C.PrintTextDocument(const DeviceID, DocumentPackage
+  : WideString): WordBool;
 var
   Document: TTextDocument;
 begin
@@ -1964,8 +2018,8 @@ begin
   Logger.Debug('PrintTextDocument.end');
 end;
 
-function TMitsuDrv1C.PrintXReport(const DeviceID,
-  InputParameters: WideString): WordBool;
+function TMitsuDrv1C.PrintXReport(const DeviceID, InputParameters: WideString)
+  : WordBool;
 var
   Cashier: TMTSCashier;
   DayStatus: TMTSDayStatus;
@@ -2049,7 +2103,8 @@ begin
     if IsCorrection then
     begin
       Driver.Check(Driver.OpenCorrection(OpenReceipt));
-    end else
+    end
+    else
     begin
       Driver.Check(Driver.OpenReceipt(OpenReceipt));
     end;
@@ -2057,18 +2112,25 @@ begin
     Attributes.CustomerPhone := Receipt.Params.CustomerPhone;
     // IndustryAttribute
     Attributes.IndustryAttribute.Enabled := Receipt.IndustryAttribute.Enabled;
-    Attributes.IndustryAttribute.IdentifierFOIV := Receipt.IndustryAttribute.IdentifierFOIV;
-    Attributes.IndustryAttribute.DocumentDate := Receipt.IndustryAttribute.DocumentDate;
-    Attributes.IndustryAttribute.DocumentNumber := Receipt.IndustryAttribute.DocumentNumber;
-    Attributes.IndustryAttribute.AttributeValue := Receipt.IndustryAttribute.AttributeValue;
+    Attributes.IndustryAttribute.IdentifierFOIV :=
+      Receipt.IndustryAttribute.IdentifierFOIV;
+    Attributes.IndustryAttribute.DocumentDate :=
+      Receipt.IndustryAttribute.DocumentDate;
+    Attributes.IndustryAttribute.DocumentNumber :=
+      Receipt.IndustryAttribute.DocumentNumber;
+    Attributes.IndustryAttribute.AttributeValue :=
+      Receipt.IndustryAttribute.AttributeValue;
     // CustomerDetail
     Attributes.CustomerDetail.Enabled := Receipt.CustomerDetail.Enabled;
     Attributes.CustomerDetail.Name := Receipt.CustomerDetail.Info;
     Attributes.CustomerDetail.INN := Receipt.CustomerDetail.INN;
     Attributes.CustomerDetail.BirthDate := Receipt.CustomerDetail.DateOfBirth;
-    Attributes.CustomerDetail.CountryCode := StrToInt(Receipt.CustomerDetail.Citizenship);
-    Attributes.CustomerDetail.DocumentCode := Receipt.CustomerDetail.DocumentTypeCode;
-    Attributes.CustomerDetail.DocumentData := Receipt.CustomerDetail.DocumentData;
+    Attributes.CustomerDetail.CountryCode :=
+      StrToInt(Receipt.CustomerDetail.Citizenship);
+    Attributes.CustomerDetail.DocumentCode :=
+      Receipt.CustomerDetail.DocumentTypeCode;
+    Attributes.CustomerDetail.DocumentData :=
+      Receipt.CustomerDetail.DocumentData;
     Attributes.CustomerDetail.Address := Receipt.CustomerDetail.Address;
     // OperationInfo
     Attributes.OperationInfo.Enabled := Receipt.OperationalAttribute.Enabled;
@@ -2198,7 +2260,6 @@ begin
   Driver.Check(Driver.AddBarcode(BC));
 end;
 
-
 procedure TMitsuDrv1C.PrinTFiscalItem(Receipt: TReceipt; Item: TFiscalItem);
 var
   Position: TMTSPosition;
@@ -2215,15 +2276,19 @@ begin
   Position.CustomsDeclaration := Item.CustomsDeclaration;
   Position.MarkingCode := Item.Marking;
   Position.AddAttribute := Item.AdditionalAttribute;
-  //Position.AgentType := Item. !!!
+  // Position.AgentType := Item. !!!
   // AgentData
   Position.AgentData.Enabled := Item.AgentData.Enabled;
   Position.AgentData.AgentOperation := Item.AgentData.AgentOperation;
   Position.AgentData.AgentPhone := Item.AgentData.AgentPhone;
-  Position.AgentData.PaymentProcessorPhone := Item.AgentData.PaymentProcessorPhone;
-  Position.AgentData.AcquirerOperatorPhone := Item.AgentData.AcquirerOperatorPhone;
-  Position.AgentData.AcquirerOperatorName := Item.AgentData.AcquirerOperatorName;
-  Position.AgentData.AcquirerOperatorAddress := Item.AgentData.AcquirerOperatorAddress;
+  Position.AgentData.PaymentProcessorPhone :=
+    Item.AgentData.PaymentProcessorPhone;
+  Position.AgentData.AcquirerOperatorPhone :=
+    Item.AgentData.AcquirerOperatorPhone;
+  Position.AgentData.AcquirerOperatorName :=
+    Item.AgentData.AcquirerOperatorName;
+  Position.AgentData.AcquirerOperatorAddress :=
+    Item.AgentData.AcquirerOperatorAddress;
   Position.AgentData.AcquirerOperatorINN := Item.AgentData.AcquirerOperatorINN;
   // Vendor
   Position.VendorData.Enabled := Item.VendorData.Enabled;
@@ -2232,16 +2297,19 @@ begin
   Position.VendorData.INN := Item.VendorData.VendorINN;
   // IndustryAttribute
   Position.IndustryAttribute.Enabled := Item.IndustryAttribute.Enabled;
-  Position.IndustryAttribute.IdentifierFOIV := Item.IndustryAttribute.IdentifierFOIV;
-  Position.IndustryAttribute.DocumentDate := Item.IndustryAttribute.DocumentDate;
-  Position.IndustryAttribute.DocumentNumber := Item.IndustryAttribute.DocumentNumber;
-  Position.IndustryAttribute.AttributeValue := Item.IndustryAttribute.AttributeValue;
+  Position.IndustryAttribute.IdentifierFOIV :=
+    Item.IndustryAttribute.IdentifierFOIV;
+  Position.IndustryAttribute.DocumentDate :=
+    Item.IndustryAttribute.DocumentDate;
+  Position.IndustryAttribute.DocumentNumber :=
+    Item.IndustryAttribute.DocumentNumber;
+  Position.IndustryAttribute.AttributeValue :=
+    Item.IndustryAttribute.AttributeValue;
   Driver.Check(Driver.AddRecPosition(Position));
 end;
 
 function TMitsuDrv1C.ProcessCorrectionCheck(const DeviceID,
-  CheckPackage: WideString;
-  out DocumentOutputParameters: WideString): WordBool;
+  CheckPackage: WideString; out DocumentOutputParameters: WideString): WordBool;
 begin
   Logger.Debug('ProcessCorrectionCheck DeviceID = ' + DeviceID);
   ClearError;
@@ -2293,9 +2361,8 @@ begin
   Logger.Debug('ReportCurrentStatusOfSettlements.end');
 end;
 
-
-function TMitsuDrv1C.OpenSessionRegistrationKM(
-  const DeviceID: WideString): WordBool;
+function TMitsuDrv1C.OpenSessionRegistrationKM(const DeviceID: WideString)
+  : WordBool;
 begin
   Logger.Debug('OpenSessionRegistrationKM DeviceID = ' + DeviceID);
   ClearError;
@@ -2314,9 +2381,8 @@ begin
   Logger.Debug('OpenSessionRegistrationKM.end');
 end;
 
-
-function TMitsuDrv1C.CloseSessionRegistrationKM(
-  const DeviceID: WideString): WordBool;
+function TMitsuDrv1C.CloseSessionRegistrationKM(const DeviceID: WideString)
+  : WordBool;
 begin
   Logger.Debug('CloseSessionRegistrationKM DeviceID = ' + DeviceID);
   ClearError;
@@ -2373,7 +2439,6 @@ begin
   Logger.Debug('RequestKM.end');
 end;
 
-
 function TMitsuDrv1C.ConfirmKM(const DeviceID, RequestGUID: WideString;
   ConfirmationType: Integer): WordBool;
 begin
@@ -2395,20 +2460,19 @@ begin
 end;
 
 function TMitsuDrv1C.GetProcessingKMResult(const DeviceID: WideString;
-  out ProcessingKMResult: WideString;
-  out RequestStatus: Integer): WordBool;
+  out ProcessingKMResult: WideString; out RequestStatus: Integer): WordBool;
 begin
   Result := True;
 end;
 
-function TMitsuDrv1C.SetLocalization(const LanguageCode,
-  LocalizationPattern: WideString): WordBool;
+function TMitsuDrv1C.SetLocalization(const LanguageCode, LocalizationPattern
+  : WideString): WordBool;
 begin
   Result := True;
 end;
 
-function TMitsuDrv1C.GetLocalizationPattern(
-  out LocalizationPattern: WideString): WordBool;
+function TMitsuDrv1C.GetLocalizationPattern(out LocalizationPattern: WideString)
+  : WordBool;
 begin
   Result := True;
 end;

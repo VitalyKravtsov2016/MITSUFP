@@ -25,7 +25,8 @@ type
     procedure Clear;
     procedure SaveToXML(XML: IXMLNode);
     property Count: Integer read GetCount;
-    property Items[Index: Integer]: TParam1CChoiceListItem read GetItem; default;
+    property Items[Index: Integer]: TParam1CChoiceListItem
+      read GetItem; default;
   end;
 
   { TParam1CChoiceListItem }
@@ -63,7 +64,8 @@ end;
 
 procedure TParam1CChoiceList.Clear;
 begin
-  while Count > 0 do Items[0].Free;
+  while Count > 0 do
+    Items[0].Free;
 end;
 
 function TParam1CChoiceList.GetCount: Integer;
@@ -132,8 +134,10 @@ procedure TParam1CChoiceListItem.SetOwner(AOwner: TParam1CChoiceList);
 begin
   if AOwner <> FOwner then
   begin
-    if FOwner <> nil then FOwner.RemoveItem(Self);
-    if AOwner <> nil then AOwner.InsertItem(Self);
+    if FOwner <> nil then
+      FOwner.RemoveItem(Self);
+    if AOwner <> nil then
+      AOwner.InsertItem(Self);
   end;
 end;
 

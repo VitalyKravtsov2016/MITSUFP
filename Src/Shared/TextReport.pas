@@ -4,17 +4,14 @@ interface
 
 uses
   // VCL
-  Classes, SysUtils, Variants,
-  // Tnt
-  TntClasses;
-
+  Classes, SysUtils, Variants;
 
 type
   { TTextReport }
 
   TTextReport = class
   private
-    FLines: TTntStrings;
+    FLines: TStrings;
     FCaptionLen: Integer;
     function GetText: WideString;
   public
@@ -25,7 +22,7 @@ type
     procedure Add(const Caption: WideString; Value: Variant);
 
     property Text: WideString read GetText;
-    property Lines: TTntStrings read FLines;
+    property Lines: TStrings read FLines;
   end;
 
 implementation
@@ -36,7 +33,7 @@ constructor TTextReport.Create(CaptionLen: Integer);
 begin
   inherited Create;
   FCaptionLen := CaptionLen;
-  FLines := TTntStringList.Create;
+  FLines := TStringList.Create;
 end;
 
 destructor TTextReport.Destroy;
@@ -59,6 +56,5 @@ procedure TTextReport.Add(const Caption: WideString; Value: Variant);
 begin
   Lines.Add(Format('%-*s : %s', [FCaptionLen, Caption, VarToStr(Value)]));
 end;
-
 
 end.

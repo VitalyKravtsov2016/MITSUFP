@@ -18,7 +18,8 @@ type
   end;
 
 procedure raiseException(const AMessage: WideString);
-procedure raiseExceptionFmt(const AFormat: WideString; const Args: array of const);
+procedure raiseExceptionFmt(const AFormat: WideString;
+  const Args: array of const);
 
 function GetExceptionMessage(E: Exception): WideString;
 
@@ -29,7 +30,8 @@ begin
   raise EWideException.Create(AMessage);
 end;
 
-procedure raiseExceptionFmt(const AFormat: WideString; const Args: array of const);
+procedure raiseExceptionFmt(const AFormat: WideString;
+  const Args: array of const);
 begin
   raise EWideException.Create(WideFormat(AFormat, Args));
 end;
@@ -53,4 +55,3 @@ begin
 end;
 
 end.
-

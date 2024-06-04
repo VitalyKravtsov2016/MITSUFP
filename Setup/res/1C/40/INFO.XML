@@ -1,4 +1,4 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <drivers>
-  <component progid="AddIn.SMDrvFR1C4" type="ККТ" name="Штрих-М: ККТ с передачей данных в ОФД 4.0 (ФФД 1.2)" version="5.17.0.989"/>
+  <component progid="AddIn.SMDrvFR1C4" type="ККТ" name="Штрих-М: ККТ с передачей данных в ОФД 4.0 (ФФД 1.2)" version="1.0.0.1"/>
 </drivers>

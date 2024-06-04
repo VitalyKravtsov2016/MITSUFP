@@ -5,12 +5,13 @@ interface
 uses
   // VCL
   Windows, Classes, SysUtils, SyncObjs, SysConst, Variants, DateUtils, TypInfo,
+  AnsiStrings,
   // This
   WideException;
 
 const
   CRLF = #13#10;
-  MAX_FILES_COUNT     = 10;
+  MAX_FILES_COUNT = 10;
   MAX_FILE_SIZE_IN_KB = 4194240;
 
 type
@@ -32,8 +33,10 @@ type
     procedure Error(const Data: WideString; Params: array of const); overload;
     procedure Debug(const Data: WideString; Result: Variant); overload;
     procedure Debug(const Data: WideString; Params: array of const); overload;
-    procedure Debug(const Data: WideString; Params: array of const; Result: Variant); overload;
-    function GetFileDate(const FileName: WideString; var FileDate: TDateTime): Boolean;
+    procedure Debug(const Data: WideString; Params: array of const;
+      Result: Variant); overload;
+    function GetFileDate(const FileName: WideString;
+      var FileDate: TDateTime): Boolean;
     procedure WriteRxData(Data: AnsiString);
     procedure WriteTxData(Data: AnsiString);
     procedure LogParam(const ParamName: WideString; const ParamValue: Variant);
@@ -65,9 +68,9 @@ type
     property MaxCount: Integer read GetMaxCount write SetMaxCount;
     property Separator: WideString read GetSeparator write SetSeparator;
     property DeviceName: WideString read GetDeviceName write SetDeviceName;
-    property TimeStampEnabled: Boolean read GetTimeStampEnabled write SetTimeStampEnabled;
+    property TimeStampEnabled: Boolean read GetTimeStampEnabled
+      write SetTimeStampEnabled;
   end;
-
 
   { TLogFile }
 
@@ -127,7 +130,8 @@ type
     procedure Error(const Data: WideString; Params: array of const); overload;
     procedure Debug(const Data: WideString; Result: Variant); overload;
     procedure Debug(const Data: WideString; Params: array of const); overload;
-    procedure Debug(const Data: WideString; Params: array of const; Result: Variant); overload;
+    procedure Debug(const Data: WideString; Params: array of const;
+      Result: Variant); overload;
     class function StrToText(const Text: WideString): WideString;
     function GetFileDate(const FileName: WideString;
       var FileDate: TDateTime): Boolean;
@@ -149,7 +153,8 @@ type
     property MaxCount: Integer read GetMaxCount write SetMaxCount;
     property Separator: WideString read GetSeparator write SetSeparator;
     property DeviceName: WideString read GetDeviceName write SetDeviceName;
-    property TimeStampEnabled: Boolean read GetTimeStampEnabled write SetTimeStampEnabled;
+    property TimeStampEnabled: Boolean read GetTimeStampEnabled
+      write SetTimeStampEnabled;
   end;
 
 function Logger: TLogFile;
@@ -180,14 +185,15 @@ begin
   FLogFile := nil;
 end;
 
-
 const
-  SDefaultSeparator   = '------------------------------------------------------------';
-  SDefaultSeparator2  = '************************************************************';
+  SDefaultSeparator =
+    '------------------------------------------------------------';
+  SDefaultSeparator2 =
+    '************************************************************';
 
-function ConstArrayToVarArray(const AValues : array of const): TVariantArray;
+function ConstArrayToVarArray(const AValues: array of const): TVariantArray;
 var
-  i : Integer;
+  i: Integer;
 begin
   SetLength(Result, Length(AValues));
   for i := Low(AValues) to High(AValues) do
@@ -195,20 +201,34 @@ begin
     with AValues[i] do
     begin
       case VType of
-        vtInteger: Result[i] := VInteger;
-        vtInt64: Result[i] := VInt64^;
-        vtBoolean: Result[i] := VBoolean;
-        vtChar: Result[i] := VChar;
-        vtExtended: Result[i] := VExtended^;
-        vtString: Result[i] := VString^;
-        vtPointer: Result[i] := Integer(VPointer);
-        vtPChar: Result[i] := StrPas(VPChar);
-        vtObject: Result[i]:= Integer(VObject);
-        vtAnsiString: Result[i] := AnsiString(VWideString);
-        vtCurrency: Result[i] := VCurrency^;
-        vtVariant: Result[i] := VVariant^;
-        vtInterface: Result[i]:= Integer(VPointer);
-        vtWideString: Result[i]:= WideString(VWideString);
+        vtInteger:
+          Result[i] := VInteger;
+        vtInt64:
+          Result[i] := VInt64^;
+        vtBoolean:
+          Result[i] := VBoolean;
+        vtChar:
+          Result[i] := VChar;
+        vtExtended:
+          Result[i] := VExtended^;
+        vtString:
+          Result[i] := VString^;
+        vtPointer:
+          Result[i] := Integer(VPointer);
+        vtPChar:
+          Result[i] := AnsiStrings.StrPas(VPChar);
+        vtObject:
+          Result[i] := Integer(VObject);
+        vtAnsiString:
+          Result[i] := AnsiString(VWideString);
+        vtCurrency:
+          Result[i] := VCurrency^;
+        vtVariant:
+          Result[i] := VVariant^;
+        vtInterface:
+          Result[i] := Integer(VPointer);
+        vtWideString:
+          Result[i] := WideString(VWideString);
       else
         Result[i] := NULL;
       end;
@@ -216,23 +236,24 @@ begin
   end;
 end;
 
-function StrToHex(const S: AnsiString): AnsiString;
+function StrToHex(const S: AnsiString): string;
 var
   i: Integer;
 begin
   Result := '';
   for i := 1 to Length(S) do
   begin
-    if i <> 1 then Result := Result + ' ';
+    if i <> 1 then
+      Result := Result + ' ';
     Result := Result + IntToHex(Ord(S[i]), 2);
   end;
 end;
 
 const
-  TagInfo         = '[ INFO] ';
-  TagTrace        = '[TRACE] ';
-  TagDebug        = '[DEBUG] ';
-  TagError        = '[ERROR] ';
+  TagInfo = '[ INFO] ';
+  TagTrace = '[TRACE] ';
+  TagDebug = '[DEBUG] ';
+  TagError = '[ERROR] ';
 
 function GetTimeStamp: WideString;
 var
@@ -241,16 +262,16 @@ var
 begin
   DecodeDate(Date, Year, Month, Day);
   DecodeTime(Time, Hour, Min, Sec, MSec);
-  Result := WideFormat('%.2d.%.2d.%.4d %.2d:%.2d:%.2d.%.3d ',[
-    Day, Month, Year, Hour, Min, Sec, MSec]);
+  Result := WideFormat('%.2d.%.2d.%.4d %.2d:%.2d:%.2d.%.3d ',
+    [Day, Month, Year, Hour, Min, Sec, MSec]);
 end;
 
 function GetLongFileName(const FileName: WideString): WideString;
 var
   L: Integer;
   Handle: Integer;
-  Buffer: array[0..MAX_PATH] of WideChar;
-  GetLongPathNameW: function (ShortPathName: PWideChar; LongPathName: PWideChar;
+  Buffer: array [0 .. MAX_PATH] of WideChar;
+  GetLongPathNameW: function(ShortPathName: PWideChar; LongPathName: PWideChar;
     cchBuffer: Integer): Integer stdcall;
 const
   kernel = 'kernel32.dll';
@@ -270,10 +291,10 @@ end;
 
 function GetModFileName: WideString;
 var
-  Buffer: array[0..261] of Char;
+  Buffer: array [0 .. 261] of Char;
 begin
-  SetString(Result, Buffer, Windows.GetModuleFileName(HInstance,
-    Buffer, SizeOf(Buffer)));
+  SetString(Result, Buffer, Windows.GetModuleFileName(HInstance, Buffer,
+    SizeOf(Buffer)));
 end;
 
 function GetModuleFileName: WideString;
@@ -283,13 +304,13 @@ end;
 
 function GetLastErrorText: WideString;
 begin
-  Result := WideFormat(SOSError, [GetLastError,  SysErrorMessage(GetLastError)]);
+  Result := WideFormat(SOSError, [GetLastError, SysErrorMessage(GetLastError)]);
 end;
 
 procedure ODS(const S: WideString);
 begin
 {$IFDEF DEBUG}
-  //OutputDebugStringW(PWideChar(S));
+  // OutputDebugStringW(PWideChar(S));
 {$ENDIF}
 end;
 
@@ -326,7 +347,7 @@ end;
 
 function TLogFile.GetDefaultFileName: WideString;
 begin
-  Result := IncludeTrailingBackSlash(FilePath) + DeviceName + '_' +
+  Result := IncludeTrailingPathDelimiter(FilePath) + DeviceName + '_' +
     FormatDateTime('yyyy.mm.dd', Date) + '.log';
 end;
 
@@ -339,7 +360,7 @@ procedure TLogFile.SetDefaults;
 begin
   MaxCount := 0;
   Enabled := False;
-  FilePath := IncludeTrailingBackSlash(ExtractFilePath(GetModuleFileName)) + 'Logs';
+  FilePath := IncludeTrailingPathDelimiter(ExtractFilePath(GetModuleFileName)) + 'Logs';
   FileName := GetDefaultFileName;
   FTimeStampEnabled := True;
 end;
@@ -385,7 +406,8 @@ begin
       FileCreated := not IsFileExists(FileName);
 
       FHandle := CreateFileW(PWideChar(FileName), GENERIC_READ or GENERIC_WRITE,
-        FILE_SHARE_READ or FILE_SHARE_WRITE, nil, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+        FILE_SHARE_READ or FILE_SHARE_WRITE, nil, OPEN_ALWAYS,
+        FILE_ATTRIBUTE_NORMAL, 0);
 
       if Opened then
       begin
@@ -395,7 +417,8 @@ begin
         begin
           Write(UNICODE_BOM);
         end;
-      end else
+      end
+      else
       begin
         ODS(Format('Failed to create log file ''%s''', [FileName]));
         ODS(GetLastErrorText);
@@ -446,10 +469,12 @@ var
   FileMask: WideString;
   FileNames: TStringList;
 begin
-  if MaxCount = 0 then Exit;
+  if MaxCount = 0 then
+    Exit;
   FileNames := TStringList.Create;
   try
-    FileMask := IncludeTrailingBackSlash(FilePath) + WideFormat('*%s*.log', [DeviceName]);
+    FileMask := IncludeTrailingPathDelimiter(FilePath) + WideFormat('*%s*.log',
+      [DeviceName]);
     GetFileNames(FileMask, FileNames);
     FileNames.Sort;
     while FileNames.Count > MaxCount do
@@ -487,7 +512,7 @@ var
 begin
   try
     Line := ChangeFileExt(ExtractFileName(FileName), '');
-    Line := Copy(Line, Length(Line)-9, 10);
+    Line := Copy(Line, Length(Line) - 9, 10);
     Day := StrToInt(Copy(Line, 1, 2));
     Month := StrToInt(Copy(Line, 4, 2));
     Year := StrToInt(Copy(Line, 7, 4));
@@ -506,7 +531,8 @@ var
   NewFileName: WideString;
 begin
   ODS(Data);
-  if not Enabled then Exit;
+  if not Enabled then
+    Exit;
 
   Lock;
   try
@@ -522,7 +548,7 @@ begin
       if (GetFileSize() div 1024) > MAX_FILE_SIZE_IN_KB then
       begin
         CloseFile;
-        for i := 0 to MAX_FILES_COUNT-1 do
+        for i := 0 to MAX_FILES_COUNT - 1 do
         begin
           NewFileName := ChangeFileExt(FFileName, Format('_%d.log', [i]));
           if not FileExists(NewFileName) then
@@ -534,7 +560,8 @@ begin
         OpenFile;
       end;
 
-      if not WriteFile(FHandle, S[1], Length(S) * Sizeof(WideChar), Count, nil) then
+      if not WriteFile(FHandle, S[1], Length(S) * SizeOf(WideChar), Count, nil)
+      then
       begin
         CloseFile;
       end;
@@ -550,7 +577,8 @@ var
 begin
   Line := Data;
   if FTimeStampEnabled then
-    Line := WideFormat('[%s] [%.8d] %s', [GetTimeStamp, GetCurrentThreadID, Line]);
+    Line := WideFormat('[%s] [%.8d] %s',
+      [GetTimeStamp, GetCurrentThreadID, Line]);
   Line := Line + CRLF;
   Write(Line);
 end;
@@ -642,7 +670,8 @@ begin
           Result := Result + '''';
         end;
         Result := Result + WideFormat('#$%.2x', [Code])
-      end else
+      end
+      else
       begin
         if not IsPrevCharNormal then
         begin
@@ -654,7 +683,8 @@ begin
     end;
     if IsPrevCharNormal then
       Result := Result + '''';
-  end else
+  end
+  else
   begin
     Result := '''''';
   end;
@@ -665,12 +695,11 @@ begin
   if VarIsNull(V) then
   begin
     Result := 'NULL';
-  end else
+  end
+  else
   begin
     case VarType(V) of
-      varOleStr,
-      varStrArg,
-      varString:
+      varOleStr, varStrArg, varString:
         Result := '''' + VarToWideStr(V) + '''';
     else
       Result := VarToWideStr(V);
@@ -678,29 +707,31 @@ begin
   end;
 end;
 
-class function TLogFile.VarArrayToStr2(const AVarArray: TVariantArray): WideString;
+class function TLogFile.VarArrayToStr2(const AVarArray: TVariantArray)
+  : WideString;
 var
-  I: Integer;
+  i: Integer;
 begin
   Result := '';
   for i := Low(AVarArray) to High(AVarArray) do
   begin
     if Length(Result) > 0 then
       Result := Result + ', ';
-    Result := Result + VariantToStr(AVarArray[I]);
+    Result := Result + VariantToStr(AVarArray[i]);
   end;
 end;
 
-class function TLogFile.VarArrayToStr(const AVarArray: TVariantArray): WideString;
+class function TLogFile.VarArrayToStr(const AVarArray: TVariantArray)
+  : WideString;
 var
-  I: Integer;
+  i: Integer;
 begin
   Result := '';
   for i := Low(AVarArray) to High(AVarArray) do
   begin
     if Length(Result) > 0 then
       Result := Result + ', ';
-    Result := Result + VariantToStr(AVarArray[I]);
+    Result := Result + VariantToStr(AVarArray[i]);
   end;
   Result := '(' + Result + ')';
 end;
@@ -737,11 +768,11 @@ begin
   DebugData('-> ', Data);
 end;
 
-procedure TLogFile.LogParam(const ParamName: WideString; const ParamValue: Variant);
+procedure TLogFile.LogParam(const ParamName: WideString;
+  const ParamValue: Variant);
 begin
   Debug(ParamName + ': ' + VarToWideStr(ParamValue));
 end;
-
 
 function TLogFile.GetSeparator: WideString;
 begin
@@ -808,6 +839,7 @@ end;
 initialization
 
 finalization
-  FreeLogFile;
+
+FreeLogFile;
 
 end.

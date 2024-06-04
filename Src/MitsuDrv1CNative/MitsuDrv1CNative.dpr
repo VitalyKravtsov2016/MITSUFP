@@ -25,9 +25,9 @@ var
 begin
 
 {$IFDEF V1C_34}
-  ClassReg := ClassRegList.RegisterClass(TExtention30, 'SMDrvFR1C4', 'SMDrvFR1C4');
+  ClassReg := ClassRegList.RegisterClass(TExtention30, 'MitsuDrv1C4', 'MitsuDrv1C4');
 {$ELSE}
-  ClassReg := ClassRegList.RegisterClass(TExtention30, 'SMDrvFR1C3', 'SMDrvFR1C3');
+  ClassReg := ClassRegList.RegisterClass(TExtention30, 'MitsuDrv1C3', 'MitsuDrv1C3');
 {$ENDIF}
 
   // Common methods

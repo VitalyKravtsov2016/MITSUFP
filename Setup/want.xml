@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+	<?xml version="1.0" encoding="UTF-8"?>
 <!--
   WANT - A build management tool.                                 
   Copyright (c) 2001-2003 Juancarlo Anez, Caracas, Venezuela.          
@@ -24,21 +24,19 @@
 This is the Want script for building Want.
 See http://www.suigeneris.org/want/ for details.
 -->
-<project name="MitsuDrv1C" basedir="../.." default="build">
+<project name="MitsuDrv1C" basedir=".." default="build">
     <property name="basepath" value="" />
     <regexp property="basepath" text="${basedir}" pattern="^\/" subst="" />
-    <property name="src" value="${basepath}/source" />
-    <property name="test" value="${basepath}/tests/DUnit" />
-    <property name="shared" value="${src}/shared" />
+    <property name="src" value="${basepath}/src" />
+    <property name="test" value="${basepath}/tests" />
     <property name="MitsuDrv1C" value="${src}/MitsuDrv1C" />
-    <property name="MitsuDrvTest" value="${src}/MitsuDrvTest" />
-    <property name="MitsuDrv1CNative" value="${src}/MitsuDrv1CNative" />
     <property name="MitsuDrv1CTst" value="${src}/MitsuDrv1CTst" />
-    <property name="setup" value="${basepath}/setup/MitsuDrv1C" />
+    <property name="MitsuDrv1CNative" value="${src}/MitsuDrv1CNative" />
+    <property name="setup" value="${basepath}/setup" />
     <property name="bin" value="${setup}/bin" />
     <property name="dcu" value="${setup}/dcu" />
     <property name="res" value="${setup}/res" />
-    <property name="brcc" value="${setup}/res/util/brcc32.exe" />
+    <property name="brcc" value="${setup}/brcc32.exe" />
     <property name="old.version" value="?{${setup}/release.ini:releases:current}" />
     <regexp property="old.build" text="${old.version}" pattern="^.*\.([0-9]+)$" subst="\1" />
     <regexp property="build_1c" text="${old.version}" pattern="^([0-9]*)\.([0-9]*)\.([0-9]*)\.([0-9]*)" subst="\1_\2_\3_\4" />
@@ -57,6 +55,7 @@ See http://www.suigeneris.org/want/ for details.
     <property name="TestFilename" value="?{${setup}/release.ini:Company:TestFilename}" />
     <property name="Native1ClibFileName" value="?{${setup}/release.ini:Company:Native1ClibFileName}" />
     <property name="Native1ClibDescription" value="?{${setup}/release.ini:Company:Native1ClibDescription}" />
+	
     <regexp property="version" text="${old.version}" pattern="\.[0-9]*$" subst=".${build}" />
     <regexp property="comma.version" pattern="\." subst="," text="${version}" />
     <regexp property="version2" pattern="^[0-9]*\.[0-9]*" text="${version}" />
@@ -80,6 +79,7 @@ See http://www.suigeneris.org/want/ for details.
             <include name="**/*.bak" />
         </delete>
     </target>
+	
     <target name="clean">
         <delete dir="${dcu}">
             <include name="**/*.dcu" />
@@ -90,6 +90,7 @@ See http://www.suigeneris.org/want/ for details.
             <include name="**/*.rsm" />
         </delete>
     </target>
+	
     <target name="internal-MitsuDrv-test" depends="prepare">
         <delete dir="${dcu}">
             <include name="*.dcu" />
@@ -115,21 +116,7 @@ See http://www.suigeneris.org/want/ for details.
         </dcc>
         <dunit testlib="${test}/MitsuDrvTest/bin/${MitsuDrvTest.app}" />
     </target>
-    <target name="makesetup64">
-        <property name="Architecture" value="ArchitecturesInstallIn64BitMode=x64" />
-        <property name="Arch" value="Win64" />
-        <property name="Archbit" value="64bit" />
-        <property name="Arch2" value="(64-bit)" />
-        <echo input="${setup}/res/setup_template.iss" file="${setup}/setup.iss" />
-        <exec basedir="${setup}" executable="iscc">
-            <arg value="Setup.iss" />
-            <arg value="/Q" />
-        </exec>
-        <move tofile="MitsuDrv_${version2}_${build}_x64.exe">
-            <include name="${setup}/setup.exe" />
-        </move>
-    </target>
-
+	
     <target name="makesetup32">
         <property name="Architecture" value="" />
         <property name="Arch" value="Win32" />
@@ -145,72 +132,19 @@ See http://www.suigeneris.org/want/ for details.
         </move>
     </target>
 	
-	<target name="makesetup32_nav">
-        <property name="Architecture" value="" />
-        <property name="Arch" value="Win32" />
-        <property name="Archbit" value="32bit" />
-        <property name="Arch2" value="(32-bit)" />
+    <target name="makesetup64">
+        <property name="Architecture" value="ArchitecturesInstallIn64BitMode=x64" />
+        <property name="Arch" value="Win64" />
+        <property name="Archbit" value="64bit" />
+        <property name="Arch2" value="(64-bit)" />
         <echo input="${setup}/res/setup_template.iss" file="${setup}/setup.iss" />
         <exec basedir="${setup}" executable="iscc">
             <arg value="Setup.iss" />
             <arg value="/Q" />
         </exec>
-        <move tofile="MitsuDrv_${version2}_${build}_x32_nav.exe">
+        <move tofile="MitsuDrv_${version2}_${build}_x64.exe">
             <include name="${setup}/setup.exe" />
         </move>
-    </target>
-	
-    <target name="makesetup-nosign">
-        <echo input="${setup}/res/setup_template.iss" file="${setup}/setup.iss" />
-        <exec basedir="${setup}" executable="iscc">
-            <arg value="Setup.iss" />
-            <arg value="/Q" />
-        </exec>
-        <move tofile="MitsuDrv_${version2}_${build}.exe">
-            <include name="${setup}/setup.exe" />
-        </move>
-        <delete file="${setup}/setup.iss" />
-    </target>
-    <target name="sign">
-        <exec executable="SignShtrih.bat">
-            <arg value="${bin}/Win32/MitsuDrv.dll" />
-        </exec>
-        <exec executable="SignShtrih.bat">
-            <arg value="${bin}/Win64/MitsuDrv.dll" />
-        </exec>
-        <exec executable="SignShtrih.bat">
-            <arg value="${bin}/Win32/MitsuDrvTest.exe" />
-        </exec>
-        <exec executable="SignShtrih.bat">
-            <arg value="${bin}/Win64/MitsuDrvTest.exe" />
-        </exec>
-        <exec executable="SignShtrih.bat">
-            <arg value="${bin}/Win32/1c/32/MitsuDrv1CNative.dll" />
-        </exec>
-        <exec executable="SignShtrih.bat">
-            <arg value="${bin}/Win32/1c/40/MitsuDrv1CNative.dll" />
-        </exec>
-        <exec executable="SignShtrih.bat">
-            <arg value="${bin}/Win64/1c/32/MitsuDrv1CNative.dll" />
-        </exec>
-        <exec executable="SignShtrih.bat">
-            <arg value="${bin}/Win64/1c/40/MitsuDrv1CNative.dll" />
-        </exec>
-    </target>
-
-    <target name="signinstaller">
-        <exec executable="SignShtrih.bat">
-            <arg value="${bin}\..\MitsuDrv_${version2}_${build}_x32.exe" />
-        </exec>
-        <exec executable="SignShtrih.bat">
-            <arg value="${bin}\..\MitsuDrv_${version2}_${build}_x64.exe" />
-        </exec>
-    </target>
-	
-	<target name="signinstaller_nav">
-        <exec executable="SignShtrih.bat">
-            <arg value="${bin}\..\MitsuDrv_${version2}_${build}_x32_nav.exe" />
-        </exec>
     </target>
 
     <target name="zipinstaller">
@@ -252,7 +186,7 @@ See http://www.suigeneris.org/want/ for details.
         </move>
     </target>
 	
-    <target name="Make1CComponent">
+    <target name="Make1CComponent" depends="build_1cnative">
         <delete dir="${res}/1C/32">
             <include name="*.xml" />
             <include name="*.zip" />
@@ -276,7 +210,8 @@ See http://www.suigeneris.org/want/ for details.
             <arg value="${res}/1C/32/MANIFEST.xml" />
         </exec>
     </target>
-    <target name="Make1CComponent34">
+	
+    <target name="Make1CComponent34" depends="build_1cnative" >
         <delete dir="${res}/1C/40">
             <include name="*.xml" />
             <include name="*.zip" />
@@ -301,73 +236,57 @@ See http://www.suigeneris.org/want/ for details.
         </exec>
     </target>
     <target name="res">
-        <echo input="${MitsuDrv}/MitsuDrv.rt" file="${MitsuDrv}/MitsuDrv_ver.rc" />
+        <echo input="${MitsuDrv1C}/MitsuDrv1C.rt" file="${MitsuDrv}/MitsuDrv1C_ver.rc" />
         <exec executable="${brcc}">
-            <arg value="${MitsuDrv}/MitsuDrv_ver.rc ${MitsuDrv}/MitsuDrv_ver.res" />
+            <arg value="${MitsuDrv1C}/MitsuDrv1C_ver.rc ${MitsuDrv1C}/MitsuDrv1C_ver.res" />
         </exec>
     </target>
     <target name="build_MitsuDrv1C">
-        <echo input="${MitsuDrv}/MitsuDrv_ver.rt" file="${MitsuDrv}/MitsuDrv_ver.rc" />
+        <echo input="${MitsuDrv1C}/MitsuDrv1C.rt" file="${MitsuDrv1C}/MitsuDrv1C.rc" />
         <exec executable="${brcc}">
-            <arg value="${MitsuDrv}/MitsuDrv_ver.rc" />
+            <arg value="${MitsuDrv1C}/MitsuDrv1C.rc" />
         </exec>
         <exec executable="msbuild.exe">
-            <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv}/MitsuDrv.dproj /p:Platform=Win32 /p:Config=Release /p:DCC_ExeOutput=../../Setup/MitsuDrv/Bin/Win32" />
+            <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv1C}/MitsuDrv1C.dproj /p:Platform=Win32 /p:Config=Release /p:DCC_ExeOutput=${Bin}/Win32" />
+            <arg value="-u"c:/Program Files (x86)/Embarcadero/Comp/DCPCrypt/Lib/Win32/Release"" />
         </exec>
         <exec executable="msbuild.exe">
-            <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv}/MitsuDrv.dproj /p:Platform=Win64 /p:Config=Release /p:DCC_ExeOutput=../../Setup/MitsuDrv/Bin/Win64" />
-        </exec>
-    </target>
-	<target name="build_MitsuDrv_nav">
-        <echo input="${MitsuDrv}/MitsuDrv_ver.rt" file="${MitsuDrv}/MitsuDrv_ver.rc" />
-        <exec executable="${brcc}">
-            <arg value="${MitsuDrv}/MitsuDrv_ver.rc" />
-        </exec>
-        <exec executable="msbuild.exe">
-            <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv}/MitsuDrv.dproj /p:Platform=Win32 /p:Config=Release /p:DCC_Define=VER_NAV /p:DCC_ExeOutput=../../Setup/MitsuDrv/Bin/Win32" />
-        </exec>
-        <exec executable="msbuild.exe">
-            <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv}/MitsuDrv.dproj /p:Platform=Win64 /p:Config=Release /p:DCC_Define=VER_NAV /p:DCC_ExeOutput=../../Setup/MitsuDrv/Bin/Win64" />
+            <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv1C}/MitsuDrv1C.dproj /p:Platform=Win64 /p:Config=Release /p:DCC_ExeOutput=${Bin}/Win64" />
         </exec>
     </target>
 	
-    <target name="build_MitsuDrvTest">
-        <echo input="${MitsuDrvTest}/MitsuDrvTest_ver.rt" file="${MitsuDrvTest}/MitsuDrvTest_ver.rc" />
+    <target name="build_MitsuDrv1CTst">
+        <echo input="${MitsuDrv1CTst}/MitsuDrv1CTst.rt" file="${MitsuDrv1CTst}/MitsuDrv1CTst.rc" />
         <exec executable="${brcc}">
-            <arg value="${MitsuDrvTest}/MitsuDrvTest_ver.rc" />
+            <arg value="${MitsuDrv1CTst}/MitsuDrv1CTst.rc" />
         </exec>
         <exec executable="msbuild.exe">
-            <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrvTest}/MitsuDrvTest.dproj /p:Platform=Win32 /p:Config=Release /p:DCC_ExeOutput=../../Setup/MitsuDrv/Bin/Win32" />
+            <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv1CTst}/MitsuDrv1CTst.dproj /p:Platform=Win32 /p:Config=Release /p:DCC_ExeOutput=${Bin}/Win32" />
         </exec>
         <exec executable="msbuild.exe">
-            <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrvTest}/MitsuDrvTest.dproj /p:Platform=Win64 /p:Config=Release /p:DCC_ExeOutput=../../Setup/MitsuDrv/Bin/Win64" />
+            <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv1CTst}/MitsuDrv1CTst.dproj /p:Platform=Win64 /p:Config=Release /p:DCC_ExeOutput=${Bin}/Win64" />
         </exec>
     </target>
+	
     <target name="build_1cnative">
         <echo input="${MitsuDrv1CNative}/MitsuDrv1CNative_ver.rt" file="${MitsuDrv1CNative}/MitsuDrv1CNative_ver.rc" />
         <exec executable="${brcc}">
             <arg value="${MitsuDrv1CNative}/MitsuDrv1CNative_ver.rc" />
         </exec>
         <exec executable="msbuild.exe">
-            <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv1CNative}/MitsuDrv1CNative.dproj /p:Platform=Win32 /p:Config=Release /p:DCC_Define=V1C_34 /p:DCC_ExeOutput=../../Setup/MitsuDrv/Bin/Win32/1C/40 /p:DCC_DcuOutput=../../Setup/MitsuDrv/Dcu/Win32/1c/40" />
+            <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv1CNative}/MitsuDrv1CNative.dproj /p:Platform=Win32 /p:Config=Release /p:DCC_Define=V1C_34 /p:DCC_ExeOutput=${bin}/Win32/1C/40 /p:DCC_DcuOutput=${dcu}/Win32/1c/40" />
         </exec>
         <exec executable="msbuild.exe">
-            <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv1CNative}/MitsuDrv1CNative.dproj /p:Platform=Win64 /p:Config=Release /p:DCC_Define=V1C_34 /p:DCC_ExeOutput=../../Setup/MitsuDrv/Bin/Win64/1C/40 /p:DCC_DcuOutput=../../Setup/MitsuDrv/Dcu/Win64/1c/40" />
+            <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv1CNative}/MitsuDrv1CNative.dproj /p:Platform=Win64 /p:Config=Release /p:DCC_Define=V1C_34 /p:DCC_ExeOutput=${Bin}/Win64/1C/40 /p:DCC_DcuOutput=${dcu}/Win64/1c/40" />
         </exec>
         <exec executable="msbuild.exe">
-            <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv1CNative}/MitsuDrv1CNative.dproj /p:Platform=Win32 /p:Config=Release /p:DCC_Define=V1C_32 /p:DCC_ExeOutput=../../Setup/MitsuDrv/Bin/Win32/1C/32 /p:DCC_DcuOutput=../../Setup/MitsuDrv/Dcu/Win32/1c/32" />
+            <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv1CNative}/MitsuDrv1CNative.dproj /p:Platform=Win32 /p:Config=Release /p:DCC_Define=V1C_32 /p:DCC_ExeOutput=${Bin}/Win32/1C/32 /p:DCC_DcuOutput=${dcu}/Win32/1c/32" />
         </exec>
         <exec executable="msbuild.exe">
-            <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv1CNative}/MitsuDrv1CNative.dproj /p:Platform=Win64 /p:Config=Release /p:DCC_Define=V1C_32 /p:DCC_ExeOutput=../../Setup/MitsuDrv/Bin/Win64/1C/32 /p:DCC_DcuOutput=../../Setup/MitsuDrv/Dcu/Win64/1c/32" />
+            <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv1CNative}/MitsuDrv1CNative.dproj /p:Platform=Win64 /p:Config=Release /p:DCC_Define=V1C_32 /p:DCC_ExeOutput=${Bin}/Win64/1C/32 /p:DCC_DcuOutput=${dcu}/Win64/1c/32" />
         </exec>
     </target>
 	
-    <target name="compile" depends="clean, build_MitsuDrv, build_MitsuDrvTest, build_1cnative" />
-	<target name="compile_nav" depends="clean, build_MitsuDrv_nav, build_MitsuDrvTest, build_1cnative" />
-    <target name="build" depends="compile, sign, Make1CComponent, Make1CComponent34, makesetup32, makesetup64, signinstaller, zipinstaller" />
-    <target name="buildxp" depends="compile, sign, Make1CComponent, Make1CComponent34, makesetup32xp, signinstallerxp, zipinstallerxp" />
-    <target name="buildnav" depends="compile_nav, sign, Make1CComponent, Make1CComponent34, makesetup32_nav, signinstaller_nav, zipinstaller_nav" />
-
-    <target name="build2" depends="compile, Make1CComponent, makesetup32, makesetup64, zipinstaller" />
-    <target name="build-nosign" depends="compile, Make1CComponent, makesetup32, makesetup64, zipinstaller" />
+    <target name="compile" depends="clean, build_MitsuDrv1C, build_MitsuDrv1CTst, build_1cnative" />
+    <target name="build" depends="compile, Make1CComponent, Make1CComponent34, makesetup32, makesetup64, zipinstaller" />
 </project>

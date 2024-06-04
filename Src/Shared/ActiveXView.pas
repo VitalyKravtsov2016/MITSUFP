@@ -12,7 +12,8 @@ type
   TActiveXView = class(TCustomControl)
   private
     FBitmap: TBitmap;
-    procedure WMWindowPosChanged(var Message: TWMWindowPosChanged); message WM_WINDOWPOSCHANGED;
+    procedure WMWindowPosChanged(var Message: TWMWindowPosChanged);
+      message WM_WINDOWPOSCHANGED;
     property Bitmap: TBitmap read FBitmap;
   protected
     procedure Paint; override;
@@ -26,14 +27,13 @@ type
 implementation
 
 {$R *.RES}
-
 { TActiveXView }
 
 constructor TActiveXView.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  ControlStyle := [csOpaque, csFixedWidth, csFixedHeight,
-    csReplicatable, csNoStdEvents];
+  ControlStyle := [csOpaque, csFixedWidth, csFixedHeight, csReplicatable,
+    csNoStdEvents];
   FBitmap := TBitmap.Create;
   FBitmap.LoadFromResourceName(hInstance, 'DRVFR');
   Width := 40;
@@ -43,7 +43,8 @@ end;
 procedure TActiveXView.CreateParams(var Params: TCreateParams);
 begin
   inherited CreateParams(Params);
-  Params.WindowClass.style := Params.WindowClass.style and not (CS_HREDRAW or CS_VREDRAW);
+  Params.WindowClass.style := Params.WindowClass.style and
+    not(CS_HREDRAW or CS_VREDRAW);
 end;
 
 destructor TActiveXView.Destroy;
@@ -59,8 +60,7 @@ begin
     Result := Bitmap.Palette;
 end;
 
-procedure TActiveXView.WMWindowPosChanged(
-  var Message: TWMWindowPosChanged);
+procedure TActiveXView.WMWindowPosChanged(var Message: TWMWindowPosChanged);
 begin
   Invalidate;
   inherited;
@@ -77,8 +77,8 @@ begin
   Canvas.FillRect(R);
   if not Bitmap.Empty then
   begin
-    LeftBound := Round(R.Left+(R.Right-R.Left)/2-Bitmap.Width/2);
-    TopBound := Round(R.Top-(R.Top-R.Bottom)/2-Bitmap.Height/2);
+    LeftBound := Round(R.Left + (R.Right - R.Left) / 2 - Bitmap.Width / 2);
+    TopBound := Round(R.Top - (R.Top - R.Bottom) / 2 - Bitmap.Height / 2);
     Canvas.Draw(LeftBound, TopBound, Bitmap);
   end;
 end;

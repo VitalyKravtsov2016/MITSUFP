@@ -67,7 +67,8 @@ end;
 
 procedure TParamList1CPages.Clear;
 begin
-  while Count > 0 do Items[0].Free;
+  while Count > 0 do
+    Items[0].Free;
 end;
 
 function TParamList1CPages.GetCount: Integer;
@@ -136,8 +137,10 @@ procedure TParamList1CPage.SetOwner(AOwner: TParamList1CPages);
 begin
   if AOwner <> FOwner then
   begin
-    if FOwner <> nil then FOwner.RemoveItem(Self);
-    if AOwner <> nil then AOwner.InsertItem(Self);
+    if FOwner <> nil then
+      FOwner.RemoveItem(Self);
+    if AOwner <> nil then
+      AOwner.InsertItem(Self);
   end;
 end;
 

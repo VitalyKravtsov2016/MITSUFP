@@ -4,11 +4,12 @@ interface
 
 uses
   // VCL
-  Windows, Messages, Classes, MConnect, ComObj, SysUtils, Variants, WinSock, SyncObjs,
+  Windows, Messages, Classes, MConnect, ComObj, SysUtils, Variants, WinSock,
+  SyncObjs,
   // Indy
   IdTCPClient, IdGlobal, IdStack, IdWinsock2,
   // This
-  PrinterPort, DriverError, StringUtils, LogFile, WException;
+  PrinterPort, DriverError, StringUtils, LogFile, WideException;
 
 const
   MaxRetryCountInfinite = 0;
@@ -50,13 +51,11 @@ type
     function GetDescription: WideString;
   end;
 
-
 implementation
 
 { TSocketPort }
 
-constructor TSocketPort.Create(AParameters: TSocketParams;
-  ALogger: ILogFile);
+constructor TSocketPort.Create(AParameters: TSocketParams; ALogger: ILogFile);
 begin
   inherited Create;
   FLogger := ALogger;
@@ -84,7 +83,8 @@ begin
     begin
       FConnection.ReadTimeout := 0;
       FConnection.ConnectTimeout := 0;
-    end else
+    end
+    else
     begin
       FConnection.ReadTimeout := FParameters.ByteTimeout;
       FConnection.ConnectTimeout := FParameters.ByteTimeout;
@@ -93,8 +93,8 @@ begin
     while True do
     begin
       try
-        Logger.Debug(Format('TSocketPort.Connect(%s,%d,%d)', [
-          FConnection.Host, FConnection.Port, FParameters.ByteTimeout]));
+        Logger.Debug(Format('TSocketPort.Connect(%s,%d,%d)',
+          [FConnection.Host, FConnection.Port, FParameters.ByteTimeout]));
 
         FConnection.Connect();
         Break;
@@ -102,7 +102,8 @@ begin
         on E: Exception do
         begin
           Logger.Error(GetExceptionMessage(E));
-          if FParameters.MaxRetryCount <> MaxRetryCountInfinite then raise;
+          if FParameters.MaxRetryCount <> MaxRetryCountInfinite then
+            raise;
         end;
       end;
     end;
@@ -114,7 +115,8 @@ begin
   Lock;
   try
     FConnection.Disconnect;
-    if (FConnection.IOHandler <> nil)and(FConnection.IOHandler.InputBuffer <> nil) then
+    if (FConnection.IOHandler <> nil) and
+      (FConnection.IOHandler.InputBuffer <> nil) then
     begin
       FConnection.IOHandler.InputBuffer.Clear;
     end;
@@ -136,7 +138,7 @@ begin
     SetLength(Buffer, Length(Data));
     for i := 1 to Length(Data) do
     begin
-      Buffer[i-1] := Ord(Data[i]);
+      Buffer[i - 1] := Ord(Data[i]);
     end;
     FConnection.Socket.Write(Buffer);
   except

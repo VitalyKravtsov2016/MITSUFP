@@ -11,7 +11,7 @@ uses
   LogFile;
 
 type
-  TIntNotifyEvent = procedure (Sender: TObject; dbt: Integer) of object;
+  TIntNotifyEvent = procedure(Sender: TObject; DBT: Integer) of object;
 
   { TDeviceNotification }
 
@@ -31,7 +31,8 @@ type
 
     procedure Uninstall;
     procedure Install(Handle: THandle);
-    property OnDeviceChange: TIntNotifyEvent read FOnDeviceChange write FOnDeviceChange;
+    property OnDeviceChange: TIntNotifyEvent read FOnDeviceChange
+      write FOnDeviceChange;
   end;
 
 implementation
@@ -49,9 +50,10 @@ begin
   begin
     if Assigned(FOnDeviceChange) then
       FOnDeviceChange(Self, Msg.WParam);
-  end else
+  end
+  else
   begin
-    DefWindowProc(FWnd, Msg.Msg, Msg.wParam, Msg.lParam);
+    DefWindowProc(FWnd, Msg.Msg, Msg.WParam, Msg.lParam);
   end;
 end;
 
@@ -60,15 +62,17 @@ var
   LastError: Integer;
 begin
   ZeroMemory(@FDev, SizeOf(FDev));
-  FDev.dbch_size := sizeof(FDev);
+  FDev.dbch_size := SizeOf(FDev);
   FDev.dbch_devicetype := DBT_DEVTYP_HANDLE;
   FDev.dbch_handle := Handle;
 
-  FNotification := RegisterDeviceNotification(FWnd, @FDev, DEVICE_NOTIFY_WINDOW_HANDLE);
+  FNotification := RegisterDeviceNotification(FWnd, @FDev,
+    DEVICE_NOTIFY_WINDOW_HANDLE);
   if not Assigned(FNotification) then
   begin
     LastError := GetLastError;
-    Logger.Error(Format('Device Notification not assigned: %d, %s', [LastError, SysErrorMessage(LastError)]));
+    Logger.Error(Format('Device Notification not assigned: %d, %s',
+      [LastError, SysErrorMessage(LastError)]));
   end;
 end;
 

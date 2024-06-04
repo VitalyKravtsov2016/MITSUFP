@@ -19,17 +19,17 @@ const
   BARCODE_ITF14 = 7;
   BARCODE_UPCA = 8;
   BARCODE_UPCE = 9;
-  BARCODE_PDF417 = 10; //2D
-  BARCODE_AZTEC = 11; //2D
+  BARCODE_PDF417 = 10; // 2D
+  BARCODE_AZTEC = 11; // 2D
   BARCODE_2OF5_INTERLEAVED = 12;
 
-  /////////////////////////////////////////////////////////////////////////////
+  /// //////////////////////////////////////////////////////////////////////////
   // ModelID constants
 
   MODEL_SHTRIH_MINI_FRK_KAZ = 12;
   MODEL_YARUS_M2100K = 20;
 
-  /////////////////////////////////////////////////////////////////////////////
+  /// //////////////////////////////////////////////////////////////////////////
   // SwapBytesMode
 
   SwapBytesModeSwap = 0;
@@ -73,46 +73,46 @@ type
   { TLicInfoRec }
 
   TLicInfoRec = record
-    ResultCode: Integer;        // Результат
-    ResultDesc: string;         // Описание результата
-    CashControl: Boolean;       // Разрешено использование CashControl
-    RemoteLaunch: Boolean;      // Разрешен удаленный запуск
-    KeyCount: Integer;          // Количество ключей
-    LicCount: Integer;          // Количество лицензий
+    ResultCode: Integer; // Результат
+    ResultDesc: string; // Описание результата
+    CashControl: Boolean; // Разрешено использование CashControl
+    RemoteLaunch: Boolean; // Разрешен удаленный запуск
+    KeyCount: Integer; // Количество ключей
+    LicCount: Integer; // Количество лицензий
   end;
 
   { TDeviceModel }
 
-  TDeviceModel = (dmUnknown, 					  // Неизвестная модель
-    dmShtrihFRF3,				  // ШТРИХ-ФР-Ф (версия 3)
-    dmShtrihFRF4,				  // ШТРИХ-ФР-Ф (версия 4)
-    dmShtrihFRFKaz,   	  // ШТРИХ-ФР-Ф (Казахстан)
-    dmElvesMiniFRF,			  // ЭЛВЕС-МИНИ-ФР-Ф
-    dmFelixRF, 					  // ФЕЛИКС-Р Ф
-    dmShtrihFRK,				  // ШТРИХ-ФР-К
-    dmShtrih950K,				  // ШТРИХ-950К версия 1
-    dmShtrih950Kv2,			  // Штрих950K версия 2
-    dmElvesFRK, 				  // ЭЛВЕС-ФР-К
-    dmShtrihMiniFRK, 		  // ШТРИХ-МИНИ-ФР-К
-    dmShtrihMiniFRK2, 	  // ШТРИХ-МИНИ-ФР-К 2
-    dmShtrihFRFBel, 		  // ШТРИХ-ФР-Ф (Белоруссия)
-    dmShtrihComboFRKv1,   // ШТРИХ-КОМБО-ФР-К версии 1
-    dmShtrihComboFRKv2,   // ШТРИХ-КОМБО-ФР-К версии 2
-    dmShtrihPOSF,				  // Фискальный блок Штрих-POS-Ф
-    dmShtrih500,					// ШТРИХ-500
-    dmShtrihMFRK,         // ШТРИХ-М-ФР-К
-    dmShtrihLightFRK,    // ШТРИХ-LIGHT-ФР-К
-    dmYARUS01K,           // ЯРУС-01К
-    dmYARUS02K,           // ЯРУС-02К
-    dmYARUSM2100K,          // ЯРУС М2100К
-    dmShtrihMobilePTK,  //"ШТРИХ-MOBILE-ПТК"
-    dmYarusTK,  //- "YARUS-ТК" | "АСПД YARUS C21"
-    dmRetail01K,  //- "Retail-01К"
-    dmRR02K,  //- "RR-02К"
-    dmRR01K,  //- "RR-01К"
-    dmRR04K,  //- "RR-04К"
-    dmRR03K  //- "RR-03К"
-);
+  TDeviceModel = (dmUnknown, // Неизвестная модель
+    dmShtrihFRF3, // ШТРИХ-ФР-Ф (версия 3)
+    dmShtrihFRF4, // ШТРИХ-ФР-Ф (версия 4)
+    dmShtrihFRFKaz, // ШТРИХ-ФР-Ф (Казахстан)
+    dmElvesMiniFRF, // ЭЛВЕС-МИНИ-ФР-Ф
+    dmFelixRF, // ФЕЛИКС-Р Ф
+    dmShtrihFRK, // ШТРИХ-ФР-К
+    dmShtrih950K, // ШТРИХ-950К версия 1
+    dmShtrih950Kv2, // Штрих950K версия 2
+    dmElvesFRK, // ЭЛВЕС-ФР-К
+    dmShtrihMiniFRK, // ШТРИХ-МИНИ-ФР-К
+    dmShtrihMiniFRK2, // ШТРИХ-МИНИ-ФР-К 2
+    dmShtrihFRFBel, // ШТРИХ-ФР-Ф (Белоруссия)
+    dmShtrihComboFRKv1, // ШТРИХ-КОМБО-ФР-К версии 1
+    dmShtrihComboFRKv2, // ШТРИХ-КОМБО-ФР-К версии 2
+    dmShtrihPOSF, // Фискальный блок Штрих-POS-Ф
+    dmShtrih500, // ШТРИХ-500
+    dmShtrihMFRK, // ШТРИХ-М-ФР-К
+    dmShtrihLightFRK, // ШТРИХ-LIGHT-ФР-К
+    dmYARUS01K, // ЯРУС-01К
+    dmYARUS02K, // ЯРУС-02К
+    dmYARUSM2100K, // ЯРУС М2100К
+    dmShtrihMobilePTK, // "ШТРИХ-MOBILE-ПТК"
+    dmYarusTK, // - "YARUS-ТК" | "АСПД YARUS C21"
+    dmRetail01K, // - "Retail-01К"
+    dmRR02K, // - "RR-02К"
+    dmRR01K, // - "RR-01К"
+    dmRR04K, // - "RR-04К"
+    dmRR03K // - "RR-03К"
+    );
 
   { TInt64Rec }
 
@@ -133,16 +133,16 @@ type
     MaxValue: Integer;
   end;
 
-  TBanknotes = array[0..23] of Integer;
+  TBanknotes = array [0 .. 23] of Integer;
 
 const
-  /////////////////////////////////////////////////////////////////////////////
+  /// //////////////////////////////////////////////////////////////////////////
   // SaveSettingsType constants
 
   stRegLocalMachine = 0;
   stRegCurrentUser = 1;
 
-  /////////////////////////////////////////////////////////////////////////////
+  /// //////////////////////////////////////////////////////////////////////////
   // ConnectionType constants
 
   CT_LOCAL = 0;
@@ -183,7 +183,7 @@ const
   REGSTR_VAL_RECOVERERROR165 = 'RecoverError165';
   REGSTR_VAL_SYSADMINPASSWORD = 'SysAdminPassword';
 
-  //License Trial TimeStamp
+  // License Trial TimeStamp
   REGSTR_VAL_TRIALSTAMP = 'LCTStamp';
 
   // описание таблицы
@@ -215,28 +215,28 @@ const
   REGSTR_VAL_TABLE_TOP = 'Top';
   REGSTR_VAL_TABLE_WIDTH = 'Width';
   REGSTR_VAL_TABLE_HEIGHT = 'Heigth';
-  DefTimeout = 3000;              // Таймаут по умолчанию
-  DefConnectionTimeout = 0;               // Таймаут подключения по умолчанию
+  DefTimeout = 3000; // Таймаут по умолчанию
+  DefConnectionTimeout = 0; // Таймаут подключения по умолчанию
   DefTCPConnectionTimeout = 10000;
-  DefBaudRate = 1;                // Скорость по умолчанию 4800
-  DefComNumber = 1;                // Номер COM порта
-  DefTCPPort = 7778;              // Порт сервера печати по умолчанию
-  DefIPAddress = '192.168.137.111';      // IP адрес сервера печати по умолчанию
-  DefConnectionType = CT_LOCAL;         // Тип подключения по умолчанию
-  DefEscapeIP = '127.0.0.1';      // IP адрес Escape по умолчанию
-  DefEscapePort = 1000;             // UDP порт Escape по умолчанию
-  DefEscapeTimeout = 1000;             // Таймаут Escape по умолчанию, мс
+  DefBaudRate = 1; // Скорость по умолчанию 4800
+  DefComNumber = 1; // Номер COM порта
+  DefTCPPort = 7778; // Порт сервера печати по умолчанию
+  DefIPAddress = '192.168.137.111'; // IP адрес сервера печати по умолчанию
+  DefConnectionType = CT_LOCAL; // Тип подключения по умолчанию
+  DefEscapeIP = '127.0.0.1'; // IP адрес Escape по умолчанию
+  DefEscapePort = 1000; // UDP порт Escape по умолчанию
+  DefEscapeTimeout = 1000; // Таймаут Escape по умолчанию, мс
   DefSysAdminPassword = 30;
   DefSwapBytesMode = SwapBytesModeModel;
   QuantityFactor: Integer = 1000;
-  BoolToInt: array[Boolean] of Byte = (0, 1);
-  BoolToStr: array[Boolean] of string = ('0', '1');
+  BoolToInt: array [Boolean] of Byte = (0, 1);
+  BoolToStr: array [Boolean] of string = ('0', '1');
   MODE_CHECK_OPENED = 8;
 
   //
   MaxRepeatCount = 3;
 
-  /////////////////////////////////////////////////////////////////////////////
+  /// //////////////////////////////////////////////////////////////////////////
   // PrintBarcodeText
 
   PrintBarcodeTextNone = 0;
@@ -257,12 +257,12 @@ const
 
   // коды ошибок драйвера
   E_NOERROR = 0;
-  E_NOHARDWARE = -1;  // Нет связи
-  E_NOPORT = -2;  // СOM порт недоступен
-  E_PORTBUSY = -3;  // СOM порт занят другим приложением
-  E_ANSWERLENGTH = -7;  // Неверная длина ответа
+  E_NOHARDWARE = -1; // Нет связи
+  E_NOPORT = -2; // СOM порт недоступен
+  E_PORTBUSY = -3; // СOM порт занят другим приложением
+  E_ANSWERLENGTH = -7; // Неверная длина ответа
   E_UNKNOWN = -8;
-  E_INVALIDPARAM = -9;  // Параметр вне диапазона
+  E_INVALIDPARAM = -9; // Параметр вне диапазона
   E_NOTSUPPORTED = -12; // Не поддерживается в данной версии драйвера
   E_NOTLOADED = -16; // Не удалось подключиться к серверу
   E_PORTLOCKED = -18; // Порт блокирован
@@ -277,7 +277,7 @@ const
   E_MODELNOTFOUND = -36; // Не найдено описание модели
   E_MODELSFILEERROR = -37; // Не найден или поврежден файл "Models.xml"
   E_SERVERVERSIONERROR = -38; // Несовместимая версия сервера ФР
-  E_UNKNOWNTAG = -39;           // Неизвестный тег
+  E_UNKNOWNTAG = -39; // Неизвестный тег
   E_FILENOTFOUND = -40; // Файл не найден
   E_DOCUMENTNOTFOUND = -41; // Документ не найден
   E_INCORRECTTLVLENGTH = -42; // Длина данных TLV превышает допустимую
@@ -322,9 +322,11 @@ resourcestring
   SUnknownTag = 'Неизвестный тег';
   SFileNotFound = 'Файл не найден';
   SDocumentNotFound = 'Документ не найден';
-  SFwupdateStarted = 'Идет обновление прошивки ККТ. Не отключайте питание и не закрывайте приложение';
+  SFwupdateStarted =
+    'Идет обновление прошивки ККТ. Не отключайте питание и не закрывайте приложение';
   SDfuModeNotSupported = 'Режим DFU не поддерживается моделью';
-  S_DATE_TIME_DIFFER_MORE_THAN_24H = 'Дата и время в ПК и ККТ расходятся более, чем на сутки';
+  S_DATE_TIME_DIFFER_MORE_THAN_24H =
+    'Дата и время в ПК и ККТ расходятся более, чем на сутки';
 
 resourcestring
   SParamsReadError = 'Ошибка чтения параметров: ';
@@ -366,7 +368,8 @@ end;
 function ECRDateTimeToDateTime(const Value: TECRDateTime): TDateTime;
 begin
   try
-    Result := EncodeDate(Value.Year + 2000, Value.Month, Value.Day) + EncodeTime(Value.Hour, Value.Min, Value.Sec, 0);
+    Result := EncodeDate(Value.Year + 2000, Value.Month, Value.Day) +
+      EncodeTime(Value.Hour, Value.Min, Value.Sec, 0);
   except
     Result := 0;
   end;
@@ -374,9 +377,10 @@ end;
 
 function GetDllFileName: string;
 var
-  Buffer: array[0..261] of Char;
+  Buffer: array [0 .. 261] of Char;
 begin
-  SetString(Result, Buffer, Windows.GetModuleFileName(HInstance, Buffer, SizeOf(Buffer)));
+  SetString(Result, Buffer, Windows.GetModuleFileName(HInstance, Buffer,
+    SizeOf(Buffer)));
 end;
 
 function GetUserShtrihPath: string;
@@ -396,36 +400,35 @@ end;
 { !!! }
 function GetCommonShtrihPath: string;
 begin
-(*
-  SetLength(Result, MAX_PATH);
-  ShlObj.SHGetSpecialFolderPath(0, @Result[1], CSIDL_COMMON_APPDATA, false);
-  SetLength(Result, Pos(#0, Result) - 1);
+  (*
+    SetLength(Result, MAX_PATH);
+    ShlObj.SHGetSpecialFolderPath(0, @Result[1], CSIDL_COMMON_APPDATA, false);
+    SetLength(Result, Pos(#0, Result) - 1);
 
-  Result := IncludeTrailingBackSlash(Result) + 'SHTRIH-M';
-  if not DirectoryExists(Result) then
+    Result := IncludeTrailingBackSlash(Result) + 'SHTRIH-M';
+    if not DirectoryExists(Result) then
     CreateDir(Result);
-  Result := Result + '\DrvFR';
-  if not DirectoryExists(Result) then
+    Result := Result + '\DrvFR';
+    if not DirectoryExists(Result) then
     CreateDir(Result);
-*)
+  *)
 end;
 
 function GetTempShtrihPath: string;
 begin
-(*
-  SetLength(Result, MAX_PATH);
-  ShlObj.SHGetSpecialFolderPath(0, @Result[1], CSIDL_COMMON_APPDATA, false);
-  SetLength(Result, Pos(#0, Result) - 1);
+  (*
+    SetLength(Result, MAX_PATH);
+    ShlObj.SHGetSpecialFolderPath(0, @Result[1], CSIDL_COMMON_APPDATA, false);
+    SetLength(Result, Pos(#0, Result) - 1);
 
-  Result := IncludeTrailingBackSlash(Result) + 'SHTRIH-M';
-  if not DirectoryExists(Result) then
+    Result := IncludeTrailingBackSlash(Result) + 'SHTRIH-M';
+    if not DirectoryExists(Result) then
     CreateDir(Result);
-  Result := Result + '\DrvFR';
-  if not DirectoryExists(Result) then
+    Result := Result + '\DrvFR';
+    if not DirectoryExists(Result) then
     CreateDir(Result);
-*)    
+  *)
 end;
-
 
 function GetUserShtrihPath_def: string;
 begin
@@ -442,7 +445,7 @@ function GetDefaultLogFileName: string;
 var
   DllFileName: string;
 begin
-  Result := IncludeTrailingBackslash(GetUserShtrihPath) + 'Logs\';
+  Result := IncludeTrailingBackSlash(GetUserShtrihPath) + 'Logs\';
   if not DirectoryExists(Result) then
     CreateDir(Result);
   Result := Result + ChangeFileExt(ExtractFileName(DllFileName), '.log');
@@ -450,8 +453,7 @@ end;
 
 function GetBackupTablesPath: string;
 begin
-  Result := IncludeTrailingBackslash(GetUserShtrihPath) + 'Tables';
+  Result := IncludeTrailingBackSlash(GetUserShtrihPath) + 'Tables';
 end;
 
 end.
-

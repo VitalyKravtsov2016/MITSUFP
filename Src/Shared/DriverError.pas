@@ -6,14 +6,14 @@ uses
   // VCL
   SysUtils,
   // This
-  WException, GNUGetText;
+  WideException, GNUGetText;
 
 type
   { EDriverError }
 
-  EDriverError = class(WideException)
+  EDriverError = class(EWideException)
   private
-   FCode: Integer;
+    FCode: Integer;
   public
     property Code: Integer read FCode;
     constructor Create2(Code: Integer; const Msg: WideString);

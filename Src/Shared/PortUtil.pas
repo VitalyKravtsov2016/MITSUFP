@@ -1,10 +1,12 @@
 unit PortUtil;
+
 interface
+
 uses
   // VCL
   Windows, SysUtils, Dialogs,
   // JVCL
-  JvSetupAPI, WException;
+  JvSetupAPI, WideException;
 
 procedure EnableComPort(PortName: string; AEnabled: Boolean);
 
@@ -12,7 +14,6 @@ implementation
 
 const
   GUID_DEVCLASS_SERIAL: TGUID = '{4D36E978-E325-11CE-BFC1-08002BE10318}';
-
 
 procedure RaiseLastError;
 begin
@@ -32,15 +33,17 @@ begin
   Result := '';
   p1 := Pos('(', Name);
   p2 := Pos(')', Name);
-  if (P1 <= 0)or(P2 <= 0) then Exit;
-  Result := Copy(Name, p1+1, p2-p1-1);
+  if (p1 <= 0) or (p2 <= 0) then
+    Exit;
+  Result := Copy(Name, p1 + 1, p2 - p1 - 1);
 end;
 
-function GetDeviceName(DevInfo: HDEVINFO; const DevData: TSPDevInfoData): AnsiString;
+function GetDeviceName(DevInfo: HDEVINFO; const DevData: TSPDevInfoData)
+  : AnsiString;
 var
   BytesReturned: DWORD;
   RegDataType: DWORD;
-  Buffer: array[0..256] of CHAR;
+  Buffer: array [0 .. 256] of CHAR;
 begin
   LoadSetupApi;
   BytesReturned := 0;
@@ -50,7 +53,7 @@ begin
     RegDataType, PByte(@Buffer[0]), SizeOf(Buffer), BytesReturned);
   Result := Buffer;
   if Result <> '' then
-    exit;
+    Exit;
   BytesReturned := 0;
   RegDataType := 0;
   Buffer[0] := #0;
@@ -63,7 +66,7 @@ function GetComPortDevIndex(DevInfo: HDEVINFO; PortName: string): DWORD;
 var
   DevData: TSPDevInfoData;
   DeviceInterfaceData: TSPDeviceInterfaceData;
-  RES: BOOL;
+  Res: BOOL;
   Name: AnsiString;
 begin
   LoadSetupApi;
@@ -71,8 +74,8 @@ begin
   repeat
     DeviceInterfaceData.cbSize := SizeOf(TSPDeviceInterfaceData);
     DevData.cbSize := SizeOf(TSPDevInfoData);
-    RES := SetupDiEnumDeviceInfo(DevInfo, Result, DevData);
-    if RES then
+    Res := SetupDiEnumDeviceInfo(DevInfo, Result, DevData);
+    if Res then
     begin
       Name := GetDeviceName(DevInfo, DevData);
       if GetComName(Name) = PortName then
@@ -80,7 +83,7 @@ begin
       else
         Inc(Result);
     end;
-  until not RES;
+  until not Res;
 end;
 
 procedure EnableComPort(PortName: string; AEnabled: Boolean);
@@ -94,29 +97,31 @@ begin
   try
     Check(DevInfo <> Pointer(INVALID_HANDLE_VALUE));
 
-    DeviceData.cbSize := sizeof(TSPDevInfoData);
-    if not SetupDiEnumDeviceInfo(DevInfo,
-      GetComPortDevIndex(DevInfo, PortName), DeviceData) then Exit;
+    DeviceData.cbSize := SizeOf(TSPDevInfoData);
+    if not SetupDiEnumDeviceInfo(DevInfo, GetComPortDevIndex(DevInfo, PortName),
+      DeviceData) then
+      Exit;
 
-    PCHP.ClassInstallHeader.cbSize := sizeof(TSPClassInstallHeader);
+    PCHP.ClassInstallHeader.cbSize := SizeOf(TSPClassInstallHeader);
 
-    Check(SetupDiSetClassInstallParams(DevInfo, @DeviceData, @PCHP, sizeof(TSPPropChangeParams)));
+    Check(SetupDiSetClassInstallParams(DevInfo, @DeviceData, @PCHP,
+      SizeOf(TSPPropChangeParams)));
 
-    PCHP.ClassInstallHeader.cbSize := sizeof(TSPClassInstallHeader);
+    PCHP.ClassInstallHeader.cbSize := SizeOf(TSPClassInstallHeader);
     PCHP.ClassInstallHeader.InstallFunction := DIF_PROPERTYCHANGE;
-    PCHP.Scope := DICS_FLAG_GLOBAL; //DICS_FLAG_CONFIGSPECIFIC;
+    PCHP.Scope := DICS_FLAG_GLOBAL; // DICS_FLAG_CONFIGSPECIFIC;
     PCHP.HwProfile := 0;
     if AEnabled then
       PCHP.StateChange := DICS_ENABLE
     else
       PCHP.StateChange := DICS_DISABLE;
-    Check(SetupDiSetClassInstallParams(DevInfo, @DeviceData, @PCHP, sizeof(TSPPropChangeParams)));
+    Check(SetupDiSetClassInstallParams(DevInfo, @DeviceData, @PCHP,
+      SizeOf(TSPPropChangeParams)));
     Check(SetupDiCallClassInstaller(DIF_PROPERTYCHANGE, DevInfo, @DeviceData));
-    DeviceData.cbSize := sizeof(TSPDevInfoData);
+    DeviceData.cbSize := SizeOf(TSPDevInfoData);
   finally
     SetupDiDestroyDeviceInfoList(DevInfo);
   end;
 end;
 
 end.
-

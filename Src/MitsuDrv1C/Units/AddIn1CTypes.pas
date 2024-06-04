@@ -84,7 +84,7 @@ type
     IsWritable: Boolean;
     vt: DWORD;
     retType: DWORD;
-    
+
     constructor Create(AOwner: TAddinFuncs);
     destructor Destroy; override;
     property Params: TAddinParams read FParams;
@@ -144,7 +144,8 @@ end;
 
 procedure TAddinProps.Clear;
 begin
-  while Count > 0 do Items[0].Free;
+  while Count > 0 do
+    Items[0].Free;
 end;
 
 function TAddinProps.GetCount: Integer;
@@ -171,7 +172,7 @@ end;
 
 function TAddinProps.ValidIndex(Index: Integer): Boolean;
 begin
-  Result := (Index >= 0)and(Index < Count);
+  Result := (Index >= 0) and (Index < Count);
 end;
 
 function TAddinProps.ItemByEngName(const Value: string): TAddinProp;
@@ -181,7 +182,8 @@ begin
   for i := 0 to Count - 1 do
   begin
     Result := Items[i];
-    if AnsiCompareText(Result.EngName, Value) = 0 then Exit;
+    if AnsiCompareText(Result.EngName, Value) = 0 then
+      Exit;
   end;
   Result := nil;
 end;
@@ -204,8 +206,10 @@ procedure TAddinProp.SetOwner(AOwner: TAddinProps);
 begin
   if AOwner <> FOwner then
   begin
-    if FOwner <> nil then FOwner.RemoveItem(Self);
-    if AOwner <> nil then AOwner.InsertItem(Self);
+    if FOwner <> nil then
+      FOwner.RemoveItem(Self);
+    if AOwner <> nil then
+      AOwner.InsertItem(Self);
   end;
 end;
 
@@ -226,7 +230,8 @@ end;
 
 procedure TAddinFuncs.Clear;
 begin
-  while Count > 0 do Items[0].Free;
+  while Count > 0 do
+    Items[0].Free;
 end;
 
 function TAddinFuncs.GetCount: Integer;
@@ -258,16 +263,16 @@ begin
   for i := 0 to Count - 1 do
   begin
     Result := Items[i];
-    if AnsiCompareText(Result.EngName, Value) = 0 then Exit;
+    if AnsiCompareText(Result.EngName, Value) = 0 then
+      Exit;
   end;
   Result := nil;
 end;
 
 function TAddinFuncs.ValidIndex(Index: Integer): Boolean;
 begin
-  Result := (Index >= 0)and(Index < Count);
+  Result := (Index >= 0) and (Index < Count);
 end;
-
 
 { TAddinFunc }
 
@@ -289,8 +294,10 @@ procedure TAddinFunc.SetOwner(AOwner: TAddinFuncs);
 begin
   if AOwner <> FOwner then
   begin
-    if FOwner <> nil then FOwner.RemoveItem(Self);
-    if AOwner <> nil then AOwner.InsertItem(Self);
+    if FOwner <> nil then
+      FOwner.RemoveItem(Self);
+    if AOwner <> nil then
+      AOwner.InsertItem(Self);
   end;
 end;
 
@@ -311,7 +318,8 @@ end;
 
 procedure TAddinParams.Clear;
 begin
-  while Count > 0 do Items[0].Free;
+  while Count > 0 do
+    Items[0].Free;
 end;
 
 function TAddinParams.GetCount: Integer;
@@ -338,7 +346,7 @@ end;
 
 function TAddinParams.ValidIndex(Index: Integer): Boolean;
 begin
-  Result := (Index >= 0)and(Index < Count);
+  Result := (Index >= 0) and (Index < Count);
 end;
 
 { TAddinParam }
@@ -359,10 +367,11 @@ procedure TAddinParam.SetOwner(AOwner: TAddinParams);
 begin
   if AOwner <> FOwner then
   begin
-    if FOwner <> nil then FOwner.RemoveItem(Self);
-    if AOwner <> nil then AOwner.InsertItem(Self);
+    if FOwner <> nil then
+      FOwner.RemoveItem(Self);
+    if AOwner <> nil then
+      AOwner.InsertItem(Self);
   end;
 end;
-
 
 end.

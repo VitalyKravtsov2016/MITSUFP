@@ -34,26 +34,26 @@ var
   hVerInfo: THandle;
   hGlobal: THandle;
   AddrRes: pointer;
-  Buf: array[0..7]of byte;
+  Buf: array [0 .. 7] of byte;
 begin
   Result.MajorVersion := 0;
   Result.MinorVersion := 0;
   Result.ProductRelease := 0;
   Result.ProductBuild := 0;
 
-  hVerInfo:= FindResource(hInstance, '#1', RT_VERSION);
+  hVerInfo := FindResource(hInstance, '#1', RT_VERSION);
   if hVerInfo <> 0 then
   begin
     hGlobal := LoadResource(hInstance, hVerInfo);
     if hGlobal <> 0 then
     begin
-      AddrRes:= LockResource(hGlobal);
+      AddrRes := LockResource(hGlobal);
       try
-        CopyMemory(@Buf, Pointer(Integer(AddrRes)+48), 8);
-        Result.MinorVersion := Buf[0] + Buf[1]*$100;
-        Result.MajorVersion := Buf[2] + Buf[3]*$100;
-        Result.ProductBuild := Buf[4] + Buf[5]*$100;
-        Result.ProductRelease := Buf[6] + Buf[7]*$100;
+        CopyMemory(@Buf, pointer(Integer(AddrRes) + 48), 8);
+        Result.MinorVersion := Buf[0] + Buf[1] * $100;
+        Result.MajorVersion := Buf[2] + Buf[3] * $100;
+        Result.ProductBuild := Buf[4] + Buf[5] * $100;
+        Result.ProductRelease := Buf[6] + Buf[7] * $100;
       finally
         FreeResource(hGlobal);
       end;
@@ -80,10 +80,10 @@ end;
 
 function GetModuleFileName: WideString;
 var
-  Buffer: array[0..261] of Char;
+  Buffer: array [0 .. 261] of Char;
 begin
-  SetString(Result, Buffer, Windows.GetModuleFileName(HInstance,
-    Buffer, SizeOf(Buffer)));
+  SetString(Result, Buffer, Windows.GetModuleFileName(hInstance, Buffer,
+    SizeOf(Buffer)));
 end;
 
 function GetModuleDate: WideString;
@@ -94,15 +94,16 @@ var
   Data: TWin32FileAttributeData;
 begin
   Result := 'unknown';
-  if GetFileAttributesExW(PWideChar(GetModuleFileName), GetFileExInfoStandard, @Data) then
+  if GetFileAttributesExW(PWideChar(GetModuleFileName), GetFileExInfoStandard,
+    @Data) then
   begin
     if FileTimeToLocalFileTime(Data.ftLastWriteTime, FileTime) then
     begin
       if FileTimeToSystemTime(FileTime, SystemTime) then
       begin
         with SystemTime do
-        ModuleDate := EncodeDate(wYear, wMonth, wDay) +
-        EncodeTime(wHour, wMinute, wSecond, wMilliseconds);
+          ModuleDate := EncodeDate(wYear, wMonth, wDay) +
+            EncodeTime(wHour, wMinute, wSecond, wMilliseconds);
         Result := DateTimeToStr(ModuleDate);
       end;
     end;
@@ -116,17 +117,16 @@ end;
 
 function GetDllFileName: WideString;
 var
-  Buffer: array[0..261] of Char;
+  Buffer: array [0 .. 261] of Char;
 begin
-  SetString(Result, Buffer, Windows.GetModuleFileName(HInstance,
-    Buffer, SizeOf(Buffer)));
+  SetString(Result, Buffer, Windows.GetModuleFileName(hInstance, Buffer,
+    SizeOf(Buffer)));
 end;
 
 function GetOPOSVersion: WideString;
 begin
   Result := '1.12';
 end;
-
 
 function VersionInfoToStr(const V: TVersionInfo): WideString;
 begin
@@ -137,7 +137,7 @@ end;
 function ReadFileVersion(const FileName: WideString): TVersionInfo;
 var
   VerInfoSize: DWORD;
-  VerInfo: Pointer;
+  VerInfo: pointer;
   VerValueSize: DWORD;
   VerValue: PVSFixedFileInfo;
   Dummy: DWORD;
@@ -148,14 +148,17 @@ begin
   Result.ProductBuild := 0;
 
   VerInfoSize := GetFileVersionInfoSizeW(PWideChar(FileName), Dummy);
-  if VerInfoSize = 0 then Exit;
+  if VerInfoSize = 0 then
+    Exit;
   GetMem(VerInfo, VerInfoSize);
-  if not assigned(VerInfo) then Exit;
+  if not assigned(VerInfo) then
+    Exit;
 
   try
-    if Windows.GetFileVersionInfoW(PWideChar(FileName), 0, VerInfoSize, VerInfo) then
+    if Windows.GetFileVersionInfoW(PWideChar(FileName), 0, VerInfoSize, VerInfo)
+    then
     begin
-      if VerQueryValueW(VerInfo, '\', Pointer(VerValue), VerValueSize) then
+      if VerQueryValueW(VerInfo, '\', pointer(VerValue), VerValueSize) then
       begin
         with VerValue^ do
         begin
