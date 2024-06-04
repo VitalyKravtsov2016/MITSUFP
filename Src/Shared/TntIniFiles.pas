@@ -43,9 +43,9 @@ type
     procedure WriteDateTime(const Section, Name: WideString; Value: TDateTime); virtual;
     procedure WriteFloat(const Section, Name: WideString; Value: Double); virtual;
     procedure WriteTime(const Section, Name: WideString; Value: TDateTime); virtual;
-    procedure ReadSection(const Section: WideString; Strings: TTntStrings); virtual; abstract;
-    procedure ReadSections(Strings: TTntStrings); virtual; abstract;
-    procedure ReadSectionValues(const Section: WideString; Strings: TTntStrings); virtual; abstract;
+    procedure ReadSection(const Section: WideString; Strings: TStrings); virtual; abstract;
+    procedure ReadSections(Strings: TStrings); virtual; abstract;
+    procedure ReadSectionValues(const Section: WideString; Strings: TStrings); virtual; abstract;
     procedure EraseSection(const Section: WideString); virtual; abstract;
     procedure DeleteKey(const Section, Ident: WideString); virtual; abstract;
     procedure UpdateFile; virtual; abstract;
@@ -79,9 +79,9 @@ type
     function ValueOf(const Key: WideString): Integer;
   end;
 
-  { THashedStringList - A TTntStringList that uses TStringHash to improve the
+  { THashedStringList - A TStringList that uses TStringHash to improve the
     speed of Find }
-  THashedStringList = class(TTntStringList)
+  THashedStringList = class(TStringList)
   private
     FValueHash: TStringHash;
     FNameHash: TStringHash;
@@ -103,8 +103,8 @@ type
 
   TMemIniFile = class(TCustomIniFile)
   private
-    FSections: TTntStringList;
-    function AddSection(const Section: WideString): TTntStrings;
+    FSections: TStringList;
+    function AddSection(const Section: WideString): TStrings;
     function GetCaseSensitive: Boolean;
     procedure LoadValues;
     procedure SetCaseSensitive(Value: Boolean);
@@ -114,36 +114,36 @@ type
     procedure Clear;
     procedure DeleteKey(const Section, Ident: WideString); override;
     procedure EraseSection(const Section: WideString); override;
-    procedure GetStrings(List: TTntStrings);
-    procedure ReadSection(const Section: WideString; Strings: TTntStrings); override;
-    procedure ReadSections(Strings: TTntStrings); override;
-    procedure ReadSectionValues(const Section: WideString; Strings: TTntStrings); override;
+    procedure GetStrings(List: TStrings);
+    procedure ReadSection(const Section: WideString; Strings: TStrings); override;
+    procedure ReadSections(Strings: TStrings); override;
+    procedure ReadSectionValues(const Section: WideString; Strings: TStrings); override;
     function ReadString(const Section, Ident, Default: WideString): WideString; override;
     procedure Rename(const FileName: WideString; Reload: Boolean);
-    procedure SetStrings(List: TTntStrings);
+    procedure SetStrings(List: TStrings);
     procedure UpdateFile; override;
     procedure WriteString(const Section, Ident, Value: WideString); override;
     property CaseSensitive: Boolean read GetCaseSensitive write SetCaseSensitive;
   end;
 
 {$IFDEF MSWINDOWS}
-  { TTntIniFile - Encapsulates the Windows INI file interface
+  { TIniFile - Encapsulates the Windows INI file interface
     (Get/SetPrivateProfileXXX functions) }
 
-  TTntIniFile = class(TCustomIniFile)
+  TIniFile = class(TCustomIniFile)
   public
     destructor Destroy; override;
     function ReadString(const Section, Ident, Default: WideString): WideString; override;
     procedure WriteString(const Section, Ident, Value: WideString); override;
-    procedure ReadSection(const Section: WideString; Strings: TTntStrings); override;
-    procedure ReadSections(Strings: TTntStrings); override;
-    procedure ReadSectionValues(const Section: WideString; Strings: TTntStrings); override;
+    procedure ReadSection(const Section: WideString; Strings: TStrings); override;
+    procedure ReadSections(Strings: TStrings); override;
+    procedure ReadSectionValues(const Section: WideString; Strings: TStrings); override;
     procedure EraseSection(const Section: WideString); override;
     procedure DeleteKey(const Section, Ident: WideString); override;
     procedure UpdateFile; override;
   end;
 {$ELSE}
-    TTntIniFile = class(TMemIniFile)
+    TIniFile = class(TMemIniFile)
     public
       destructor Destroy; override;
     end;
@@ -166,9 +166,9 @@ end;
 
 function TCustomIniFile.SectionExists(const Section: WideString): Boolean;
 var
-  S: TTntStrings;
+  S: TStrings;
 begin
-  S := TTntStringList.Create;
+  S := TStringList.Create;
   try
     ReadSection(Section, S);
     Result := S.Count > 0;
@@ -297,9 +297,9 @@ end;
 
 function TCustomIniFile.ValueExists(const Section, Ident: WideString): Boolean;
 var
-  S: TTntStrings;
+  S: TStrings;
 begin
-  S := TTntStringList.Create;
+  S := TStringList.Create;
   try
     ReadSection(Section, S);
     Result := S.IndexOf(Ident) > -1;
@@ -313,15 +313,15 @@ function TCustomIniFile.ReadBinaryStream(const Section, Name: WideString;
 var
   Pos: Integer;
   Text: AnsiString;
-  Stream: TTntMemoryStream;
+  Stream: TMemoryStream;
 begin
   Text := ReadString(Section, Name, '');
   if Text <> '' then
   begin
-    if Value is TTntMemoryStream then
-      Stream := TTntMemoryStream(Value)
+    if Value is TMemoryStream then
+      Stream := TMemoryStream(Value)
     else
-      Stream := TTntMemoryStream.Create;
+      Stream := TMemoryStream.Create;
 
     try
       Pos := Stream.Position;
@@ -344,15 +344,15 @@ procedure TCustomIniFile.WriteBinaryStream(const Section, Name: WideString;
   Value: TStream);
 var
   Text: AnsiString;
-  Stream: TTntMemoryStream;
+  Stream: TMemoryStream;
 begin
   SetLength(Text, (Value.Size - Value.Position) * 2);
   if Length(Text) > 0 then
   begin
-    if Value is TTntMemoryStream then
-      Stream := TTntMemoryStream(Value)
+    if Value is TMemoryStream then
+      Stream := TMemoryStream(Value)
     else
-      Stream := TTntMemoryStream.Create;
+      Stream := TMemoryStream.Create;
 
     try
       if Stream <> Value then
@@ -579,7 +579,7 @@ begin
   inherited Destroy;
 end;
 
-function TMemIniFile.AddSection(const Section: WideString): TTntStrings;
+function TMemIniFile.AddSection(const Section: WideString): TStrings;
 begin
   Result := THashedStringList.Create;
   try
@@ -603,12 +603,12 @@ end;
 procedure TMemIniFile.DeleteKey(const Section, Ident: WideString);
 var
   I, J: Integer;
-  Strings: TTntStrings;
+  Strings: TStrings;
 begin
   I := FSections.IndexOf(Section);
   if I >= 0 then
   begin
-    Strings := TTntStrings(FSections.Objects[I]);
+    Strings := TStrings(FSections.Objects[I]);
     J := Strings.IndexOfName(Ident);
     if J >= 0 then
       Strings.Delete(J);
@@ -622,7 +622,7 @@ begin
   I := FSections.IndexOf(Section);
   if I >= 0 then
   begin
-    TTntStrings(FSections.Objects[I]).Free;
+    TStrings(FSections.Objects[I]).Free;
     FSections.Delete(I);
   end;
 end;
@@ -632,17 +632,17 @@ begin
   Result := FSections.CaseSensitive;
 end;
 
-procedure TMemIniFile.GetStrings(List: TTntStrings);
+procedure TMemIniFile.GetStrings(List: TStrings);
 var
   I, J: Integer;
-  Strings: TTntStrings;
+  Strings: TStrings;
 begin
   List.BeginUpdate;
   try
     for I := 0 to FSections.Count - 1 do
     begin
       List.Add('[' + FSections[I] + ']');
-      Strings := TTntStrings(FSections.Objects[I]);
+      Strings := TStrings(FSections.Objects[I]);
       for J := 0 to Strings.Count - 1 do List.Add(Strings[J]);
       List.Add('');
     end;
@@ -653,11 +653,11 @@ end;
 
 procedure TMemIniFile.LoadValues;
 var
-  List: TTntStringList;
+  List: TStringList;
 begin
   if (FileName <> '') and FileExists(FileName) then
   begin
-    List := TTntStringList.Create;
+    List := TStringList.Create;
     try
       List.LoadFromFile(FileName);
       SetStrings(List);
@@ -670,10 +670,10 @@ begin
 end;
 
 procedure TMemIniFile.ReadSection(const Section: WideString;
-  Strings: TTntStrings);
+  Strings: TStrings);
 var
   I, J: Integer;
-  SectionStrings: TTntStrings;
+  SectionStrings: TStrings;
 begin
   Strings.BeginUpdate;
   try
@@ -681,7 +681,7 @@ begin
     I := FSections.IndexOf(Section);
     if I >= 0 then
     begin
-      SectionStrings := TTntStrings(FSections.Objects[I]);
+      SectionStrings := TStrings(FSections.Objects[I]);
       for J := 0 to SectionStrings.Count - 1 do
         Strings.Add(SectionStrings.Names[J]);
     end;
@@ -690,13 +690,13 @@ begin
   end;
 end;
 
-procedure TMemIniFile.ReadSections(Strings: TTntStrings);
+procedure TMemIniFile.ReadSections(Strings: TStrings);
 begin
   Strings.Assign(FSections);
 end;
 
 procedure TMemIniFile.ReadSectionValues(const Section: WideString;
-  Strings: TTntStrings);
+  Strings: TStrings);
 var
   I: Integer;
 begin
@@ -705,7 +705,7 @@ begin
     Strings.Clear;
     I := FSections.IndexOf(Section);
     if I >= 0 then
-      Strings.Assign(TTntStrings(FSections.Objects[I]));
+      Strings.Assign(TStrings(FSections.Objects[I]));
   finally
     Strings.EndUpdate;
   end;
@@ -715,12 +715,12 @@ function TMemIniFile.ReadString(const Section, Ident,
   Default: WideString): WideString;
 var
   I: Integer;
-  Strings: TTntStrings;
+  Strings: TStrings;
 begin
   I := FSections.IndexOf(Section);
   if I >= 0 then
   begin
-    Strings := TTntStrings(FSections.Objects[I]);
+    Strings := TStrings(FSections.Objects[I]);
     I := Strings.IndexOfName(Ident);
     if I >= 0 then
     begin
@@ -755,11 +755,11 @@ begin
   end;
 end;
 
-procedure TMemIniFile.SetStrings(List: TTntStrings);
+procedure TMemIniFile.SetStrings(List: TStrings);
 var
   I, J: Integer;
   S: WideString;
-  Strings: TTntStrings;
+  Strings: TStrings;
 begin
   Clear;
   Strings := nil;
@@ -787,9 +787,9 @@ end;
 
 procedure TMemIniFile.UpdateFile;
 var
-  List: TTntStringList;
+  List: TStringList;
 begin
-  List := TTntStringList.Create;
+  List := TStringList.Create;
   try
     GetStrings(List);
     List.SaveToFile(FFileName);
@@ -802,11 +802,11 @@ procedure TMemIniFile.WriteString(const Section, Ident, Value: WideString);
 var
   I: Integer;
   S: WideString;
-  Strings: TTntStrings;
+  Strings: TStrings;
 begin
   I := FSections.IndexOf(Section);
   if I >= 0 then
-    Strings := TTntStrings(FSections.Objects[I])
+    Strings := TStrings(FSections.Objects[I])
   else
     Strings := AddSection(Section);
   S := Ident + '=' + Value;
@@ -818,15 +818,15 @@ begin
 end;
 
 {$IFDEF MSWINDOWS}
-{ TTntIniFile }
+{ TIniFile }
 
-destructor TTntIniFile.Destroy;
+destructor TIniFile.Destroy;
 begin
   UpdateFile;         // flush changes to disk
   inherited Destroy;
 end;
 
-function TTntIniFile.ReadString(const Section, Ident, Default: WideString): WideString;
+function TIniFile.ReadString(const Section, Ident, Default: WideString): WideString;
 var
   Buffer: array[0..2047] of WideChar;
 begin
@@ -834,14 +834,14 @@ begin
     PWideChar(Ident), PWideChar(Default), Buffer, SizeOf(Buffer), PWideChar(FFileName)));
 end;
 
-procedure TTntIniFile.WriteString(const Section, Ident, Value: WideString);
+procedure TIniFile.WriteString(const Section, Ident, Value: WideString);
 begin
   if not WritePrivateProfileStringW(PWideChar(Section), PWideChar(Ident),
                                    PWideChar(Value), PWideChar(FFileName)) then
     raise EIniFileException.CreateResFmt(@SIniFileWriteError, [FileName]);
 end;
 
-procedure TTntIniFile.ReadSections(Strings: TTntStrings);
+procedure TIniFile.ReadSections(Strings: TStrings);
 const
   BufSize = 16384;
 var
@@ -870,7 +870,7 @@ begin
   end;
 end;
 
-procedure TTntIniFile.ReadSection(const Section: WideString; Strings: TTntStrings);
+procedure TIniFile.ReadSection(const Section: WideString; Strings: TStrings);
 const
   BufSize = 16384;
 var
@@ -899,12 +899,12 @@ begin
   end;
 end;
 
-procedure TTntIniFile.ReadSectionValues(const Section: WideString; Strings: TTntStrings);
+procedure TIniFile.ReadSectionValues(const Section: WideString; Strings: TStrings);
 var
-  KeyList: TTntStringList;
+  KeyList: TStringList;
   I: Integer;
 begin
-  KeyList := TTntStringList.Create;
+  KeyList := TStringList.Create;
   try
     ReadSection(Section, KeyList);
     Strings.BeginUpdate;
@@ -920,24 +920,24 @@ begin
   end;
 end;
 
-procedure TTntIniFile.EraseSection(const Section: WideString);
+procedure TIniFile.EraseSection(const Section: WideString);
 begin
   if not WritePrivateProfileStringW(PWideChar(Section), nil, nil, PWideChar(FFileName)) then
     raise EIniFileException.CreateResFmt(@SIniFileWriteError, [FileName]);
 end;
 
-procedure TTntIniFile.DeleteKey(const Section, Ident: WideString);
+procedure TIniFile.DeleteKey(const Section, Ident: WideString);
 begin
   WritePrivateProfileStringW(PWideChar(Section), PWideChar(Ident), nil, PWideChar(FFileName));
 end;
 
-procedure TTntIniFile.UpdateFile;
+procedure TIniFile.UpdateFile;
 begin
   WritePrivateProfileStringW(nil, nil, nil, PWideChar(FFileName));
 end;
 {$ELSE}
 
-destructor TTntIniFile.Destroy;
+destructor TIniFile.Destroy;
 begin
   UpdateFile;
   inherited Destroy;

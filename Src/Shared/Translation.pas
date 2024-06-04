@@ -14,13 +14,13 @@ type
   TTranslation = class(TCollectionItem)
   private
     FName: WideString;
-    FItems: TTntStringList;
+    FItems: TStringList;
   public
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
 
     property Name: WideString read FName;
-    property Items: TTntStringList read FItems;
+    property Items: TStringList read FItems;
   end;
 
   { TTranslations }
@@ -44,7 +44,7 @@ implementation
 constructor TTranslation.Create(Collection: TCollection);
 begin
   inherited Create(Collection);
-  FItems := TTntStringList.Create;
+  FItems := TStringList.Create;
 end;
 
 destructor TTranslation.Destroy;
@@ -88,12 +88,12 @@ var
   i: Integer;
   Text: WideString;
   Path: WideString;
-  FileNames: TTntStrings;
+  FileNames: TStrings;
   Translation: TTranslation;
 begin
   Clear;
 
-  FileNames := TTntStringList.Create;
+  FileNames := TStringList.Create;
   try
     Path := IncludeTrailingPathDelimiter(GetModulePath + 'Translation') + '*';
     GetFileNames(Path, FileNames);

@@ -14,7 +14,6 @@ uses
   SocketPort in '..\..\Src\Shared\SocketPort.pas',
   DriverError in '..\..\Src\Shared\DriverError.pas',
   StringUtils in '..\..\Src\Shared\StringUtils.pas',
-  FileUtils in '..\..\Src\Shared\FileUtils.pas',
   ByteUtils in '..\..\Src\Shared\ByteUtils.pas',
   XmlDoc1C in '..\..\Src\MitsuDrv1C\Units\XmlDoc1C.pas',
   XmlUtils in '..\..\Src\MitsuDrv1C\Units\XmlUtils.pas',
@@ -38,11 +37,12 @@ uses
   MitsuDrv_1C in '..\..\Src\MitsuDrv1C\Units\MitsuDrv_1C.pas',
   ActiveXView in '..\..\Src\Shared\ActiveXView.pas',
   ActiveXControl1C in '..\..\Src\MitsuDrv1C\Units\ActiveXControl1C.pas',
-  ComObj2 in '..\..\Src\MitsuDrv1C\Units\ComObj2.pas',
   AddIn1CTypes in '..\..\Src\MitsuDrv1C\Units\AddIn1CTypes.pas',
   AddIn1CInterface in '..\..\Src\MitsuDrv1C\Units\AddIn1CInterface.pas',
   TextEncoding in '..\..\Src\MitsuDrv1C\Units\TextEncoding.pas',
-  TranslationUtil in '..\..\Src\Shared\TranslationUtil.pas';
+  TranslationUtil in '..\..\Src\Shared\TranslationUtil.pas',
+  gnugettext in '..\..\Src\Shared\gnugettext.pas',
+  FileUtils in '..\..\Src\Shared\FileUtils.pas';
 
 {$R *.res}
 

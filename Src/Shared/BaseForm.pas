@@ -12,7 +12,7 @@ uses
 type
   { TBaseForm }
 
-  TBaseForm = class(TTntForm)
+  TBaseForm = class(TForm)
   private
     FActiveControl: TWinControl;
   public
@@ -28,7 +28,7 @@ implementation
 
 procedure EnableWinControl(WinControl: TWinControl; Value: Boolean);
 begin
-  if WinControl is TTntButton then
+  if WinControl is TButton then
   begin
     if (not Value)and WinControl.Enabled then
     begin
@@ -69,7 +69,7 @@ begin
     if Control is TWinControl then
       EnableControlsFocused(Control as TWinControl, Value, FocusedControl);
   end;
-  if WinControl is TTntButton then
+  if WinControl is TButton then
   begin
     if WinControl.Focused and (not Value) then
       FocusedControl := WinControl;

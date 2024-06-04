@@ -1,0 +1,84 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{D2F2B2D3-B266-4E92-A5E9-E8B31B54443A}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="MitsuDrv1C\MitsuDrv1C.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="MitsuDrv1CNative\MitsuDrv1CNative.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="MitsuDrv1CTst\MitsuDrv1CTst.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\Test\MisuDrvTest\MitsuDrvTest.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\Test\MisuDrvTest\MitsuDrvTestLib.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="MitsuDrv1C">
+        <MSBuild Projects="MitsuDrv1C\MitsuDrv1C.dproj"/>
+    </Target>
+    <Target Name="MitsuDrv1C:Clean">
+        <MSBuild Projects="MitsuDrv1C\MitsuDrv1C.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="MitsuDrv1C:Make">
+        <MSBuild Projects="MitsuDrv1C\MitsuDrv1C.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="MitsuDrv1CNative">
+        <MSBuild Projects="MitsuDrv1CNative\MitsuDrv1CNative.dproj"/>
+    </Target>
+    <Target Name="MitsuDrv1CNative:Clean">
+        <MSBuild Projects="MitsuDrv1CNative\MitsuDrv1CNative.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="MitsuDrv1CNative:Make">
+        <MSBuild Projects="MitsuDrv1CNative\MitsuDrv1CNative.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="MitsuDrv1CTst">
+        <MSBuild Projects="MitsuDrv1CTst\MitsuDrv1CTst.dproj"/>
+    </Target>
+    <Target Name="MitsuDrv1CTst:Clean">
+        <MSBuild Projects="MitsuDrv1CTst\MitsuDrv1CTst.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="MitsuDrv1CTst:Make">
+        <MSBuild Projects="MitsuDrv1CTst\MitsuDrv1CTst.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="MitsuDrvTest">
+        <MSBuild Projects="..\Test\MisuDrvTest\MitsuDrvTest.dproj"/>
+    </Target>
+    <Target Name="MitsuDrvTest:Clean">
+        <MSBuild Projects="..\Test\MisuDrvTest\MitsuDrvTest.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="MitsuDrvTest:Make">
+        <MSBuild Projects="..\Test\MisuDrvTest\MitsuDrvTest.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="MitsuDrvTestLib">
+        <MSBuild Projects="..\Test\MisuDrvTest\MitsuDrvTestLib.dproj"/>
+    </Target>
+    <Target Name="MitsuDrvTestLib:Clean">
+        <MSBuild Projects="..\Test\MisuDrvTest\MitsuDrvTestLib.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="MitsuDrvTestLib:Make">
+        <MSBuild Projects="..\Test\MisuDrvTest\MitsuDrvTestLib.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="MitsuDrv1C;MitsuDrv1CNative;MitsuDrv1CTst;MitsuDrvTest;MitsuDrvTestLib"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="MitsuDrv1C:Clean;MitsuDrv1CNative:Clean;MitsuDrv1CTst:Clean;MitsuDrvTest:Clean;MitsuDrvTestLib:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="MitsuDrv1C:Make;MitsuDrv1CNative:Make;MitsuDrv1CTst:Make;MitsuDrvTest:Make;MitsuDrvTestLib:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

@@ -1454,7 +1454,7 @@ end;
 procedure TDevice1C.PrintText2(const AStr: WideString; AWrapString: Boolean = False);
 var
   i: Integer;
-  SL: TTntStringList;
+  SL: TStringList;
   Str: WideString;
 begin
   Str := ReplaceDelimeter(AStr);
@@ -1485,7 +1485,7 @@ begin
   end
   else }
   begin
-    SL := TTntStringList.Create;
+    SL := TStringList.Create;
     try
       if Str = '' then
         SL.Text := ' '

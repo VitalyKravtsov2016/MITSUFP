@@ -4,9 +4,7 @@ interface
 
 uses
   // VCL
-  Windows, Classes, SysUtils, ShlObj, ShFolder, Registry,
-  // 3'd
-  TntClasses, TntStdCtrls, TntRegistry, TntSysUtils;
+  Windows, Classes, SysUtils, ShlObj, ShFolder, Registry;
 
 function GetModulePath: WideString;
 function GetModuleFileName: WideString;
@@ -17,14 +15,14 @@ function GetLongFileName(const FileName: WideString): WideString;
 function GetSystemPath: WideString;
 function CLSIDToFileName(const CLSID: TGUID): WideString;
 procedure DeleteFiles(const FileMask: WideString);
-procedure GetFileNames(const Mask: WideString; FileNames: TTntStrings);
-procedure GetDirNames(const Mask: WideString; DirNames: TTntStrings);
+procedure GetFileNames(const Mask: WideString; FileNames: TStrings);
+procedure GetDirNames(const Mask: WideString; DirNames: TStrings);
 
 implementation
 
 function GetModulePath: WideString;
 begin
-  Result := WideIncludeTrailingPathDelimiter(ExtractFilePath(
+  Result := IncludeTrailingPathDelimiter(ExtractFilePath(
     GetLongFileName(GetModuleFileName)));
 end;
 
@@ -117,7 +115,7 @@ var
 begin
   Result := '';
   SHGetSpecialFolderPathW(0, Buffer, CSIDL_SYSTEM, False);
-  Result := WideIncludeTrailingPathDelimiter(Buffer);
+  Result := IncludeTrailingPathDelimiter(Buffer);
 end;
 
 function ExtractQuotedStr(const Src: WideString): WideString;
@@ -129,11 +127,11 @@ end;
 
 function CLSIDToFileName(const CLSID: TGUID): WideString;
 var
-  Reg: TTntRegistry;
+  Reg: TRegistry;
   strCLSID: WideString;
 begin
   Result := '';
-  Reg := TTntRegistry.Create;
+  Reg := TRegistry.Create;
   try
     Reg.RootKey:= HKEY_CLASSES_ROOT;
     Reg.Access := KEY_READ;
@@ -153,52 +151,52 @@ begin
   end;
 end;
 
-procedure GetFileNames(const Mask: WideString; FileNames: TTntStrings);
+procedure GetFileNames(const Mask: WideString; FileNames: TStrings);
 var
-  F: TSearchRecW;
+  F: TSearchRec;
   Result: Integer;
   FileName: WideString;
 begin
-  Result := WideFindFirst(Mask, faAnyFile, F);
+  Result := FindFirst(Mask, faAnyFile, F);
   while Result = 0 do
   begin
     if (WideCompareText(F.FindData.cFileName, '.') <> 0)and
       (WideCompareText(F.FindData.cFileName, '..') <> 0) then
     begin
-      FileName := WideExtractFilePath(Mask) + F.FindData.cFileName;
+      FileName := ExtractFilePath(Mask) + F.FindData.cFileName;
       FileNames.Add(FileName);
     end;
-    Result := WideFindNext(F);
+    Result := FindNext(F);
   end;
-  WideFindClose(F);
+  FindClose(F);
 end;
 
-procedure GetDirNames(const Mask: WideString; DirNames: TTntStrings);
+procedure GetDirNames(const Mask: WideString; DirNames: TStrings);
 var
-  F: TSearchRecW;
+  F: TSearchRec;
   Result: Integer;
   FileName: WideString;
   DirName: WideString;
 begin
-  Result := WideFindFirst(Mask, faDirectory, F);
+  Result := FindFirst(Mask, faDirectory, F);
   while Result = 0 do
   begin
     DirName := F.FindData.cFileName;
     if (DirName <> '.') and (DirName <> '..')and((F.Attr and FILE_ATTRIBUTE_DIRECTORY) <> 0) then
     begin
-      FileName := WideExtractFilePath(Mask) + DirName;
+      FileName := ExtractFilePath(Mask) + DirName;
       DirNames.Add(FileName);
     end;
-    Result := WideFindNext(F);
+    Result := FindNext(F);
   end;
-  WideFindClose(F);
+  FindClose(F);
 end;
 
 procedure DeleteFiles(const FileMask: WideString);
 var
-  FileNames: TTntStringList;
+  FileNames: TStringList;
 begin
-  FileNames := TTntStringList.Create;
+  FileNames := TStringList.Create;
   try
     GetFileNames(FileMask, FileNames);
     while FileNames.Count > 0 do

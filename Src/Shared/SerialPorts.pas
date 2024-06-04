@@ -13,10 +13,10 @@ type
 
   TSerialPorts = class
   private
-    class procedure GetDefaultPorts(Ports: TTntStrings; Count: Integer);
+    class procedure GetDefaultPorts(Ports: TStrings; Count: Integer);
   public
-    class procedure GetPorts(Ports: TTntStrings);
-    class procedure GetSystemPorts(Ports: TTntStringList);
+    class procedure GetPorts(Ports: TStrings);
+    class procedure GetSystemPorts(Ports: TStringList);
 
     class function GetPortNames: string;
     class function GetSystemPortNames: string;
@@ -26,12 +26,12 @@ implementation
 
 { TSerialPorts }
 
-class procedure TSerialPorts.GetPorts(Ports: TTntStrings);
+class procedure TSerialPorts.GetPorts(Ports: TStrings);
 begin
   GetDefaultPorts(Ports, 256);
 end;
 
-class procedure TSerialPorts.GetDefaultPorts(Ports: TTntStrings; Count: Integer);
+class procedure TSerialPorts.GetDefaultPorts(Ports: TStrings; Count: Integer);
 var
   i: Integer;
 begin
@@ -42,7 +42,7 @@ end;
 
 { Compare by port numbers  }
 
-function ComparePorts(List: TTntStringList; Index1, Index2: Integer): Integer;
+function ComparePorts(List: TStringList; Index1, Index2: Integer): Integer;
 begin
   Result := Integer(List.Objects[Index1]) - Integer(List.Objects[Index2]);
 end;
@@ -50,19 +50,19 @@ end;
 { Ports must be named as COMx }
 { We don't add another ports }
 
-class procedure TSerialPorts.GetSystemPorts(Ports: TTntStringList);
+class procedure TSerialPorts.GetSystemPorts(Ports: TStringList);
 var
   S: string;
   S1: string;
   i: Integer;
   Code: Integer;
-  Reg: TTntRegistry;
+  Reg: TRegistry;
   PortNumber: Integer;
-  Strings: TTntStringList;
+  Strings: TStringList;
 begin
   Ports.Clear;
-  Reg := TTntRegistry.Create;
-  Strings := TTntStringList.Create;
+  Reg := TRegistry.Create;
+  Strings := TStringList.Create;
   try
     Reg.Access := KEY_READ;
     Reg.RootKey := HKEY_LOCAL_MACHINE;
@@ -90,9 +90,9 @@ end;
 
 class function TSerialPorts.GetSystemPortNames: string;
 var
-  PortNames: TTntStringList;
+  PortNames: TStringList;
 begin
-  PortNames := TTntStringList.Create;
+  PortNames := TStringList.Create;
   try
     GetSystemPorts(PortNames);
     Result := PortNames.Text;
@@ -103,9 +103,9 @@ end;
 
 class function TSerialPorts.GetPortNames: string;
 var
-  PortNames: TTntStringList;
+  PortNames: TStringList;
 begin
-  PortNames := TTntStringList.Create;
+  PortNames := TStringList.Create;
   try
     GetPorts(PortNames);
     Result := PortNames.Text;

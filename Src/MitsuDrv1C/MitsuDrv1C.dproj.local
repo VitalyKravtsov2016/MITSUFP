@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
-  <Transactions>
-    <Transaction>2024.06.03 11:14:46.666,=D:\projects\MITSUFP\Src\Shared\gnugettext.pas</Transaction>
-    <Transaction>2024.06.03 13:27:43.230,D:\projects\MITSUFP\Src\MitsuDrv1C\Units\ComObj2.pas=</Transaction>
-    <Transaction>2024.06.03 13:29:25.311,D:\projects\MITSUFP\Src\MitsuDrv1C\Units\AxCtrls2.pas=</Transaction>
-    <Transaction>2024.06.03 13:29:38.446,D:\projects\MITSUFP\Src\MitsuDrv1C\Units\ComServ2.pas=</Transaction>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.446,D:\projects\MITSUFP\Src\MitsuDrv1C\Units\ComServ2.pas=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.230,D:\projects\MITSUFP\Src\MitsuDrv1C\Units\ComObj2.pas=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.311,D:\projects\MITSUFP\Src\MitsuDrv1C\Units\AxCtrls2.pas=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.666,=D:\projects\MITSUFP\Src\Shared\gnugettext.pas</Transaction>
   </Transactions>
 </BorlandProject>

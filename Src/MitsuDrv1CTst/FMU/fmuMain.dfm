@@ -54,7 +54,7 @@ object fmMain: TfmMain
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object Splitter1: TTntSplitter
+  object Splitter1: TSplitter
     Left = 0
     Top = 417
     Width = 647
@@ -62,7 +62,7 @@ object fmMain: TfmMain
     Cursor = crVSplit
     Align = alTop
   end
-  object memInfo: TTntMemo
+  object memInfo: TMemo
     Left = 0
     Top = 421
     Width = 647
@@ -78,7 +78,7 @@ object fmMain: TfmMain
     TabOrder = 2
     WordWrap = False
   end
-  object pcMain: TTntPageControl
+  object pcMain: TPageControl
     Left = 0
     Top = 42
     Width = 647
@@ -86,9 +86,9 @@ object fmMain: TfmMain
     ActivePage = tsCommon
     Align = alTop
     TabOrder = 1
-    object tsCommon: TTntTabSheet
+    object tsCommon: TTabSheet
       Caption = #1054#1073#1097#1080#1077
-      object btnGetVersion: TTntButton
+      object btnGetVersion: TButton
         Left = 360
         Top = 248
         Width = 273
@@ -100,7 +100,7 @@ object fmMain: TfmMain
         TabOrder = 8
         OnClick = btnGetVersionClick
       end
-      object btnGetLastError: TTntButton
+      object btnGetLastError: TButton
         Left = 360
         Top = 280
         Width = 273
@@ -112,7 +112,7 @@ object fmMain: TfmMain
         TabOrder = 9
         OnClick = btnGetLastErrorClick
       end
-      object btnClose: TTntButton
+      object btnClose: TButton
         Left = 360
         Top = 80
         Width = 273
@@ -124,7 +124,7 @@ object fmMain: TfmMain
         TabOrder = 3
         OnClick = btnCloseClick
       end
-      object btnOpen: TTntButton
+      object btnOpen: TButton
         Left = 360
         Top = 48
         Width = 273
@@ -136,7 +136,7 @@ object fmMain: TfmMain
         TabOrder = 2
         OnClick = btnOpenClick
       end
-      object btnPrintXReport: TTntButton
+      object btnPrintXReport: TButton
         Left = 360
         Top = 184
         Width = 273
@@ -150,7 +150,7 @@ object fmMain: TfmMain
         TabOrder = 6
         OnClick = btnPrintXReportClick
       end
-      object btnPrintZReport: TTntButton
+      object btnPrintZReport: TButton
         Left = 360
         Top = 152
         Width = 273
@@ -164,7 +164,7 @@ object fmMain: TfmMain
         TabOrder = 5
         OnClick = btnPrintZReportClick
       end
-      object btnCashInOutcome: TTntButton
+      object btnCashInOutcome: TButton
         Left = 360
         Top = 216
         Width = 273
@@ -178,7 +178,7 @@ object fmMain: TfmMain
         TabOrder = 7
         OnClick = btnCashInOutcomeClick
       end
-      object btnDeviceTest: TTntButton
+      object btnDeviceTest: TButton
         Left = 360
         Top = 16
         Width = 273
@@ -194,7 +194,7 @@ object fmMain: TfmMain
         TabOrder = 1
         OnClick = btnDeviceTestClick
       end
-      object btnOpenSession: TTntButton
+      object btnOpenSession: TButton
         Left = 360
         Top = 120
         Width = 273
@@ -203,7 +203,7 @@ object fmMain: TfmMain
         TabOrder = 4
         OnClick = btnOpenSessionClick
       end
-      object btnGetDescription: TTntButton
+      object btnGetDescription: TButton
         Left = 360
         Top = 312
         Width = 273
@@ -227,31 +227,31 @@ object fmMain: TfmMain
           189)
       end
     end
-    object tsReceipt: TTntTabSheet
+    object tsReceipt: TTabSheet
       Caption = #1063#1077#1082
       ImageIndex = 1
-      object grpOpenCheck: TTntGroupBox
+      object grpOpenCheck: TGroupBox
         Left = 8
         Top = 8
         Width = 201
         Height = 233
         Caption = 'OpenCheck'
         TabOrder = 0
-        object lblCheckNumber: TTntLabel
+        object lblCheckNumber: TLabel
           Left = 8
           Top = 100
           Width = 71
           Height = 13
           Caption = 'CheckNumber:'
         end
-        object lblSessionNumber: TTntLabel
+        object lblSessionNumber: TLabel
           Left = 8
           Top = 124
           Width = 77
           Height = 13
           Caption = 'SessionNumber:'
         end
-        object chkIsFiscalCheck: TTntCheckBox
+        object chkIsFiscalCheck: TCheckBox
           Left = 8
           Top = 24
           Width = 129
@@ -262,7 +262,7 @@ object fmMain: TfmMain
           State = cbChecked
           TabOrder = 0
         end
-        object chkIsReturnCheck: TTntCheckBox
+        object chkIsReturnCheck: TCheckBox
           Left = 8
           Top = 48
           Width = 129
@@ -271,7 +271,7 @@ object fmMain: TfmMain
           Caption = 'IsReturnCheck'
           TabOrder = 1
         end
-        object chkCancelOpenedCheck: TTntCheckBox
+        object chkCancelOpenedCheck: TCheckBox
           Left = 8
           Top = 72
           Width = 129
@@ -280,21 +280,21 @@ object fmMain: TfmMain
           Caption = 'CancelOpenedCheck'
           TabOrder = 2
         end
-        object edtCheckNumber: TTntEdit
+        object edtCheckNumber: TEdit
           Left = 96
           Top = 96
           Width = 97
           Height = 21
           TabOrder = 3
         end
-        object edtSessionNumber: TTntEdit
+        object edtSessionNumber: TEdit
           Left = 96
           Top = 120
           Width = 97
           Height = 21
           TabOrder = 4
         end
-        object btnOpenCheck: TTntButton
+        object btnOpenCheck: TButton
           Left = 8
           Top = 200
           Width = 185
@@ -307,49 +307,49 @@ object fmMain: TfmMain
           OnClick = btnOpenCheckClick
         end
       end
-      object grpCloseCheck: TTntGroupBox
+      object grpCloseCheck: TGroupBox
         Left = 424
         Top = 7
         Width = 209
         Height = 233
         Caption = 'CloseCheck'
         TabOrder = 1
-        object lblCash: TTntLabel
+        object lblCash: TLabel
           Left = 8
           Top = 28
           Width = 27
           Height = 13
           Caption = 'Cash:'
         end
-        object lblPayByCard: TTntLabel
+        object lblPayByCard: TLabel
           Left = 8
           Top = 60
           Width = 55
           Height = 13
           Caption = 'PayByCard:'
         end
-        object lblPayByCredit: TTntLabel
+        object lblPayByCredit: TLabel
           Left = 8
           Top = 92
           Width = 60
           Height = 13
           Caption = 'PayByCredit:'
         end
-        object lblDiscountOnCheck: TTntLabel
+        object lblDiscountOnCheck: TLabel
           Left = 8
           Top = 158
           Width = 90
           Height = 13
           Caption = 'DiscountOnCheck:'
         end
-        object lblPayType4: TTntLabel
+        object lblPayType4: TLabel
           Left = 8
           Top = 124
           Width = 80
           Height = 13
           Caption = 'PayByCertificate:'
         end
-        object edtCash: TTntEdit
+        object edtCash: TEdit
           Left = 104
           Top = 24
           Width = 97
@@ -357,7 +357,7 @@ object fmMain: TfmMain
           TabOrder = 0
           Text = '2223,78'
         end
-        object edtPayByCard: TTntEdit
+        object edtPayByCard: TEdit
           Left = 104
           Top = 56
           Width = 97
@@ -365,7 +365,7 @@ object fmMain: TfmMain
           TabOrder = 1
           Text = '15,18'
         end
-        object edtPayByCredit: TTntEdit
+        object edtPayByCredit: TEdit
           Left = 104
           Top = 88
           Width = 97
@@ -373,7 +373,7 @@ object fmMain: TfmMain
           TabOrder = 2
           Text = '11'
         end
-        object edtDiscountOnCheck: TTntEdit
+        object edtDiscountOnCheck: TEdit
           Left = 104
           Top = 154
           Width = 97
@@ -381,7 +381,7 @@ object fmMain: TfmMain
           TabOrder = 4
           Text = '0'
         end
-        object btnCloseCheck: TTntButton
+        object btnCloseCheck: TButton
           Left = 8
           Top = 200
           Width = 193
@@ -393,7 +393,7 @@ object fmMain: TfmMain
           TabOrder = 5
           OnClick = btnCloseCheckClick
         end
-        object edtPayByCertificate: TTntEdit
+        object edtPayByCertificate: TEdit
           Left = 104
           Top = 120
           Width = 97
@@ -402,21 +402,21 @@ object fmMain: TfmMain
           Text = '3'
         end
       end
-      object grpPrintNonFiscalString: TTntGroupBox
+      object grpPrintNonFiscalString: TGroupBox
         Left = 8
         Top = 280
         Width = 625
         Height = 61
         Caption = 'PrintNonFiscalString'
         TabOrder = 2
-        object lblTextString: TTntLabel
+        object lblTextString: TLabel
           Left = 8
           Top = 28
           Width = 51
           Height = 13
           Caption = 'TextString:'
         end
-        object edtTextString: TTntEdit
+        object edtTextString: TEdit
           Left = 72
           Top = 24
           Width = 289
@@ -430,7 +430,7 @@ object fmMain: TfmMain
           TabOrder = 0
           Text = #1057#1090#1088#1086#1082#1072' '#1076#1083#1103' '#1087#1077#1095#1072#1090#1080
         end
-        object btnPrintNonFiscalString: TTntButton
+        object btnPrintNonFiscalString: TButton
           Left = 368
           Top = 24
           Width = 249
@@ -443,56 +443,56 @@ object fmMain: TfmMain
           OnClick = btnPrintNonFiscalStringClick
         end
       end
-      object grpPrintFiscalString: TTntGroupBox
+      object grpPrintFiscalString: TGroupBox
         Left = 216
         Top = 8
         Width = 201
         Height = 233
         Caption = 'PrintFiscalString'
         TabOrder = 3
-        object lblName: TTntLabel
+        object lblName: TLabel
           Left = 8
           Top = 28
           Width = 31
           Height = 13
           Caption = 'Name:'
         end
-        object lblQuantity: TTntLabel
+        object lblQuantity: TLabel
           Left = 8
           Top = 57
           Width = 42
           Height = 13
           Caption = 'Quantity:'
         end
-        object lblPrice: TTntLabel
+        object lblPrice: TLabel
           Left = 8
           Top = 85
           Width = 27
           Height = 13
           Caption = 'Price:'
         end
-        object lblAmount: TTntLabel
+        object lblAmount: TLabel
           Left = 8
           Top = 114
           Width = 39
           Height = 13
           Caption = 'Amount:'
         end
-        object lblDepartment: TTntLabel
+        object lblDepartment: TLabel
           Left = 8
           Top = 142
           Width = 58
           Height = 13
           Caption = 'Department:'
         end
-        object lblTax: TTntLabel
+        object lblTax: TLabel
           Left = 8
           Top = 171
           Width = 21
           Height = 13
           Caption = 'Tax:'
         end
-        object edtName: TTntEdit
+        object edtName: TEdit
           Left = 72
           Top = 24
           Width = 120
@@ -506,7 +506,7 @@ object fmMain: TfmMain
           TabOrder = 0
           Text = #1041#1091#1083#1082#1072
         end
-        object edtQuantity: TTntEdit
+        object edtQuantity: TEdit
           Left = 72
           Top = 53
           Width = 120
@@ -514,7 +514,7 @@ object fmMain: TfmMain
           TabOrder = 1
           Text = '2,315'
         end
-        object edtPrice: TTntEdit
+        object edtPrice: TEdit
           Left = 72
           Top = 81
           Width = 120
@@ -522,7 +522,7 @@ object fmMain: TfmMain
           TabOrder = 2
           Text = '53,75'
         end
-        object edtAmount: TTntEdit
+        object edtAmount: TEdit
           Left = 72
           Top = 110
           Width = 120
@@ -530,7 +530,7 @@ object fmMain: TfmMain
           TabOrder = 3
           Text = '124,43'
         end
-        object edtDepartment: TTntEdit
+        object edtDepartment: TEdit
           Left = 72
           Top = 138
           Width = 120
@@ -538,7 +538,7 @@ object fmMain: TfmMain
           TabOrder = 4
           Text = '1'
         end
-        object edtTax: TTntEdit
+        object edtTax: TEdit
           Left = 70
           Top = 167
           Width = 120
@@ -546,7 +546,7 @@ object fmMain: TfmMain
           TabOrder = 5
           Text = '12,32'
         end
-        object btnPrintFiscalString: TTntButton
+        object btnPrintFiscalString: TButton
           Left = 8
           Top = 200
           Width = 185
@@ -563,7 +563,7 @@ object fmMain: TfmMain
           OnClick = btnPrintFiscalStringClick
         end
       end
-      object btnContinuePrinting: TTntButton
+      object btnContinuePrinting: TButton
         Left = 400
         Top = 248
         Width = 185
@@ -572,7 +572,7 @@ object fmMain: TfmMain
         TabOrder = 4
         OnClick = btnContinuePrintingClick
       end
-      object btnCheckPaperStatus: TTntButton
+      object btnCheckPaperStatus: TButton
         Left = 208
         Top = 248
         Width = 185
@@ -581,7 +581,7 @@ object fmMain: TfmMain
         TabOrder = 5
         OnClick = btnCheckPaperStatusClick
       end
-      object btnCancelCheck: TTntButton
+      object btnCancelCheck: TButton
         Left = 8
         Top = 248
         Width = 193
@@ -596,24 +596,24 @@ object fmMain: TfmMain
         OnClick = btnCancelCheckClick
       end
     end
-    object tsTest: TTntTabSheet
+    object tsTest: TTabSheet
       Caption = #1058#1077#1089#1090
       ImageIndex = 2
-      object bllCashDrawerID: TTntLabel
+      object bllCashDrawerID: TLabel
         Left = 16
         Top = 150
         Width = 72
         Height = 13
         Caption = 'CashDrawerID:'
       end
-      object grpTestCheck: TTntGroupBox
+      object grpTestCheck: TGroupBox
         Left = 8
         Top = 8
         Width = 489
         Height = 121
         Caption = #1058#1077#1089#1090#1086#1074#1099#1081' '#1095#1077#1082
         TabOrder = 0
-        object btnTestFiscalReceipt: TTntButton
+        object btnTestFiscalReceipt: TButton
           Left = 360
           Top = 64
           Width = 113
@@ -622,7 +622,7 @@ object fmMain: TfmMain
           TabOrder = 0
           OnClick = btnTestFiscalReceiptClick
         end
-        object btnTestNonFiscalReceipt: TTntButton
+        object btnTestNonFiscalReceipt: TButton
           Left = 360
           Top = 24
           Width = 113
@@ -632,7 +632,7 @@ object fmMain: TfmMain
           OnClick = btnTestNonFiscalReceiptClick
         end
       end
-      object Button1: TTntButton
+      object Button1: TButton
         Left = 248
         Top = 144
         Width = 249
@@ -644,7 +644,7 @@ object fmMain: TfmMain
         TabOrder = 1
         OnClick = Button1Click
       end
-      object edtCashDrawerID: TTntEdit
+      object edtCashDrawerID: TEdit
         Left = 96
         Top = 146
         Width = 137
@@ -653,38 +653,38 @@ object fmMain: TfmMain
         Text = '0'
       end
     end
-    object tsLoadLogo: TTntTabSheet
+    object tsLoadLogo: TTabSheet
       Caption = #1051#1086#1075#1086#1090#1080#1087
       ImageIndex = 4
-      object grp1: TTntGroupBox
+      object grp1: TGroupBox
         Left = 8
         Top = 8
         Width = 625
         Height = 329
         Caption = 'LoadLogo'
         TabOrder = 0
-        object lbl5: TTntLabel
+        object lbl5: TLabel
           Left = 16
           Top = 284
           Width = 47
           Height = 13
           Caption = 'LogoSize:'
         end
-        object lbl6: TTntLabel
+        object lbl6: TLabel
           Left = 16
           Top = 236
           Width = 71
           Height = 13
           Caption = 'LogoFileName:'
         end
-        object edtLogoFileName: TTntEdit
+        object edtLogoFileName: TEdit
           Left = 96
           Top = 232
           Width = 233
           Height = 21
           TabOrder = 0
         end
-        object chkCenterLogo: TTntCheckBox
+        object chkCenterLogo: TCheckBox
           Left = 14
           Top = 258
           Width = 99
@@ -693,7 +693,7 @@ object fmMain: TfmMain
           Caption = 'CenterLogo:'
           TabOrder = 1
         end
-        object btnOpenImage: TTntButton
+        object btnOpenImage: TButton
           Left = 340
           Top = 230
           Width = 25
@@ -702,7 +702,7 @@ object fmMain: TfmMain
           TabOrder = 2
           OnClick = btnOpenImageClick
         end
-        object edtLogoSize: TTntEdit
+        object edtLogoSize: TEdit
           Left = 96
           Top = 280
           Width = 233
@@ -724,7 +724,7 @@ object fmMain: TfmMain
             150
             189)
         end
-        object btnLoadLogo: TTntButton
+        object btnLoadLogo: TButton
           Left = 368
           Top = 24
           Width = 241
@@ -735,26 +735,26 @@ object fmMain: TfmMain
         end
       end
     end
-    object TntTabSheet1: TTntTabSheet
+    object TntTabSheet1: TTabSheet
       Caption = #1064#1090#1088#1080#1093#1082#1086#1076
       DesignSize = (
         639
         347)
-      object lblBarcode: TTntLabel
+      object lblBarcode: TLabel
         Left = 8
         Top = 60
         Width = 52
         Height = 13
         Caption = #1064#1090#1088#1080#1093#1082#1086#1076':'
       end
-      object lblBarcodeType: TTntLabel
+      object lblBarcodeType: TLabel
         Left = 8
         Top = 28
         Width = 79
         Height = 13
         Caption = #1058#1080#1087' '#1096#1090#1088#1080#1093#1082#1086#1076#1072':'
       end
-      object edtBarcode: TTntEdit
+      object edtBarcode: TEdit
         Left = 96
         Top = 56
         Width = 290
@@ -762,7 +762,7 @@ object fmMain: TfmMain
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
       end
-      object btnPrintBarcode: TTntButton
+      object btnPrintBarcode: TButton
         Left = 398
         Top = 54
         Width = 233
@@ -772,7 +772,7 @@ object fmMain: TfmMain
         TabOrder = 1
         OnClick = btnPrintBarcodeClick
       end
-      object cbBarcodeType: TTntComboBox
+      object cbBarcodeType: TComboBox
         Left = 96
         Top = 24
         Width = 105
@@ -787,34 +787,34 @@ object fmMain: TfmMain
           'QR')
       end
     end
-    object tsAttitional: TTntTabSheet
+    object tsAttitional: TTabSheet
       Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086
       ImageIndex = 5
       DesignSize = (
         639
         347)
-      object lblTxData: TTntLabel
+      object lblTxData: TLabel
         Left = 8
         Top = 28
         Width = 38
         Height = 13
         Caption = 'TxData:'
       end
-      object lblRxData: TTntLabel
+      object lblRxData: TLabel
         Left = 8
         Top = 60
         Width = 39
         Height = 13
         Caption = 'RxData:'
       end
-      object lblGetLineLength: TTntLabel
+      object lblGetLineLength: TLabel
         Left = 8
         Top = 92
         Width = 36
         Height = 13
         Caption = #1044#1083#1080#1085#1072':'
       end
-      object edtTxData: TTntEdit
+      object edtTxData: TEdit
         Left = 56
         Top = 24
         Width = 296
@@ -823,7 +823,7 @@ object fmMain: TfmMain
         TabOrder = 0
         Text = '13 1E 00 00 00'
       end
-      object edtRxData: TTntEdit
+      object edtRxData: TEdit
         Left = 56
         Top = 56
         Width = 296
@@ -831,7 +831,7 @@ object fmMain: TfmMain
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 1
       end
-      object btnDeviceControl: TTntButton
+      object btnDeviceControl: TButton
         Left = 359
         Top = 24
         Width = 265
@@ -841,7 +841,7 @@ object fmMain: TfmMain
         TabOrder = 3
         OnClick = btnDeviceControlClick
       end
-      object btnDeviceControlHEX: TTntButton
+      object btnDeviceControlHEX: TButton
         Left = 359
         Top = 56
         Width = 265
@@ -851,7 +851,7 @@ object fmMain: TfmMain
         TabOrder = 4
         OnClick = btnDeviceControlHEXClick
       end
-      object TntGroupBox1: TTntGroupBox
+      object TntGroupBox1: TGroupBox
         Left = 8
         Top = 120
         Width = 617
@@ -861,7 +861,7 @@ object fmMain: TfmMain
         DesignSize = (
           617
           218)
-        object memGetParameters: TTntMemo
+        object memGetParameters: TMemo
           Left = 8
           Top = 16
           Width = 361
@@ -871,7 +871,7 @@ object fmMain: TfmMain
           ScrollBars = ssBoth
           TabOrder = 0
         end
-        object btnGetParameters: TTntButton
+        object btnGetParameters: TButton
           Left = 374
           Top = 16
           Width = 233
@@ -882,7 +882,7 @@ object fmMain: TfmMain
           OnClick = btnGetParametersClick
         end
       end
-      object edtLineLength: TTntEdit
+      object edtLineLength: TEdit
         Left = 56
         Top = 88
         Width = 296
@@ -891,7 +891,7 @@ object fmMain: TfmMain
         ReadOnly = True
         TabOrder = 2
       end
-      object btnGetLineLength: TTntButton
+      object btnGetLineLength: TButton
         Left = 359
         Top = 88
         Width = 265
@@ -902,16 +902,16 @@ object fmMain: TfmMain
         OnClick = btnGetLineLengthClick
       end
     end
-    object tsLang: TTntTabSheet
+    object tsLang: TTabSheet
       Caption = #1071#1079#1099#1082
-      object lblLang: TTntLabel
+      object lblLang: TLabel
         Left = 8
         Top = 36
         Width = 97
         Height = 13
         Caption = #1071#1079#1099#1082' '#1082#1086#1084#1087#1086#1085#1077#1085#1090#1099':'
       end
-      object cbLang: TTntComboBox
+      object cbLang: TComboBox
         Left = 112
         Top = 32
         Width = 89
@@ -925,7 +925,7 @@ object fmMain: TfmMain
           'RUS'
           'ENG')
       end
-      object btnSetLanguage: TTntButton
+      object btnSetLanguage: TButton
         Left = 208
         Top = 30
         Width = 129
@@ -936,7 +936,7 @@ object fmMain: TfmMain
       end
     end
   end
-  object pnlParams: TTntPanel
+  object pnlParams: TPanel
     Left = 0
     Top = 0
     Width = 647
@@ -944,28 +944,28 @@ object fmMain: TfmMain
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    object lblDeviceID: TTntLabel
+    object lblDeviceID: TLabel
       Left = 200
       Top = 12
       Width = 48
       Height = 13
       Caption = 'DeviceID:'
     end
-    object lblInterfaceType: TTntLabel
+    object lblInterfaceType: TLabel
       Left = 8
       Top = 12
       Width = 102
       Height = 13
       Caption = #1042#1077#1088#1089#1080#1103' '#1090#1088#1077#1073#1086#1074#1072#1085#1080#1081':'
     end
-    object edtDeviceID: TTntEdit
+    object edtDeviceID: TEdit
       Left = 256
       Top = 8
       Width = 129
       Height = 21
       TabOrder = 1
     end
-    object cbInterfaceType: TTntComboBox
+    object cbInterfaceType: TComboBox
       Left = 120
       Top = 8
       Width = 73
@@ -980,7 +980,7 @@ object fmMain: TfmMain
         '1.0'
         '1.5')
     end
-    object btnTestError: TTntButton
+    object btnTestError: TButton
       Left = 512
       Top = 4
       Width = 113
@@ -991,7 +991,7 @@ object fmMain: TfmMain
       OnClick = btnTestErrorClick
     end
   end
-  object dlgOpen: TTntOpenDialog
+  object dlgOpen: TOpenDialog
     Filter = 'Bitmaps|*.bmp|Any file|*.*'
     Left = 12
     Top = 447

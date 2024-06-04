@@ -4,7 +4,7 @@ interface
 
 uses
   // VCL
-  Windows, SysUtils, Dialogs,
+  Windows, SysUtils,
   // JVCL
   JvSetupAPI, WideException;
 

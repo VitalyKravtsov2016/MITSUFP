@@ -13,7 +13,7 @@ uses
 type
   { TSmIniFile }
 
-  TSmIniFile = class(TTntIniFile)
+  TSmIniFile = class(TIniFile)
   public
     procedure WriteText(const Section, Ident, Value: WideString);
     function ReadText(const Section, Ident, Default: WideString): WideString;

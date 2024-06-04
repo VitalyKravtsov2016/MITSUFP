@@ -4,12 +4,12 @@ interface
 
 uses
   // This
-  Windows, ComServ, ActiveX, ComObj, Controls, SysUtils, Classes, Math,
+  Windows, ComServ, ActiveX, ComObj, SysUtils, Classes, Math,
   XMLDoc, XmlIntf,
   // DUnit
   TestFramework,
   // This
-  MitsuDrv, MitsuDrv_1C, StringUtils, FileUtils, FFDTypes, XmlDoc1C;
+  MitsuDrv, MitsuDrv_1C, StringUtils, FFDTypes, XmlDoc1C, FileUtils;
 
 type
   { TMitsuDrv1CTest }

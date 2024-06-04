@@ -1,4 +1,4 @@
-	<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   WANT - A build management tool.                                 
   Copyright (c) 2001-2003 Juancarlo Anez, Caracas, Venezuela.          
@@ -203,7 +203,7 @@ See http://www.suigeneris.org/want/ for details.
         <exec executable="7z.exe">
             <arg value="a" />
             <arg value="-tzip" />
-            <arg value="${res}/1C/32/shtrih-m_32_x32_64.zip" />
+            <arg value="${res}/1C/32/mitsudrv_32_x32_64.zip" />
             <arg value="${bin}/Win32/1c/32/${component_1c_32_win32_dll}" />
             <arg value="${bin}/Win64/1c/32/${component_1c_32_win64_dll}" />
             <arg value="${res}/1C/32/INFO.xml" />
@@ -228,7 +228,7 @@ See http://www.suigeneris.org/want/ for details.
         <exec executable="7z.exe">
             <arg value="a" />
             <arg value="-tzip" />
-            <arg value="${res}/1C/40/shtrih-m_40_x32_64.zip" />
+            <arg value="${res}/1C/40/mitsudrv_40_x32_64.zip" />
             <arg value="${bin}/Win32/1c/40/${component_1c_40_win32_dll}" />
             <arg value="${bin}/Win64/1c/40/${component_1c_40_win64_dll}" />
             <arg value="${res}/1C/40/INFO.xml" />
@@ -248,7 +248,6 @@ See http://www.suigeneris.org/want/ for details.
         </exec>
         <exec executable="msbuild.exe">
             <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv1C}/MitsuDrv1C.dproj /p:Platform=Win32 /p:Config=Release /p:DCC_ExeOutput=${Bin}/Win32" />
-            <arg value="-u"c:/Program Files (x86)/Embarcadero/Comp/DCPCrypt/Lib/Win32/Release"" />
         </exec>
         <exec executable="msbuild.exe">
             <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv1C}/MitsuDrv1C.dproj /p:Platform=Win64 /p:Config=Release /p:DCC_ExeOutput=${Bin}/Win64" />
@@ -286,7 +285,10 @@ See http://www.suigeneris.org/want/ for details.
             <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv1CNative}/MitsuDrv1CNative.dproj /p:Platform=Win64 /p:Config=Release /p:DCC_Define=V1C_32 /p:DCC_ExeOutput=${Bin}/Win64/1C/32 /p:DCC_DcuOutput=${dcu}/Win64/1c/32" />
         </exec>
     </target>
-	
+	<!--
     <target name="compile" depends="clean, build_MitsuDrv1C, build_MitsuDrv1CTst, build_1cnative" />
+	-->
+	
+    <target name="compile" depends="clean, build_MitsuDrv1C, build_1cnative" />
     <target name="build" depends="compile, Make1CComponent, Make1CComponent34, makesetup32, makesetup64, zipinstaller" />
 </project>

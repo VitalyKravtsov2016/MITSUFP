@@ -9,8 +9,8 @@ uses
   // VCL
   Windows, Classes, ComObj, SysUtils, Variants, ActiveX, Types,
   // This
-  MitsuDrv1CTst_TLB, DrvFRLib_TLB,
-  LanguageExtender, OleArray1C, StringUtils, untTypes, Driver1C;
+  MitsuDrv1CTst_TLB, LanguageExtender, OleArray1C, StringUtils,
+  untTypes, Driver1C;
 
 type
   { TDriver1C10 }
