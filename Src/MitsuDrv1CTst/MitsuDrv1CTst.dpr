@@ -16,11 +16,11 @@ uses
   Driver1C11 in 'Units\Driver1C11.pas',
   untTypes in 'Units\untTypes.pas',
   Driver1C in 'Units\Driver1C.pas',
-  DrvFRLib_TLB in '..\MitsuDrv\DrvFRLib_TLB.pas',
-  SMDrvFR1CLib_TLB in '..\MitsuDrv1C\SMDrvFR1CLib_TLB.pas',
   BaseForm in '..\Shared\BaseForm.pas',
   AddIn1CInterface in 'Units\AddIn1CInterface.pas',
-  WideException in '..\Shared\WideException.pas';
+  WideException in '..\Shared\WideException.pas',
+  MitsuLib_TLB in '..\MitsuDrv1C\MitsuLib_TLB.pas',
+  gnugettext in '..\Shared\gnugettext.pas';
 
 {$R *.TLB}
 

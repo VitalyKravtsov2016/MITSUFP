@@ -18,6 +18,9 @@
         <Projects Include="..\Test\MisuDrvTest\MitsuDrvTestLib.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="..\Test\MisuAccTest\MitsuAccTest.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -71,14 +74,23 @@
     <Target Name="MitsuDrvTestLib:Make">
         <MSBuild Projects="..\Test\MisuDrvTest\MitsuDrvTestLib.dproj" Targets="Make"/>
     </Target>
+    <Target Name="MitsuAccTest">
+        <MSBuild Projects="..\Test\MisuAccTest\MitsuAccTest.dproj"/>
+    </Target>
+    <Target Name="MitsuAccTest:Clean">
+        <MSBuild Projects="..\Test\MisuAccTest\MitsuAccTest.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="MitsuAccTest:Make">
+        <MSBuild Projects="..\Test\MisuAccTest\MitsuAccTest.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="MitsuDrv1C;MitsuDrv1CNative;MitsuDrv1CTst;MitsuDrvTest;MitsuDrvTestLib"/>
+        <CallTarget Targets="MitsuDrv1C;MitsuDrv1CNative;MitsuDrv1CTst;MitsuDrvTest;MitsuDrvTestLib;MitsuAccTest"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="MitsuDrv1C:Clean;MitsuDrv1CNative:Clean;MitsuDrv1CTst:Clean;MitsuDrvTest:Clean;MitsuDrvTestLib:Clean"/>
+        <CallTarget Targets="MitsuDrv1C:Clean;MitsuDrv1CNative:Clean;MitsuDrv1CTst:Clean;MitsuDrvTest:Clean;MitsuDrvTestLib:Clean;MitsuAccTest:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="MitsuDrv1C:Make;MitsuDrv1CNative:Make;MitsuDrv1CTst:Make;MitsuDrvTest:Make;MitsuDrvTestLib:Make"/>
+        <CallTarget Targets="MitsuDrv1C:Make;MitsuDrv1CNative:Make;MitsuDrv1CTst:Make;MitsuDrvTest:Make;MitsuDrvTestLib:Make;MitsuAccTest:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

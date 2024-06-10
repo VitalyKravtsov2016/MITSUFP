@@ -5,8 +5,7 @@ interface
 uses
   // VCL
   Windows, Forms, Classes, Controls, StdCtrls,
-  // Tnt
-  TntForms, TntStdCtrls, TntComCtrls, TntExtCtrls, TntClasses,
+  // 3'd
   gnugettext;
 
 type

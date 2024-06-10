@@ -1,12 +1,12 @@
 object fmMain: TfmMain
   Left = 488
   Top = 212
-  AutoScroll = False
   BorderWidth = 2
   Caption = #1058#1077#1089#1090' 1'#1057' '#1080#1085#1090#1077#1088#1092#1077#1081#1089#1072
   ClientHeight = 518
   ClientWidth = 647
   Color = clBtnFace
+  CustomTitleBar.CaptionAlignment = taCenter
   Constraints.MinHeight = 440
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -778,7 +778,6 @@ object fmMain: TfmMain
         Width = 105
         Height = 21
         Style = csDropDownList
-        ItemHeight = 13
         ItemIndex = 0
         TabOrder = 2
         Text = 'EAN13'
@@ -917,7 +916,6 @@ object fmMain: TfmMain
         Width = 89
         Height = 21
         Style = csDropDownList
-        ItemHeight = 13
         ItemIndex = 0
         TabOrder = 0
         Text = 'RUS'
@@ -971,7 +969,6 @@ object fmMain: TfmMain
       Width = 73
       Height = 21
       Style = csDropDownList
-      ItemHeight = 13
       ItemIndex = 1
       TabOrder = 0
       Text = '1.5'

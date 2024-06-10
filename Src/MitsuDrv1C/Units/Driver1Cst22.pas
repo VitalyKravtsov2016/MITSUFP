@@ -6,33 +6,16 @@ uses
   // VCL
   SysUtils,
   // This
-  Driver1Cst11, ParamList1C, ParamList1CPage, ParamList1CGroup, ParamList1CItem,
-  Param1CChoiceList, PrinterTypes, DriverError, DriverTypes, Devices1C,
-  untLogger, Types1C, LogFile, AdditionalAction, TextEncoding, DrvFRLib_TLB,
-  VersionInfo, LangUtils, untDrvFR;
+  MitsuDrv_1C;
 
 type
   { TDriver1Cst22 }
 
   TDriver1Cst22 = class
   private
-    FAdditionalActions: TAdditionalActions;
-    FDriver: IDrvFR49;
-    FDevices: TDevices1C;
-    FResultCode: Integer;
-    FResultDescription: string;
-    FLogger: TLogger;
-    FDevice: TDevice1C;
-    FParamList: TParamList1C;
-    FParams: TDeviceParams17;
-    procedure CreateParamList;
-    property Logger: TLogger read FLogger;
-    procedure ClearError;
-    procedure HandleException(E: Exception);
-    procedure SelectDevice(const DeviceID: string);
-
-    property Device: TDevice1C read FDevice;
-    property Devices: TDevices1C read FDevices;
+    FDriver: TMitsuDrv1C;
+    function GetDriver: TMitsuDrv1C;
+    property Driver: TMitsuDrv1C read GetDriver;
   public
     constructor Create;
     destructor Destroy; override;
@@ -93,77 +76,20 @@ type
 
 implementation
 
-uses Driver1Cst;
- var
- ConnectionTypes: array[1..6] of Integer = (
-   CT_LOCAL,
-   CT_TCP,
-   CT_DCOM,
-   CT_ESCAPE,
-   CT_EMULATOR,
-   CT_TCPSOCKET);
-
-resourcestring
-  SInvalidParam = 'Некорректное значение параметра';
-
-
-function BaudRateToStr(BaudRate: Integer): WideString;
-begin
-  case BaudRate of
-    BAUD_RATE_CODE_2400:   Result := '2400';
-    BAUD_RATE_CODE_4800:   Result := '4800';
-    BAUD_RATE_CODE_9600:   Result := '9600';
-    BAUD_RATE_CODE_19200:  Result := '19200';
-    BAUD_RATE_CODE_38400:  Result := '38400';
-    BAUD_RATE_CODE_57600:  Result := '57600';
-    BAUD_RATE_CODE_115200: Result := '115200';
-    BAUD_RATE_CODE_230400: Result := '230400';
-    BAUD_RATE_CODE_460800: Result := '460800';
-    BAUD_RATE_CODE_921600: Result := '921600';
-  else
-    RaiseError(E_INVALIDPARAM, Format('%s %s', [GetRes(@SInvalidParam), '"Baudrate"']));
-  end;
-end;
-
-function ConnectionTypeToStr(ConnectionType: Integer): WideString;
-begin
-  case ConnectionType of
-    CT_LOCAL     : Result := 'Локально';
-    CT_TCP       : Result := 'TCP (сервер ФР)';
-    CT_DCOM      : Result := 'DCOM (сервер ФР)';
-    CT_ESCAPE    : Result := 'Escape';
-    CT_EMULATOR  : Result := 'Эмулятор';
-    CT_TCPSOCKET : Result := 'TCP socket'
-  else
-    RaiseError(E_INVALIDPARAM, Format('%s %s', [GetRes(@SInvalidParam), '"ConnectionType"']));
-  end;
-end;
-
-
 { TDriver1Cst22 }
 
 constructor TDriver1Cst22.Create;
 begin
   inherited Create;
-  FLogger := TLogger.Create(Self.ClassName);
-  FDriver := DrvFR_create;
+  FDriver := TMitsuDrv1C.Create;
+  FLogger := TLogFile.Create;
   Logger.Debug('Create');
-  FParamList := TParamList1C.Create;
-  CreateParamList;
-  FAdditionalActions := TAdditionalActions.Create;
-  TPrintTaxReportAdditionalAction.Create(FAdditionalActions);
-  TPrintDepartmentReportAdditionalAction.Create(FAdditionalActions);
-  FDevices := TDevices1C.Create(FDriver);
-  FDevices.BPOVersion := 22;
 end;
 
 destructor TDriver1Cst22.Destroy;
 begin
-  FLogger.Free;
-  FAdditionalActions.Free;
-  FParamList.Free;
-  FDevices.Free;
-  FDriver := nil;
+  FDriver.Free;
+  FLogger := nil;
   inherited Destroy;
 end;
 
@@ -178,15 +104,10 @@ var
 
 resourcestring
   SConnectionParams = 'Параметры связи';
-
   SConnectionType = 'Тип подключения';
-  SProtocolType = 'Тип протокола';
-  SStandard = 'Стандартный';
-  SProtocol2 = 'Протокол ККТ 2.0';
   SPort = 'Порт';
   SBaudrate = 'Скорость';
   STimeout = 'Таймаут';
-  SComputerName = 'Имя компьютера';
   SIPAddress = 'IP адрес';
   STCPPort = 'TCP порт';
 

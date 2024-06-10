@@ -4,8 +4,7 @@ interface
 
 uses
   // This
-  Windows, ComServ, ActiveX, ComObj, Controls, SysUtils, Classes, Math,
-  XMLDoc, XmlIntf,
+  XMLDoc, XmlIntf, SysUtils, Math,
   // DUnit
   TestFramework,
   // This
@@ -75,8 +74,19 @@ implementation
 { TDriver1CstTest }
 
 procedure TMitsuDrvTest.Setup;
+var
+  Params: TMitsuParams;
 begin
   Driver := TMitsuDrv.Create;
+  Params.ConnectionType := ConnectionTypeSerial;
+  Params.PortName := 'COM8';
+  Params.BaudRate := 115200;
+  Params.ByteTimeout := 1000;
+  Params.RemoteHost := '';
+  Params.RemotePort := 0;
+  Params.LogPath := GetModulePath;
+  Params.LogEnabled := True;
+  Driver.Params := Params;
 end;
 
 procedure TMitsuDrvTest.TearDown;

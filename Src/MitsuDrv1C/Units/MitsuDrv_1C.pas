@@ -340,6 +340,7 @@ begin
   FXmlDocument := TXmlDoc1C.Create;
   FParamList := TParamList1C.Create;
   CreateParamList;
+  ClearError;
 end;
 
 destructor TMitsuDrv1C.Destroy;

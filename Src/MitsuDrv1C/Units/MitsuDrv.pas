@@ -1506,7 +1506,7 @@ begin
         SerialParams.StopBits := ONESTOPBIT;
         SerialParams.Parity := NOPARITY;
         SerialParams.FlowControl := FLOW_CONTROL_NONE;
-        SerialParams.ReconnectPort := True;
+        SerialParams.ReconnectPort := False;
         SerialParams.ByteTimeout := 10000; // !!!
         Result := TSerialPort.Create(SerialParams, Logger);
       end;

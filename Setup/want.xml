@@ -247,7 +247,8 @@ See http://www.suigeneris.org/want/ for details.
             <arg value="${MitsuDrv1C}/MitsuDrv1C.rc" />
         </exec>
         <exec executable="msbuild.exe">
-            <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv1C}/MitsuDrv1C.dproj /p:Platform=Win32 /p:Config=Release /p:DCC_ExeOutput=${Bin}/Win32" />
+            <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv1C}/MitsuDrv1C.dproj /p:Platform=Win32 /p:Config=Release /p:DCC_ExeOutput=${Bin}/Win32"/>
+            <arg value="/v"/>
         </exec>
         <exec executable="msbuild.exe">
             <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv1C}/MitsuDrv1C.dproj /p:Platform=Win64 /p:Config=Release /p:DCC_ExeOutput=${Bin}/Win64" />

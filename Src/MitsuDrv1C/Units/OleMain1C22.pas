@@ -6,20 +6,20 @@ interface
 
 uses
   // VCL
-  ActiveX, DrvFRLib_TLB, StdVcl, SysUtils, ActiveXView,
+  ActiveX, StdVcl, SysUtils, ActiveXView, ComObj, ComServ,
   // This
-  ComObj, ComServ, untLogger, Driver1Cst22, StringUtils, ActiveXControl1C,
+  MitsuLib_TLB, LogFile, MitsuDrv_1C, StringUtils, ActiveXControl1C,
   AddIn1CInterface, AxCtrls, classes, TranslationUtil;
 
 type
-  TDrvFR1C22 = class(TActiveXControl1C, IDrvFR1C22)
+  TDrvFR1C22 = class(TActiveXControl1C, IMitsu1C22)
   private
-    FLogger: TLogger;
-    FDriver: TDriver1Cst22;
-    function GetLogger: TLogger;                                                          
-    function GetDriver: TDriver1Cst22;
-    property Logger: TLogger read GetLogger;
-    property Driver: TDriver1Cst22 read GetDriver;
+    FLogger: ILogFile;
+    FDriver: TMitsuDrv1C;
+    function GetLogger: ILogFile;
+    function GetDriver: TMitsuDrv1C;
+    property Logger: ILogFile read GetLogger;
+    property Driver: TMitsuDrv1C read GetDriver;
   protected
     function CashInOutcome(const DeviceID, InputParameters: WideString;
       Amount: Double): WordBool; safecall;
@@ -85,13 +85,29 @@ type
 
 implementation
 
+{ TDrvFR1C22 }
+
+destructor TDrvFR1C22.Destroy;
+begin
+  FDriver.Free;
+  FLogger := nil;
+  inherited Destroy;
+end;
+
+function TDrvFR1C22.GetLogger: ILogFile;
+begin
+  if FLogger = nil then
+    FLogger := TLogFile.Create;
+  Result := FLogger;
+end;
+
 function TDrvFR1C22.CashInOutcome(const DeviceID,
   InputParameters: WideString; Amount: Double): WordBool;
 begin
   Logger.Debug(Format('%s(DeviceID: %s, Amount: %.2f)', ['CashInOutcome',
     DeviceID, Amount]));
-  Logger.Debug('InputParameters: ' + InputParameters);  
-  Result := Driver.CashInOutcome(DeviceID, Amount, InputParameters);
+  Logger.Debug('InputParameters: ' + InputParameters);
+  Result := Driver.CashInOutcome(DeviceID, InputParameters, Amount);
   Logger.Debug(Format('%s: %s', ['CashInOutcome', BoolToStr(Result)]));
 end;
 
@@ -108,18 +124,14 @@ function TDrvFR1C22.CloseShift(const DeviceID, InputParameters: WideString;
 begin
   Logger.Debug(Format('CloseShift(DeviceID: %s)', [DeviceID]));
   Logger.Debug(Format('InputParameters: %s', [InputParameters]));
-  Result := Driver.CloseShift(DeviceID, InputParameters, OutputParameters, SessionNumber, DocumentNumber);
+  Result := Driver.CloseShift(DeviceID, InputParameters, OutputParameters);
+  //SessionNumber,
+  //DocumentNumber
+
   Logger.Debug(Format('%s: %s', ['CloseShift', BoolToStr(Result)]));
   Logger.Debug(Format('OutputParameters: %s', [OutputParameters]));
   Logger.Debug(Format('SessionNumber: %d', [SessionNumber]));
   Logger.Debug(Format('DocumentNumber: %u', [Cardinal(DocumentNumber)]));
-end;
-
-destructor TDrvFR1C22.Destroy;
-begin
-  FDriver.Free;
-  FLogger.Free;
-  inherited;
 end;
 
 function TDrvFR1C22.DeviceTest(out Description,
@@ -150,7 +162,8 @@ function TDrvFR1C22.GetCurrentStatus(const DeviceID: WideString;
   out CheckNumber, SessionNumber, SessionState: Integer;
   out StatusParameters: WideString): WordBool;
 begin
-  Result := Driver.GetCurrentStatus(DeviceID, CheckNumber, SessionNumber, SessionState, StatusParameters);
+  {  !!! }
+  //Result := Driver.GetCurrentStatus(DeviceID, CheckNumber, SessionNumber, SessionState, StatusParameters);
 end;
 
 function TDrvFR1C22.GetDataKKT(const DeviceID: WideString;
@@ -176,10 +189,10 @@ begin
   DownloadURL := 'http://www.shtrih-m.ru/support/download/?section_id=76&product_id=all&type_id=156';
 end;
 
-function TDrvFR1C22.GetDriver: TDriver1Cst22;
+function TDrvFR1C22.GetDriver: TMitsuDrv1C;
 begin
   if FDriver = nil then
-    FDriver := TDriver1Cst22.Create;
+    FDriver := TMitsuDrv1C.Create;
   Result := FDriver;
 end;
 
@@ -200,13 +213,6 @@ begin
   Logger.Debug(Format('GetLineLength(LineLength: %d): %s', [LineLength, BoolToStr(Result)]));
 end;
 
-function TDrvFR1C22.GetLogger: TLogger;
-begin
-  if FLogger = nil then
-    FLogger := TLogger.Create(Self.ClassName);
-  Result := FLogger;
-end;
-
 function TDrvFR1C22.GetParameters(
   out TableParameters: WideString): WordBool;
 begin
@@ -218,7 +224,7 @@ end;
 function TDrvFR1C22.GetVersion: WideString;
 begin
   Logger.Debug('GetVersion');
-  Result := Driver.GetVersion;
+  //Result := Driver.GetVersion; !!!
   Logger.Debug(Format('%s: %s', ['GetVersion', Result]));
 end;
 
@@ -232,7 +238,7 @@ end;
 function TDrvFR1C22.OpenCashDrawer(const DeviceID: WideString): WordBool;
 begin
   Logger.Debug(Format('OpenCashDrawer(DeviceID: %s)', [DeviceID]));
-  Result := Driver.OpenCashDrawer(DeviceID, 0);
+  Result := Driver.OpenCashDrawer(DeviceID);
   Logger.Debug(Format('OpenCashDrawer: %s', [BoolToStr(Result)]));
 end;
 
@@ -242,7 +248,9 @@ function TDrvFR1C22.OpenShift(const DeviceID, InputParameters: WideString;
 begin
   Logger.Debug(Format('OpenShift(DeviceID: %s)', [DeviceID]));
   Logger.Debug(Format('InputParameters: %s', [InputParameters]));
-  Result := Driver.OpenShift(DeviceID, InputParameters, OutputParameters, SessionNumber, DocumentNumber);
+  Result := Driver.OpenShift(DeviceID, InputParameters, OutputParameters);
+  //SessionNumber, !!!
+  //DocumentNumber
   Logger.Debug(Format('%s: %s', ['OpenShift', BoolToStr(Result)]));
   Logger.Debug(Format('OutputParameters: %s', [OutputParameters]));
   Logger.Debug(Format('SessionNumber: %d', [SessionNumber]));
@@ -268,7 +276,7 @@ function TDrvFR1C22.PrintXReport(const DeviceID,
   InputParameters: WideString): WordBool;
 begin
   Logger.Debug('PrintXReport');
-  Result := Driver.PrintXReport(DeviceID);
+  Result := Driver.PrintXReport(DeviceID, InputParameters);
 end;
 
 function TDrvFR1C22.ProcessCheck(const DeviceID: WideString;
@@ -277,19 +285,24 @@ function TDrvFR1C22.ProcessCheck(const DeviceID: WideString;
   AddressSiteInspections: WideString): WordBool;
 begin
   Logger.Debug('ProcessCheck');
+(*
+  !!!
   Result := Driver.ProcessCheck(DeviceID, '',
         Electronically, CheckPackage, CheckNumber, SessionNumber,
           FiscalSign, AddressSiteInspections);
-
+*)
 end;
 
 function TDrvFR1C22.ProcessCorrectionCheck(const DeviceID,
   CheckCorrectionPackage: WideString; out CheckNumber,
   SessionNumber: Integer; out FiscalSign,
   AddressSiteInspections: WideString): WordBool;
+var
+  OutParams: WideString;
 begin
   Logger.Debug('ProcessCheckCorrection');
-  Result := Driver.ProcessCorrectionCheck(DeviceID, CheckCorrectionPackage, CheckNumber, SessionNumber, FiscalSign, AddressSiteInspections);
+  Result := Driver.ProcessCorrectionCheck(DeviceID, CheckCorrectionPackage, OutParams);
+  //CheckNumber, SessionNumber, FiscalSign, AddressSiteInspections !!!
 
 end;
 
@@ -349,5 +362,5 @@ initialization
 {$ENDIF}
   ComServer.SetServerName('AddIn');
   TActiveXControlFactory.Create(ComServer, TDrvFR1C22, TActiveXView,
-    Class_DrvFR1C22, 1, '', OLEMISC_INVISIBLEATRUNTIME, tmApartment);
+    Class_Mitsu1C22, 1, '', OLEMISC_INVISIBLEATRUNTIME, tmApartment);
 end.

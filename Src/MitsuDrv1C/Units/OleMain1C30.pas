@@ -6,19 +6,19 @@ interface
 
 uses
   // VCL
-  ActiveX, StdVcl, SysUtils, ActiveXView,
+  ActiveX, StdVcl, SysUtils, ActiveXView, ComObj, ComServ,
   // This
-  MitsuLib_TLB, ComObj, ComServ, LogFile, MitsuDrv_1C, StringUtils,
-  ActiveXControl1C, AddIn1CInterface, AxCtrls, classes, TranslationUtil;
+  MitsuLib_TLB, LogFile, MitsuDrv_1C, StringUtils, ActiveXControl1C,
+  AddIn1CInterface, AxCtrls, classes, TranslationUtil, FileUtils;
 
 type
-  TDrvFR1C30 = class(TActiveXControl1C, IDrvFR1C30)
+  TDrvFR1C30 = class(TActiveXControl1C, IMitsu1C30)
   private
-    FLogger: TLogFile;
+    FLogger: ILogFile;
     FDriver: TMitsuDrv1C;
-    function GetLogFile: TLogFile;
+    function GetLogFile: ILogFile;
     function GetDriver: TMitsuDrv1C;
-    property Logger: TLogFile read GetLogFile;
+    property Logger: ILogFile read GetLogFile;
     property Driver: TMitsuDrv1C read GetDriver;
   protected
     function GetInterfaceRevision: Integer; safecall;
@@ -96,6 +96,26 @@ type
 
 implementation
 
+destructor TDrvFR1C30.Destroy;
+begin
+  FDriver.Free;
+  FLogger := nil;
+  inherited Destroy;
+end;
+
+function TDrvFR1C30.GetLogFile: ILogFile;
+begin
+  if FLogger = nil then
+  begin
+    FLogger := TLogFile.Create;
+    FLogger.Enabled := true;
+    FLogger.FilePath := GetModulePath;
+    FLogger.FileName := 'MitsuDrv1C.log';
+  end;
+  Result := FLogger;
+end;
+
+
 function TDrvFR1C30.CashInOutcome(const DeviceID, InputParameters: WideString;
   Amount: Double): WordBool;
 begin
@@ -111,13 +131,6 @@ function TDrvFR1C30.CloseShift(const DeviceID, InputParameters: WideString;
   out OutputParameters: WideString): WordBool;
 begin
   Result := Driver.CloseShift(DeviceID, InputParameters, OutputParameters);
-end;
-
-destructor TDrvFR1C30.Destroy;
-begin
-  FDriver.Free;
-  FLogger.Free;
-  inherited;
 end;
 
 function TDrvFR1C30.DeviceTest(out Description: WideString;
@@ -182,13 +195,6 @@ begin
   Result := Driver.GetLineLength(DeviceID, LineLength);
   Logger.Debug(Format('GetLineLength(LineLength: %d): %s',
     [LineLength, BoolToStr(Result)]));
-end;
-
-function TDrvFR1C30.GetLogFile: TLogFile;
-begin
-  if FLogger = nil then
-    FLogger := TLogFile.Create;
-  Result := FLogger;
 end;
 
 function TDrvFR1C30.GetParameters(out TableParameters: WideString): WordBool;
@@ -333,6 +339,6 @@ initialization
 {$ENDIF}
 ComServer.SetServerName('AddIn');
 TActiveXControlFactory.Create(ComServer, TDrvFR1C30, TActiveXView,
-  Class_DrvFR1C30, 1, '', OLEMISC_INVISIBLEATRUNTIME, tmApartment);
+  Class_Mitsu1C30, 1, '', OLEMISC_INVISIBLEATRUNTIME, tmApartment);
 
 end.

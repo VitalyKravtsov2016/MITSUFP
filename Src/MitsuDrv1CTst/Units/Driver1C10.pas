@@ -9,7 +9,7 @@ uses
   // VCL
   Windows, Classes, ComObj, SysUtils, Variants, ActiveX, Types,
   // This
-  MitsuDrv1CTst_TLB, LanguageExtender, OleArray1C, StringUtils,
+  MitsuLib_TLB, MitsuDrv1CTst_TLB, LanguageExtender, OleArray1C, StringUtils,
   untTypes, Driver1C;
 
 type
@@ -17,11 +17,11 @@ type
 
   TDriver1C10 = class(TDriver1C)
   private
-    FDriver: IDrvFR1C;
+    FDriver: IMitsu1C;
     FValuesArray: IArray1C;
     FLogoValuesArray: IArray1C;
-    function GetDriver: IDrvFR1C;
-    property Driver: IDrvFR1C read GetDriver;
+    function GetDriver: IMitsu1C;
+    property Driver: IMitsu1C read GetDriver;
   public
     procedure CashInOutcome; override; 
     procedure Close; override; 
@@ -487,10 +487,10 @@ begin
   DoChange(Res);
 end;
 
-function TDriver1C10.GetDriver: DrvFR1C;
+function TDriver1C10.GetDriver: IMitsu1C;
 begin
   if FDriver = nil then
-    FDriver := CreateOleObject('Addin.MitsuDrv1C') as IDrvFR1C;
+    FDriver := CreateOleObject('Addin.Mitsu1C30') as IMitsu1C;
   Result := FDriver;
 end;
 

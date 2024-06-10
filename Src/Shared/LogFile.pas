@@ -5,9 +5,7 @@ interface
 uses
   // VCL
   Windows, Classes, SysUtils, SyncObjs, SysConst, Variants, DateUtils, TypInfo,
-  AnsiStrings,
-  // This
-  WideException;
+  AnsiStrings;
 
 const
   CRLF = #13#10;
@@ -600,7 +598,7 @@ end;
 
 procedure TLogFile.Error(const Data: WideString; E: Exception);
 begin
-  AddLine(TagError + Data + ' ' + GetExceptionMessage(E));
+  AddLine(TagError + Data + ' ' + E.Message);
 end;
 
 procedure TLogFile.Debug(const Data: WideString);

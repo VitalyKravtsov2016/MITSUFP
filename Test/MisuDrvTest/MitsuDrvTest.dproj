@@ -1,6 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{BEB0A5DF-3F8E-4BCA-8921-16BE4D5EE145}</ProjectGuid>
+        <ProjectGuid>{A08A0460-6EE1-4737-A582-5DF1D06EAE61}</ProjectGuid>
         <MainSource>MitsuDrvTest.dpr</MainSource>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>

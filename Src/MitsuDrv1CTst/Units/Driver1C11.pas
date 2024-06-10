@@ -10,17 +10,17 @@ uses
   // VCL
   Windows, Classes, ComObj, SysUtils, Variants, ActiveX, Types,
   // This
-  AddIn1CInterface,
-  DrvFRLib_TLB, StringUtils, untTypes, Driver1C, SMDrvFR1CLib_TLB;
+  AddIn1CInterface, MitsuLib_TLB, MitsuDrv1CTst_TLB, StringUtils,
+  untTypes, Driver1C;
 
 type
   { TDriver1C11 }
 
   TDriver1C11 = class(TDriver1C)
   private
-    FDriver: IsmDrvFR1C;
-    function GetDriver: IsmDrvFR1C;
-    property Driver: IsmDrvFR1C read GetDriver;
+    FDriver: IMitsu1C11;
+    function GetDriver: IMitsu1C11;
+    property Driver: IMitsu1C11 read GetDriver;
   public
     // IDriver1C
     procedure CashInOutcome; override;
@@ -241,11 +241,11 @@ begin
 end;
 
 
-function TDriver1C11.GetDriver: IsmDrvFR1C;
+function TDriver1C11.GetDriver: IMitsu1C11;
 begin
   if FDriver = nil then
   begin
-    FDriver := CreateOleObject('Addin.MitsuDrv1C') as IsmDrvFR1C;
+    FDriver := CreateOleObject('Addin.Mitsu1C30') as IMitsu1C11;
   end;
   Result := FDriver;
 end;

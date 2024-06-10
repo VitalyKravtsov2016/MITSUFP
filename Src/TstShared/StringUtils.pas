@@ -164,12 +164,12 @@ function CurrencyToStr(Value: Currency): AnsiString;
 var
   SaveDecimalSeparator: Char;
 begin
-  SaveDecimalSeparator := DecimalSeparator;
+  SaveDecimalSeparator := FormatSettings.DecimalSeparator;
   try
-    DecimalSeparator := '.';
+    FormatSettings.DecimalSeparator := '.';
     Result := Format('%.2f', [Value]);
   finally
-    DecimalSeparator := SaveDecimalSeparator;
+    FormatSettings.DecimalSeparator := SaveDecimalSeparator;
   end;
 end;
 
@@ -177,12 +177,12 @@ function StrToCurrency(const S: AnsiString): Currency;
 var
   SaveDecimalSeparator: Char;
 begin
-  SaveDecimalSeparator := DecimalSeparator;
+  SaveDecimalSeparator := FormatSettings.DecimalSeparator;
   try
-    DecimalSeparator := '.';
+    FormatSettings.DecimalSeparator := '.';
     Result := StrToFloat(S);
   finally
-    DecimalSeparator := SaveDecimalSeparator;
+    FormatSettings.DecimalSeparator := SaveDecimalSeparator;
   end;
 end;
 
@@ -355,12 +355,12 @@ function DecimalToString(Value: Currency): WideString;
 var
   C: Char;
 begin
-  C := DecimalSeparator;
-  DecimalSeparator := '.';
+  C := FormatSettings.DecimalSeparator;
+  FormatSettings.DecimalSeparator := '.';
   try
     Result := CurrToStr(Value);
   finally
-    DecimalSeparator := C;
+    FormatSettings.DecimalSeparator := C;
   end;
 end;
 

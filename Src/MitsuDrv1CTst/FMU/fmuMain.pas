@@ -6,8 +6,6 @@ uses
   // VCL
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ExtCtrls, Spin, ComCtrls, Grids, ValEdit,
-  // Tnt
-  TntForms, TntDialogs, TntExtCtrls, TntStdCtrls, TntComCtrls,
   // This
   BaseForm, Driver1C, OleArray1C, VLEUtil, untTypes, Driver1C10, Driver1C11;
 
@@ -258,8 +256,8 @@ procedure TfmMain.UpdateForm(Sender: TObject);
 var
   decimalsep: Char;
 begin
-  decimalsep := DecimalSeparator;
-  DecimalSeparator := ',';
+  decimalsep := FormatSettings.DecimalSeparator;
+  FormatSettings.DecimalSeparator := ',';
   try
     if Driver.FDeviceID <> '' then
       edtDeviceID.Text := Driver.FDeviceID;
@@ -277,7 +275,7 @@ begin
       memInfo.Lines.Add('Ошибка в параметрах подключения!');
     end;
   finally
-    DecimalSeparator := decimalsep;
+    FormatSettings.DecimalSeparator := decimalsep;
   end;
 end;
 
@@ -296,8 +294,8 @@ procedure TfmMain.SetValues;
 var
   decimalsep: Char;
 begin
-  decimalsep := DecimalSeparator;
-  DecimalSeparator := ',';
+  decimalsep := FormatSettings.DecimalSeparator;
+  FormatSettings.DecimalSeparator := ',';
   try
     Driver.FDeviceID := edtDeviceID.Text;
     Driver.FName := edtName.Text;
@@ -349,7 +347,7 @@ begin
     Driver.FConnectionParams.QRCodeHeight := StrToInt(VLE_GetPropertyValue(vleParams, 'QRCodeHeight'));
     Driver.SetConnectionParams;
   finally
-    DecimalSeparator := decimalsep;
+    FormatSettings.DecimalSeparator := decimalsep;
   end;
 end;
 

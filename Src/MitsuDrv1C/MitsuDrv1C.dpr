@@ -4,7 +4,6 @@ uses
   Forms,
   ComServ,
   OleMain1C30 in 'Units\OleMain1C30.pas',
-  MitsuLib_TLB in 'MitsuLib_TLB.pas',
   LogFile in '..\Shared\LogFile.pas',
   ActiveXView in '..\Shared\ActiveXView.pas',
   WideException in '..\Shared\WideException.pas',
@@ -41,7 +40,9 @@ uses
   AddIn1CInterface in 'Units\AddIn1CInterface.pas',
   TextEncoding in 'Units\TextEncoding.pas',
   TranslationUtil in '..\Shared\TranslationUtil.pas',
-  gnugettext in '..\Shared\gnugettext.pas';
+  gnugettext in '..\Shared\gnugettext.pas',
+  FileUtils in '..\Shared\FileUtils.pas',
+  MitsuLib_TLB in 'MitsuLib_TLB.pas';
 
 {$E dll}
 

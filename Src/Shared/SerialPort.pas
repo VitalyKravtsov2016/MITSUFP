@@ -422,14 +422,14 @@ end;
 procedure TSerialPort.CreateHandle;
 var
   i: Integer;
-  DevName: AnsiString;
+  DevName: string;
 const
   MaxReconnectCount = 3;
 begin
   DevName := '\\.\' + FParams.PortName;
   for i := 1 to MaxReconnectCount do
   begin
-    FHandle := CreateFile(PCHAR(DevName), GENERIC_READ or GENERIC_WRITE, 0, nil,
+    FHandle := CreateFile(PChar(DevName), GENERIC_READ or GENERIC_WRITE, 0, nil,
       OPEN_EXISTING, 0, 0);
 
     if FHandle <> INVALID_HANDLE_VALUE then
@@ -438,12 +438,12 @@ begin
     if GetLastError = ERROR_ACCESS_DENIED then
       raise ENoPortError.Create(_('Port is opened by another application'));
 
-    if FParams.ReconnectPort and (i <> MaxReconnectCount) then
-    begin
-      EnableComPort(FParams.PortName, False);
-      Sleep(100);
-      EnableComPort(FParams.PortName, True);
-    end;
+    if not FParams.ReconnectPort then Break;
+    if i = MaxReconnectCount then Break;
+
+    EnableComPort(FParams.PortName, False);
+    Sleep(100);
+    EnableComPort(FParams.PortName, True);
   end;
 
   if FHandle = INVALID_HANDLE_VALUE then
@@ -451,7 +451,7 @@ begin
     Logger.Error(Format('CreateFile ERROR: 0x%.8x, %s',
       [GetLastError, SysErrorMessage(GetLastError)]));
 
-    raise ENoPortError.Create(_('Cannot open port'));
+    raise ENoPortError.Create(SysErrorMessage(GetLastError));
   end;
 end;
 
