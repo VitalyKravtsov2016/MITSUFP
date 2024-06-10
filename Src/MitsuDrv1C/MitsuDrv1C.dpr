@@ -42,7 +42,9 @@ uses
   TranslationUtil in '..\Shared\TranslationUtil.pas',
   gnugettext in '..\Shared\gnugettext.pas',
   FileUtils in '..\Shared\FileUtils.pas',
-  MitsuLib_TLB in 'MitsuLib_TLB.pas';
+  MitsuLib_TLB in 'MitsuLib_TLB.pas',
+  oleMain1C10 in 'Units\oleMain1C10.pas',
+  Driver1Cst in 'Units\Driver1Cst.pas';
 
 {$E dll}
 

@@ -6,23 +6,22 @@ interface
 
 uses
   // VCL
-  ActiveX, DrvFRLib_TLB, StdVcl, SysUtils, ActiveXView,
+  ActiveX, StdVcl, SysUtils, ActiveXView,
   // This
-  ComObj, ComServ,
-  Driver1Cst, untLogger, FiscalPrinter, StringUtils, ActiveXControl1C,
-  AddIn1CInterface, AxCtrls, Params1C, TranslationUtil;
+  MitsuLib_TLB, LogFile, Driver1Cst, StringUtils, ActiveXControl1C,
+  AddIn1CInterface, TranslationUtil, FileUtils;
 
 type
-  { TDrvFR1C }
+  { TOleMain1C }
 
-  TDrvFR1C = class(TActiveXControl1C, IDrvFR1C, IInitDone, ILanguageExtender)
+  TOleMain1C = class(TActiveXControl1C, IMitsu1C, IInitDone, ILanguageExtender)
   private
     FPayType4: Double;
-    FLogger: TLogger;
-    FDriver: TDriver1Cst;
-    function GetLogger: TLogger;
+    FLogger: ILogFile;
+    FDriver: TMitsuDrv1C;
+    function GetLogger: ILogFile;
     function GetDriver: TDriver1Cst;
-    property Logger: TLogger read GetLogger;
+    property Logger: ILogFile read GetLogger;
     property Driver: TDriver1Cst read GetDriver;
   protected
     function CashInOutcome(const DeviceID: WideString;
@@ -70,34 +69,34 @@ type
   public
     destructor Destroy; override;
     procedure Initialize; override;
-    procedure SetLanguage(LangType: string); override;
+    //procedure SetLanguage(LangType: string); override;
   end;
 
 implementation
 
-{ TDrvFR1C }
+{ TOleMain1C }
 
-procedure TDrvFR1C.Initialize;
+procedure TOleMain1C.Initialize;
 begin
   inherited Initialize;
   FPayType4 := 0;
 end;
 
-destructor TDrvFR1C.Destroy;
+destructor TOleMain1C.Destroy;
 begin
-  FLogger.Free;
   FDriver.Free;
-  inherited;
+  FLogger := nil;
+  inherited Destroy;
 end;
 
-function TDrvFR1C.GetDriver: TDriver1Cst;
+function TOleMain1C.GetDriver: TDriver1Cst;
 begin
   if FDriver = nil then
     FDriver := TDriver1Cst.Create;
   Result := FDriver;
 end;
 
-function TDrvFR1C.CashInOutcome(const DeviceID: WideString;
+function TOleMain1C.CashInOutcome(const DeviceID: WideString;
   Amount: Double): WordBool;
 begin
   Logger.Debug(Format('%s(DeviceID: %s, Amount: %.2f)', ['CashInOutcome',
@@ -106,14 +105,14 @@ begin
   Logger.Debug(Format('%s: %s', ['CashInOutcome', BoolToStr(Result)]));
 end;
 
-function TDrvFR1C.Close(const DeviceID: WideString): WordBool;
+function TOleMain1C.Close(const DeviceID: WideString): WordBool;
 begin
   Logger.Debug(Format('%s(DeviceID: %s)', ['Close', DeviceID]));
   Result := Driver.Close(DeviceID);
   Logger.Debug(Format('%s: %s', ['Close', BoolToStr(Result)]));
 end;
 
-function TDrvFR1C.CloseCheck(
+function TOleMain1C.CloseCheck(
   const DeviceID: WideString;
   Cash, PayByCard, PayByCredit: Double): WordBool; safecall;
 begin
@@ -123,7 +122,7 @@ begin
   Logger.Debug(Format('%s: %s', ['CloseCheck', BoolToStr(Result)]));
 end;
 
-function TDrvFR1C.DeviceTest(const ValuesArray: IDispatch;
+function TOleMain1C.DeviceTest(const ValuesArray: IDispatch;
   out AdditionalDescription: WideString): WordBool;
 var
   S: WideString;
@@ -135,7 +134,7 @@ begin
     ValuesArrayToStr(ValuesArray, True),AdditionalDescription, BoolToStr(Result)]));
 end;
 
-function TDrvFR1C.GetLastError(out ErrorDescription: WideString): Integer;
+function TOleMain1C.GetLastError(out ErrorDescription: WideString): Integer;
 begin
   Logger.Debug('GetLastError');
   Result := Driver.GetLastError(ErrorDescription);
@@ -143,14 +142,14 @@ begin
     ErrorDescription, Result]));
 end;
 
-function TDrvFR1C.GetVersion: WideString;
+function TOleMain1C.GetVersion: WideString;
 begin
   Logger.Debug('GetVersion');
   Result := Driver.GetVersion;
   Logger.Debug(Format('%s: %s', ['GetVersion', Result]));
 end;
 
-function TDrvFR1C.Open(const ValuesArray: IDispatch;
+function TOleMain1C.Open(const ValuesArray: IDispatch;
   out DeviceID: WideString): WordBool;
 begin
   Logger.Debug(Format('%s(ValuesArray:(%s))', ['Open',
@@ -160,7 +159,7 @@ begin
     ['Open', ValuesArrayToStr(ValuesArray, True), DeviceID, BoolToStr(Result)]));
 end;
 
-function TDrvFR1C.OpenCheck(const DeviceID: WideString; IsFiscalCheck,
+function TOleMain1C.OpenCheck(const DeviceID: WideString; IsFiscalCheck,
   IsReturnCheck, CancelOpenedCheck: WordBool; out CheckNumber,
   SessionNumber: Integer): WordBool; safecall;
 begin
@@ -173,7 +172,7 @@ begin
     ['OpenCheck', CheckNumber, SessionNumber, BoolToStr(Result)]));
 end;
 
-function TDrvFR1C.PrintFiscalString(const DeviceID, Name: WideString;
+function TOleMain1C.PrintFiscalString(const DeviceID, Name: WideString;
   Quantity, Price, Amount: Double; Department: Integer;
   Tax: Single): WordBool;
 begin
@@ -186,7 +185,7 @@ begin
     ['PrintFiscalString', BoolToStr(Result)]));
 end;
 
-function TDrvFR1C.PrintNonFiscalString(const DeviceID,
+function TOleMain1C.PrintNonFiscalString(const DeviceID,
   TextString: WideString): WordBool;
 begin
   Logger.Debug(Format('%s(DeviceID: %s, TextString: %s)',
@@ -195,21 +194,21 @@ begin
   Logger.Debug(Format('%s: %s', ['PrintNonFiscalString', BoolToStr(Result)]));
 end;
 
-function TDrvFR1C.PrintXReport(const DeviceID: WideString): WordBool;
+function TOleMain1C.PrintXReport(const DeviceID: WideString): WordBool;
 begin
   Logger.Debug(Format('%s(DeviceID: %s)', ['PrintXReport', DeviceID]));
   Result := Driver.PrintXReport(DeviceID);
   Logger.Debug(Format('%s: %s', ['PrintXReport', BoolToStr(Result)]));
 end;
 
-function TDrvFR1C.PrintZReport(const DeviceID: WideString): WordBool;
+function TOleMain1C.PrintZReport(const DeviceID: WideString): WordBool;
 begin
   Logger.Debug(Format('%s(DeviceID: %s)', ['PrintZReport', DeviceID]));
   Result := Driver.PrintZReport(DeviceID);
   Logger.Debug(Format('%s: %s', ['PrintZReport', BoolToStr(Result)]));
 end;
 
-function TDrvFR1C.CancelCheck(
+function TOleMain1C.CancelCheck(
   const DeviceID: WideString): WordBool; safecall;
 begin
   Logger.Debug(Format('%s(DeviceID: %s)', ['CancelCheck', DeviceID]));
@@ -217,7 +216,7 @@ begin
   Logger.Debug(Format('%s: %s', ['CancelCheck', BoolToStr(Result)]));
 end;
 
-function TDrvFR1C.CheckPrintingStatus(
+function TOleMain1C.CheckPrintingStatus(
   const DeviceID: WideString): WordBool;
 begin
   Logger.Debug(Format('%s(DeviceID: %s)', ['CheckPrintingStatus', DeviceID]));
@@ -225,14 +224,14 @@ begin
   Logger.Debug(Format('%s: %s', ['CheckPrintingStatus', BoolToStr(Result)]));
 end;
 
-function TDrvFR1C.ContinuePrinting(const DeviceID: WideString): WordBool;
+function TOleMain1C.ContinuePrinting(const DeviceID: WideString): WordBool;
 begin
   Logger.Debug(Format('%s(DeviceID: %s)', ['ContinuePrinting', DeviceID]));
   Result := Driver.ContinuePrinting(DeviceID);
   Logger.Debug(Format('%s: %s', ['ContinuePrinting', BoolToStr(Result)]));
 end;
 
-function TDrvFR1C.GetLogger: TLogger;
+function TOleMain1C.GetLogger: TLogger;
 begin
   if FLogger = nil then
   begin
@@ -241,7 +240,7 @@ begin
   Result := FLogger;
 end;
 
-function TDrvFR1C.OpenCashDrawer(const DeviceID: WideString;
+function TOleMain1C.OpenCashDrawer(const DeviceID: WideString;
   CashDrawerID: Integer): WordBool;
 begin
   Logger.Debug(Format('OpenCashDrawer(DeviceID: %s)', [DeviceID]));
@@ -249,7 +248,7 @@ begin
   Logger.Debug(Format('OpenCashDrawer: %s', [BoolToStr(Result)]));
 end;
 
-function TDrvFR1C.LoadLogo(const ValuesArray: IDispatch;
+function TOleMain1C.LoadLogo(const ValuesArray: IDispatch;
   const LogoFileName: WideString; CenterLogo: WordBool;
   out LogoSize: Integer; out AdditionalDescription: WideString): WordBool;
 begin
@@ -259,14 +258,14 @@ begin
   Logger.Debug(Format('LoadLogo(AdditionalDescription: %s): %s', [AdditionalDescription, BoolToStr(Result)]));
 end;
 
-function TDrvFR1C.OpenSession(const DeviceID: WideString): WordBool;
+function TOleMain1C.OpenSession(const DeviceID: WideString): WordBool;
 begin
   Logger.Debug(Format('Opensession(%s)', [DeviceID]));
   Result := Driver.OpenSession(DeviceID);
   Logger.Debug(Format('OpenSession(%s): %s', [DeviceID, BoolToStr(Result)]));
 end;
 
-function TDrvFR1C.DeviceControl(const DeviceID, TxData: WideString;
+function TOleMain1C.DeviceControl(const DeviceID, TxData: WideString;
   out RxData: WideString): WordBool;
 begin
   Logger.Debug(Format('DeviceControl(%s, Tx: "%s")', [DeviceID, StrToHex(TxData)]));
@@ -274,7 +273,7 @@ begin
   Logger.Debug(Format('DeviceControl(%s, Rx: "%s"): %s', [DeviceID, StrToHex(RxData), BoolToStr(Result)]));
 end;
 
-function TDrvFR1C.DeviceControlHEX(const DeviceID, TxData: WideString;
+function TOleMain1C.DeviceControlHEX(const DeviceID, TxData: WideString;
   out RxData: WideString): WordBool;
 begin
   Logger.Debug(Format('DeviceControlHex(%s, Tx: "%s")', [DeviceID, TxData]));
@@ -282,42 +281,38 @@ begin
   Logger.Debug(Format('DeviceControlHex(%s, Rx: "%s"): %s', [DeviceID, RxData, BoolToStr(Result)]));
 end;
 
-function TDrvFR1C.Get_DiscountOnCheck: Double;
+function TOleMain1C.Get_DiscountOnCheck: Double;
 begin
   Logger.Debug('Get_DiscountOnCheck');
   Result := Driver.DiscountOnCheck;
   Logger.Debug(Format('Get_DiscountOnCheck %.2f', [Result]));
 end;
 
-procedure TDrvFR1C.Set_DiscountOnCheck(Value: Double);
+procedure TOleMain1C.Set_DiscountOnCheck(Value: Double);
 begin
   Logger.Debug(Format('Set_DiscountOnCheck %.2f', [Value]));
   Driver.DiscountOnCheck := Value;
 end;
 
-function TDrvFR1C.Get_PayType4: Double;
+function TOleMain1C.Get_PayType4: Double;
 begin
   Result := FPayType4;
   Logger.Debug(Format('Get_PayType4 %.2f', [Result]));
 end;
 
-procedure TDrvFR1C.Set_PayType4(Value: Double);
+procedure TOleMain1C.Set_PayType4(Value: Double);
 begin
   Logger.Debug(Format('Set_PayType4 %.2f', [Value]));
   FPayType4 := Value;
 end;
 
-procedure TDrvFR1C.SetLanguage(LangType: string);
-begin
-//
-end;
 
 initialization
 {$IFNDEF WIN64}
   SetTranslationLanguage;
 {$ENDIF}
   ComServer.SetServerName('AddIn');
-  TActiveXControlFactory.Create(ComServer, TDrvFR1C, TActiveXView,
+  TActiveXControlFactory.Create(ComServer, TOleMain1C, TActiveXView,
     Class_DrvFR1C, 1, '', OLEMISC_INVISIBLEATRUNTIME, tmApartment);
 end.
 

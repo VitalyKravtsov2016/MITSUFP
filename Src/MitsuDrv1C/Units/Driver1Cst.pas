@@ -4,37 +4,89 @@ interface
 
 uses
   // VCL
-  SysUtils,
+  Classes, SysUtils,
   // This
-  untLogger, Devices1C, VersionInfo, DriverError, DriverTypes, Types1C,
-  StringUtils, TextEncoding, DrvFRLib_TLB, LangUtils, untDrvFR;
+  LogFile, VersionInfo, DriverError, DriverTypes, Types1C,
+  StringUtils, TextEncoding, LangUtils, MitsuDrv;
 
 type
+  { TDeviceParams }
+
+  TDeviceParams = record
+    ConnectionType: Integer;
+    Port: Integer;
+    BaudRate: Integer;
+    Timeout: Integer;
+    IPAddress: WideString;
+    TCPPort: Integer;
+    AdminPassword: Integer;
+    LogEnabled: Boolean;
+    LogFileName: WideSTring;
+    CloseSession: Boolean;
+    //Paynames: T1CPayNames;
+    BarcodeFirstLine: Integer;
+    QRCodeHeight: Integer;
+    EnablePaymentSignPrint: Boolean;
+    QRCodeDotWidth: Integer;
+
+    ItemNameLength: Integer;
+    CheckFontNumber: Integer;
+    EnableNonFiscalHeader: Boolean;
+    EnableNonFiscalFooter: Boolean;
+    FormatVersion: Integer;
+    DisablePrintReports: Boolean;
+    CheckClock: Boolean;
+    UseRepeatDocument: Boolean;
+  end;
+
+  { TDevice }
+
+  TDevice1C = class(TCollectionItem)
+  private
+    FID: Integer;
+    FParams: TMitsuParams;
+  public
+    property ID: Integer read FID;
+    property Params: TMitsuParams read FParams;
+  end;
+
+  { TDevices1C }
+
+  TDevices1C = class(TCollection)
+  private
+    function GetFreeID: Integer;
+    function ItemByID(ID: Integer): TDevice1C;
+    function GetItem(Index: Integer): TDevice1C;
+  public
+    property Items[Index: Integer]: TDevice1C read GetItem; default;
+  end;
+
+
   { TDriver1Cst }
 
   TDriver1Cst = class
   private
-    FLogger: TLogger;
+    FLogger: ILogFile;
     FDevice: TDevice1C;
-    FDriver: IDrvFR49;
+    FDriver: TMitsuDrv;
     FDevices: TDevices1C;
     FDiscountOnCheck: Double;
     FResultCode: Integer;
     FResultDescription: WideString;
-
     function GetDevice: TDevice1C;
-
   protected
     procedure ClearError;
     procedure HandleException(E: Exception);
     procedure SelectDevice(const DeviceID: string);
     function GetAdditionalDescription: WideString;
 
+    property Driver: TMitsuDrv read FDriver;
     property Device: TDevice1C read GetDevice;
     property Devices: TDevices1C read FDevices;
   public
-    constructor Create;
+    constructor Create(ALogger: ILogFile);
     destructor Destroy; override;
+
     function GetLogPath: string;
     function Open(const ValuesArray: IDispatch; var DeviceID: WideString): WordBool; virtual;
     function CashInOutcome(const DeviceID: WideString;
@@ -70,35 +122,71 @@ type
     function DeviceControl(const DeviceID: WideString; const TxData: WideString; var RxData: WideString): WordBool;
     function DeviceControlHex(const DeviceID: WideString; const TxData: WideString; var RxData: WideString): WordBool;
 
-    property Logger: TLogger read FLogger;
+    property Logger: ILogFile read FLogger;
     property DiscountOnCheck: Double read FDiscountOnCheck write FDiscountOnCheck;
   end;
 
 implementation
 
+{ TDevices1C }
+
+function TDevices1C.GetFreeID: Integer;
+var
+  ID: Integer;
+begin
+  ID := 1;
+  while True do
+  begin
+    if ItemByID(ID) = nil then
+    begin
+      Result := ID;
+      Exit;
+    end;
+    Inc(ID);
+  end;
+end;
+
+function TDevices1C.GetItem(Index: Integer): TDevice1C;
+begin
+  Result := inherited Items[Index] as TDevice1C;
+end;
+
+function TDevices1C.ItemByID(ID: Integer): TDevice1C;
+var
+  i: Integer;
+begin
+  for i := 0 to Count - 1 do
+  begin
+    Result := Items[i];
+    if Result.ID = ID then
+      Exit;
+  end;
+  Result := nil;
+end;
+
 { TDriver1CSt }
 
-constructor TDriver1Cst.Create;
+constructor TDriver1Cst.Create(ALogger: ILogFile);
 begin
   inherited Create;
-  FLogger := TLogger.Create(Self.ClassName);
-  FDriver := DrvFR_create;
-  FDevices := TDevices1C.Create(FDriver);
-  FDevice := FDevices.Add;
+  FLogger := ALogger;
+  FDriver := TMitsuDrv.Create;
+  FDevices := TDevices1C.Create(TDevice1C);
+  //FDevice := FDevices.Add; !!!
 end;
 
 destructor TDriver1Cst.Destroy;
 begin
-  FLogger.Free;
+  FDriver.Free;
   FDevices.Free;
-  FDriver := nil;
+  FLogger := nil;
   inherited Destroy;
 end;
 
 function TDriver1Cst.GetDevice: TDevice1C;
 begin
   if FDevice = nil then
-    FDevice := Devices.Add;
+    //FDevice := Devices.Add; !!!
   Result := FDevice;
 end;
 
@@ -114,7 +202,7 @@ begin
   if E is EDriverError then
   begin
     DriverError := E as EDriverError;
-    FResultCode := DriverError.ErrorCode;
+    FResultCode := DriverError.Code;
     FResultDescription := EDriverError(E).Message;
   end
   else
@@ -131,7 +219,7 @@ begin
   Result := True;
   try
     SelectDevice(DeviceID);
-    Device.CancelCheck;
+    Driver.Check(Driver.Reset);
   except
     on E: Exception do
     begin
@@ -144,26 +232,31 @@ end;
 procedure TDriver1Cst.SelectDevice(const DeviceID: string);
 var
   ID: Integer;
-  ADevice: TDevice1C;
+  Device: TDevice1C;
 begin
+  Logger.Debug('SelectDevice DeviceID = ' + DeviceID);
   ID := 0;
   try
     ID := StrToInt(DeviceID);
   except
-    RaiseError(E_INVALIDPARAM, Format('%s %s', [GetRes(@SInvalidParam),'"DeviceID"']));
+    RaiseError(E_INVALIDPARAM, Format('%s %s', [GetRes(@SInvalidParam),
+      '"DeviceID"']));
   end;
-  ADevice := Devices.ItemByID(ID);
-  if ADevice = nil then
-    RaiseError(E_INVALIDPARAM, GetRes(@SDeviceNotActive));
-  if ADevice <> FDevice then
+
+  Device := FDevices.ItemByID(ID);
+  if Device = nil then
   begin
-    if FDevice <> nil then
-    begin
-      FDevice.Disconnect;
-    end;
+    Logger.Error(Format('Device "%s"  not found', [DeviceID]));
+    RaiseError(E_INVALIDPARAM, GetRes(@SDeviceNotActive));
   end;
-  FDevice := ADevice;
-  FDevice.ApplyDeviceParams;
+
+  if Device <> FDevice then
+  begin
+    Driver.Disconnect;
+    Driver.Params := Device.Params;
+    FDevice := Device;
+  end;
+  Logger.Debug('SelectDevice.end');
 end;
 
 ///////////////////////////////////////////////////////////////////////////////

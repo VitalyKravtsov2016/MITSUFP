@@ -294,7 +294,7 @@ resourcestring
   SUseRepeatDocument =
     'Для печати копии последнего документа использовать команду повтора документа';
 
-  { TDevices }
+{ TDevices }
 
 function TDevices.GetFreeID: Integer;
 var

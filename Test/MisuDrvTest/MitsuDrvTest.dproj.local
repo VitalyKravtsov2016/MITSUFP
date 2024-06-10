@@ -2,7 +2,7 @@
 <BorlandProject>
 	<Transactions>
     <Transaction>1899.12.30 00:00:00.000.876,=C:\projects\OposMitsu\Src\Shared\gnugettext.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.303,C:\projects\OposMitsu\Src\Shared\FileUtils.pas=</Transaction>
     <Transaction>1899.12.30 00:00:00.000.186,=C:\projects\OposMitsu\Src\Shared\FileUtils.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.303,C:\projects\OposMitsu\Src\Shared\FileUtils.pas=</Transaction>
   </Transactions>
 </BorlandProject>

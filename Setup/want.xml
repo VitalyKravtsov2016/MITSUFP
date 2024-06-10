@@ -188,7 +188,6 @@ See http://www.suigeneris.org/want/ for details.
 	
     <target name="Make1CComponent" depends="build_1cnative">
         <delete dir="${res}/1C/32">
-            <include name="*.xml" />
             <include name="*.zip" />
         </delete>
         <move tofile="${bin}/Win32/1c/32/${component_1c_32_win32_dll}">
@@ -197,9 +196,6 @@ See http://www.suigeneris.org/want/ for details.
         <move tofile="${bin}/Win64/1c/32/${component_1c_32_win64_dll}">
             <include name="${bin}/Win64/1c/32/MitsuDrv1CNative.dll" />
         </move>
-        <exec executable="${res}/1C/32/manifest1cgen.exe">
-            <arg value="${component_1c_32_win32_dll} ${component_1c_32_win64_dll} 3" />
-        </exec>
         <exec executable="7z.exe">
             <arg value="a" />
             <arg value="-tzip" />
@@ -213,7 +209,6 @@ See http://www.suigeneris.org/want/ for details.
 	
     <target name="Make1CComponent34" depends="build_1cnative" >
         <delete dir="${res}/1C/40">
-            <include name="*.xml" />
             <include name="*.zip" />
         </delete>
         <move tofile="${bin}/Win32/1c/40/${component_1c_40_win32_dll}">
@@ -222,9 +217,6 @@ See http://www.suigeneris.org/want/ for details.
         <move tofile="${bin}/Win64/1c/40/${component_1c_40_win64_dll}">
             <include name="${bin}/Win64/1c/40/MitsuDrv1CNative.dll" />
         </move>
-        <exec executable="${res}/1C/40/manifest1cgen.exe">
-            <arg value="${component_1c_40_win32_dll} ${component_1c_40_win64_dll} 4 ${version}" />
-        </exec>
         <exec executable="7z.exe">
             <arg value="a" />
             <arg value="-tzip" />
@@ -248,7 +240,6 @@ See http://www.suigeneris.org/want/ for details.
         </exec>
         <exec executable="msbuild.exe">
             <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv1C}/MitsuDrv1C.dproj /p:Platform=Win32 /p:Config=Release /p:DCC_ExeOutput=${Bin}/Win32"/>
-            <arg value="/v"/>
         </exec>
         <exec executable="msbuild.exe">
             <arg value="/clp:ErrorsOnly /t:Build  ${MitsuDrv1C}/MitsuDrv1C.dproj /p:Platform=Win64 /p:Config=Release /p:DCC_ExeOutput=${Bin}/Win64" />

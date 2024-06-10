@@ -184,6 +184,8 @@
         <DCCReference Include="..\Shared\gnugettext.pas"/>
         <DCCReference Include="..\Shared\FileUtils.pas"/>
         <DCCReference Include="MitsuLib_TLB.pas"/>
+        <DCCReference Include="Units\oleMain1C10.pas"/>
+        <DCCReference Include="Units\Driver1Cst.pas"/>
         <RidlCompile Include="MitsuDrv1C.ridl"/>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>
