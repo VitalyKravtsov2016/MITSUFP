@@ -751,6 +751,7 @@ type
     FPrintDocument: Boolean;
     function FNParamsToXml(const Params: TFNParams): AnsiString;
     procedure AddAgentData(Node: IXmlNode; const P: TMTSAgentData);
+    procedure SetParams(const Value: TMitsuParams);
   public
     function GetPort: IPrinterPort;
     function CreatePort: IPrinterPort;
@@ -875,7 +876,7 @@ type
     property Port: IPrinterPort read GetPort;
     property Answer: AnsiString read FAnswer;
     property Command: AnsiString read FCommand;
-    property Params: TMitsuParams read FParams write FParams;
+    property Params: TMitsuParams read FParams write SetParams;
     property PrintDocument: Boolean read FPrintDocument write FPrintDocument;
   end;
 
@@ -1599,6 +1600,12 @@ begin
     FLastError.Par := GetAttribute('PAR');
     Result := FLastError.Code;
   end;
+end;
+
+procedure TMitsuDrv.SetParams(const Value: TMitsuParams);
+begin
+  Disconnect;
+  FParams := Value;
 end;
 
 procedure TMitsuDrv.Check(Code: Integer);

@@ -7,28 +7,37 @@ uses
   Classes, SysUtils,
   // This
   LogFile, VersionInfo, DriverError, DriverTypes, Types1C,
-  StringUtils, TextEncoding, LangUtils, MitsuDrv;
+  StringUtils, TextEncoding, LangUtils, MitsuDrv, Params1C;
+
+const
+  IdxConnectionType = 0;
+  IdxPortName = 1;
+  IdxBaudRate = 2;
+  IdxByteTimeout = 3;
+  IdxRemoteHost = 4;
+  IdxRemotePort = 5;
+  IdxLogPath = 6;
+  IdxLogEnabled = 7;
+  IdxCashierName = 8;
+  IdxCashierINN = 9;
+  IdxPrintRequired = 10;
 
 type
-  { TDeviceParams }
+  { TDriverParams }
 
-  TDeviceParams = record
-    ConnectionType: Integer;
-    Port: Integer;
-    BaudRate: Integer;
-    Timeout: Integer;
-    IPAddress: WideString;
-    TCPPort: Integer;
+  TDriverParams = record
+    DriverParams: TMitsuParams;
+    CashierName: WideString;
+    CashierINN: WideString;
+    PrintRequired: Boolean;
+
+    (*
     AdminPassword: Integer;
-    LogEnabled: Boolean;
-    LogFileName: WideSTring;
     CloseSession: Boolean;
-    //Paynames: T1CPayNames;
     BarcodeFirstLine: Integer;
     QRCodeHeight: Integer;
     EnablePaymentSignPrint: Boolean;
     QRCodeDotWidth: Integer;
-
     ItemNameLength: Integer;
     CheckFontNumber: Integer;
     EnableNonFiscalHeader: Boolean;
@@ -37,6 +46,7 @@ type
     DisablePrintReports: Boolean;
     CheckClock: Boolean;
     UseRepeatDocument: Boolean;
+    *)
   end;
 
   { TDevice }
@@ -44,10 +54,10 @@ type
   TDevice1C = class(TCollectionItem)
   private
     FID: Integer;
-    FParams: TMitsuParams;
+    FParams: TDriverParams;
   public
     property ID: Integer read FID;
-    property Params: TMitsuParams read FParams;
+    property Params: TDriverParams read FParams write FParams;
   end;
 
   { TDevices1C }
@@ -58,6 +68,7 @@ type
     function ItemByID(ID: Integer): TDevice1C;
     function GetItem(Index: Integer): TDevice1C;
   public
+    function Add: TDevice1C;
     property Items[Index: Integer]: TDevice1C read GetItem; default;
   end;
 
@@ -74,6 +85,7 @@ type
     FResultCode: Integer;
     FResultDescription: WideString;
     function GetDevice: TDevice1C;
+    procedure SetDevice(const Value: TDevice1C);
   protected
     procedure ClearError;
     procedure HandleException(E: Exception);
@@ -81,7 +93,7 @@ type
     function GetAdditionalDescription: WideString;
 
     property Driver: TMitsuDrv read FDriver;
-    property Device: TDevice1C read GetDevice;
+    property Device: TDevice1C read GetDevice write SetDevice;
     property Devices: TDevices1C read FDevices;
   public
     constructor Create(ALogger: ILogFile);
@@ -126,9 +138,111 @@ type
     property DiscountOnCheck: Double read FDiscountOnCheck write FDiscountOnCheck;
   end;
 
+function GetParamName(Index: Integer): string;
+function GetParamValue(V: Variant; Index: Integer): Variant;
+procedure SetParamValue(V: Variant; Index: Integer; Value: Variant);
+
+function ReadDriverParams(V: Variant): TDriverParams;
+procedure WriteDriverParams(V: Variant; const Params: TDriverParams);
+
 implementation
 
+function ReadDriverParams(V: Variant): TDriverParams;
+begin
+  Result.DriverParams.ConnectionType := GetParamValue(V, IdxConnectionType);
+  Result.DriverParams.PortName := GetParamValue(V, IdxPortName);
+  Result.DriverParams.BaudRate := GetParamValue(V, IdxBaudRate);
+  Result.DriverParams.ByteTimeout := GetParamValue(V, IdxByteTimeout);
+  Result.DriverParams.RemoteHost := GetParamValue(V, IdxRemoteHost);
+  Result.DriverParams.RemotePort := GetParamValue(V, IdxRemotePort);
+  Result.DriverParams.LogPath := GetParamValue(V, IdxLogPath);
+  Result.DriverParams.LogEnabled := GetParamValue(V, IdxLogEnabled);
+  Result.CashierName := GetParamValue(V, IdxCashierName);
+  Result.CashierINN := GetParamValue(V, IdxCashierINN);
+  Result.PrintRequired := GetParamValue(V, IdxPrintRequired);
+end;
+
+procedure WriteDriverParams(V: Variant; const Params: TDriverParams);
+begin
+  SetParamValue(V, IdxConnectionType, Params.DriverParams.ConnectionType);
+  SetParamValue(V, IdxPortName, Params.DriverParams.PortName);
+  SetParamValue(V, IdxBaudRate, Params.DriverParams.BaudRate);
+  SetParamValue(V, IdxByteTimeout, Params.DriverParams.ByteTimeout);
+  SetParamValue(V, IdxRemoteHost, Params.DriverParams.RemoteHost);
+  SetParamValue(V, IdxRemotePort, Params.DriverParams.RemotePort);
+  SetParamValue(V, IdxLogPath, Params.DriverParams.LogPath);
+  SetParamValue(V, IdxLogEnabled, Params.DriverParams.LogEnabled);
+  SetParamValue(V, IdxCashierName, Params.CashierName);
+  SetParamValue(V, IdxCashierINN, Params.CashierINN);
+  SetParamValue(V, IdxPrintRequired, Params.PrintRequired);
+end;
+
+function GetParamName(Index: Integer): string;
+begin
+  case Index of
+    IdxConnectionType: Result := 'ConnectionType';
+    IdxPortName: Result := 'PortName';
+    IdxBaudRate: Result := 'BaudRate';
+    IdxByteTimeout: Result := 'ByteTimeout';
+    IdxRemoteHost: Result := 'RemoteHost';
+    IdxRemotePort: Result := 'RemotePort';
+    IdxLogPath: Result := 'LogPath';
+    IdxLogEnabled: Result := 'LogEnabled';
+    IdxCashierName: Result := 'CashierName';
+    IdxCashierINN: Result := 'CashierINN';
+    IdxPrintRequired: Result := 'PrintRequired';
+  else
+    Result := 'Unknown'
+  end;
+end;
+
+function GetParamValue(V: Variant; Index: Integer): Variant;
+var
+  Msg: string;
+begin
+  try
+    Result := V.Get(Index);
+  except
+    on E: Exception do
+    begin
+      Msg := Format('Failed to get value, name=%s', [GetParamName(Index)]);
+      E.Message := Msg + E.Message;
+      raise;
+    end;
+  end;
+end;
+
+procedure SetParamValue(V: Variant; Index: Integer; Value: Variant);
+var
+  Msg: string;
+begin
+  try
+    V.Set(Index, Value);
+  except
+    on E: Exception do
+    begin
+      Msg := Format('Failed to set value, name=%s', [GetParamName(Index)]);
+      E.Message := Msg + E.Message;
+      raise;
+    end;
+  end;
+end;
+
+function AmountToInt(Amount: Currency): Int64;
+begin
+  Result := Round(Amount * 100);
+end;
+
 { TDevices1C }
+
+function TDevices1C.Add: TDevice1C;
+var
+  ID: Integer;
+begin
+  ID := GetFreeID;
+  Result := TDevice1C.Create(Self);
+  Result.FID := ID;
+end;
 
 function TDevices1C.GetFreeID: Integer;
 var
@@ -172,7 +286,7 @@ begin
   FLogger := ALogger;
   FDriver := TMitsuDrv.Create;
   FDevices := TDevices1C.Create(TDevice1C);
-  //FDevice := FDevices.Add; !!!
+  ClearError;
 end;
 
 destructor TDriver1Cst.Destroy;
@@ -186,7 +300,7 @@ end;
 function TDriver1Cst.GetDevice: TDevice1C;
 begin
   if FDevice = nil then
-    //FDevice := Devices.Add; !!!
+    FDevice := Devices.Add;
   Result := FDevice;
 end;
 
@@ -249,14 +363,21 @@ begin
     Logger.Error(Format('Device "%s"  not found', [DeviceID]));
     RaiseError(E_INVALIDPARAM, GetRes(@SDeviceNotActive));
   end;
+  SetDevice(Device);
+  Logger.Debug('SelectDevice.end');
+end;
 
-  if Device <> FDevice then
+procedure TDriver1Cst.SetDevice(const Value: TDevice1C);
+begin
+  if Value <> FDevice then
   begin
     Driver.Disconnect;
-    Driver.Params := Device.Params;
-    FDevice := Device;
+    FDevice := Value;
+    if FDevice <> nil then
+    begin
+      Driver.Params := FDevice.Params.DriverParams;
+    end;
   end;
-  Logger.Debug('SelectDevice.end');
 end;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -270,7 +391,7 @@ begin
   Result := True;
   try
     SelectDevice(DeviceID);
-    Device.CashInOutcome(Amount);
+    //Driver.CashInOutcome(Amount);
   except
     on E: Exception do
     begin
@@ -289,7 +410,7 @@ begin
   Result := True;
   try
     SelectDevice(DeviceID);
-    Device.Close;
+    Driver.Disconnect;
     FDevice.Free;
     FDevice := nil;
   except
@@ -303,13 +424,28 @@ end;
 
 function TDriver1Cst.CloseCheck(const DeviceID: WideString; Cash,
   PayByCard, PayByCredit, PayBySertificate: Double): WordBool;
+var
+  Payment: TMTSReceiptPayment;
 begin
   ClearError;
   Result := True;
   try
     SelectDevice(DeviceID);
-    Device.CloseCheck(Cash, PayByCard, PayByCredit,
-      PayBySertificate, DiscountOnCheck);
+
+    Payment.CashAmount := AmountToInt(Cash);
+    Payment.CardAmount := AmountToInt(PayByCard);
+    Payment.AdvanceAmount := AmountToInt(PayBySertificate);
+    Payment.CreditAmount := AmountToInt(PayByCredit);
+    Payment.OtherAmount := 0;
+    Payment.DiscountAmount := 0;
+    Payment.CommentType := 0;
+    Payment.CommentText := '';
+    Payment.AmountType1 := 0;
+    Payment.AmountType2 := 0;
+    Payment.AmountType3 := 0;
+    Payment.AmountType4 := 0;
+    Payment.AmountType5 := 0;
+    Driver.Check(Driver.PayReceipt(Payment));
   except
     on E: Exception do
     begin
@@ -331,16 +467,25 @@ end;
 function TDriver1Cst.DeviceTest(const ValuesArray: IDispatch;
       var AdditionalDescription, DemoModeIsActivated: WideString): WordBool;
 var
-  Device: TDevice1C;
+  Params: TDriverParams;
+  DeviceName: WideString;
+  DeviceVersion: TMTSVersion;
 begin
   ClearError;
   Result := True;
+  AdditionalDescription := 'OK';
   try
-    Device := Devices.Add;
+    Params := ReadDriverParams(ValuesArray);
+    Driver.Params := Params.DriverParams;
+    Driver.LockPort;
     try
-      Device.DeviceTest(ValuesArray, AdditionalDescription, DemoModeIsActivated);
+      Driver.Check(Driver.Connect);
+      Driver.Check(Driver.ReadDeviceName(DeviceName));
+      Driver.Check(Driver.ReadDeviceVersion(DeviceVersion));
+      AdditionalDescription := Format('%s ¹ %s', [DeviceName, DeviceVersion.Serial]);
     finally
-      Device.Free;
+      Driver.UnlockPort;
+      Driver.Disconnect;
     end;
   except
     on E: Exception do
@@ -356,7 +501,7 @@ end;
 function TDriver1Cst.GetLastError(
   var ErrorDescription: WideString): Integer;
 begin
-  ErrorDescription := Format('%.2xh, %s', [FResultCode, FResultDescription]);
+  ErrorDescription := Format('%d, %s', [FResultCode, FResultDescription]);
   Result := FResultCode;
   Logger.Debug('GetLastError ' + ErrorDescription);
 end;
@@ -373,19 +518,31 @@ function TDriver1Cst.Open(const ValuesArray: IDispatch;
   var DeviceID: WideString): WordBool;
 var
   ADevice: TDevice1C;
+  Params: TDriverParams;
+  DeviceVersion: TMTSVersion;
 begin
   ClearError;
   Result := True;
-  ADevice := nil;
   try
-    ADevice := Devices.Add;
-    ADevice.Open(ValuesArray);
-    DeviceID := IntToStr(ADevice.ID);
-    SelectDevice(DeviceID);
+    Params := ReadDriverParams(ValuesArray);
+    Driver.Disconnect;
+    Driver.Params := Params.DriverParams;
+    Driver.LockPort;
+    try
+      //ProgramPayNames;
+      //SetUserPassword;
+      Driver.Check(Driver.ReadDeviceVersion(DeviceVersion));
+
+      ADevice := Devices.Add;
+      ADevice.Params := Params;
+      DeviceID := IntToStr(ADevice.ID);
+      SetDevice(ADevice);
+    finally
+      Driver.UnlockPort;
+    end;
   except
     on E: Exception do
     begin
-      ADevice.Free;
       Result := False;
       HandleException(E);
     end;
@@ -403,8 +560,10 @@ begin
   Result := True;
   try
     SelectDevice(DeviceID);
+    (*
     Device.OpenCheck(IsFiscalCheck, IsReturnCheck,
       CancelOpenedCheck, ACheckNumber, ASessionNumber);
+    *)
   except
     on E: Exception do
     begin
@@ -432,8 +591,10 @@ begin
   Result := True;
   try
     SelectDevice(DeviceID);
+    (*
     Device.PrintFiscalString(AName, AQuantity, APrice,
       AAmount, ADepartment, ATax);
+    *)
   except
     on E: Exception do
     begin
@@ -452,7 +613,7 @@ begin
   Result := True;
   try
     SelectDevice(DeviceID);
-    Device.PrintNonFiscalString(TextString);
+    //Device.PrintNonFiscalString(TextString);
   except
     on E: Exception do
     begin
@@ -463,12 +624,27 @@ begin
 end;
 
 function TDriver1Cst.PrintXReport(const DeviceID: WideString): WordBool;
+var
+  Cashier: TMTSCashier;
+  DayStatus: TMTSDayStatus;
 begin
   ClearError;
   Result := True;
   try
     SelectDevice(DeviceID);
-    Device.PrintXReport;
+    // Set cashier
+    Cashier.Name := Device.Params.CashierName;
+    Cashier.INN := Device.Params.CashierINN;
+    if (Cashier.Name <> '')and(Cashier.INN <> '') then
+    begin
+      Driver.Check(Driver.WriteCashier(Cashier));
+    end;
+    // X report
+    Driver.Check(Driver.MakeXReport(DayStatus));
+    if Device.Params.PrintRequired then
+    begin
+      Driver.Check(Driver.Print);
+    end;
   except
     on E: Exception do
     begin
@@ -478,13 +654,14 @@ begin
   end;
 end;
 
+
 function TDriver1Cst.PrintZReport(const DeviceID: WideString): WordBool;
 begin
   ClearError;
   Result := True;
   try
     SelectDevice(DeviceID);
-    Device.PrintZReport;
+    //Device.PrintZReport;
   except
     on E: Exception do
     begin
@@ -527,7 +704,7 @@ begin
   Result := True;
   try
     SelectDevice(DeviceID);
-    Device.CheckPrintingStatus;
+    //Device.CheckPrintingStatus;
   except
     on E: Exception do
     begin
@@ -543,7 +720,7 @@ begin
   Result := True;
   try
     SelectDevice(DeviceID);
-    Device.ContinuePrinting;
+    //Device.ContinuePrinting;
   except
     on E: Exception do
     begin
@@ -561,7 +738,7 @@ begin
   Result := True;
   try
     SelectDevice(DeviceID);
-    Device.OpenCashDrawer(CashDrawerID);
+    //Device.OpenCashDrawer(CashDrawerID);
   except
     on E: Exception do
     begin
@@ -582,8 +759,10 @@ begin
   try
     ADevice := Devices.Add;
     try
+      (*
       ADevice.LoadLogo(ValuesArray, LogoFileName, CenterLogo,
         LogoSize, AdditionalDescription);
+      *)
     finally
       ADevice.Free;
     end;
@@ -601,7 +780,7 @@ begin
   Result := True;
   try
     SelectDevice(DeviceID);
-    Device.OpenSession;
+    //Device.OpenSession;
   except
     on E: Exception do
     begin
@@ -619,7 +798,7 @@ begin
   Result := True;
   try
     SelectDevice(DeviceID);
-    Device.DeviceControl(TxData, RxData);
+    //Device.DeviceControl(TxData, RxData);
   except
     on E: Exception do
     begin
@@ -656,7 +835,7 @@ begin
   Result := True;
   try
     SelectDevice(DeviceID);
-    Device.OpenShift;
+    //Device.OpenShift;
   except
     on E: Exception do
     begin
@@ -674,8 +853,10 @@ begin
   Result := True;
   try
     SelectDevice(DeviceID);
+    (*
     Device.PrintFiscalString2(AName, AQuantity, APrice,
       AAmount, ADepartment, ATax1, ATax2, ATax3, ATax4);
+    *)
   except
     on E: Exception do
     begin
@@ -693,7 +874,7 @@ end;
 
 function TDriver1Cst.GetLogPath: string;
 begin
-  Result := FDriver.ComLogFile;
+  //Result := FDriver.ComLogFile;
 end;
 
 end.

@@ -168,7 +168,6 @@
         <DCCReference Include="Units\ParamList1CItem.pas"/>
         <DCCReference Include="Units\Param1CChoiceList.pas"/>
         <DCCReference Include="Units\FDTypes.pas"/>
-        <DCCReference Include="Units\Params1C.pas"/>
         <DCCReference Include="Units\Types1C.pas"/>
         <DCCReference Include="..\Shared\DriverTypes.pas"/>
         <DCCReference Include="..\Shared\GlobalConst.pas"/>
@@ -186,6 +185,7 @@
         <DCCReference Include="MitsuLib_TLB.pas"/>
         <DCCReference Include="Units\oleMain1C10.pas"/>
         <DCCReference Include="Units\Driver1Cst.pas"/>
+        <DCCReference Include="Units\Params1C.pas"/>
         <RidlCompile Include="MitsuDrv1C.ridl"/>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>

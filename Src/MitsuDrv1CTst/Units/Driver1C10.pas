@@ -46,7 +46,7 @@ type
     procedure DeviceControl; override; 
     procedure DeviceControlHEX; override; 
     procedure GetLastError; override; 
-    procedure SetConnectionParams; override; 
+    procedure SetConnectionParams; override;
     function GetSerialNumber: WideString; override; 
     function GetDrvVersion: Integer; override; 
     function GetLastError(var Desc: WideString): Integer; override; 
@@ -247,8 +247,8 @@ end;
 constructor TDriver1C10.Create;
 begin
   inherited;
-  FValuesArray := TArray1C.Create;
-  FLogoValuesArray := TArray1C.Create;
+  FValuesArray := TArray1C.Create(nil);
+  FLogoValuesArray := TArray1C.Create(nil);
 end;
 
 destructor TDriver1C10.Destroy;
@@ -490,7 +490,7 @@ end;
 function TDriver1C10.GetDriver: IMitsu1C;
 begin
   if FDriver = nil then
-    FDriver := CreateOleObject('Addin.Mitsu1C30') as IMitsu1C;
+    FDriver := CreateOleObject('Addin.Mitsu1C') as IMitsu1C;
   Result := FDriver;
 end;
 

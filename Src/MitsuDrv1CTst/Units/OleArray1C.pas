@@ -8,14 +8,14 @@ interface
 
 uses
   // VCL
-  Windows, ComObj, ActiveX, StdVcl,
+  Windows, Classes, ComObj, ActiveX, StdVcl,
   // This
   MitsuDrv1CTst_TLB;
 
 type
   { TArray1C }
 
-  TArray1C = class(TAutoObject, IArray1C)
+  TArray1C = class(TAutoObject, IDispatch, IArray1C)
   private
     FData: array[0..50] of OleVariant;
   public
@@ -36,21 +36,16 @@ end;
 
 function TArray1C.Get(Index: Integer): OleVariant;
 begin
-  if Index = 5 then
-    Result := string(FData[Index])
-  else
   Result := FData[Index];
 end;
 
 procedure TArray1C.Set_(Index: Integer; Value: OleVariant);
 begin
-  if Index = 5 then
-    FData[Index] := string(Value)
-  else
   FData[Index] := Value;
 end;
 
 initialization
   TAutoObjectFactory.Create(ComServer, TArray1C, Class_Array1C,
     ciMultiInstance, tmApartment);
+
 end.

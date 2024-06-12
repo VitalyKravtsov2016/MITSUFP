@@ -210,10 +210,9 @@ end;
 
 procedure TfmMain.Initialize;
 begin
-  VLE_AddPickProperty(vleParams, 'ConnectionType', '0. Local', ['0. Local', '1. TCP', '2. DCOM', '3. Escape', '4. Сервер печати', '5. Эмулятор ФР', '6. TCP socket'], [0, 1, 2, 3, 4, 5, 6]);
-  VLE_AddPickProperty(vleParams, 'ProtocolType', '0. Стандартный', ['0. Стандартный', '1. Протокол ККТ 2.0'], [0, 1]);
-  VLE_AddProperty(vleParams, 'Port', '1');
-  VLE_AddPickProperty(vleParams, 'Speed', '19200', ['2400', '4800', '9600', '19200', '38400', '57600', '115200'], [2400, 4800, 9600, 19200, 38400, 57600, 115200]);
+  VLE_AddPickProperty(vleParams, 'ConnectionType', '0. Local', ['0. Local', '1. TCP'], [0, 1]);
+  VLE_AddProperty(vleParams, 'PortName', 'COM1');
+  VLE_AddPickProperty(vleParams, 'BaudRate', '115200', ['2400', '4800', '9600', '19200', '38400', '57600', '115200'], [2400, 4800, 9600, 19200, 38400, 57600, 115200]);
   VLE_AddProperty(vleParams, 'UserPassword', '1');
   VLE_AddProperty(vleParams, 'AdminPassword', '30');
   VLE_AddProperty(vleParams, 'Timeout', '100');

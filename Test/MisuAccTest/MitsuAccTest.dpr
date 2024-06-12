@@ -3,7 +3,8 @@ program MitsuAccTest;
 uses
   TestFramework,
   GUITestRunner,
-  duMitsuDrv1C in 'Units\duMitsuDrv1C.pas' {$R *.res},
+  {$R}
+  duDriver1Cst in 'Units\duDriver1Cst.pas' {$R *.res},
   MitsuLib_TLB in '..\..\Src\MitsuDrv1C\MitsuLib_TLB.pas',
   FileUtils in '..\..\Src\Shared\FileUtils.pas',
   XmlUtils in '..\..\Src\MitsuDrv1C\Units\XmlUtils.pas',

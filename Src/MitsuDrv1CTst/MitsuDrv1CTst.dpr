@@ -6,7 +6,6 @@ uses
   LogFile in '..\Shared\LogFile.pas',
   Driver1C10 in 'Units\Driver1C10.pas',
   fmuMain in 'FMU\fmuMain.pas' {fmMain},
-  OleArray1C in 'Units\OleArray1C.pas' {Array1C: CoClass},
   MitsuDrv1CTst_TLB in 'MitsuDrv1CTst_TLB.pas',
   LanguageExtender in 'Units\LanguageExtender.pas',
   RegExpr in '..\Shared\RegExpr.pas',
@@ -20,7 +19,8 @@ uses
   AddIn1CInterface in 'Units\AddIn1CInterface.pas',
   WideException in '..\Shared\WideException.pas',
   MitsuLib_TLB in '..\MitsuDrv1C\MitsuLib_TLB.pas',
-  gnugettext in '..\Shared\gnugettext.pas';
+  gnugettext in '..\Shared\gnugettext.pas',
+  OleArray1C in 'Units\OleArray1C.pas';
 
 {$R *.TLB}
 

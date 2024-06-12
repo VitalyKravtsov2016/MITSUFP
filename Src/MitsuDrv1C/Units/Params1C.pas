@@ -11,7 +11,7 @@ uses
 const
   // Value indexes
   DRVFR_VALUE_INDEX_PORT = 0;
-  DRVFR_VALUE_INDEX_SPEED = 1;
+  DRVFR_VALUE_INDEX_BAUDRATE = 1;
   DRVFR_VALUE_INDEX_USERPASSWORD = 2;
   DRVFR_VALUE_INDEX_ADMINPASSWORD = 3;
   DRVFR_VALUE_INDEX_TIMEOUT = 4;
@@ -164,7 +164,7 @@ var
 begin
   V := AValuesArray;
   sPort := GetIntParamValueAsString(V, DRVFR_VALUE_INDEX_PORT);
-  sSpeed := GetIntParamValueAsString(V, DRVFR_VALUE_INDEX_SPEED);
+  sSpeed := GetIntParamValueAsString(V, DRVFR_VALUE_INDEX_BAUDRATE);
   sUserPassword := GetStrParamValueAsString(V, DRVFR_VALUE_INDEX_USERPASSWORD);
   sAdminPassword := GetStrParamValueAsString(V,
     DRVFR_VALUE_INDEX_ADMINPASSWORD);

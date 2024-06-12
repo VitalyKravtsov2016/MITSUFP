@@ -120,7 +120,6 @@ type
 
     function GetLogger: ILogFile;
     function ReadOutputParameters: AnsiString;
-    function ReadValuesArray(const AValuesArray: IDispatch): T1CDriverParams;
     function GetAdditionalDescription: WideString;
 
     property Device: TDevice read FDevice;
@@ -385,88 +384,6 @@ end;
 function TMitsuDrv1C.GetAdditionalDescription: WideString;
 begin
   Result := Format('%.2xh, %s', [FResultCode, FResultDescription]);
-end;
-
-function TMitsuDrv1C.ReadValuesArray(const AValuesArray: IDispatch)
-  : T1CDriverParams;
-var
-  V: Variant;
-begin
-  V := AValuesArray;
-
-  if not GetIntParamValue(V, DRVFR_VALUE_INDEX_PORT, Result.Port) then
-    RaiseInvalidValue('Port');
-
-  if not GetIntParamValue(V, DRVFR_VALUE_INDEX_SPEED, Result.Speed) then
-    RaiseInvalidValue('Speed');
-
-  if not GetStrParamValue(V, DRVFR_VALUE_INDEX_USERPASSWORD, Result.UserPassword)
-  then
-    RaiseInvalidValue('UserPassword');
-
-  if not GetStrParamValue(V, DRVFR_VALUE_INDEX_ADMINPASSWORD,
-    Result.AdminPassword) then
-    RaiseInvalidValue('AdminPassword)');
-
-  if not GetIntParamValue(V, DRVFR_VALUE_INDEX_TIMEOUT, Result.Timeout) then
-    RaiseInvalidValue('Timeout');
-
-  if not GetSingleParamValue(V, DRVFR_VALUE_INDEX_TAX1, Result.Tax[1]) then
-    RaiseInvalidValue('Tax1');
-
-  if not GetSingleParamValue(V, DRVFR_VALUE_INDEX_TAX2, Result.Tax[2]) then
-    RaiseInvalidValue('Tax2');
-
-  if not GetSingleParamValue(V, DRVFR_VALUE_INDEX_TAX3, Result.Tax[3]) then
-    RaiseInvalidValue('Tax3');
-
-  if not GetSingleParamValue(V, DRVFR_VALUE_INDEX_TAX4, Result.Tax[4]) then
-    RaiseInvalidValue('Tax4');
-
-  if not GetBoolParamValue(V, DRVFR_VALUE_INDEX_CLOSESESSION,
-    Result.CloseSession) then
-    RaiseInvalidValue('CloseSession');
-
-  if not GetBoolParamValue(V, DRVFR_VALUE_INDEX_ENABLELOG, Result.EnableLog)
-  then
-    RaiseInvalidValue('EnableLog');
-
-  if not GetStrParamValue(V, DRVFR_VALUE_INDEX_PAYNAME1, Result.PayNames[1])
-  then
-    RaiseInvalidValue('PayName1');
-
-  if not GetStrParamValue(V, DRVFR_VALUE_INDEX_PAYNAME2, Result.PayNames[2])
-  then
-    RaiseInvalidValue('PayName2');
-
-  if not GetBoolParamValue(V, DRVFR_VALUE_INDEX_PRINTLOGO, Result.PrintLogo)
-  then
-    Result.PrintLogo := DEF_PRINTLOGO;
-
-  if not GetIntParamValue(V, DRVFR_VALUE_INDEX_LOGOSIZE, Result.LogoSize) then
-    Result.LogoSize := DEF_LOGOSIZE;
-
-  if not GetIntParamValue(V, DRVFR_VALUE_INDEX_CONNECTION_TYPE,
-    Result.ConnectionType) then
-    Result.ConnectionType := DEF_CONNECTION_TYPE;
-
-  if not GetStrParamValue(V, DRVFR_VALUE_INDEX_COMPUTERNAME, Result.ComputerName)
-  then
-    Result.ComputerName := DEF_COMPUTERNAME;
-
-  if not GetStrParamValue(V, DRVFR_VALUE_INDEX_IPADDRESS, Result.IPAddress) then
-    Result.IPAddress := DEF_IPADDRESS;
-
-  if not GetIntParamValue(V, DRVFR_VALUE_INDEX_TCPPORT, Result.TCPPort) then
-    Result.TCPPort := DEF_TCPPORT;
-
-  if not GetIntParamValue(V, DRVFR_VALUE_INDEX_PROTOCOLTYPE, Result.ProtocolType)
-  then
-    Result.ProtocolType := DEF_PROTOCOLTYPE;
-
-  if not GetBoolParamValue(V, DRVFR_VALUE_INDEX_BUFFERSTRINGS,
-    Result.BufferStrings) then
-    Result.BufferStrings := DEF_BUFFERSTRINGS;
 end;
 
 function TMitsuDrv1C.ReadOutputParameters: AnsiString;
@@ -2478,4 +2395,90 @@ begin
   Result := True;
 end;
 
+(*
+
+function TMitsuDrv1C.ReadValuesArray(const AValuesArray: IDispatch)
+  : T1CDriverParams;
+var
+  V: Variant;
+begin
+  V := AValuesArray;
+
+  if not GetIntParamValue(V, DRVFR_VALUE_INDEX_PORT, Result.Port) then
+    RaiseInvalidValue('Port');
+
+  if not GetIntParamValue(V, DRVFR_VALUE_INDEX_BAUDRATE, Result.Speed) then
+    RaiseInvalidValue('Speed');
+
+  if not GetStrParamValue(V, DRVFR_VALUE_INDEX_USERPASSWORD, Result.UserPassword)
+  then
+    RaiseInvalidValue('UserPassword');
+
+  if not GetStrParamValue(V, DRVFR_VALUE_INDEX_ADMINPASSWORD,
+    Result.AdminPassword) then
+    RaiseInvalidValue('AdminPassword)');
+
+  if not GetIntParamValue(V, DRVFR_VALUE_INDEX_TIMEOUT, Result.Timeout) then
+    RaiseInvalidValue('Timeout');
+
+  if not GetSingleParamValue(V, DRVFR_VALUE_INDEX_TAX1, Result.Tax[1]) then
+    RaiseInvalidValue('Tax1');
+
+  if not GetSingleParamValue(V, DRVFR_VALUE_INDEX_TAX2, Result.Tax[2]) then
+    RaiseInvalidValue('Tax2');
+
+  if not GetSingleParamValue(V, DRVFR_VALUE_INDEX_TAX3, Result.Tax[3]) then
+    RaiseInvalidValue('Tax3');
+
+  if not GetSingleParamValue(V, DRVFR_VALUE_INDEX_TAX4, Result.Tax[4]) then
+    RaiseInvalidValue('Tax4');
+
+  if not GetBoolParamValue(V, DRVFR_VALUE_INDEX_CLOSESESSION,
+    Result.CloseSession) then
+    RaiseInvalidValue('CloseSession');
+
+  if not GetBoolParamValue(V, DRVFR_VALUE_INDEX_ENABLELOG, Result.EnableLog)
+  then
+    RaiseInvalidValue('EnableLog');
+
+  if not GetStrParamValue(V, DRVFR_VALUE_INDEX_PAYNAME1, Result.PayNames[1])
+  then
+    RaiseInvalidValue('PayName1');
+
+  if not GetStrParamValue(V, DRVFR_VALUE_INDEX_PAYNAME2, Result.PayNames[2])
+  then
+    RaiseInvalidValue('PayName2');
+
+  if not GetBoolParamValue(V, DRVFR_VALUE_INDEX_PRINTLOGO, Result.PrintLogo)
+  then
+    Result.PrintLogo := DEF_PRINTLOGO;
+
+  if not GetIntParamValue(V, DRVFR_VALUE_INDEX_LOGOSIZE, Result.LogoSize) then
+    Result.LogoSize := DEF_LOGOSIZE;
+
+  if not GetIntParamValue(V, DRVFR_VALUE_INDEX_CONNECTION_TYPE,
+    Result.ConnectionType) then
+    Result.ConnectionType := DEF_CONNECTION_TYPE;
+
+  if not GetStrParamValue(V, DRVFR_VALUE_INDEX_COMPUTERNAME, Result.ComputerName)
+  then
+    Result.ComputerName := DEF_COMPUTERNAME;
+
+  if not GetStrParamValue(V, DRVFR_VALUE_INDEX_IPADDRESS, Result.IPAddress) then
+    Result.IPAddress := DEF_IPADDRESS;
+
+  if not GetIntParamValue(V, DRVFR_VALUE_INDEX_TCPPORT, Result.TCPPort) then
+    Result.TCPPort := DEF_TCPPORT;
+
+  if not GetIntParamValue(V, DRVFR_VALUE_INDEX_PROTOCOLTYPE, Result.ProtocolType)
+  then
+    Result.ProtocolType := DEF_PROTOCOLTYPE;
+
+  if not GetBoolParamValue(V, DRVFR_VALUE_INDEX_BUFFERSTRINGS,
+    Result.BufferStrings) then
+    Result.BufferStrings := DEF_BUFFERSTRINGS;
+end;
+
+
+*)
 end.

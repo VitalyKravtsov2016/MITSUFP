@@ -7,11 +7,12 @@
     <Transaction>1899.12.30 00:00:00.000.516,=D:\projects\Mitsu1C\Src\Shared\FileUtils.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.521,D:\projects\Mitsu1C\Test\MisuAccTest\MitsuAccTest.dproj=D:\projects\Mitsu1C\Test\MisuAccTest\MitsuDrvTest.dproj</Transaction>
     <Transaction>1899.12.30 00:00:00.000.953,=D:\projects\Mitsu1C\Src\Shared\StringUtils.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.579,=D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\XmlUtils.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.876,=C:\projects\OposMitsu\Src\Shared\gnugettext.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.482,=D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\GS1Barcode.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.172,=D:\projects\Mitsu1C\Src\Shared\LogFile.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.579,=D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\XmlUtils.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.482,=D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\GS1Barcode.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.876,=C:\projects\OposMitsu\Src\Shared\gnugettext.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.219,=D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\GS1Util.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.172,=D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\XmlDoc1C.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.904,D:\projects\Mitsu1C\Test\MisuAccTest\Units\duMitsuDrv1C.pas=D:\projects\Mitsu1C\Test\MisuAccTest\Units\duDriver1Cst.pas</Transaction>
   </Transactions>
 </BorlandProject>

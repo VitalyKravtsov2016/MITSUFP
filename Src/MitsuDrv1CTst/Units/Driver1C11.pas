@@ -245,7 +245,7 @@ function TDriver1C11.GetDriver: IMitsu1C11;
 begin
   if FDriver = nil then
   begin
-    FDriver := CreateOleObject('Addin.Mitsu1C30') as IMitsu1C11;
+    FDriver := CreateOleObject('Addin.Mitsu1C11') as IMitsu1C11;
   end;
   Result := FDriver;
 end;

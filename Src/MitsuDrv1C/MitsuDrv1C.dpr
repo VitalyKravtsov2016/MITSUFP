@@ -27,7 +27,6 @@ uses
   ParamList1CItem in 'Units\ParamList1CItem.pas',
   Param1CChoiceList in 'Units\Param1CChoiceList.pas',
   FDTypes in 'Units\FDTypes.pas',
-  Params1C in 'Units\Params1C.pas',
   Types1C in 'Units\Types1C.pas',
   DriverTypes in '..\Shared\DriverTypes.pas',
   GlobalConst in '..\Shared\GlobalConst.pas',
@@ -44,7 +43,8 @@ uses
   FileUtils in '..\Shared\FileUtils.pas',
   MitsuLib_TLB in 'MitsuLib_TLB.pas',
   oleMain1C10 in 'Units\oleMain1C10.pas',
-  Driver1Cst in 'Units\Driver1Cst.pas';
+  Driver1Cst in 'Units\Driver1Cst.pas',
+  Params1C in 'Units\Params1C.pas';
 
 {$E dll}
 
