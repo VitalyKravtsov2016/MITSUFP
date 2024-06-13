@@ -6,11 +6,11 @@
     <Transaction>1899.12.30 00:00:00.000.000,=C:\projects\OposMitsu\Src\MitsuDrv1C\Units\oleMain1C10.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.666,=D:\projects\MITSUFP\Src\Shared\gnugettext.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.726,=D:\projects\Mitsu1C\Src\Shared\FileUtils.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.360,=D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\OleMain1C22.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.184,D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\OleMain1C22.pas=</Transaction>
     <Transaction>1899.12.30 00:00:00.000.446,D:\projects\MITSUFP\Src\MitsuDrv1C\Units\ComServ2.pas=</Transaction>
     <Transaction>1899.12.30 00:00:00.000.080,=D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\Driver1Cst22.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.328,D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\Driver1Cst22.pas=</Transaction>
     <Transaction>1899.12.30 00:00:00.000.311,D:\projects\MITSUFP\Src\MitsuDrv1C\Units\AxCtrls2.pas=</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.184,D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\OleMain1C22.pas=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.360,=D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\OleMain1C22.pas</Transaction>
   </Transactions>
 </BorlandProject>

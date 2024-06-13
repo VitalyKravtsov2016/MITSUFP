@@ -6,7 +6,7 @@ uses
   // VCL
   SysUtils,
   // This
-  WideException, GNUGetText;
+  WideException;
 
 type
   { EDriverError }
@@ -26,7 +26,7 @@ implementation
 
 procedure raiseOpenKeyError(const KeyName: WideString);
 begin
-  raiseExceptionFmt('%s: %s', [_('Error opening registry'), KeyName]);
+  raiseExceptionFmt('%s: %s', ['Error opening registry', KeyName]);
 end;
 
 { EDriverError }

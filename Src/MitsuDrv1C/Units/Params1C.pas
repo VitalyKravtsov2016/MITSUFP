@@ -6,7 +6,7 @@ uses
   // VCL
   SysUtils,
   // This
-  LangUtils, DriverError, Types1C, DriverTypes;
+  DriverError, Types1C, DriverTypes;
 
 const
   // Value indexes
@@ -94,7 +94,7 @@ end;
 
 procedure RaiseInvalidValue(const ValueName: string);
 begin
-  RaiseError(E_INVALIDPARAM, Format('%s, "%s"', [GetRes(@SErrorParameterRead),
+  RaiseError(E_INVALIDPARAM, Format('%s, "%s"', [SErrorParameterRead,
     ValueName]));
 end;
 

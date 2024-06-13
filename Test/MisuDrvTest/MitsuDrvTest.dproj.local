@@ -1,17 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.396,=D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\Driver1Cst.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.303,C:\projects\OposMitsu\Src\Shared\FileUtils.pas=</Transaction>
     <Transaction>1899.12.30 00:00:00.000.186,=C:\projects\OposMitsu\Src\Shared\FileUtils.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.541,=D:\projects\Mitsu1C\Test\MisuAccTest\Units\duDriver1Cst.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.303,C:\projects\OposMitsu\Src\Shared\FileUtils.pas=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.910,D:\projects\Mitsu1C\Test\MisuDrvTest\Unit1.pas=D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\ParamList.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.876,=C:\projects\OposMitsu\Src\Shared\gnugettext.pas</Transaction>
-    <Transaction>2024.06.12 13:28:52.682,=D:\projects\Mitsu1C\Test\MisuDrvTest\Unit1.pas</Transaction>
-    <Transaction>2024.06.12 13:29:16.910,D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\ParamList.pas=D:\projects\Mitsu1C\Test\MisuDrvTest\Unit1.pas</Transaction>
-    <Transaction>2024.06.12 14:50:25.861,=D:\projects\Mitsu1C\Src\MitsuDrv1CTst\MitsuDrv1CTst_TLB.pas</Transaction>
-    <Transaction>2024.06.12 14:59:31.284,=D:\projects\Mitsu1C\Src\MitsuDrv1CTst\Units\OleArray1C.pas</Transaction>
-    <Transaction>2024.06.12 19:44:08.736,D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\ParamList.pas=</Transaction>
-    <Transaction>2024.06.12 19:45:23.613,=D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\ParamList.pas</Transaction>
-    <Transaction>2024.06.12 20:49:24.446,D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\ParamList.pas=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.284,=D:\projects\Mitsu1C\Src\MitsuDrv1CTst\Units\OleArray1C.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.861,=D:\projects\Mitsu1C\Src\MitsuDrv1CTst\MitsuDrv1CTst_TLB.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.682,=D:\projects\Mitsu1C\Test\MisuDrvTest\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.613,=D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\ParamList.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.736,D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\ParamList.pas=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.541,=D:\projects\Mitsu1C\Test\MisuAccTest\Units\duDriver1Cst.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.396,=D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\Driver1Cst.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.446,D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\ParamList.pas=</Transaction>
+    <Transaction>2024.06.13 15:30:58.537,C:\projects\OposMitsu\Src\Shared\gnugettext.pas=</Transaction>
+    <Transaction>2024.06.13 15:58:44.280,C:\projects\OposMitsu\Src\Shared\TranslationUtil.pas=</Transaction>
   </Transactions>
 </BorlandProject>

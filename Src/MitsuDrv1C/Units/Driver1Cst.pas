@@ -4,7 +4,7 @@ interface
 
 uses
   // VCL
-  Classes, SysUtils,
+  Classes, SysUtils, Variants,
   // This
   LogFile, VersionInfo, DriverError, DriverTypes, Types1C,
   StringUtils, TextEncoding, LangUtils, MitsuDrv, Params1C;
@@ -21,6 +21,13 @@ const
   IdxCashierName = 8;
   IdxCashierINN = 9;
   IdxPrintRequired = 10;
+  IdxSaleAddress = 11;
+  IdxSaleLocation = 12;
+  IdxExtendedProperty = 13;
+  IdxExtendedData = 14;
+  IdxTaxSystem = 15;
+  IdxAutomaticNumber = 16;
+  IdxSenderEmail = 17;
 
 type
   { TDriverParams }
@@ -30,6 +37,14 @@ type
     CashierName: WideString;
     CashierINN: WideString;
     PrintRequired: Boolean;
+    SaleAddress: WideString; // Адрес проведения расчетов
+    SaleLocation: WideString; // Место проведения расчетов
+    ExtendedProperty: WideString; // дополнительный реквизит ОР
+    ExtendedData: WideString; // дополнительные данные ОР
+    TaxSystem: Integer; // Система налогообложения
+    AutomaticNumber: WideString; // Номер автомата для автоматического режима
+    SenderEmail: WideString; // Адрес электронной почты отправителя чека
+    Correction: TMTSCorrection;
 
     (*
     AdminPassword: Integer;
@@ -99,7 +114,6 @@ type
     constructor Create(ALogger: ILogFile);
     destructor Destroy; override;
 
-    function GetLogPath: string;
     function Open(const ValuesArray: IDispatch; var DeviceID: WideString): WordBool; virtual;
     function CashInOutcome(const DeviceID: WideString;
       Amount: Double): WordBool;
@@ -120,7 +134,6 @@ type
     function PrintNonFiscalString(const DeviceID,
       TextString: WideString): WordBool;
     function PrintXReport(const DeviceID: WideString): WordBool;
-    function OpenShift(const DeviceID: WideString): WordBool;
     function PrintZReport(const DeviceID: WideString): WordBool;
     function CancelCheck(const DeviceID: WideString): WordBool;
     function CheckPrintingStatus(const DeviceID: WideString): WordBool;
@@ -140,6 +153,9 @@ type
 
 function GetParamName(Index: Integer): string;
 function GetParamValue(V: Variant; Index: Integer): Variant;
+function GetStrParamValue(V: Variant; Index: Integer): string;
+function GetIntParamValue(V: Variant; Index: Integer): Integer;
+function GetBoolParamValue(V: Variant; Index: Integer): Boolean;
 procedure SetParamValue(V: Variant; Index: Integer; Value: Variant);
 
 function ReadDriverParams(V: Variant): TDriverParams;
@@ -149,17 +165,24 @@ implementation
 
 function ReadDriverParams(V: Variant): TDriverParams;
 begin
-  Result.DriverParams.ConnectionType := GetParamValue(V, IdxConnectionType);
-  Result.DriverParams.PortName := GetParamValue(V, IdxPortName);
-  Result.DriverParams.BaudRate := GetParamValue(V, IdxBaudRate);
-  Result.DriverParams.ByteTimeout := GetParamValue(V, IdxByteTimeout);
-  Result.DriverParams.RemoteHost := GetParamValue(V, IdxRemoteHost);
-  Result.DriverParams.RemotePort := GetParamValue(V, IdxRemotePort);
-  Result.DriverParams.LogPath := GetParamValue(V, IdxLogPath);
-  Result.DriverParams.LogEnabled := GetParamValue(V, IdxLogEnabled);
-  Result.CashierName := GetParamValue(V, IdxCashierName);
-  Result.CashierINN := GetParamValue(V, IdxCashierINN);
-  Result.PrintRequired := GetParamValue(V, IdxPrintRequired);
+  Result.DriverParams.ConnectionType := GetIntParamValue(V, IdxConnectionType);
+  Result.DriverParams.PortName := GetStrParamValue(V, IdxPortName);
+  Result.DriverParams.BaudRate := GetIntParamValue(V, IdxBaudRate);
+  Result.DriverParams.ByteTimeout := GetIntParamValue(V, IdxByteTimeout);
+  Result.DriverParams.RemoteHost := GetStrParamValue(V, IdxRemoteHost);
+  Result.DriverParams.RemotePort := GetIntParamValue(V, IdxRemotePort);
+  Result.DriverParams.LogPath := GetStrParamValue(V, IdxLogPath);
+  Result.DriverParams.LogEnabled := GetBoolParamValue(V, IdxLogEnabled);
+  Result.CashierName := GetStrParamValue(V, IdxCashierName);
+  Result.CashierINN := GetStrParamValue(V, IdxCashierINN);
+  Result.PrintRequired := GetBoolParamValue(V, IdxPrintRequired);
+  Result.SaleAddress := GetParamValue(V, IdxSaleAddress);
+  Result.SaleLocation := GetParamValue(V, IdxSaleLocation);
+  Result.ExtendedProperty := GetParamValue(V, IdxExtendedProperty);
+  Result.ExtendedData := GetParamValue(V, IdxExtendedData);
+  Result.TaxSystem := GetParamValue(V, IdxTaxSystem);
+  Result.AutomaticNumber := GetParamValue(V, IdxAutomaticNumber);
+  Result.SenderEmail := GetParamValue(V, IdxSenderEmail);
 end;
 
 procedure WriteDriverParams(V: Variant; const Params: TDriverParams);
@@ -175,6 +198,13 @@ begin
   SetParamValue(V, IdxCashierName, Params.CashierName);
   SetParamValue(V, IdxCashierINN, Params.CashierINN);
   SetParamValue(V, IdxPrintRequired, Params.PrintRequired);
+  SetParamValue(V, IdxSaleAddress, Params.SaleAddress);
+  SetParamValue(V, IdxSaleLocation, Params.SaleLocation);
+  SetParamValue(V, IdxExtendedProperty, Params.ExtendedProperty);
+  SetParamValue(V, IdxExtendedData, Params.ExtendedData);
+  SetParamValue(V, IdxTaxSystem, Params.TaxSystem);
+  SetParamValue(V, IdxAutomaticNumber, Params.AutomaticNumber);
+  SetParamValue(V, IdxSenderEmail, Params.SenderEmail);
 end;
 
 function GetParamName(Index: Integer): string;
@@ -194,6 +224,21 @@ begin
   else
     Result := 'Unknown'
   end;
+end;
+
+function GetIntParamValue(V: Variant; Index: Integer): Integer;
+begin
+  Result := Integer(GetParamValue(V, Index));
+end;
+
+function GetStrParamValue(V: Variant; Index: Integer): string;
+begin
+  Result := String(GetParamValue(V, Index));
+end;
+
+function GetBoolParamValue(V: Variant; Index: Integer): Boolean;
+begin
+  Result := Boolean(GetParamValue(V, Index));
 end;
 
 function GetParamValue(V: Variant; Index: Integer): Variant;
@@ -353,7 +398,7 @@ begin
   try
     ID := StrToInt(DeviceID);
   except
-    RaiseError(E_INVALIDPARAM, Format('%s %s', [GetRes(@SInvalidParam),
+    RaiseError(E_INVALIDPARAM, Format('%s %s', [SInvalidParam,
       '"DeviceID"']));
   end;
 
@@ -361,7 +406,7 @@ begin
   if Device = nil then
   begin
     Logger.Error(Format('Device "%s"  not found', [DeviceID]));
-    RaiseError(E_INVALIDPARAM, GetRes(@SDeviceNotActive));
+    RaiseError(E_INVALIDPARAM, SDeviceNotActive);
   end;
   SetDevice(Device);
   Logger.Debug('SelectDevice.end');
@@ -551,19 +596,32 @@ end;
 
 {	Открывает новый чек }
 
-function TDriver1Cst.OpenCheck(
-  const DeviceID: WideString;
+function TDriver1Cst.OpenCheck(const DeviceID: WideString;
   IsFiscalCheck, IsReturnCheck, CancelOpenedCheck: WordBool;
   var ACheckNumber, ASessionNumber: Integer): WordBool;
+var
+  Params: TMTSOpenReceipt;
 begin
   ClearError;
   Result := True;
   try
     SelectDevice(DeviceID);
-    (*
-    Device.OpenCheck(IsFiscalCheck, IsReturnCheck,
-      CancelOpenedCheck, ACheckNumber, ASessionNumber);
-    *)
+
+  //CancelOpenedCheck: WordBool; var ACheckNumber, ASessionNumber
+
+    if IsFiscalCheck then
+    begin
+      Params.ReceiptType := MTS_RT_SALE;
+      if IsReturnCheck then
+        Params.ReceiptType := MTS_RT_RETSALE;
+
+    end;
+    Params.TaxSystem := Device.Params.TaxSystem;
+    Params.SaleAddress := Device.Params.SaleAddress;
+    Params.SaleLocation := Device.Params.SaleLocation;
+    Params.AutomaticNumber := Device.Params.AutomaticNumber;
+    Params.SenderEmail := Device.Params.SenderEmail;
+    Driver.Check(Driver.OpenReceipt(Params));
   except
     on E: Exception do
     begin
@@ -613,6 +671,7 @@ begin
   Result := True;
   try
     SelectDevice(DeviceID);
+    Driver.PrintDocument
     //Device.PrintNonFiscalString(TextString);
   except
     on E: Exception do
@@ -656,12 +715,34 @@ end;
 
 
 function TDriver1Cst.PrintZReport(const DeviceID: WideString): WordBool;
+var
+  Cashier: TMTSCashier;
+  DayParams: TMTSDayParams;
 begin
   ClearError;
   Result := True;
   try
     SelectDevice(DeviceID);
-    //Device.PrintZReport;
+    // Set cashier
+    Cashier.Name := Device.Params.CashierName;
+    Cashier.INN := Device.Params.CashierINN;
+    if (Cashier.Name <> '')and(Cashier.INN <> '') then
+    begin
+      Driver.Check(Driver.WriteCashier(Cashier));
+    end;
+    // Z report
+    DayParams.SaleAddress := Device.Params.SaleAddress;
+    DayParams.SaleLocation := Device.Params.SaleLocation;
+    DayParams.ExtendedProperty := Device.Params.ExtendedProperty;
+    DayParams.ExtendedData := Device.Params.ExtendedData;
+    DayParams.PrintRequired := Device.Params.PrintRequired;
+    Driver.Check(Driver.CloseFiscalDay(DayParams));
+    (*
+    if Device.Params.PrintRequired then
+    begin
+      Driver.Check(Driver.Print);
+    end;
+    *)
   except
     on E: Exception do
     begin
@@ -720,7 +801,7 @@ begin
   Result := True;
   try
     SelectDevice(DeviceID);
-    //Device.ContinuePrinting;
+    //Device.ContinuePrinting; !!!
   except
     on E: Exception do
     begin
@@ -730,15 +811,13 @@ begin
   end;
 end;
 
-// Установка пароля администратора
-// Установка пароля пользователя
 function TDriver1Cst.OpenCashDrawer(const DeviceID: WideString;
   CashDrawerID: Integer): WordBool;
 begin
   Result := True;
   try
     SelectDevice(DeviceID);
-    //Device.OpenCashDrawer(CashDrawerID);
+    Driver.Check(Driver.OpenCashDrawer);
   except
     on E: Exception do
     begin
@@ -751,21 +830,13 @@ end;
 function TDriver1Cst.LoadLogo(const ValuesArray: IDispatch;
   const LogoFileName: WideString; CenterLogo: WordBool; var LogoSize: Integer;
   var AdditionalDescription: WideString): WordBool;
-var
-  ADevice: TDevice1C;
 begin
   ClearError;
   Result := True;
   try
-    ADevice := Devices.Add;
-    try
-      (*
-      ADevice.LoadLogo(ValuesArray, LogoFileName, CenterLogo,
-        LogoSize, AdditionalDescription);
-      *)
-    finally
-      ADevice.Free;
-    end;
+    Params := ReadDriverParams(ValuesArray);
+    Driver.Params := Params.DriverParams;
+    // !!!
   except
     on E: Exception do
     begin
@@ -775,30 +846,20 @@ begin
   end;
 end;
 
-function TDriver1Cst.OpenSession(const DeviceID: WideString): WordBool;
-begin
-  Result := True;
-  try
-    SelectDevice(DeviceID);
-    //Device.OpenSession;
-  except
-    on E: Exception do
-    begin
-      Result := False;
-      HandleException(E);
-    end;
-  end;
-end;
-
 function TDriver1Cst.DeviceControl(const DeviceID: WideString;
   const TxData: WideString; var RxData: WideString): WordBool;
+var
+  Tx, Rx: AnsiString;
 begin
   ClearError;
   RxData := '';
   Result := True;
   try
     SelectDevice(DeviceID);
-    //Device.DeviceControl(TxData, RxData);
+    SelectDevice(DeviceID);
+    Tx := TxData;
+    Driver.Check(Driver.Send(Tx, Rx));
+    RxData := Rx;
   except
     on E: Exception do
     begin
@@ -811,14 +872,14 @@ end;
 function TDriver1Cst.DeviceControlHex(const DeviceID: WideString;
   const TxData: WideString; var RxData: WideString): WordBool;
 var
-  Tx, Rx: WideString;
+  Tx, Rx: AnsiString;
 begin
   ClearError;
   RxData := '';
   try
+    SelectDevice(DeviceID);
     Tx := HexToStr(TxData);
-    Result := DeviceControl(DeviceID, Tx, Rx);
-    if not Result then Exit;
+    Driver.Check(Driver.Send(Tx, Rx));
     RxData := StrToHex(Rx);
   except
     on E: Exception do
@@ -829,34 +890,29 @@ begin
   end;
 end;
 
-function TDriver1Cst.OpenShift(const DeviceID: WideString): WordBool;
+function TDriver1Cst.OpenSession(const DeviceID: WideString): WordBool;
+var
+  Cashier: TMTSCashier;
+  DayParams: TMTSDayParams;
 begin
   ClearError;
   Result := True;
   try
     SelectDevice(DeviceID);
-    //Device.OpenShift;
-  except
-    on E: Exception do
+    // Set cashier
+    Cashier.Name := Device.Params.CashierName;
+    Cashier.INN := Device.Params.CashierINN;
+    if (Cashier.Name <> '')and(Cashier.INN <> '') then
     begin
-      Result := False;
-      HandleException(E);
+      Driver.Check(Driver.WriteCashier(Cashier));
     end;
-  end;
-end;
-
-function TDriver1Cst.PrintFiscalString2(const DeviceID, AName: WideString;
-  AQuantity, APrice, AAmount: Double; ADepartment, ATax1, ATax2, ATax3,
-  ATax4: Integer): WordBool;
-begin
-  ClearError;
-  Result := True;
-  try
-    SelectDevice(DeviceID);
-    (*
-    Device.PrintFiscalString2(AName, AQuantity, APrice,
-      AAmount, ADepartment, ATax1, ATax2, ATax3, ATax4);
-    *)
+    // Z report
+    DayParams.SaleAddress := Device.Params.SaleAddress;
+    DayParams.SaleLocation := Device.Params.SaleLocation;
+    DayParams.ExtendedProperty := Device.Params.ExtendedProperty;
+    DayParams.ExtendedData := Device.Params.ExtendedData;
+    DayParams.PrintRequired := Device.Params.PrintRequired;
+    Driver.Check(Driver.OpenFiscalDay(DayParams));
   except
     on E: Exception do
     begin
@@ -872,10 +928,6 @@ begin
   FResultDescription := 'Ошибок нет';
 end;
 
-function TDriver1Cst.GetLogPath: string;
-begin
-  //Result := FDriver.ComLogFile;
-end;
 
 end.
 

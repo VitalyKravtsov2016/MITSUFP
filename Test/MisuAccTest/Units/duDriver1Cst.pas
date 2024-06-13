@@ -26,12 +26,15 @@ type
     procedure TearDown; override;
   published
     procedure TestParams;
+    procedure TestParams2;
+
     procedure TestOpen;
     procedure TestClose;
     procedure TestDeviceTest;
     procedure TestGetVersion;
     procedure TestPrintXReport;
     procedure TestPrintZReport;
+    procedure TestOpenSession;
   end;
 
 implementation
@@ -63,13 +66,28 @@ begin
   Logger := nil;
 end;
 
-procedure TDriver1CTest.TestParams;
+
+procedure TDriver1CTest.TestParams2;
 var
   V: IDispatch;
-  P: TDriverParams;
-  P2: TDriverParams;
-  M: TMitsuParams;
-  M2: TMitsuParams;
+  s, s2: string;
+  Data: array[0..50] of OleVariant;
+begin
+  s := 'Test';
+  Data[0] := OleVariant(s);
+  CheckEquals(s, Data[0], 'Data[0]');
+
+  V := TArray1C.Create;
+  SetParamValue(V, 0, s);
+  s2 := GetStrParamValue(V, 0);
+  CheckEquals(s, s2, 's2');
+end;
+
+procedure TDriver1CTest.TestParams;
+var
+  V: TArray1C;
+  P, P2: TDriverParams;
+  D, D2: TMitsuParams;
 begin
   V := TArray1C.Create;
 
@@ -85,22 +103,22 @@ begin
   P.CashierINN := '505303696069';
   P.PrintRequired := True;
 
-  WriteDriverParams(V, Params);
-  P2 := ReadDriverParams(V);
+  WriteDriverParams(V as IDispatch, Params);
+  P2 := ReadDriverParams(V as IDispatch);
 
-  D
-  CheckEquals(P.DriverParams.ConnectionType, P2.DriverParams.ConnectionType,
-  Params.DriverParams.PortName := 'COM8';
-  Params.DriverParams.BaudRate := 115200;
-  Params.DriverParams.ByteTimeout := 1000;
-  Params.DriverParams.RemoteHost := '';
-  Params.DriverParams.RemotePort := 0;
-  Params.DriverParams.LogPath := GetModulePath;
-  Params.DriverParams.LogEnabled := True;
-  Params.CashierName := 'CashierName';
-  Params.CashierINN := '505303696069';
-  Params.PrintRequired := True;
-
+  D := P.DriverParams;
+  D2 := P2.DriverParams;
+  CheckEquals(D.ConnectionType, D2.ConnectionType, 'ConnectionType');
+  CheckEquals(D.PortName, D2.PortName, 'PortName');
+  CheckEquals(D.BaudRate, D2.BaudRate, 'BaudRate');
+  CheckEquals(D.ByteTimeout, D2.ByteTimeout, 'ByteTimeout');
+  CheckEquals(D.RemoteHost, D2.RemoteHost, 'RemoteHost');
+  CheckEquals(D.RemotePort, D2.RemotePort, 'RemotePort');
+  CheckEquals(D.LogPath, D2.LogPath, 'LogPath');
+  CheckEquals(D.LogEnabled, D2.LogEnabled, 'LogEnabled');
+  CheckEquals(P.CashierName, P2.CashierName, 'CashierName');
+  CheckEquals(P.CashierINN, P2.CashierINN, 'CashierINN');
+  CheckEquals(P.PrintRequired, P2.PrintRequired, 'PrintRequired');
 end;
 
 procedure TDriver1CTest.TestDeviceTest;
@@ -181,8 +199,27 @@ begin
 end;
 
 procedure TDriver1CTest.TestPrintZReport;
+var
+  V: IArray1C;
+  DeviceID: WideString;
 begin
+  V := TArray1C.Create;
+  WriteDriverParams(V, Params);
+  CheckEquals(True, Driver.Open(Array1C, DeviceID), 'Open');
+  CheckEquals('1', DeviceID, 'DeviceID');
+  CheckEquals(True, Driver.PrintZReport(DeviceID), 'PrintZReport');
+end;
 
+procedure TDriver1CTest.TestOpenSession;
+var
+  V: IArray1C;
+  DeviceID: WideString;
+begin
+  V := TArray1C.Create;
+  WriteDriverParams(V, Params);
+  CheckEquals(True, Driver.Open(Array1C, DeviceID), 'Open');
+  CheckEquals('1', DeviceID, 'DeviceID');
+  CheckEquals(True, Driver.OpenSession(DeviceID), 'OpenShift');
 end;
 
 

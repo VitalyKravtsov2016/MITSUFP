@@ -5,14 +5,11 @@ interface
 uses
   // VCL
   Windows, SysUtils, Classes, Registry, IniFiles,
-  // gnugettext
-  gnugettext,
   // This
   DriverTypes;
 
 function GetLanguage: string;
 procedure SetLanguage(const Language: string);
-function GetRes(Value: PResStringRec): WideString;
 function GetLanguageParamsFileName: string;
 
 implementation
@@ -26,11 +23,6 @@ const
 function GetLanguageParamsFileName: string;
 begin
   Result := IncludeTrailingBackslash(GetUserShtrihPath) + LangParamsFileName;
-end;
-
-function GetRes(Value: PResStringRec): WideString;
-begin
-  Result := LoadResStringW(Value);
 end;
 
 function GetModuleFileName: string;

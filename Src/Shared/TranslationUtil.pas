@@ -5,8 +5,6 @@ interface
 uses
   // VCL
   SysUtils,
-  // gnugettext
-  gnugettext,
   // This
   VersionInfo, LangUtils;
 

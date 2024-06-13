@@ -9,7 +9,7 @@ uses
   DBT,
   // This
   LogFile, PrinterPort, DeviceNotification, PortUtil, TextReport,
-  gnugettext, WideException;
+  WideException;
 
 const
   /// //////////////////////////////////////////////////////////////////////////
@@ -436,7 +436,7 @@ begin
       Break;
 
     if GetLastError = ERROR_ACCESS_DENIED then
-      raise ENoPortError.Create(_('Port is opened by another application'));
+      raise ENoPortError.Create('Port is opened by another application');
 
     if not FParams.ReconnectPort then Break;
     if i = MaxReconnectCount then Break;
@@ -458,7 +458,7 @@ end;
 procedure TSerialPort.CheckOpened;
 begin
   if not Opened then
-    raise ESerialPortError.Create(_('Port not opened'));
+    raise ESerialPortError.Create('Port not opened');
 end;
 
 procedure TSerialPort.ReadCommConfig;
@@ -614,8 +614,8 @@ begin
 
     if Count <> WriteCount then
     begin
-      Logger.Error('Write failed. ' + _('Device not connected'));
-      raise ETimeoutError.Create(_('Write data failed'));
+      Logger.Error('Write failed. Device not connected');
+      raise ETimeoutError.Create('Write data failed');
     end;
   finally
     Unlock;
@@ -644,8 +644,8 @@ begin
     if ReadCount <> Count then
     begin
       Logger.Error(Format('Read data: %d <> %d', [ReadCount, Count]));
-      Logger.Error('Read error. ' + _('Device not connected'));
-      raise ETimeoutError.Create(_('Read data failed'));
+      Logger.Error('Read error. Device not connected');
+      raise ETimeoutError.Create('Read data failed');
     end;
   finally
     Unlock;

@@ -478,7 +478,7 @@ begin
   try
     ID := StrToInt(DeviceID);
   except
-    RaiseError(E_INVALIDPARAM, Format('%s %s', [GetRes(@SInvalidParam),
+    RaiseError(E_INVALIDPARAM, Format('%s %s', [SInvalidParam,
       '"DeviceID"']));
   end;
 
@@ -486,7 +486,7 @@ begin
   if Device = nil then
   begin
     Logger.Error(Format('Device "%s"  not found', [DeviceID]));
-    RaiseError(E_INVALIDPARAM, GetRes(@SDeviceNotActive));
+    RaiseError(E_INVALIDPARAM, SDeviceNotActive);
   end;
 
   if Device <> FDevice then
@@ -838,15 +838,15 @@ resourcestring
 begin
   // СТРАНИЦА Параметры связи
   Page := FParamList.Pages.Add;
-  Page.Caption := GetRes(@SConnectionParams);
+  Page.Caption := SConnectionParams;
   { --- Параметры связи --- }
   Group := Page.Groups.Add;
-  Group.Caption := GetRes(@SConnectionParams); // 'Параметры связи';
+  Group.Caption := SConnectionParams; // 'Параметры связи';
   // Тип подключения
   Item := Group.Items.Add;
   Item.Name := 'ConnectionType';
-  Item.Caption := GetRes(@SConnectionType);
-  Item.Description := GetRes(@SConnectionType);
+  Item.Caption := SConnectionType;
+  Item.Description := SConnectionType;
   Item.TypeValue := 'Number';
   Item.DefaultValue := '0';
   for i := Low(Driver.ValidConnectionTypes)
@@ -856,8 +856,8 @@ begin
   // Порт
   Item := Group.Items.Add;
   Item.Name := 'Port';
-  Item.Caption := GetRes(@SPort);
-  Item.Description := GetRes(@SPort);
+  Item.Caption := SPort;
+  Item.Description := SPort;
   Item.TypeValue := 'Number';
   Item.DefaultValue := '1';
   for i := 1 to 256 do
@@ -865,8 +865,8 @@ begin
   // Baudrate
   Item := Group.Items.Add;
   Item.Name := 'Baudrate';
-  Item.Caption := GetRes(@SBaudrate);
-  Item.Description := GetRes(@SBaudrate);
+  Item.Caption := SBaudrate;
+  Item.Description := SBaudrate;
   Item.TypeValue := 'Number';
   Item.DefaultValue := '115200';
   for i := Low(Driver.ValidBaudRates) to High(Driver.ValidBaudRates) do
@@ -878,271 +878,271 @@ begin
   // Таймаут
   Item := Group.Items.Add;
   Item.Name := 'Timeout';
-  Item.Caption := GetRes(@STimeout);
-  Item.Description := GetRes(@STimeout);
+  Item.Caption := STimeout;
+  Item.Description := STimeout;
   Item.TypeValue := 'Number';
   Item.DefaultValue := '10000';
   // IP адрес
   Item := Group.Items.Add;
   Item.Name := 'IPAddress';
-  Item.Caption := GetRes(@SIPAddress);
-  Item.Description := GetRes(@SIPAddress);
+  Item.Caption := SIPAddress;
+  Item.Description := SIPAddress;
   Item.TypeValue := 'String';
   Item.DefaultValue := '192.168.137.111';
   // TCP Port
   Item := Group.Items.Add;
   Item.Name := 'TCPPort';
-  Item.Caption := GetRes(@STCPPort);
-  Item.Description := GetRes(@STCPPort);
+  Item.Caption := STCPPort;
+  Item.Description := STCPPort;
   Item.TypeValue := 'Number';
   Item.DefaultValue := '7778';
 
   // СТРАНИЦА Параметры Устройства
   Page := FParamList.Pages.Add;
-  Page.Caption := GetRes(@SDeviceParams);
+  Page.Caption := SDeviceParams;
   { --- Параметры устройства --- }
   Group := Page.Groups.Add;
-  Group.Caption := GetRes(@SDeviceParams);
+  Group.Caption := SDeviceParams;
   // Пароль администратора
   Item := Group.Items.Add;
   Item.Name := 'AdminPassword';
-  Item.Caption := GetRes(@SAdminPassword);
-  Item.Description := GetRes(@SAdminPassword);
+  Item.Caption := SAdminPassword;
+  Item.Description := SAdminPassword;
   Item.TypeValue := 'Number';
   Item.DefaultValue := '30';
   // Печать QR
   Item := Group.Items.Add;
   Item.Name := 'BarcodeFirstLine';
-  Item.Caption := GetRes(@SBarcodeFirstLine);
-  Item.Description := GetRes(@SBarcodeFirstLine);
+  Item.Caption := SBarcodeFirstLine;
+  Item.Description := SBarcodeFirstLine;
   Item.TypeValue := 'Number';
   Item.DefaultValue := '1';
   //
   Item := Group.Items.Add;
   Item.Name := 'QRCodeDotWidth';
-  Item.Caption := GetRes(@SQRCodeDotWidth);
-  Item.Description := GetRes(@SQRCodeDotWidth);
+  Item.Caption := SQRCodeDotWidth;
+  Item.Description := SQRCodeDotWidth;
   Item.TypeValue := 'Number';
   Item.DefaultValue := '3';
   //
   Item := Group.Items.Add;
   Item.Name := 'CheckClock';
-  Item.Caption := GetRes(@SCheckClock);
-  Item.Description := GetRes(@SCheckClock);
+  Item.Caption := SCheckClock;
+  Item.Description := SCheckClock;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   // СТРАНИЦА Налоговые ставки и типы оплат
   Page := FParamList.Pages.Add;
-  Page.Caption := GetRes(@STaxRates);
+  Page.Caption := STaxRates;
   { --- Налоговые ставки и типы оплат --- }
   Group := Page.Groups.Add;
-  Group.Caption := GetRes(@STaxRates);
+  Group.Caption := STaxRates;
   // Закрывать смену
   Item := Group.Items.Add;
   Item.Name := 'CloseSession';
-  Item.Caption := GetRes(@SCloseSession);
-  Item.Description := GetRes(@SCloseSession);
+  Item.Caption := SCloseSession;
+  Item.Description := SCloseSession;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'True';
   // Наименование типа оплаты 1
   Item := Group.Items.Add;
   Item.Name := 'PayName1';
-  Item.Caption := GetRes(@SPayName1);
-  Item.Description := GetRes(@SPayName1);
+  Item.Caption := SPayName1;
+  Item.Description := SPayName1;
   Item.TypeValue := 'String';
-  Item.DefaultValue := GetRes(@SPayName1DefaultValue);
+  Item.DefaultValue := SPayName1DefaultValue;
   // Наименование типа оплаты 2
   Item := Group.Items.Add;
   Item.Name := 'PayName2';
-  Item.Caption := GetRes(@SPayName2);
-  Item.Description := GetRes(@SPayName2);
+  Item.Caption := SPayName2;
+  Item.Description := SPayName2;
   Item.TypeValue := 'String';
-  Item.DefaultValue := GetRes(@SPayName2DefaultValue);
+  Item.DefaultValue := SPayName2DefaultValue;
   // Наименование типа оплаты 3
   Item := Group.Items.Add;
   Item.Name := 'PayName3';
-  Item.Caption := GetRes(@SPayName3);
-  Item.Description := GetRes(@SPayName3);
+  Item.Caption := SPayName3;
+  Item.Description := SPayName3;
   Item.TypeValue := 'String';
-  Item.DefaultValue := GetRes(@SPayName3DefaultValue);
+  Item.DefaultValue := SPayName3DefaultValue;
 
   // СТРАНИЦА Настройка лога
   Page := FParamList.Pages.Add;
-  Page.Caption := GetRes(@SLogParams);
+  Page.Caption := SLogParams;
   { --- Настройка лога --- }
   Group := Page.Groups.Add;
-  Group.Caption := GetRes(@SLogParams);
+  Group.Caption := SLogParams;
   // Лог
   Item := Group.Items.Add;
   Item.Name := 'EnableLog';
-  Item.Caption := GetRes(@SEnableLog);
-  Item.Description := GetRes(@SEnableLog);
+  Item.Caption := SEnableLog;
+  Item.Description := SEnableLog;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   Item := Group.Items.Add;
   Item.Name := 'LogPath';
-  Item.Caption := GetRes(@SLogPath);
-  Item.Description := GetRes(@SLogPath);
+  Item.Caption := SLogPath;
+  Item.Description := SLogPath;
   Item.TypeValue := 'String';
   Item.DefaultValue := FDriver.Params.LogPath;
 
   // СТРАНИЦА ФОРМАТ ЧЕКА
   Page := FParamList.Pages.Add;
-  Page.Caption := GetRes(@SReceiptFormat);
+  Page.Caption := SReceiptFormat;
   Group := Page.Groups.Add;
-  Group.Caption := GetRes(@SReceiptFormat);
+  Group.Caption := SReceiptFormat;
 
   Item := Group.Items.Add;
   Item.Name := 'DisablePrintReports';
-  Item.Caption := GetRes(@SDisablePrintReports);
-  Item.Description := GetRes(@SDisablePrintReports);
+  Item.Caption := SDisablePrintReports;
+  Item.Description := SDisablePrintReports;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   Item := Group.Items.Add;
   Item.Name := 'EnablePaymentSignPrint';
-  Item.Caption := GetRes(@SEnablePaymentSignPrint);
-  Item.Description := GetRes(@SEnablePaymentSignPrint);
+  Item.Caption := SEnablePaymentSignPrint;
+  Item.Description := SEnablePaymentSignPrint;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'True';
 
   Item := Group.Items.Add;
   Item.Name := 'ItemNameLength';
-  Item.Caption := GetRes(@SItemnameLength);
-  Item.Description := GetRes(@SItemnameLength);
+  Item.Caption := SItemnameLength;
+  Item.Description := SItemnameLength;
   Item.TypeValue := 'Number';
   Item.DefaultValue := '0';
 
   Item := Group.Items.Add;
   Item.Name := 'CheckFontNumber';
-  Item.Caption := GetRes(@SCheckFontNumber);
-  Item.Description := GetRes(@SCheckFontNumber);
+  Item.Caption := SCheckFontNumber;
+  Item.Description := SCheckFontNumber;
   Item.TypeValue := 'Number';
   Item.DefaultValue := '1';
 
   Item := Group.Items.Add;
   Item.Name := 'EnableNonFiscalHeader';
-  Item.Caption := GetRes(@SEnableNonFiscalHeader);
-  Item.Description := GetRes(@SEnableNonFiscalHeader);
+  Item.Caption := SEnableNonFiscalHeader;
+  Item.Description := SEnableNonFiscalHeader;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'True';
 
   Item := Group.Items.Add;
   Item.Name := 'EnableNonFiscalFooter';
-  Item.Caption := GetRes(@SEnableNonFiscalFooter);
-  Item.Description := GetRes(@SEnableNonFiscalFooter);
+  Item.Caption := SEnableNonFiscalFooter;
+  Item.Description := SEnableNonFiscalFooter;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'True';
 
   Item := Group.Items.Add;
   Item.Name := 'UseRepeatDocument';
-  Item.Caption := GetRes(@SUseRepeatDocument);
-  Item.Description := GetRes(@SUseRepeatDocument);
+  Item.Caption := SUseRepeatDocument;
+  Item.Description := SUseRepeatDocument;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   { ORANGE DATA }
   // Orange data
   Page := FParamList.Pages.Add;
-  Page.Caption := GetRes(@SOrangeData);
+  Page.Caption := SOrangeData;
   Group := Page.Groups.Add;
-  Group.Caption := GetRes(@SOrangeDataConnection);
+  Group.Caption := SOrangeDataConnection;
 
   Item := Group.Items.Add;
   Item.Name := 'ODEnabled';
-  Item.Caption := GetRes(@SODEnabled);
-  Item.Description := GetRes(@SODEnabled);
+  Item.Caption := SODEnabled;
+  Item.Description := SODEnabled;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   Item := Group.Items.Add;
   Item.Name := 'ODServerURL';
-  Item.Caption := GetRes(@SODServerURL);
-  Item.Description := GetRes(@SODServerURL);
+  Item.Caption := SODServerURL;
+  Item.Description := SODServerURL;
   Item.TypeValue := 'String';
   Item.DefaultValue := 'https://apip.orangedata.ru:2443/api/v2/';
 
   Item := Group.Items.Add;
   Item.Name := 'ODINN';
-  Item.Caption := GetRes(@SODINN);
-  Item.Description := GetRes(@SODINN);
+  Item.Caption := SODINN;
+  Item.Description := SODINN;
   Item.TypeValue := 'String';
   Item.DefaultValue := '';
 
   Item := Group.Items.Add;
   Item.Name := 'ODGroup';
-  Item.Caption := GetRes(@SODGroup);
-  Item.Description := GetRes(@SODGroup);
+  Item.Caption := SODGroup;
+  Item.Description := SODGroup;
   Item.TypeValue := 'String';
   Item.DefaultValue := '';
 
   Item := Group.Items.Add;
   Item.Name := 'ODCertFileName';
-  Item.Caption := GetRes(@SODCertFileName);
-  Item.Description := GetRes(@SODCertFileName);
+  Item.Caption := SODCertFileName;
+  Item.Description := SODCertFileName;
   Item.TypeValue := 'String';
   Item.DefaultValue := '';
 
   Item := Group.Items.Add;
   Item.Name := 'ODKeyFileName';
-  Item.Caption := GetRes(@SODKeyFileName);
-  Item.Description := GetRes(@SODKeyFileName);
+  Item.Caption := SODKeyFileName;
+  Item.Description := SODKeyFileName;
   Item.TypeValue := 'String';
   Item.DefaultValue := '';
 
   Item := Group.Items.Add;
   Item.Name := 'ODSignKeyFileName';
-  Item.Caption := GetRes(@SODSignKeyFileName);
-  Item.Description := GetRes(@SODSignKeyFileName);
+  Item.Caption := SODSignKeyFileName;
+  Item.Description := SODSignKeyFileName;
   Item.TypeValue := 'String';
   Item.DefaultValue := '';
 
   Item := Group.Items.Add;
   Item.Name := 'ODKeyName';
-  Item.Caption := GetRes(@SODKeyName);
-  Item.Description := GetRes(@SODKeyName);
+  Item.Caption := SODKeyName;
+  Item.Description := SODKeyName;
   Item.TypeValue := 'String';
   Item.DefaultValue := '';
 
   Item := Group.Items.Add;
   Item.Name := 'ODRetryCount';
-  Item.Caption := GetRes(@SODRetryCount);
-  Item.Description := GetRes(@SODRetryCount);
+  Item.Caption := SODRetryCount;
+  Item.Description := SODRetryCount;
   Item.TypeValue := 'Number';
   Item.DefaultValue := '10';
 
   Item := Group.Items.Add;
   Item.Name := 'ODRetryTimeout';
-  Item.Caption := GetRes(@SODRetryTimeout);
-  Item.Description := GetRes(@SODRetryTimeout);
+  Item.Caption := SODRetryTimeout;
+  Item.Description := SODRetryTimeout;
   Item.TypeValue := 'Number';
   Item.DefaultValue := '2';
 
   { ORANGE DATA 2 }
   // Orange data
   { Page := FParamList.Pages.Add;
-    Page.Caption := GetRes(@SOrangeData2);
+    Page.Caption := SOrangeData2;
     Group := Page.Groups.Add;
-    Group.Caption := GetRes(@SOrangeData2); }
+    Group.Caption := SOrangeData2; }
 
   Item := Group.Items.Add;
   Item.Name := 'ODFFDVersion';
-  Item.Caption := GetRes(@SFFDVersion);
-  Item.Description := GetRes(@SFFDVersion);
+  Item.Caption := SFFDVersion;
+  Item.Description := SFFDVersion;
   Item.TypeValue := 'Number';
   Item.DefaultValue := '4';
   Item.AddChoiceListItem('ФФД 1.05', '2');
   Item.AddChoiceListItem('ФФД 1.2', '4');
 
   Group := Page.Groups.Add;
-  Group.Caption := GetRes(@SKKTParams);
+  Group.Caption := SKKTParams;
 
   Item := Group.Items.Add;
   Item.Name := 'ODFFDVersion';
-  Item.Caption := GetRes(@SFFDVersion);
-  Item.Description := GetRes(@SFFDVersion);
+  Item.Caption := SFFDVersion;
+  Item.Description := SFFDVersion;
   Item.TypeValue := 'Number';
   Item.DefaultValue := '4';
   Item.AddChoiceListItem('ФФД 1.05', '2');
@@ -1150,204 +1150,204 @@ begin
 
   Item := Group.Items.Add;
   Item.Name := 'ODKKTRetailDelivery';
-  Item.Caption := GetRes(@SKKTRetailDelivery);
-  Item.Description := GetRes(@SKKTRetailDelivery);
+  Item.Caption := SKKTRetailDelivery;
+  Item.Description := SKKTRetailDelivery;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   Item := Group.Items.Add;
   Item.Name := 'ODKKTSerialNumber';
-  Item.Caption := GetRes(@SODKKTSerialNumber);
-  Item.Description := GetRes(@SODKKTSerialNumber);
+  Item.Caption := SODKKTSerialNumber;
+  Item.Description := SODKKTSerialNumber;
   Item.TypeValue := 'String';
   Item.DefaultValue := '';
 
   Item := Group.Items.Add;
   Item.Name := 'ODKKTRNM';
-  Item.Caption := GetRes(@SODKKTRNM);
-  Item.Description := GetRes(@SODKKTRNM);
+  Item.Caption := SODKKTRNM;
+  Item.Description := SODKKTRNM;
   Item.TypeValue := 'String';
   Item.DefaultValue := '';
 
   Item := Group.Items.Add;
   Item.Name := 'ODKKTFNSerialNumber';
-  Item.Caption := GetRes(@SODKKTFNSerialNumber);
-  Item.Description := GetRes(@SODKKTFNSerialNumber);
+  Item.Caption := SODKKTFNSerialNumber;
+  Item.Description := SODKKTFNSerialNumber;
   Item.TypeValue := 'String';
   Item.DefaultValue := '';
 
   Item := Group.Items.Add;
   Item.Name := 'ODSaleAddress';
-  Item.Caption := GetRes(@SODSaleAddress);
-  Item.Description := GetRes(@SODSaleAddress);
+  Item.Caption := SODSaleAddress;
+  Item.Description := SODSaleAddress;
   Item.TypeValue := 'String';
   Item.DefaultValue := '';
 
   Item := Group.Items.Add;
   Item.Name := 'ODSaleLocation';
-  Item.Caption := GetRes(@SODSaleLocation);
-  Item.Description := GetRes(@SODSaleLocation);
+  Item.Caption := SODSaleLocation;
+  Item.Description := SODSaleLocation;
   Item.TypeValue := 'String';
   Item.DefaultValue := '';
 
   Group := Page.Groups.Add;
-  Group.Caption := GetRes(@SODTax);
+  Group.Caption := SODTax;
 
   Item := Group.Items.Add;
   Item.Name := 'ODTaxOSN';
-  Item.Caption := GetRes(@SODTaxOSN);
-  Item.Description := GetRes(@SODTaxOSN);
+  Item.Caption := SODTaxOSN;
+  Item.Description := SODTaxOSN;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'True';
 
   Item := Group.Items.Add;
   Item.Name := 'ODTaxUSND';
-  Item.Caption := GetRes(@SODTaxUSND);
-  Item.Description := GetRes(@SODTaxUSND);
+  Item.Caption := SODTaxUSND;
+  Item.Description := SODTaxUSND;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   Item := Group.Items.Add;
   Item.Name := 'ODTaxUSNDMR';
-  Item.Caption := GetRes(@SODTaxUSNDMR);
-  Item.Description := GetRes(@SODTaxUSNDMR);
+  Item.Caption := SODTaxUSNDMR;
+  Item.Description := SODTaxUSNDMR;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   Item := Group.Items.Add;
   Item.Name := 'ODTaxENVD';
-  Item.Caption := GetRes(@SODTaxENVD);
-  Item.Description := GetRes(@SODTaxENVD);
+  Item.Caption := SODTaxENVD;
+  Item.Description := SODTaxENVD;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   Item := Group.Items.Add;
   Item.Name := 'ODTaxESN';
-  Item.Caption := GetRes(@SODTaxESN);
-  Item.Description := GetRes(@SODTaxESN);
+  Item.Caption := SODTaxESN;
+  Item.Description := SODTaxESN;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   Item := Group.Items.Add;
   Item.Name := 'ODTaxPSN';
-  Item.Caption := GetRes(@SODTaxPSN);
-  Item.Description := GetRes(@SODTaxPSN);
+  Item.Caption := SODTaxPSN;
+  Item.Description := SODTaxPSN;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   { OD Режим работы }
   Group := Page.Groups.Add;
-  Group.Caption := GetRes(@SODWorkMode);
+  Group.Caption := SODWorkMode;
 
   // Признак автономного режима
   Item := Group.Items.Add;
   Item.Name := 'ODIsOffline';
-  Item.Caption := GetRes(@SODIsOffline);
-  Item.Description := GetRes(@SODIsOffline);
+  Item.Caption := SODIsOffline;
+  Item.Description := SODIsOffline;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   // Признак шифрование данных
   Item := Group.Items.Add;
   Item.Name := 'ODIsEncrypted';
-  Item.Caption := GetRes(@SODIsEncrypted);
-  Item.Description := GetRes(@SODIsEncrypted);
+  Item.Caption := SODIsEncrypted;
+  Item.Description := SODIsEncrypted;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   // Признак расчетов за услуги
   Item := Group.Items.Add;
   Item.Name := 'ODIsService';
-  Item.Caption := GetRes(@SODIsService);
-  Item.Description := GetRes(@SODIsService);
+  Item.Caption := SODIsService;
+  Item.Description := SODIsService;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   // Признак продажи подакцизного товара
   Item := Group.Items.Add;
   Item.Name := 'ODIsExcisable';
-  Item.Caption := GetRes(@SODIsExcisable);
-  Item.Description := GetRes(@SODIsExcisable);
+  Item.Caption := SODIsExcisable;
+  Item.Description := SODIsExcisable;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   // Признак проведения азартных игр
   Item := Group.Items.Add;
   Item.Name := 'ODIsGambling';
-  Item.Caption := GetRes(@SODIsGambling);
-  Item.Description := GetRes(@SODIsGambling);
+  Item.Caption := SODIsGambling;
+  Item.Description := SODIsGambling;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   // Признак Признак проведения лотереи
   Item := Group.Items.Add;
   Item.Name := 'ODIsLottery';
-  Item.Caption := GetRes(@SODIsLottery);
-  Item.Description := GetRes(@SODIsLottery);
+  Item.Caption := SODIsLottery;
+  Item.Description := SODIsLottery;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   // Признак формирования АС БСО
   Item := Group.Items.Add;
   Item.Name := 'ODBSOSing';
-  Item.Caption := GetRes(@SODBSOSing);
-  Item.Description := GetRes(@SODBSOSing);
+  Item.Caption := SODBSOSing;
+  Item.Description := SODBSOSing;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   // Признак ККТ для расчетов в Интернет
   Item := Group.Items.Add;
   Item.Name := 'ODIsOnline';
-  Item.Caption := GetRes(@SODIsOnline);
-  Item.Description := GetRes(@SODIsOnline);
+  Item.Caption := SODIsOnline;
+  Item.Description := SODIsOnline;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   // Признак установки принтера в автомате
   Item := Group.Items.Add;
   Item.Name := 'ODIsAutomaticPrinter';
-  Item.Caption := GetRes(@SODIsAutomaticPrinter);
-  Item.Description := GetRes(@SODIsAutomaticPrinter);
+  Item.Caption := SODIsAutomaticPrinter;
+  Item.Description := SODIsAutomaticPrinter;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   // Признак автоматического режима
   Item := Group.Items.Add;
   Item.Name := 'ODIsAutomatic';
-  Item.Caption := GetRes(@SODIsAutomatic);
-  Item.Description := GetRes(@SODIsAutomatic);
+  Item.Caption := SODIsAutomatic;
+  Item.Description := SODIsAutomatic;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   // Номер автомата автоматического режима
   Item := Group.Items.Add;
   Item.Name := 'ODAutomaticNumber';
-  Item.Caption := GetRes(@SODAutomaticNumber);
-  Item.Description := GetRes(@SODAutomaticNumber);
+  Item.Caption := SODAutomaticNumber;
+  Item.Description := SODAutomaticNumber;
   Item.TypeValue := 'String';
   Item.DefaultValue := '';
 
   // Признак применения при осуществлении торговли товарами, подлежащими обязательной маркировке средствами идентификации
   Item := Group.Items.Add;
   Item.Name := 'ODIsMarking';
-  Item.Caption := GetRes(@SODIsMarking);
-  Item.Description := GetRes(@SODIsMarking);
+  Item.Caption := SODIsMarking;
+  Item.Description := SODIsMarking;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   // Признак применения при осуществлении ломбардами кредитования граждан
   Item := Group.Items.Add;
   Item.Name := 'ODIsPawnshop';
-  Item.Caption := GetRes(@SODIsPawnshop);
-  Item.Description := GetRes(@SODIsPawnshop);
+  Item.Caption := SODIsPawnshop;
+  Item.Description := SODIsPawnshop;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 
   // Признак применения при осуществлении деятельности по страхованию
   Item := Group.Items.Add;
   Item.Name := 'ODIsAssurance';
-  Item.Caption := GetRes(@SODIsAssurance);
-  Item.Description := GetRes(@SODIsAssurance);
+  Item.Caption := SODIsAssurance;
+  Item.Description := SODIsAssurance;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
 end;

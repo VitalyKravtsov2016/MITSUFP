@@ -8,7 +8,7 @@ interface
 
 uses
   // VCL
-  Windows, Classes, ComObj, ActiveX, StdVcl,
+  Windows, Classes, ComObj, ActiveX, StdVcl, Variants,
   // This
   MitsuDrv1CTst_TLB;
 
@@ -36,12 +36,13 @@ end;
 
 function TArray1C.Get(Index: Integer): OleVariant;
 begin
+  //OutputDebugString(PCHar(VarToStr(FData[Index])));
   Result := FData[Index];
 end;
 
 procedure TArray1C.Set_(Index: Integer; Value: OleVariant);
 begin
-  FData[Index] := Value;
+  FData[Index] := VarToStr(Value);
 end;
 
 initialization

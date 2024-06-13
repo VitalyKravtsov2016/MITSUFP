@@ -69,7 +69,6 @@ type
   public
     destructor Destroy; override;
     procedure Initialize; override;
-    //procedure SetLanguage(LangType: string); override;
   end;
 
 implementation
