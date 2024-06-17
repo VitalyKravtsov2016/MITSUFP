@@ -579,6 +579,7 @@ function _FindMethod(Obj: PV8ObjectRec; const wsMethodName: PWideChar)
 var
   i: integer;
 begin
+  globallogger.Debug('_FindMethod');
   result := -1;
   for i := 0 to Obj.RelObj1.ClassReg.MethCount - 1 do
     if (_WideSameStr(Obj.RelObj1.ClassReg.MethList[i].MethNameLoc, wsMethodName)) or
@@ -595,6 +596,7 @@ function _FindProp(Obj: PV8ObjectRec; const wsPropName: PWideChar): integer;
 var
   i: integer;
 begin
+  globallogger.Debug('_FindProp');
   result := -1;
   for i := 0 to Obj.RelObj1.ClassReg.PropCount - 1 do
     if (_WideSameStr(Obj.RelObj1.ClassReg.PropList[i].PropNameLoc, wsPropName))
@@ -602,39 +604,47 @@ begin
       result := i;
       Break;
     end;
+  globallogger.Debug('_FindProp: OK');
 end;
 
 function _GetInfo(Obj: PV8ObjectRec): integer; stdcall;
 begin
+  globallogger.Debug('_GetInfo');
   result := Obj.RelObj1.GetInfo;
+  globallogger.Debug('_GetInfo: OK');
 end;
 
 function _GetMethodName(Obj: PV8ObjectRec; const lMethodNum,
   lMethodAlias: integer): PWideChar; stdcall;
 begin
-  GlobalLogger.Enabled := True;
-  GlobalLogger.FileName := 'C:\v8napi.log';
   globallogger.Debug('_GetMethodName ' + lMethodNum.ToString);
   if lMethodAlias = 0 then
     _MoveWideStringToV8(Obj.RelObj1.V8MM, Obj.RelObj1.ClassReg.MethList[lMethodNum].MethName, @Result)
   else
     _MoveWideStringToV8(Obj.RelObj1.V8MM, Obj.RelObj1.ClassReg.MethList[lMethodNum].MethNameLoc, @Result);
+  globallogger.Debug('_GetMethodName: OK');
 end;
 
 function _GetNMethods(Obj: PV8ObjectRec): integer; stdcall;
 begin
+  globallogger.Debug('_GetNMethods');
   result := Obj.RelObj1.ClassReg.MethCount;
+  globallogger.Debug('_GetNMethods: OK');
 end;
 
 function _GetNParams(Obj: PV8ObjectRec; const lMethodNum: integer): integer;
   stdcall;
 begin
+  globallogger.Debug(Format('_GetNParams(%d)', [lMethodNum]));
   result := Obj.RelObj1.ClassReg.MethList[lMethodNum].ParamCount;
+  globallogger.Debug(Format('_GetNParams(%d)=%d', [lMethodNum, Result]));
 end;
 
 function _GetNProps(Obj: PV8ObjectRec): integer; stdcall;
 begin
+  globallogger.Debug('_GetNProps');
   result := Obj.RelObj1.ClassReg.PropCount;
+  globallogger.Debug(Format('_GetNProps: %d', [Result]));
 end;
 
 function _GetParamDefValue(Obj: PV8ObjectRec; const lMethodNum,
@@ -642,6 +652,7 @@ function _GetParamDefValue(Obj: PV8ObjectRec; const lMethodNum,
 var
   ind: integer;
 begin
+  globallogger.Debug('_GetParamDefValue');
   result := False;
   if Obj.RelObj1.ClassReg.MethList[lMethodNum].DefParams <> nil then
     for ind := 0 to Length(Obj.RelObj1.ClassReg.MethList[lMethodNum].DefParams.Values)-1 do
@@ -649,31 +660,38 @@ begin
         pvarParamDefValue^ := Obj.RelObj1.ClassReg.MethList[lMethodNum].DefParams.Values[ind].Value;
         result := True;
       end;
+  globallogger.Debug('_GetParamDefValue: OK');
 end;
 
 function _GetPropName(Obj: PV8ObjectRec; lPropNum, lPropAlias: integer)
   : PWideChar; stdcall;
 begin
+  globallogger.Debug('_GetPropName');
   if lPropAlias = 0 then
     _MoveWideStringToV8(Obj.RelObj1.V8MM, Obj.RelObj1.ClassReg.PropList[lPropNum].PropName, @Result)
   else
     _MoveWideStringToV8(Obj.RelObj1.V8MM, Obj.RelObj1.ClassReg.PropList[lPropNum].PropNameLoc, @Result);
+  globallogger.Debug('_GetPropName: OK');
 end;
 
 function _GetPropVal(Obj: PV8ObjectRec; const lPropNum: integer;
   pvarPropVal: PV8Variant): boolean; stdcall;
 var err: WideString;
 begin
+  globallogger.Debug('_GetPropVal');
   try
   result := False;
   if @(Obj.RelObj1.ClassReg.PropList[lPropNum].PropGetSet) <> nil then
     result := _V8PGS(Obj.RelObj1.ClassReg.PropList[lPropNum].PropGetSet)
       (Obj.RelObj1, pvarPropVal, True, Obj.RelObj1.v8);
+    globallogger.Debug('_GetPropVal: OK');
   except
-    on e: Exception do begin
+    on e: Exception do
+    begin
 			err := e.Message;
       Obj.RelObj1.V8.addError(1006, 'Внешняя компонента', pWideChar(err), E_FAIL);
       result := false;
+      globallogger.Error('_GetPropVal: ' + e.Message);
     end;
   end;
 end;
@@ -681,13 +699,17 @@ end;
 function _HasRetVal(Obj: PV8ObjectRec; const lMethodNum: integer): boolean;
   stdcall;
 begin
+  globallogger.Debug('_HasRetVal');
   result := Obj.RelObj1.ClassReg.MethList[lMethodNum].IsFunction;
+  globallogger.Debug('_HasRetVal: OK');
 end;
 
 function _Init(Obj: PV8ObjectRec; disp: TV8AddInDefBase): boolean; stdcall;
 begin
+  globallogger.Debug('_Init');
   Obj.RelObj1.V8 := disp;
   result := Obj.RelObj1.Init;
+  globallogger.Debug('_Init: OK');
 end;
 
 function _IsPropReadable(Obj: PV8ObjectRec; const lPropNum: integer): boolean;
@@ -1509,7 +1531,6 @@ initialization
   ClassRegList := TClassRegList.Create;
 
 finalization
-
   ClassRegList.Free;
 
 end.

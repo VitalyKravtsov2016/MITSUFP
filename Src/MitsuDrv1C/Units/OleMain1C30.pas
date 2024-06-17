@@ -6,7 +6,8 @@ interface
 
 uses
   // VCL
-  AxCtrls, Classes, ActiveX, StdVcl, SysUtils, ActiveXView, ComObj, ComServ,
+  ComObj, ComServ, AxCtrls,
+  Classes, ActiveX, StdVcl, SysUtils, ActiveXView,
   // This
   MitsuLib_TLB, LogFile, MitsuDrv_1C, StringUtils, ActiveXControl1C,
   AddIn1CInterface, TranslationUtil, FileUtils;
@@ -335,7 +336,6 @@ begin
 end;
 
 initialization
-
 {$IFNDEF WIN64}
   SetTranslationLanguage;
 {$ENDIF}
