@@ -11,7 +11,7 @@ uses
   Windows, Classes, ComObj, SysUtils, Variants, ActiveX, Types,
   // This
   AddIn1CInterface, MitsuLib_TLB, MitsuDrv1CTst_TLB, StringUtils,
-  untTypes, Driver1C;
+  Driver1C, DriverParams1C;
 
 type
   { TDriver1C11 }
@@ -272,7 +272,8 @@ begin
   FPrice := 34.15;
   FAmount := FPrice * FQuantity - 5.45; // Скидка 5.45
   FDepartment := 1;
-  FTax := FConnectionParams.Tax1;
+  //FTax := FConnectionParams.Tax1; !!!
+  FTax := 0;
   PrintFiscalString;
 
   FTextString := '------------------------------';
@@ -284,7 +285,8 @@ begin
   FPrice := 4.35;
   FAmount := FPrice * FQuantity + 1.23; // Надбавка 1.23
   FDepartment := 2;
-  FTax := FConnectionParams.Tax2;
+  //FTax := FConnectionParams.Tax2;
+  FTax := 0;
   PrintFiscalString;
 
   FTextString := '------------------------------';
@@ -296,7 +298,8 @@ begin
   FPrice := 0.15;
   FAmount := FPrice * FQuantity - 0.12; // Скидка 0.12
   FDepartment := 3;
-  FTax := FConnectionParams.Tax3;
+  //FTax := FConnectionParams.Tax3;
+  FTax := 0;
   PrintFiscalString;
 
   FTextString := '------------------------------';
@@ -308,7 +311,8 @@ begin
   FPrice := 12.75;
   FAmount := FPrice * FQuantity + 1.2; // Надбавка 1.2
   FDepartment := 4;
-  FTax := FConnectionParams.Tax4;
+  //FTax := FConnectionParams.Tax4;
+  FTax := 0;
   PrintFiscalString;
 
   FTextString := '------------------------------';
@@ -414,16 +418,15 @@ end;
 
 procedure TDriver1C11.SetConnectionParams;
 begin
-  Driver.SetParameter('Port', FConnectionParams.Port);
-  Driver.SetParameter('ConnectionType', FConnectionParams.ConnectionType);
-  Driver.SetParameter('Baudrate', FConnectionParams.Speed);
-  Driver.SetParameter('Timeout', FConnectionParams.Timeout);
-  Driver.SetParameter('ComputerName', FConnectionParams.ComputerName);
-  Driver.SetParameter('IPAddress', FConnectionParams.IPAddress);
-  Driver.SetParameter('TCPPort', FConnectionParams.TCPPort);
-  Driver.SetParameter('UserPassword', FConnectionParams.UserPassword);
-  Driver.SetParameter('AdminPassword', FConnectionParams.AdminPassword);
-  Driver.SetParameter('EnableLog', FConnectionParams.EnableLog);
+  Driver.SetParameter('PortName', FParams.PortName);
+  Driver.SetParameter('ConnectionType', FParams.ConnectionType);
+  Driver.SetParameter('BaudRate', FParams.BaudRate);
+  Driver.SetParameter('ByteTimeout', FParams.ByteTimeout);
+  Driver.SetParameter('IPAddress', FParams.RemoteHost);
+  Driver.SetParameter('TCPPort', FParams.RemotePort);
+  Driver.SetParameter('EnableLog', FParams.LogEnabled);
+
+(*
   Driver.SetParameter('CloseSession', FConnectionParams.CloseSession);
   Driver.SetParameter('Tax1', FConnectionParams.Tax1);
   Driver.SetParameter('Tax2', FConnectionParams.Tax2);
@@ -436,6 +439,7 @@ begin
   Driver.SetParameter('BufferStrings', FConnectionParams.BufferStrings);
   Driver.SetParameter('BarcodeFirstLine', FConnectionParams.BarcodeFirstLine);
   Driver.SetParameter('QRCodeHeight', FConnectionParams.QRCodeHeight);
+*)
 end;
 
 function TDriver1C11.GetSerialNumber: WideString;

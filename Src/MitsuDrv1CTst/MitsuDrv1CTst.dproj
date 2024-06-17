@@ -167,7 +167,6 @@
         <DCCReference Include="..\TstShared\DriverTypes.pas"/>
         <DCCReference Include="..\TstShared\GlobalConst.pas"/>
         <DCCReference Include="Units\Driver1C11.pas"/>
-        <DCCReference Include="Units\untTypes.pas"/>
         <DCCReference Include="Units\Driver1C.pas"/>
         <DCCReference Include="..\Shared\BaseForm.pas"/>
         <DCCReference Include="Units\AddIn1CInterface.pas"/>
@@ -175,6 +174,7 @@
         <DCCReference Include="..\MitsuDrv1C\MitsuLib_TLB.pas"/>
         <DCCReference Include="..\Shared\gnugettext.pas"/>
         <DCCReference Include="Units\OleArray1C.pas"/>
+        <DCCReference Include="..\MitsuDrv1C\Units\DriverParams1C.pas"/>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

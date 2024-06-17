@@ -139,6 +139,7 @@
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.1;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
         <Manifest_File>(None)</Manifest_File>
+        <Debugger_HostApplication>D:\projects\Mitsu1C\Src\Bin\MitsuDrv1CTst.exe</Debugger_HostApplication>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -180,12 +181,13 @@
         <DCCReference Include="Units\AddIn1CInterface.pas"/>
         <DCCReference Include="Units\TextEncoding.pas"/>
         <DCCReference Include="..\Shared\TranslationUtil.pas"/>
-        <DCCReference Include="..\Shared\gnugettext.pas"/>
         <DCCReference Include="..\Shared\FileUtils.pas"/>
         <DCCReference Include="MitsuLib_TLB.pas"/>
         <DCCReference Include="Units\oleMain1C10.pas"/>
-        <DCCReference Include="Units\Driver1Cst.pas"/>
+        <DCCReference Include="Units\Driver1C10.pas"/>
         <DCCReference Include="Units\Params1C.pas"/>
+        <DCCReference Include="..\Shared\gnugettext.pas"/>
+        <DCCReference Include="Units\DriverParams1C.pas"/>
         <RidlCompile Include="MitsuDrv1C.ridl"/>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>

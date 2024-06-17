@@ -13,12 +13,10 @@ type
 
   TActiveXControl1C = class(TActiveXControl, IInitDone, ILanguageExtender)
   private
-    FLogger: TLogFile;
+    FLogger: ILogFile;
     FProps: TAddinProps;
     FMethods: TAddinFuncs;
-    function GetLogFile: TLogFile;
     procedure UpdateAddinLists;
-    property Logger: TLogFile read GetLogFile;
     procedure PutNParam(var pArray: PSafeArray; lIndex: Integer;
       var varPut: OleVariant);
     function GetNParam(var pArray: PSafeArray; lIndex: Integer): OleVariant;
@@ -63,6 +61,7 @@ type
     procedure Initialize; override;
     destructor Destroy; override;
 
+    property Logger: ILogFile read FLogger;
     property Props: TAddinProps read FProps;
     property Methods: TAddinFuncs read FMethods;
   end;
@@ -73,6 +72,27 @@ const
   BoolToInt: array [Boolean] of Integer = (0, 1);
 
   { TActiveXControl1C }
+
+procedure TActiveXControl1C.Initialize;
+begin
+  inherited Initialize;
+  FProps := TAddinProps.Create;
+  FMethods := TAddinFuncs.Create;
+  FLogger := TLogFile.Create;
+  FLogger.Enabled := True;
+  FLogger.FilePath := 'c:\';
+  FLogger.FileName := 'MitsuDrv1C.log';
+  FLogger.Debug('Initialize');
+  UpdateAddinLists;
+end;
+
+destructor TActiveXControl1C.Destroy;
+begin
+  FProps.Free;
+  FMethods.Free;
+  FLogger := nil;
+  inherited Destroy;
+end;
 
 procedure TActiveXControl1C.UpdateAddinLists;
 var
@@ -160,14 +180,6 @@ begin
   finally
     TypeInfo.ReleaseTypeAttr(TypeAttr);
   end;
-end;
-
-destructor TActiveXControl1C.Destroy;
-begin
-  FProps.Free;
-  FMethods.Free;
-  FLogger.Free;
-  inherited Destroy;
 end;
 
 { ILanguageExtender }
@@ -659,24 +671,17 @@ begin
     DispParams, nil, nil, nil);
 end;
 
-function TActiveXControl1C.GetLogFile: TLogFile;
-begin
-  if FLogger = nil then
-  begin
-    FLogger := TLogFile.Create;
-  end;
-  Result := FLogger;
-end;
-
 // IInitDone
 
 function TActiveXControl1C.Init(pConnection: IDispatch): HResult;
 begin
+  Logger.Debug('Init');
   Result := S_OK;
 end;
 
 function TActiveXControl1C.Done: HResult;
 begin
+  Logger.Debug('Done');
   Result := S_OK;
 end;
 
@@ -685,31 +690,24 @@ var
   Index: Integer;
   Value: OleVariant;
 begin
+  Logger.Debug('GetInfo');
+
   Index := 0;
   Value := '1000';
   SafeArrayPutElement(pInfo, Index, Value);
   Result := S_OK;
 end;
 
-procedure TActiveXControl1C.Initialize;
-begin
-  inherited Initialize;
-  FProps := TAddinProps.Create;
-  FMethods := TAddinFuncs.Create;
-  // GlobalLogger.Enabled := True;
-  // GlobalLogger.FileName := 'c:\logs\drv.txt';
-  UpdateAddinLists;
-end;
-
 function TActiveXControl1C.SetLocale(bstrLocale: WideString): HResult;
 begin
+  Logger.Debug(Format('SetLocale(%s)', [bstrLocale]));
   Result := S_OK;
   SetLang(bstrLocale);
 end;
 
 procedure TActiveXControl1C.SetLang(LangType: string);
 begin
-
+  Logger.Debug(Format('SetLang(%s)', [LangType]));
 end;
 
 end.

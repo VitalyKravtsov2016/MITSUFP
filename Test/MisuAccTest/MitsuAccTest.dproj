@@ -217,6 +217,12 @@
         <DCCReference Include="..\..\Src\Shared\StringUtils.pas"/>
         <DCCReference Include="..\..\Src\MitsuDrv1C\Units\GS1Util.pas"/>
         <DCCReference Include="..\..\Src\MitsuDrv1C\Units\GS1Barcode.pas"/>
+        <DCCReference Include="..\..\Src\MitsuDrv1CTst\MitsuDrv1CTst_TLB.pas"/>
+        <DCCReference Include="..\..\Src\MitsuDrv1C\Units\Driver1C10.pas"/>
+        <DCCReference Include="..\..\Src\Shared\VersionInfo.pas"/>
+        <DCCReference Include="..\..\Src\Shared\DriverError.pas"/>
+        <DCCReference Include="..\..\Src\Shared\DriverTypes.pas"/>
+        <DCCReference Include="..\..\Src\Shared\GlobalConst.pas"/>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -110,9 +110,9 @@ begin
   if FLogger = nil then
   begin
     FLogger := TLogFile.Create;
-    FLogger.Enabled := true;
-    FLogger.FilePath := GetModulePath;
+    FLogger.FilePath := 'C:\';
     FLogger.FileName := 'MitsuDrv1C.log';
+    FLogger.Enabled := True;
   end;
   Result := FLogger;
 end;
@@ -173,7 +173,7 @@ end;
 function TOleMain1C30.GetDriver: TMitsuDrv1C;
 begin
   if FDriver = nil then
-    FDriver := TMitsuDrv1C.Create;
+    FDriver := TMitsuDrv1C.Create(Logger);
   Result := FDriver;
 end;
 

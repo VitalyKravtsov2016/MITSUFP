@@ -8,13 +8,14 @@ uses
   // DUnit
   TestFramework,
   // This
-  MitsuDrv, StringUtils, FileUtils, FFDTypes;
+  MitsuDrv, StringUtils, FileUtils, FFDTypes, LogFile;
 
 type
   { TMitsuDrvTest }
 
   TMitsuDrvTest = class(TTestCase)
   private
+    FLogger: ILogFile;
     Driver: TMitsuDrv;
     procedure TestReadVATNames;
     procedure InitPrinter;
@@ -77,7 +78,8 @@ procedure TMitsuDrvTest.Setup;
 var
   Params: TMitsuParams;
 begin
-  Driver := TMitsuDrv.Create;
+  FLogger := TLogFile.Create;
+  Driver := TMitsuDrv.Create(FLogger);
   Params.ConnectionType := ConnectionTypeSerial;
   Params.PortName := 'COM8';
   Params.BaudRate := 115200;

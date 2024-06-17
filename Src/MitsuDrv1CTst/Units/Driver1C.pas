@@ -5,11 +5,12 @@
 unit Driver1C;
 
 interface
+
 uses
   // VCL
   Windows, Classes, ComObj, SysUtils, Variants, ActiveX, Types,
   // This
-  LanguageExtender, StringUtils, untTypes, OleArray1C;
+  LanguageExtender, StringUtils, OleArray1C, DriverParams1C;
 
 type
   TStringEvent = procedure (Sender: TObject; const Line: WideString) of object;
@@ -24,7 +25,8 @@ type
     procedure DoChange(ARes: Boolean);
     procedure AddLine(const S: string);
   public
-    FConnectionParams: T1CConnectionParams;
+    FParams: TDriverParams;
+
     FDeviceID: WideString;
     FName: WideString;
     FQuantity: Double;

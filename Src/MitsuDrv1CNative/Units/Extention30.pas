@@ -3,20 +3,21 @@ unit Extention30;
 interface
 
 uses
-  SysUtils, v8napi, Driver30, untLogger, logfile;
+  // VCL
+  SysUtils,
+  // This
+  v8napi, Driver30, LogFile;
 
 type
   TExtention30 = class(TV8UserObject)
   private
-    FLogger: TLogger;
+    FLogger: ILogFile;
     FDriver: TDriver30;
-    procedure CheckParamCount(ACount: Integer; AExpected: Integer);
     function HandleException(E: Exception): Boolean;
-
+    procedure CheckParamCount(ACount: Integer; AExpected: Integer);
   public
     constructor Create; override;
     destructor Destroy; override;
-
     // Common methods
     function GetInterfaceRevision(RetValue: PV8Variant; Params: PV8ParamArray; const ParamCount: integer; var v8:TV8AddInDefBase): Boolean;
     function GetDescription(RetValue: PV8Variant; Params: PV8ParamArray; const ParamCount: integer; var v8:TV8AddInDefBase): Boolean;
@@ -61,17 +62,18 @@ implementation
 constructor TExtention30.Create;
 begin
   inherited;
-//  GlobalLogger.Enabled := True;
-//  GlobalLogger.FileName := 'e:\v8napi.txt';
-  FLogger := TLogger.Create(Self.ClassName);
-  FDriver := TDriver30.Create;
+  FLogger := TLogFile.Create;
+  FLogger.Enabled := True;
+  FLogger.FilePath := 'c:\';
+  FLogger.FileName := 'v8napi.log';
+  FDriver := TDriver30.Create(FLogger);
 end;
 
 destructor TExtention30.Destroy;
 begin
   FDriver.Free;
-  FLogger.Free;
-  inherited;
+  FLogger := nil;
+  inherited Destroy;
 end;
 
 function TExtention30.HandleException(E: Exception): Boolean;
@@ -85,7 +87,6 @@ begin
   if ACount < AExpected then
     raise Exception.Create('Incorrect Params count: ' + IntToStr(ACount) + '; Must be: ' + IntToStr(AExpected));
 end;
-
 
 ///////////////////////////// Common methods
 
@@ -784,7 +785,5 @@ begin
       Result := HandleException(E);
   end;
 end;
-
-
 
 end.

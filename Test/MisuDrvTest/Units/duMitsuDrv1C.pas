@@ -9,13 +9,14 @@ uses
   // DUnit
   TestFramework,
   // This
-  MitsuDrv, MitsuDrv_1C, StringUtils, FFDTypes, XmlDoc1C, FileUtils;
+  MitsuDrv, MitsuDrv_1C, StringUtils, FFDTypes, XmlDoc1C, FileUtils, LogFile;
 
 type
   { TMitsuDrv1CTest }
 
   TMitsuDrv1CTest = class(TTestCase)
   private
+    Logger: ILogFile;
     Driver: TMitsuDrv1C;
     DeviceID: WideString;
     procedure OpenDevice;
@@ -45,7 +46,8 @@ implementation
 
 procedure TMitsuDrv1CTest.Setup;
 begin
-  Driver := TMitsuDrv1C.Create;
+  Logger := TLogFile.Create;
+  Driver := TMitsuDrv1C.Create(Logger);
 end;
 
 procedure TMitsuDrv1CTest.TearDown;

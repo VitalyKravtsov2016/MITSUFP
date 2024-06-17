@@ -7,7 +7,8 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ExtCtrls, Spin, ComCtrls, Grids, ValEdit,
   // This
-  BaseForm, Driver1C, OleArray1C, VLEUtil, untTypes, Driver1C10, Driver1C11;
+  BaseForm, Driver1C, OleArray1C, VLEUtil, Driver1C10, Driver1C11,
+  DriverParams1C;
 
 type
   { TfmMain }
@@ -210,39 +211,27 @@ end;
 
 procedure TfmMain.Initialize;
 begin
-  VLE_AddPickProperty(vleParams, 'ConnectionType', '0. Local', ['0. Local', '1. TCP'], [0, 1]);
-  VLE_AddProperty(vleParams, 'PortName', 'COM1');
+  VLE_AddPickProperty(vleParams, 'ConnectionType', '0. Serial', ['0. Serial', '1. TCP'], [0, 1]);
+  VLE_AddPickProperty(vleParams, 'PortName', 'COM8',
+    ['COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8'],
+    [0, 1, 2, 3, 4, 5, 6, 7]);
   VLE_AddPickProperty(vleParams, 'BaudRate', '115200', ['2400', '4800', '9600', '19200', '38400', '57600', '115200'], [2400, 4800, 9600, 19200, 38400, 57600, 115200]);
-  VLE_AddProperty(vleParams, 'UserPassword', '1');
-  VLE_AddProperty(vleParams, 'AdminPassword', '30');
-  VLE_AddProperty(vleParams, 'Timeout', '100');
-  VLE_AddProperty(vleParams, 'ComputerName', '');
-  VLE_AddProperty(vleParams, 'IPAddress', '');
-  VLE_AddProperty(vleParams, 'TCPPort', '211');
+  VLE_AddProperty(vleParams, 'ByteTimeout', '100');
+  VLE_AddProperty(vleParams, 'RemoteHost', '');
+  VLE_AddProperty(vleParams, 'RemotePort', '211');
   VLE_AddProperty(vleParams, 'SerialNumber', '');
-  VLE_AddProperty(vleParams, 'Tax1', '12,32');
-  VLE_AddProperty(vleParams, 'Tax2', '15,4');
-  VLE_AddProperty(vleParams, 'Tax3', '0,45');
-  VLE_AddProperty(vleParams, 'Tax4', '1,34');
-  VLE_AddProperty(vleParams, 'PayName1', 'œÀ¿“. ¿–“Œ…');
-  VLE_AddProperty(vleParams, 'PayName2', ' –≈ƒ»“ŒÃ');
-  VLE_AddProperty(vleParams, 'PayName3', '—≈–“»‘» ¿“');
-  VLE_AddPickProperty(vleParams, 'PrintLogo', 'False',  ['True', 'False'], [1, 0]);
-  VLE_AddProperty(vleParams, 'LogoSize', '0');
-  VLE_AddPickProperty(vleParams, 'CloseSession', 'False',  ['True', 'False'], [1, 0]);
-  VLE_AddPickProperty(vleParams, 'EnableLog', 'True',  ['True', 'False'], [1, 0]);
+  VLE_AddPickProperty(vleParams, 'LogEnabled', 'True',  ['True', 'False'], [1, 0]);
 
-  VLE_AddPickProperty(vleLogo, 'ConnectionType', 'Local', ['Local', 'TCP', 'DCOM', 'TCP socket'], [0, 1, 2, 6]);
-  VLE_AddProperty(vleLogo, 'Port', '1');
-  VLE_AddPickProperty(vleLogo, 'Speed', '19200', ['2400', '4800', '9600', '19200', '38400', '57600', '115200'], [2400, 4800, 9600, 19200, 38400, 57600, 115200]);
-  VLE_AddProperty(vleLogo, 'UserPassword', '1');
-  VLE_AddProperty(vleLogo, 'Timeout', '100');
-  VLE_AddProperty(vleLogo, 'ComputerName', '');
-  VLE_AddProperty(vleLogo, 'IPAddress', '');
-  VLE_AddProperty(vleLogo, 'TCPPort', '211');
-  VLE_AddPickProperty(vleParams, 'BufferStrings', 'False',  ['True', 'False'], [1, 0]);
-  VLE_AddProperty(vleParams, 'BarcodeFirstLine', '1');
-  VLE_AddProperty(vleParams, 'QRCodeHeight', '200');
+  VLE_AddProperty(vleParams, 'CashierName', 'CashierName');
+  VLE_AddProperty(vleParams, 'CashierINN', '505303696069');
+  VLE_AddProperty(vleParams, 'PrintRequired', '1');
+  VLE_AddProperty(vleParams, 'SaleAddress', 'SaleAddress');
+  VLE_AddProperty(vleParams, 'SaleLocation', 'SaleLocation');
+  VLE_AddProperty(vleParams, 'ExtendedProperty', '');
+  VLE_AddProperty(vleParams, 'ExtendedData', '');
+  VLE_AddProperty(vleParams, 'TaxSystem', '0');
+  VLE_AddProperty(vleParams, 'AutomaticNumber', '0');
+  VLE_AddProperty(vleParams, 'SenderEmail', '');
 end;
 
 procedure TfmMain.FormShow(Sender: TObject);
@@ -318,32 +307,45 @@ begin
     Driver.FCenterLogo := chkCenterLogo.Checked;
     Driver.FLogoFileName := edtLogoFileName.Text;
     Driver.FBarcodeType := cbBarcodeType.Text;
+
+    Driver.FParams.ConnectionType := VLE_GetPickPropertyValue(vleParams, 'ConnectionType');
+    Driver.FParams.PortName := VLE_GetPropertyValue(vleParams, 'PortName');
+    Driver.FParams.BaudRate := VLE_GetPickPropertyValue(vleParams, 'BaudRate');
+    Driver.FParams.ByteTimeout := StrToInt(VLE_GetPropertyValue(vleParams, 'ByteTimeout'));
+    Driver.FParams.SerialNumber := VLE_GetPropertyValue(vleParams, 'SerialNumber');
+    Driver.FParams.LogEnabled := VLE_GetPickPropertyValue(vleParams, 'LogEnabled') = 1;
+    Driver.FParams.RemoteHost := VLE_GetPropertyValue(vleParams, 'RemoteHost');
+    Driver.FParams.RemotePort := StrToInt(VLE_GetPropertyValue(vleParams, 'RemotePort'));
+    Driver.FParams.PrintRequired := VLE_GetPickPropertyValue(vleParams, 'PrintRequired') = 1;
+    Driver.FParams.CashierName := VLE_GetPropertyValue(vleParams, 'CashierName');
+    Driver.FParams.CashierINN := VLE_GetPropertyValue(vleParams, 'CashierINN');
+    Driver.FParams.SaleAddress := VLE_GetPropertyValue(vleParams, 'SaleAddress');
+    Driver.FParams.SaleLocation := VLE_GetPropertyValue(vleParams, 'SaleLocation');
+    Driver.FParams.ExtendedProperty := VLE_GetPropertyValue(vleParams, 'ExtendedProperty');
+    Driver.FParams.ExtendedData := VLE_GetPropertyValue(vleParams, 'ExtendedData');
+    Driver.FParams.TaxSystem := StrToInt(VLE_GetPropertyValue(vleParams, 'TaxSystem'));
+    Driver.FParams.AutomaticNumber := VLE_GetPropertyValue(vleParams, 'AutomaticNumber');
+    Driver.FParams.SenderEmail := VLE_GetPropertyValue(vleParams, 'SenderEmail');
+
+(*
     Driver.FLogoSize := StrToInt(VLE_GetPropertyValue(vleParams, 'LogoSize'));
-    Driver.FConnectionParams.Port := StrToInt(VLE_GetPropertyValue(vleParams, 'Port'));
-    Driver.FConnectionParams.Speed := VLE_GetPickPropertyValue(vleParams, 'Speed');
-    Driver.FConnectionParams.UserPassword := VLE_GetPropertyValue(vleParams, 'UserPassword');
-    Driver.FConnectionParams.AdminPassword :=  VLE_GetPropertyValue(vleParams, 'AdminPassword');
-    Driver.FConnectionParams.Timeout := StrToInt(VLE_GetPropertyValue(vleParams, 'Timeout'));
-    Driver.FConnectionParams.SerialNumber := '';
-    Driver.FConnectionParams.Tax1 := StrToFloat(VLE_GetPropertyValue(vleParams, 'Tax1'));
-    Driver.FConnectionParams.Tax2 := StrToFloat(VLE_GetPropertyValue(vleParams, 'Tax2'));
-    Driver.FConnectionParams.Tax3 := StrToFloat(VLE_GetPropertyValue(vleParams, 'Tax3'));
-    Driver.FConnectionParams.Tax4 := StrToFloat(VLE_GetPropertyValue(vleParams, 'Tax4'));
-    Driver.FConnectionParams.CloseSession := VLE_GetPickPropertyValue(vleParams, 'CloseSession') = 1;
-    Driver.FConnectionParams.EnableLog := VLE_GetPickPropertyValue(vleParams, 'EnableLog') = 1;
-    Driver.FConnectionParams.PayName1 := VLE_GetPropertyValue(vleParams, 'PayName1');
-    Driver.FConnectionParams.PayName2 := VLE_GetPropertyValue(vleParams, 'PayName2');
-    Driver.FConnectionParams.PayName3 := VLE_GetPropertyValue(vleParams, 'PayName3');
-    Driver.FConnectionParams.PrintLogo := VLE_GetPickPropertyValue(vleParams, 'PrintLogo') = 1;
-    Driver.FConnectionParams.LogoSize := StrToInt(VLE_GetPropertyValue(vleParams, 'LogoSize'));
-    Driver.FConnectionParams.ConnectionType := VLE_GetPickPropertyValue(vleParams, 'ConnectionType');
-    Driver.FConnectionParams.ComputerName :=  VLE_GetPropertyValue(vleParams, 'ComputerName');
-    Driver.FConnectionParams.IPAddress := VLE_GetPropertyValue(vleParams, 'IPAddress');
-    Driver.FConnectionParams.TCPPort := StrToInt(VLE_GetPropertyValue(vleParams, 'TCPPort'));
-    Driver.FConnectionParams.ProtocolType := VLE_GetPickPropertyValue(vleParams, 'ProtocolType');
-    Driver.FConnectionParams.BufferStrings := VLE_GetPickPropertyValue(vleParams, 'BufferStrings') = 1;
-    Driver.FConnectionParams.BarcodeFirstLine := StrToInt(VLE_GetPropertyValue(vleParams, 'BarcodeFirstLine'));
-    Driver.FConnectionParams.QRCodeHeight := StrToInt(VLE_GetPropertyValue(vleParams, 'QRCodeHeight'));
+    Driver.FParams.Tax1 := StrToFloat(VLE_GetPropertyValue(vleParams, 'Tax1'));
+    Driver.FParams.Tax2 := StrToFloat(VLE_GetPropertyValue(vleParams, 'Tax2'));
+    Driver.FParams.Tax3 := StrToFloat(VLE_GetPropertyValue(vleParams, 'Tax3'));
+    Driver.FParams.Tax4 := StrToFloat(VLE_GetPropertyValue(vleParams, 'Tax4'));
+    Driver.FParams.CloseSession := VLE_GetPickPropertyValue(vleParams, 'CloseSession') = 1;
+    Driver.FParams.PayName1 := VLE_GetPropertyValue(vleParams, 'PayName1');
+    Driver.FParams.PayName2 := VLE_GetPropertyValue(vleParams, 'PayName2');
+    Driver.FParams.PayName3 := VLE_GetPropertyValue(vleParams, 'PayName3');
+    Driver.FParams.PrintLogo := VLE_GetPickPropertyValue(vleParams, 'PrintLogo') = 1;
+    Driver.FParams.LogoSize := StrToInt(VLE_GetPropertyValue(vleParams, 'LogoSize'));
+    Driver.FParams.BufferStrings := VLE_GetPickPropertyValue(vleParams, 'BufferStrings') = 1;
+    Driver.FParams.BarcodeFirstLine := StrToInt(VLE_GetPropertyValue(vleParams, 'BarcodeFirstLine'));
+    Driver.FParams.QRCodeHeight := StrToInt(VLE_GetPropertyValue(vleParams, 'QRCodeHeight'));
+    Driver.FParams.UserPassword := VLE_GetPropertyValue(vleParams, 'UserPassword');
+    Driver.FParams.AdminPassword :=  VLE_GetPropertyValue(vleParams, 'AdminPassword');
+*)
+
     Driver.SetConnectionParams;
   finally
     FormatSettings.DecimalSeparator := decimalsep;

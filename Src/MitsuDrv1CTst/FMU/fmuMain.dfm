@@ -969,9 +969,9 @@ object fmMain: TfmMain
       Width = 73
       Height = 21
       Style = csDropDownList
-      ItemIndex = 1
+      ItemIndex = 0
       TabOrder = 0
-      Text = '1.5'
+      Text = '1.0'
       OnChange = cbInterfaceTypeChange
       Items.Strings = (
         '1.0'

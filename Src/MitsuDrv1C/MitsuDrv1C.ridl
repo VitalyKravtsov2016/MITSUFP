@@ -6,11 +6,11 @@
 // However, when applying changes via the Editor this file will be regenerated
 // and comments or formatting changes will be lost.
 // ************************************************************************ //
-// File generated on 07.06.2024 19:01:00 (- $Rev: 12980 $, 2368968656).
+// File generated on 16.06.2024 20:30:08 (- $Rev: 12980 $, 376024218).
 
 [
   uuid(97D449D6-FAEC-403E-B21E-0A35B942DA10),
-  version(5.17),
+  version(1.0),
   helpstring("MITSU 1-F driver for 1C"),
   control
 
@@ -392,7 +392,8 @@ library MitsuLib
   [
     uuid(A1769D95-0EA0-413E-AC5C-CC720C9F4EA5),
     version(1.0),
-    helpstring("MITSU 1-F 1C driver")
+    helpstring("MITSU 1-F 1C driver"),
+    control
   ]
   coclass Mitsu1C30
   {

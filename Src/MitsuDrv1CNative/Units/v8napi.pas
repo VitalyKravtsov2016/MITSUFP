@@ -613,7 +613,7 @@ function _GetMethodName(Obj: PV8ObjectRec; const lMethodNum,
   lMethodAlias: integer): PWideChar; stdcall;
 begin
   GlobalLogger.Enabled := True;
-  GlobalLogger.FileName := 'e:\lll.txt';
+  GlobalLogger.FileName := 'C:\v8napi.log';
   globallogger.Debug('_GetMethodName ' + lMethodNum.ToString);
   if lMethodAlias = 0 then
     _MoveWideStringToV8(Obj.RelObj1.V8MM, Obj.RelObj1.ClassReg.MethList[lMethodNum].MethName, @Result)

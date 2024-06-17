@@ -6,9 +6,9 @@ interface
 
 uses
   // VCL
-  ActiveX, StdVcl, SysUtils, ActiveXView,
+  ComObj, ActiveX, StdVcl, SysUtils, ActiveXView, ComServ, AxCtrls,
   // This
-  MitsuLib_TLB, LogFile, Driver1Cst, StringUtils, ActiveXControl1C,
+  MitsuLib_TLB, LogFile, Driver1C10, StringUtils, ActiveXControl1C,
   AddIn1CInterface, TranslationUtil, FileUtils;
 
 type
@@ -18,11 +18,11 @@ type
   private
     FPayType4: Double;
     FLogger: ILogFile;
-    FDriver: TMitsuDrv1C;
+    FDriver: TDriver1C10;
     function GetLogger: ILogFile;
-    function GetDriver: TDriver1Cst;
+    function GetDriver: TDriver1C10;
     property Logger: ILogFile read GetLogger;
-    property Driver: TDriver1Cst read GetDriver;
+    property Driver: TDriver1C10 read GetDriver;
   protected
     function CashInOutcome(const DeviceID: WideString;
       Amount: Double): WordBool; safecall;
@@ -88,10 +88,19 @@ begin
   inherited Destroy;
 end;
 
-function TOleMain1C.GetDriver: TDriver1Cst;
+function TOleMain1C.GetLogger: ILogFile;
+begin
+  if FLogger = nil then
+  begin
+    FLogger := TLogFile.Create;
+  end;
+  Result := FLogger;
+end;
+
+function TOleMain1C.GetDriver: TDriver1C10;
 begin
   if FDriver = nil then
-    FDriver := TDriver1Cst.Create;
+    FDriver := TDriver1C10.Create(Logger);
   Result := FDriver;
 end;
 
@@ -126,11 +135,19 @@ function TOleMain1C.DeviceTest(const ValuesArray: IDispatch;
 var
   S: WideString;
 begin
+  Logger.Debug('DeviceTest');
+(*
   Logger.Debug(Format('%s(ValuesArray:(%s))', ['DeviceTest',
     ValuesArrayToStr(ValuesArray)]));
+*)
   Result := Driver.DeviceTest(ValuesArray, AdditionalDescription, S);
+  Logger.Debug(Format('DeviceTest; AdditionalDescription: %s): %s', [
+    AdditionalDescription, BoolToStr(Result)]));
+
+(*
   Logger.Debug(Format('%s(ValuesArray: (%s); AdditionalDescription: %s): %s', ['DeviceTest',
     ValuesArrayToStr(ValuesArray, True),AdditionalDescription, BoolToStr(Result)]));
+*)
 end;
 
 function TOleMain1C.GetLastError(out ErrorDescription: WideString): Integer;
@@ -151,11 +168,16 @@ end;
 function TOleMain1C.Open(const ValuesArray: IDispatch;
   out DeviceID: WideString): WordBool;
 begin
+  Logger.Debug('Open');
+(*
   Logger.Debug(Format('%s(ValuesArray:(%s))', ['Open',
     ValuesArrayToStr(ValuesArray)]));
+*)
   Result := Driver.Open(ValuesArray, DeviceID);
+(*
   Logger.Debug(Format('%s(ValuesArray: (%s); DeviceID: %s): %s',
     ['Open', ValuesArrayToStr(ValuesArray, True), DeviceID, BoolToStr(Result)]));
+*)
 end;
 
 function TOleMain1C.OpenCheck(const DeviceID: WideString; IsFiscalCheck,
@@ -230,15 +252,6 @@ begin
   Logger.Debug(Format('%s: %s', ['ContinuePrinting', BoolToStr(Result)]));
 end;
 
-function TOleMain1C.GetLogger: TLogger;
-begin
-  if FLogger = nil then
-  begin
-    FLogger := TLogger.Create(Self.ClassName);
-  end;
-  Result := FLogger;
-end;
-
 function TOleMain1C.OpenCashDrawer(const DeviceID: WideString;
   CashDrawerID: Integer): WordBool;
 begin
@@ -251,8 +264,12 @@ function TOleMain1C.LoadLogo(const ValuesArray: IDispatch;
   const LogoFileName: WideString; CenterLogo: WordBool;
   out LogoSize: Integer; out AdditionalDescription: WideString): WordBool;
 begin
+  Logger.Debug(Format('LoadLogo(LogoFileName: %s; CenterLogo: %s; LogoSize: %d)',
+    [LogoFileName, BoolToStr(CenterLogo), LogoSize]));
+(*
   Logger.Debug(Format('LoadLogo(ValuesArray: (%s); LogoFileName: %s; CenterLogo: %s; LogoSize: %d)',
     [LogoValuesArrayToStr(ValuesArray), LogoFileName, BoolToStr(CenterLogo), LogoSize]));
+*)
   Result := Driver.LoadLogo(ValuesArray, LogoFileName, CenterLogo, LogoSize, AdditionalDescription);
   Logger.Debug(Format('LoadLogo(AdditionalDescription: %s): %s', [AdditionalDescription, BoolToStr(Result)]));
 end;
@@ -306,13 +323,15 @@ begin
 end;
 
 
+(*
 initialization
 {$IFNDEF WIN64}
   SetTranslationLanguage;
 {$ENDIF}
   ComServer.SetServerName('AddIn');
   TActiveXControlFactory.Create(ComServer, TOleMain1C, TActiveXView,
-    Class_DrvFR1C, 1, '', OLEMISC_INVISIBLEATRUNTIME, tmApartment);
+    Class_Mitsu1C, 1, '', OLEMISC_INVISIBLEATRUNTIME, tmApartment);
+*)
 end.
 
 

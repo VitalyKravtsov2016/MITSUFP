@@ -6,7 +6,7 @@ uses
   // VCL
   SysUtils,
   // This
-  VersionInfo, LangUtils;
+  VersionInfo, LangUtils, gnugettext;
 
 procedure SetTranslationLanguage;
 procedure SetCustomTranslationLanguage(const Language: string);

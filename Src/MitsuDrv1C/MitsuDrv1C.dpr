@@ -39,12 +39,13 @@ uses
   AddIn1CInterface in 'Units\AddIn1CInterface.pas',
   TextEncoding in 'Units\TextEncoding.pas',
   TranslationUtil in '..\Shared\TranslationUtil.pas',
-  gnugettext in '..\Shared\gnugettext.pas',
   FileUtils in '..\Shared\FileUtils.pas',
   MitsuLib_TLB in 'MitsuLib_TLB.pas',
   oleMain1C10 in 'Units\oleMain1C10.pas',
-  Driver1Cst in 'Units\Driver1Cst.pas',
-  Params1C in 'Units\Params1C.pas';
+  Driver1C10 in 'Units\Driver1C10.pas',
+  Params1C in 'Units\Params1C.pas',
+  gnugettext in '..\Shared\gnugettext.pas',
+  DriverParams1C in 'Units\DriverParams1C.pas';
 
 {$E dll}
 

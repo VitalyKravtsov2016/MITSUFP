@@ -6,18 +6,19 @@ uses
   // VCL
   Variants, SysUtils, XMLDoc, XMLIntf,
   // This
-  MitsuLib_TLB, LogFile, untLogger, VersionInfo;
+  MitsuLib_TLB, LogFile, VersionInfo;
 
 type
   TDriver30 = class
   private
-    FLogger: TLogger;
+    FLogger: ILogFile;
     FDriver: TDrvFR1C30;
     function GetDriver: TDrvFR1C30;
     function GetDriverVersion: string;
   public
-    constructor Create;
+    constructor Create(ALogger: ILogFile);
     destructor Destroy; override;
+
     function GetInterfaceRevision: Integer;
     function GetDescription(var DriverDescription: WideString): Boolean;
     function GetLastError(var ErrorDescription: WideString): Integer;
@@ -62,20 +63,18 @@ implementation
 
 { TDriver30 }
 
-constructor TDriver30.Create;
+constructor TDriver30.Create(ALogger: ILogFile);
 begin
-  inherited;
-  FLogger := TLogger.Create(Self.ClassName);
+  inherited Create;
+  FLogger := ALogger;
 end;
 
 destructor TDriver30.Destroy;
 begin
   FDriver.Free;
-  FLogger.Free;
-  inherited;
+  FLogger := nil;
+  inherited Destroy;
 end;
-
-//////////////////////////////////////////////////////
 
 function TDriver30.GetInterfaceRevision: Integer;
 begin

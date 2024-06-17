@@ -768,7 +768,7 @@ type
     function GetChildText(const Child: AnsiString): AnsiString;
     function HasAttribute(const Attribute: AnsiString): Boolean;
   public
-    constructor Create;
+    constructor Create(ALogger: ILogFile);
     destructor Destroy; override;
 
     procedure LockPort;
@@ -1342,14 +1342,18 @@ end;
 
 { TMitsuDrv }
 
-constructor TMitsuDrv.Create;
+constructor TMitsuDrv.Create(ALogger: ILogFile);
 begin
   inherited Create;
-  FLogger := TLogFile.Create;
-  FLogger.MaxCount := 10;
-  FLogger.Enabled := True;
-  FLogger.FilePath := 'Logs';
-  FLogger.DeviceName := 'DeviceName';
+  FLogger := ALogger;
+  if FLogger = nil  then
+  begin
+    FLogger := TLogFile.Create;
+    FLogger.MaxCount := 10;
+    FLogger.Enabled := True;
+    FLogger.FilePath := 'Logs';
+    FLogger.DeviceName := 'DeviceName';
+  end;
   FParams.ConnectionType := ConnectionTypeSerial;
   FParams.PortName := 'COM8';
   FParams.BaudRate := 115200;

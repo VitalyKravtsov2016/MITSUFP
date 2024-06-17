@@ -13,14 +13,14 @@ uses
   DriverTypes in '..\TstShared\DriverTypes.pas',
   GlobalConst in '..\TstShared\GlobalConst.pas',
   Driver1C11 in 'Units\Driver1C11.pas',
-  untTypes in 'Units\untTypes.pas',
   Driver1C in 'Units\Driver1C.pas',
   BaseForm in '..\Shared\BaseForm.pas',
   AddIn1CInterface in 'Units\AddIn1CInterface.pas',
   WideException in '..\Shared\WideException.pas',
   MitsuLib_TLB in '..\MitsuDrv1C\MitsuLib_TLB.pas',
   gnugettext in '..\Shared\gnugettext.pas',
-  OleArray1C in 'Units\OleArray1C.pas';
+  OleArray1C in 'Units\OleArray1C.pas',
+  DriverParams1C in '..\MitsuDrv1C\Units\DriverParams1C.pas';
 
 {$R *.TLB}
 

@@ -10,7 +10,7 @@ uses
   Windows, Classes, ComObj, SysUtils, Variants, ActiveX, Types,
   // This
   MitsuLib_TLB, MitsuDrv1CTst_TLB, LanguageExtender, OleArray1C, StringUtils,
-  untTypes, Driver1C;
+  Driver1C, DriverParams1C;
 
 type
   { TDriver1C10 }
@@ -29,7 +29,7 @@ type
     procedure DeviceTest; override; 
     procedure GetVersion; override; 
     procedure Open; override; 
-    procedure OpenCheck; override; 
+    procedure OpenCheck; override;
     procedure PrintFiscalString; override; 
     procedure PrintNonFiscalString; override; 
     procedure PrintXReport; override; 
@@ -144,7 +144,7 @@ begin
   Res := Driver.DeviceTest(FValuesArray as IDispatch, FAdditionalDescription);
   FRunTime := GetTickCount - FRunTime;
   AddLine(Format('%s(ValuesArray:(%s), %s):%s',
-    ['DeviceTest', ValuesArrayToStr(FValuesArray), FAdditionalDescription, BoolToStr(Res)]));
+    ['DeviceTest', (*ValuesArrayToStr(FValuesArray)*)'', FAdditionalDescription, BoolToStr(Res)]));
   DoChange(Res);
 end;
 
@@ -179,7 +179,7 @@ begin
   Res := Driver.Open(FValuesArray as IDispatch, FDeviceID);
   FRunTime := GetTickCount - FRunTime;
   AddLine(Format('%s(ValuesArray:(%s), DeviceID = %s):%s',
-    ['Open', ValuesArrayToStr(FValuesArray), FDeviceID, BoolToStr(Res)]));
+    ['Open', {ValuesArrayToStr(FValuesArray)}'', FDeviceID, BoolToStr(Res)]));
   DoChange(Res);
 end;
 
@@ -247,8 +247,8 @@ end;
 constructor TDriver1C10.Create;
 begin
   inherited;
-  FValuesArray := TArray1C.Create(nil);
-  FLogoValuesArray := TArray1C.Create(nil);
+  FValuesArray := TArray1C.Create;
+  FLogoValuesArray := TArray1C.Create;
 end;
 
 destructor TDriver1C10.Destroy;
@@ -451,7 +451,7 @@ begin
   Res := Driver.LoadLogo(FLogoValuesArray as IDispatch, FLogoFileName, FCenterLogo, FLogoSize, FAdditionalDescription);
   FRunTime := GetTickCount - FRunTime;
   AddLine(Format('LoadLogo(ValuesArray:(%s), LogoFileName: %s, CenterLogo: %s, LogoSize: %d, AdditionalDesctiption: %s):%s',
-    [LogoValuesArrayToStr(FLogoValuesArray), FLogoFileName, BoolToStr(FCenterLogo), FLogoSize, FAdditionalDescription, BoolToStr(Res)]));
+    [{LogoValuesArrayToStr(FLogoValuesArray)}'', FLogoFileName, BoolToStr(FCenterLogo), FLogoSize, FAdditionalDescription, BoolToStr(Res)]));
   DoChange(Res);
 end;
 
@@ -496,6 +496,9 @@ end;
 
 procedure TDriver1C10.SetConnectionParams;
 begin
+  WriteDriverParams(FValuesArray, FParams);
+
+(*
   FValuesArray.Set_(C_PORT, FConnectionParams.Port);
   FValuesArray.Set_(C_SPEED, FConnectionParams.Speed);
   FValuesArray.Set_(C_USERPASSWORD, FConnectionParams.UserPassword);
@@ -528,11 +531,12 @@ begin
   FLogoValuesArray.Set_(6, FConnectionParams.IPAddress);
   FLogoValuesArray.Set_(7, FConnectionParams.TCPPort);
   FLogoValuesArray.Set_(8, FConnectionParams.ProtocolType);
+*)
 end;
 
 function TDriver1C10.GetSerialNumber: WideString;
 begin
-  Result := FValuesArray.Get(C_SERIALNUMBER);
+  Result := FValuesArray.Get(IdxSerialNumber);
 end;
 
 function TDriver1C10.GetDrvVersion: Integer;

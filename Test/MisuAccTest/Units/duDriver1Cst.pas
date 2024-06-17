@@ -8,8 +8,8 @@ uses
   // DUnit
   TestFramework,
   // This
-  MitsuDrv1CTst_TLB, LogFile, Driver1Cst, FileUtils, XmlDoc1C, OleArray1C,
-  DriverTypes, VersionInfo, MitsuDrv;
+  MitsuDrv1CTst_TLB, LogFile, Driver1C10, FileUtils, XmlDoc1C, OleArray1C,
+  DriverTypes, VersionInfo, MitsuDrv, DriverParams1C;
 
 type
   { TDriver1CTest }
@@ -17,7 +17,7 @@ type
   TDriver1CTest = class(TTestCase)
   private
     Logger: ILogFile;
-    Driver: TDriver1Cst;
+    Driver: TDriver1C10;
     DeviceID: WideString;
     Array1C: Variant;
     Params: TDriverParams;
@@ -45,16 +45,16 @@ procedure TDriver1CTest.Setup;
 begin
   //Driver := CreateOleObject('Addin.Mitsu1C') as IMitsu1C;
   Logger := TLogFile.Create;
-  Driver := TDriver1Cst.Create(Logger);
+  Driver := TDriver1C10.Create(Logger);
 
-  Params.DriverParams.ConnectionType := 0;
-  Params.DriverParams.PortName := 'COM8';
-  Params.DriverParams.BaudRate := 115200;
-  Params.DriverParams.ByteTimeout := 1000;
-  Params.DriverParams.RemoteHost := '';
-  Params.DriverParams.RemotePort := 0;
-  Params.DriverParams.LogPath := GetModulePath;
-  Params.DriverParams.LogEnabled := True;
+  Params.ConnectionType := 0;
+  Params.PortName := 'COM8';
+  Params.BaudRate := 115200;
+  Params.ByteTimeout := 1000;
+  Params.RemoteHost := '';
+  Params.RemotePort := 0;
+  Params.LogPath := GetModulePath;
+  Params.LogEnabled := True;
   Params.CashierName := 'CashierName';
   Params.CashierINN := '505303696069';
   Params.PrintRequired := True;
@@ -87,18 +87,17 @@ procedure TDriver1CTest.TestParams;
 var
   V: TArray1C;
   P, P2: TDriverParams;
-  D, D2: TMitsuParams;
 begin
   V := TArray1C.Create;
 
-  P.DriverParams.ConnectionType := 0;
-  P.DriverParams.PortName := 'COM8';
-  P.DriverParams.BaudRate := 115200;
-  P.DriverParams.ByteTimeout := 1000;
-  P.DriverParams.RemoteHost := '';
-  P.DriverParams.RemotePort := 0;
-  P.DriverParams.LogPath := GetModulePath;
-  P.DriverParams.LogEnabled := True;
+  P.ConnectionType := 0;
+  P.PortName := 'COM8';
+  P.BaudRate := 115200;
+  P.ByteTimeout := 1000;
+  P.RemoteHost := '';
+  P.RemotePort := 0;
+  P.LogPath := GetModulePath;
+  P.LogEnabled := True;
   P.CashierName := 'CashierName';
   P.CashierINN := '505303696069';
   P.PrintRequired := True;
@@ -106,16 +105,14 @@ begin
   WriteDriverParams(V as IDispatch, Params);
   P2 := ReadDriverParams(V as IDispatch);
 
-  D := P.DriverParams;
-  D2 := P2.DriverParams;
-  CheckEquals(D.ConnectionType, D2.ConnectionType, 'ConnectionType');
-  CheckEquals(D.PortName, D2.PortName, 'PortName');
-  CheckEquals(D.BaudRate, D2.BaudRate, 'BaudRate');
-  CheckEquals(D.ByteTimeout, D2.ByteTimeout, 'ByteTimeout');
-  CheckEquals(D.RemoteHost, D2.RemoteHost, 'RemoteHost');
-  CheckEquals(D.RemotePort, D2.RemotePort, 'RemotePort');
-  CheckEquals(D.LogPath, D2.LogPath, 'LogPath');
-  CheckEquals(D.LogEnabled, D2.LogEnabled, 'LogEnabled');
+  CheckEquals(P.ConnectionType, P2.ConnectionType, 'ConnectionType');
+  CheckEquals(P.PortName, P2.PortName, 'PortName');
+  CheckEquals(P.BaudRate, P2.BaudRate, 'BaudRate');
+  CheckEquals(P.ByteTimeout, P2.ByteTimeout, 'ByteTimeout');
+  CheckEquals(P.RemoteHost, P2.RemoteHost, 'RemoteHost');
+  CheckEquals(P.RemotePort, P2.RemotePort, 'RemotePort');
+  CheckEquals(P.LogPath, P2.LogPath, 'LogPath');
+  CheckEquals(P.LogEnabled, P2.LogEnabled, 'LogEnabled');
   CheckEquals(P.CashierName, P2.CashierName, 'CashierName');
   CheckEquals(P.CashierINN, P2.CashierINN, 'CashierINN');
   CheckEquals(P.PrintRequired, P2.PrintRequired, 'PrintRequired');

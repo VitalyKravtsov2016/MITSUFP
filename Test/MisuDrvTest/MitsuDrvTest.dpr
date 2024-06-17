@@ -40,11 +40,12 @@ uses
   TextEncoding in '..\..\Src\MitsuDrv1C\Units\TextEncoding.pas',
   FileUtils in '..\..\Src\Shared\FileUtils.pas',
   duMitsuDrv1C in 'Units\duMitsuDrv1C.pas',
-  Driver1Cst in '..\..\Src\MitsuDrv1C\Units\Driver1Cst.pas',
+  Driver1C10 in '..\..\Src\MitsuDrv1C\Units\Driver1C10.pas',
   duDriver1Cst in '..\MisuAccTest\Units\duDriver1Cst.pas',
   MitsuDrv1CTst_TLB in '..\..\Src\MitsuDrv1CTst\MitsuDrv1CTst_TLB.pas',
   OleArray1C in '..\..\Src\MitsuDrv1CTst\Units\OleArray1C.pas',
-  LangUtils in '..\..\Src\TstShared\LangUtils.pas';
+  LangUtils in '..\..\Src\TstShared\LangUtils.pas',
+  DriverParams1C in '..\..\Src\MitsuDrv1C\Units\DriverParams1C.pas';
 
 {$R *.res}
 {$R ..\..\Src\MitsuDrv1CTst\MitsuDrv1CTst.tlb}

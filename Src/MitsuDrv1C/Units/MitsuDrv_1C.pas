@@ -99,6 +99,7 @@ type
   TMitsuDrv1C = class
   private
     FDevice: TDevice;
+    FLogger: ILogFile;
     FDevices: TDevices;
     FDriver: TMitsuDrv;
     FParams: TMitsuParams;
@@ -118,7 +119,6 @@ type
       out OutXml: WideString; IsCorrection: Boolean);
     procedure PrintBarcode(const BarcodeType, Barcode: WideString);
 
-    function GetLogger: ILogFile;
     function ReadOutputParameters: AnsiString;
     function GetAdditionalDescription: WideString;
 
@@ -126,7 +126,7 @@ type
     property Devices: TDevices read FDevices;
     procedure PrintDocument(Document: TTextDocument);
   public
-    constructor Create;
+    constructor Create(ALogger: ILogFile);
     destructor Destroy; override;
 
     function GetInterfaceRevision: Integer;
@@ -188,8 +188,8 @@ type
     function SetLocalization(const LanguageCode: WideString;
       const LocalizationPattern: WideString): WordBool;
 
+    property Logger: ILogFile read FLogger;
     property Driver: TMitsuDrv read FDriver;
-    property Logger: ILogFile read GetLogger;
     property ResultCode: Integer read FResultCode write FResultCode;
     property ResultDescription: string read FResultDescription
       write FResultDescription;
@@ -331,10 +331,11 @@ end;
 
 { TMitsuDrv1C }
 
-constructor TMitsuDrv1C.Create;
+constructor TMitsuDrv1C.Create(ALogger: ILogFile);
 begin
   inherited Create;
-  FDriver := TMitsuDrv.Create;
+  FLogger := ALogger;
+  FDriver := TMitsuDrv.Create(ALogger);
   FDevices := TDevices.Create(TDevice);
   FXmlDocument := TXmlDoc1C.Create;
   FParamList := TParamList1C.Create;
@@ -349,11 +350,6 @@ begin
   FParamList.Free;
   FXmlDocument.Free;
   inherited Destroy;
-end;
-
-function TMitsuDrv1C.GetLogger: ILogFile;
-begin
-  Result := Driver.Logger;
 end;
 
 procedure TMitsuDrv1C.ClearError;
@@ -383,7 +379,7 @@ end;
 
 function TMitsuDrv1C.GetAdditionalDescription: WideString;
 begin
-  Result := Format('%.2xh, %s', [FResultCode, FResultDescription]);
+  Result := Format('%d, %s', [FResultCode, FResultDescription]);
 end;
 
 function TMitsuDrv1C.ReadOutputParameters: AnsiString;
@@ -724,7 +720,7 @@ end;
 
 function TMitsuDrv1C.GetLastError(out ErrorDescription: WideString): Integer;
 begin
-  ErrorDescription := Format('%.2xh, %s', [FResultCode, FResultDescription]);
+  ErrorDescription := FResultDescription;
   Result := FResultCode;
   Logger.Debug('GetLastError ' + ErrorDescription);
 end;
@@ -746,15 +742,12 @@ var
 resourcestring
   SConnectionParams = 'Параметры связи';
   SConnectionType = 'Тип подключения';
-  SProtocolType = 'Тип протокола';
-  SStandard = 'Стандартный';
-  SProtocol2 = 'Протокол ККТ 2.0';
-  SPort = 'Порт';
-  SBaudrate = 'Скорость';
-  STimevar = 'Таймаут';
-  SComputerName = 'Имя компьютера';
-  SIPAddress = 'IP адрес';
-  STCPPort = 'TCP порт';
+  SSerialPort = 'ИмяПорта';
+  SBaudRate = 'Скорость';
+  SByteTimeout = 'Таймаут';
+  SRemoteHost = 'IP адрес';
+  SRemotePort = 'TCP порт';
+(*
   SDeviceParams = 'Параметры устройства';
   SAdminPassword = 'Пароль администратора';
   SCloseSession =
@@ -835,6 +828,7 @@ resourcestring
   SKgKKT = 'Kg ККТ';
   SKgKKTEnabled = 'Работать с Kg KKT';
   SKgKKTUrl = 'URL ККТ в формате http://192.168.137.111:80';
+*)
 begin
   // СТРАНИЦА Параметры связи
   Page := FParamList.Pages.Add;
@@ -855,16 +849,16 @@ begin
       IntToStr(ConnectionTypes[i]));
   // Порт
   Item := Group.Items.Add;
-  Item.Name := 'Port';
-  Item.Caption := SPort;
-  Item.Description := SPort;
-  Item.TypeValue := 'Number';
-  Item.DefaultValue := '1';
+  Item.Name := 'SerialPort';
+  Item.Caption := SSerialPort;
+  Item.Description := SSerialPort;
+  Item.TypeValue := 'String';
+  Item.DefaultValue := 'COM1';
   for i := 1 to 256 do
     Item.AddChoiceListItem('COM' + IntToStr(i), IntToStr(i));
   // Baudrate
   Item := Group.Items.Add;
-  Item.Name := 'Baudrate';
+  Item.Name := 'BaudRate';
   Item.Caption := SBaudrate;
   Item.Description := SBaudrate;
   Item.TypeValue := 'Number';
@@ -877,7 +871,7 @@ begin
   end;
   // Таймаут
   Item := Group.Items.Add;
-  Item.Name := 'Timeout';
+  Item.Name := 'ByteTimeout';
   Item.Caption := STimeout;
   Item.Description := STimeout;
   Item.TypeValue := 'Number';
@@ -896,7 +890,7 @@ begin
   Item.Description := STCPPort;
   Item.TypeValue := 'Number';
   Item.DefaultValue := '7778';
-
+(*
   // СТРАНИЦА Параметры Устройства
   Page := FParamList.Pages.Add;
   Page.Caption := SDeviceParams;
@@ -1350,6 +1344,7 @@ begin
   Item.Description := SODIsAssurance;
   Item.TypeValue := 'Boolean';
   Item.DefaultValue := 'False';
+*)
 end;
 
 function TMitsuDrv1C.SetParameter(const Name: WideString; Value: OleVariant)

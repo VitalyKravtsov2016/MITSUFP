@@ -4,14 +4,12 @@ interface
 
 uses
   // VCL
-  SysUtils,
-  // This
-  WideException;
+  SysUtils;
 
 type
   { EDriverError }
 
-  EDriverError = class(EWideException)
+  EDriverError = class(Exception)
   private
     FCode: Integer;
   public
@@ -26,7 +24,7 @@ implementation
 
 procedure raiseOpenKeyError(const KeyName: WideString);
 begin
-  raiseExceptionFmt('%s: %s', ['Error opening registry', KeyName]);
+  raise Exception.CreateFmt('%s: %s', ['Error opening registry', KeyName]);
 end;
 
 { EDriverError }
