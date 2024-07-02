@@ -128,10 +128,7 @@ begin
   CheckEquals(True, Driver.GetParameters(XmlText), 'GetParameters');
   Xml := LoadXMLData(XmlText);
   Xml.SaveToFile('GetParameters.xml');
-  //Node := Xml.DocumentElement;
 end;
-
-
 
 procedure TMitsuDrv1CTest.TestSetParameter;
 begin

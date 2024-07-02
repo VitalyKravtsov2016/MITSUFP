@@ -6,10 +6,10 @@
 // However, when applying changes via the Editor this file will be regenerated
 // and comments or formatting changes will be lost.
 // ************************************************************************ //
-// File generated on 16.06.2024 20:30:08 (- $Rev: 12980 $, 376024218).
+// File generated on 02.07.2024 11:26:32 (- $Rev: 12980 $, 1725802031).
 
 [
-  uuid(97D449D6-FAEC-403E-B21E-0A35B942DA10),
+  uuid(8C69BB55-8F17-4946-A0AD-4E9DF680F85A),
   version(1.0),
   helpstring("MITSU 1-F driver for 1C"),
   control
@@ -33,7 +33,7 @@ library MitsuLib
 
 
   [
-    uuid(FC75F797-8ACE-4AE4-979C-00070E237E8B),
+    uuid(73B0EE0E-73F2-46EA-84AA-B47700462C1F),
     version(1.0),
     dual,
     oleautomation
@@ -91,7 +91,7 @@ library MitsuLib
   };
 
   [
-    uuid(C406E0FD-0B49-4D7C-A70E-A037EDE25F48),
+    uuid(7B5D3811-BAA3-4714-AAE5-68469572E5D2),
     version(1.0),
     helpstring("Dispatch interface for DrvFR1C11 Object"),
     dual,
@@ -156,7 +156,7 @@ library MitsuLib
   };
 
   [
-    uuid(9F7ACDBB-DBE8-4D5F-81AC-A64353A7B988),
+    uuid(E2A613DA-1844-42C1-9C48-4A13E6804A6C),
     version(1.0),
     helpstring("Dispatch interface for DrvFR1C17 Control"),
     dual,
@@ -215,7 +215,7 @@ library MitsuLib
   };
 
   [
-    uuid(033B9BD2-75B1-4CFD-AA3E-28BB85DF2636),
+    uuid(46F19A5E-6E83-4448-B94B-02D5F0F64D9F),
     version(1.0),
     helpstring("Dispatch interface for DrvFR1C22 Object"),
     dual,
@@ -274,7 +274,7 @@ library MitsuLib
   };
 
   [
-    uuid(08D7B9DA-133B-42FA-B9CF-26B72F79C893),
+    uuid(1CD466C1-DACD-47F0-BCBC-3897881C67A9),
     version(1.0),
     dual,
     oleautomation
@@ -350,7 +350,7 @@ library MitsuLib
   };
 
   [
-    uuid(39DDDA2A-E540-4E11-A584-FB9BD787B568),
+    uuid(0BFF23D1-7C0E-4D32-A52B-DBA98C86F76C),
     version(1.0),
     helpstring("MITSU 1-F 1C driver")
   ]
@@ -360,7 +360,7 @@ library MitsuLib
   };
 
   [
-    uuid(E93D7E5C-7FE7-4D51-A273-01E6110B7E08),
+    uuid(9042D8E2-BAC1-4060-B58E-5CA5D67FE23C),
     version(1.0),
     helpstring("MITSU 1-F 1C driver")
   ]
@@ -370,7 +370,7 @@ library MitsuLib
   };
 
   [
-    uuid(CEE7B7DF-A1FE-42C6-B148-8DD3EA3F3E25),
+    uuid(5E687886-93E8-4761-83E6-F255E02EDF14),
     version(1.0),
     helpstring("MITSU 1-F 1C driver")
   ]
@@ -380,7 +380,7 @@ library MitsuLib
   };
 
   [
-    uuid(D1BD4A84-0E34-495A-B9BC-5B855BA8BB6A),
+    uuid(6E7FA51F-510C-47FC-9BA5-EC5A30B490A0),
     version(1.0),
     helpstring("MITSU 1-F 1C driver")
   ]
@@ -390,7 +390,7 @@ library MitsuLib
   };
 
   [
-    uuid(A1769D95-0EA0-413E-AC5C-CC720C9F4EA5),
+    uuid(2A26DE93-F367-4CE8-95E3-51C539978AC8),
     version(1.0),
     helpstring("MITSU 1-F 1C driver"),
     control

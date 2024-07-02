@@ -63,9 +63,9 @@ constructor TExtention30.Create;
 begin
   inherited;
   FLogger := TLogFile.Create;
-  FLogger.Enabled := True;
   FLogger.FilePath := 'c:\';
-  FLogger.FileName := 'v8napi.log';
+  FLogger.DeviceName := 'v8napi';
+  FLogger.Enabled := True;
   FDriver := TDriver30.Create(FLogger);
 end;
 

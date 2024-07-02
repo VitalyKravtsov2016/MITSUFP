@@ -50,7 +50,7 @@ AllowNoIcons=Yes
 OutputDir="."
 UsePreviousAppDir=No
 UsePreviousGroup=No
-AppVersion=1.0.0.1
+AppVersion=1.0.0.4
 AppPublisher= {cm:AppPublisher}
 AppComments= {cm:AppComments}
 AppReadmeFile=History.txt
@@ -58,8 +58,8 @@ AppCopyright= {cm:AppCopyright}
 ;Version
 VersionInfoCompany=VAV
 VersionInfoDescription=Fiscal printer driver
-VersionInfoTextVersion="1.0.0.1"
-VersionInfoVersion=1.0.0.1
+VersionInfoTextVersion="1.0.0.4"
+VersionInfoVersion=1.0.0.4
 UsePreviousLanguage=no
 OutputBaseFilename=setup
 [Languages]

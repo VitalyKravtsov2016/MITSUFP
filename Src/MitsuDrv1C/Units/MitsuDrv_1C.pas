@@ -213,13 +213,10 @@ end;
 resourcestring
   SConnectionParams = 'Параметры связи';
   SConnectionType = 'Тип подключения';
-  SProtocolType = 'Тип протокола';
-  SStandard = 'Стандартный';
-  SProtocol2 = 'Протокол ККТ 2.0';
   SPort = 'Порт';
   SBaudrate = 'Скорость';
-  STimeout = 'Таймаут';
-  SComputerName = 'Имя компьютера';
+  SByteTimeout = 'Таймаут байта';
+  SCommandTimeout = 'Таймаут команды';
   SIPAddress = 'IP адрес';
   STCPPort = 'TCP порт';
   SDeviceParams = 'Параметры устройства';
@@ -693,14 +690,14 @@ begin
     Xml.Options := Xml.Options + [doNodeAutoIndent];
     Node := Xml.AddChild('DriverDescription');
 {$IFDEF WIN64}
-    Node.Attributes['Name'] := 'Драйвер ККТ с передачей данных в ОФД ' + Version
+    Node.Attributes['Name'] := 'ВиЭйВи: Драйвер ККТ с передачей данных в ОФД ' + Version
       + ' (Win64)';
-    Node.Attributes['Description'] := 'Драйвер ККТ с передачей данных в ОФД ' +
+    Node.Attributes['Description'] := 'ВиЭйВи: Драйвер ККТ с передачей данных в ОФД ' +
       Version + ' (Win64)';
 {$ELSE}
-    Node.Attributes['Name'] := 'Драйвер ККТ с передачей данных в ОФД ' + Version
+    Node.Attributes['Name'] := 'ВиЭйВи: Драйвер ККТ с передачей данных в ОФД ' + Version
       + ' (Win32)';
-    Node.Attributes['Description'] := 'Драйвер ККТ с передачей данных в ОФД ' +
+    Node.Attributes['Description'] := 'ВиЭйВи: Драйвер ККТ с передачей данных в ОФД ' +
       Version + ' (Win32)';
 {$ENDIF}
     Node.Attributes['EquipmentType'] := 'ККТ';
@@ -747,88 +744,6 @@ resourcestring
   SByteTimeout = 'Таймаут';
   SRemoteHost = 'IP адрес';
   SRemotePort = 'TCP порт';
-(*
-  SDeviceParams = 'Параметры устройства';
-  SAdminPassword = 'Пароль администратора';
-  SCloseSession =
-    'Закрывать смену для программирования налоговых ставок (в случае некорректных значений)';
-  SBufferStrings = 'Буферизировать строки';
-  SBarcodeFirstLine = 'Номер линии для загрузки QR Code';
-  SQRCodeHeight = 'Высота QR Code, точек';
-  SQRCodeDotWidth = 'Толщина точки QR Code (3-8)';
-  SCheckClock = 'Синхронизировать часы ККТ перед открытием смены';
-  SReceiptFormat = 'Формат чека';
-  SEnablePaymentSignPrint = 'Печатать признак и способ расчета (ФФД 1.05)';
-  SDisablePrintReports =
-    'Не печатать фискальные отчеты и чеки внесения/выемки на бумаге';
-  SLogParams = 'Настройка лога';
-  SEnableLog = 'Вести лог (путь к логу настраивается через тест драйвера)';
-  SLogPath = 'Путь к файлу лога';
-  STaxRates = 'Налоговые ставки и типы оплат';
-  STax1 = 'Наименование ставки НДС 18 %';
-  STax2 = 'Наименование ставки НДС 10%';
-  STax3 = 'Наименование ставки НДС 0%';
-  STax4 = 'Наименование ставки БЕЗ НДС';
-  STax5 = 'Наименование ставки НДС 18/118';
-  STax6 = 'Наименование ставки НДС 10/110';
-  SPayName1 = 'Тип безнал. оплаты 1';
-  SPayName2 = 'Тип безнал. оплаты 2';
-  SPayName3 = 'Тип безнал. оплаты 3';
-  SCashiers = 'Кассиры';
-  SCashier = 'Кассир';
-  SPassword = 'Пароль кассира';
-  SPayName1DefaultValue = 'ПЛАТ.КАРТОЙ';
-  SPayName2DefaultValue = 'КРЕДИТОМ';
-  SPayName3DefaultValue = 'СЕРТИФИКАТОМ';
-  SCodepage = 'Кодировка';
-  SCodepageDef = 'Нет перекодировки';
-  SCodepageRussian = 'Русская';
-  SCodepageArmenianUnicode = 'Армянская UNICODE';
-  SCodepageArmenianAnsi = 'Армянская ANSI';
-  SCodePageKazakhUnicode = 'Казахская UNICODE';
-  SCodepageTurkmenUnicode = 'Туркменская UNICODE';
-  SOrangeData = 'Orange Data';
-  SOrangeData2 = 'Orange Data 2';
-  SOrangeDataConnection = 'Параметры подключения';
-  SODEnabled = 'Включить передачу данных в Orange Data';
-  SODTaxOSN = 'ОСН';
-  SODTaxUSND = 'УСН доход';
-  SODTaxUSNDMR = 'УСН доход минус расход';
-  SODTaxENVD = 'ЕНВД';
-  SODTaxESN = 'ЕСН';
-  SODTaxPSN = 'ПСН';
-  SODTax = 'Системы налогообложения';
-  SODServerURL = 'URL сервера';
-  SODINN = 'ИНН';
-  SODGroup = 'Группа';
-  SODCertFileName = 'Путь к файлу клиентского сертификата (.crt)';
-  SODKeyFileName = 'Путь к файлу клиентского ключа (.key)';
-  SODSignKeyFileName = 'Путь к файлу ключа для подписи запросов (.pem)';
-  SODKeyName = 'Название ключа для проверки подписи (опционально)';
-  SODRetryCount = 'Количество попыток подтверждения документа';
-  SODRetryTimevar = 'Время между попытками подтверждения документа, сек.';
-  SODWorkMode = 'Режим работы ККТ';
-  SODIsOffline = 'Признак автономного режима';
-  SODIsEncrypted = 'Признак шифрование данных';
-  SODIsService = 'Признак расчетов за услуги';
-  SODIsExcisable = 'Признак продажи подакцизного товара';
-  SODIsGambling = 'Признак проведения азартных игр';
-  SODIsLottery = 'Признак проведения лотереи';
-  SODBSOSing = 'Признак формирования АС БСО';
-  SODIsOnline = 'Признак ККТ для расчетов в Интернет';
-  SODIsAutomaticPrinter = 'Признак установки принтера в автомате';
-  SODAutomaticNumber = 'Номер автомата для автоматического режима';
-  SODIsAutomatic = 'Признак автоматического режима';
-  SODIsMarking = 'Признак торговли маркированными товарами';
-  SODIsPawnshop = 'Признак ломбардной деятельности';
-  SODIsAssurance = 'Признак страховой деятельности';
-  SItemnameLength =
-    'Кол-во используемых символов наименования товара (0 - использовать целиком)';
-  SCheckFontNumber = 'Номер шрифта тела чека';
-  SKgKKT = 'Kg ККТ';
-  SKgKKTEnabled = 'Работать с Kg KKT';
-  SKgKKTUrl = 'URL ККТ в формате http://192.168.137.111:80';
-*)
 begin
   // СТРАНИЦА Параметры связи
   Page := FParamList.Pages.Add;
@@ -854,8 +769,10 @@ begin
   Item.Description := SSerialPort;
   Item.TypeValue := 'String';
   Item.DefaultValue := 'COM1';
-  for i := 1 to 256 do
-    Item.AddChoiceListItem('COM' + IntToStr(i), IntToStr(i));
+  for i := 1 to 16 do
+  begin
+    Item.AddChoiceListItem('COM' + IntToStr(i), 'COM' + IntToStr(i));
+  end;
   // Baudrate
   Item := Group.Items.Add;
   Item.Name := 'BaudRate';
@@ -866,16 +783,23 @@ begin
   for i := Low(Driver.ValidBaudRates) to High(Driver.ValidBaudRates) do
   begin
     ChoiceListItem := Item.ChoiceList.Add;
-    ChoiceListItem.Name := IntToStr(i);
-    ChoiceListItem.Value := IntToStr(i);
+    ChoiceListItem.Name := IntToStr(BaudRates[i]);
+    ChoiceListItem.Value := IntToStr(BaudRates[i]);
   end;
-  // Таймаут
+  // Таймаут приема байта
   Item := Group.Items.Add;
   Item.Name := 'ByteTimeout';
-  Item.Caption := STimeout;
-  Item.Description := STimeout;
+  Item.Caption := SByteTimeout;
+  Item.Description := SByteTimeout;
   Item.TypeValue := 'Number';
-  Item.DefaultValue := '10000';
+  Item.DefaultValue := '100';
+  // Таймаут команды
+  Item := Group.Items.Add;
+  Item.Name := 'CommandTimeout';
+  Item.Caption := SCommandTimeout;
+  Item.Description := SCommandTimeout;
+  Item.TypeValue := 'Number';
+  Item.DefaultValue := '1000';
   // IP адрес
   Item := Group.Items.Add;
   Item.Name := 'IPAddress';
@@ -890,461 +814,6 @@ begin
   Item.Description := STCPPort;
   Item.TypeValue := 'Number';
   Item.DefaultValue := '7778';
-(*
-  // СТРАНИЦА Параметры Устройства
-  Page := FParamList.Pages.Add;
-  Page.Caption := SDeviceParams;
-  { --- Параметры устройства --- }
-  Group := Page.Groups.Add;
-  Group.Caption := SDeviceParams;
-  // Пароль администратора
-  Item := Group.Items.Add;
-  Item.Name := 'AdminPassword';
-  Item.Caption := SAdminPassword;
-  Item.Description := SAdminPassword;
-  Item.TypeValue := 'Number';
-  Item.DefaultValue := '30';
-  // Печать QR
-  Item := Group.Items.Add;
-  Item.Name := 'BarcodeFirstLine';
-  Item.Caption := SBarcodeFirstLine;
-  Item.Description := SBarcodeFirstLine;
-  Item.TypeValue := 'Number';
-  Item.DefaultValue := '1';
-  //
-  Item := Group.Items.Add;
-  Item.Name := 'QRCodeDotWidth';
-  Item.Caption := SQRCodeDotWidth;
-  Item.Description := SQRCodeDotWidth;
-  Item.TypeValue := 'Number';
-  Item.DefaultValue := '3';
-  //
-  Item := Group.Items.Add;
-  Item.Name := 'CheckClock';
-  Item.Caption := SCheckClock;
-  Item.Description := SCheckClock;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  // СТРАНИЦА Налоговые ставки и типы оплат
-  Page := FParamList.Pages.Add;
-  Page.Caption := STaxRates;
-  { --- Налоговые ставки и типы оплат --- }
-  Group := Page.Groups.Add;
-  Group.Caption := STaxRates;
-  // Закрывать смену
-  Item := Group.Items.Add;
-  Item.Name := 'CloseSession';
-  Item.Caption := SCloseSession;
-  Item.Description := SCloseSession;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'True';
-  // Наименование типа оплаты 1
-  Item := Group.Items.Add;
-  Item.Name := 'PayName1';
-  Item.Caption := SPayName1;
-  Item.Description := SPayName1;
-  Item.TypeValue := 'String';
-  Item.DefaultValue := SPayName1DefaultValue;
-  // Наименование типа оплаты 2
-  Item := Group.Items.Add;
-  Item.Name := 'PayName2';
-  Item.Caption := SPayName2;
-  Item.Description := SPayName2;
-  Item.TypeValue := 'String';
-  Item.DefaultValue := SPayName2DefaultValue;
-  // Наименование типа оплаты 3
-  Item := Group.Items.Add;
-  Item.Name := 'PayName3';
-  Item.Caption := SPayName3;
-  Item.Description := SPayName3;
-  Item.TypeValue := 'String';
-  Item.DefaultValue := SPayName3DefaultValue;
-
-  // СТРАНИЦА Настройка лога
-  Page := FParamList.Pages.Add;
-  Page.Caption := SLogParams;
-  { --- Настройка лога --- }
-  Group := Page.Groups.Add;
-  Group.Caption := SLogParams;
-  // Лог
-  Item := Group.Items.Add;
-  Item.Name := 'EnableLog';
-  Item.Caption := SEnableLog;
-  Item.Description := SEnableLog;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  Item := Group.Items.Add;
-  Item.Name := 'LogPath';
-  Item.Caption := SLogPath;
-  Item.Description := SLogPath;
-  Item.TypeValue := 'String';
-  Item.DefaultValue := FDriver.Params.LogPath;
-
-  // СТРАНИЦА ФОРМАТ ЧЕКА
-  Page := FParamList.Pages.Add;
-  Page.Caption := SReceiptFormat;
-  Group := Page.Groups.Add;
-  Group.Caption := SReceiptFormat;
-
-  Item := Group.Items.Add;
-  Item.Name := 'DisablePrintReports';
-  Item.Caption := SDisablePrintReports;
-  Item.Description := SDisablePrintReports;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  Item := Group.Items.Add;
-  Item.Name := 'EnablePaymentSignPrint';
-  Item.Caption := SEnablePaymentSignPrint;
-  Item.Description := SEnablePaymentSignPrint;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'True';
-
-  Item := Group.Items.Add;
-  Item.Name := 'ItemNameLength';
-  Item.Caption := SItemnameLength;
-  Item.Description := SItemnameLength;
-  Item.TypeValue := 'Number';
-  Item.DefaultValue := '0';
-
-  Item := Group.Items.Add;
-  Item.Name := 'CheckFontNumber';
-  Item.Caption := SCheckFontNumber;
-  Item.Description := SCheckFontNumber;
-  Item.TypeValue := 'Number';
-  Item.DefaultValue := '1';
-
-  Item := Group.Items.Add;
-  Item.Name := 'EnableNonFiscalHeader';
-  Item.Caption := SEnableNonFiscalHeader;
-  Item.Description := SEnableNonFiscalHeader;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'True';
-
-  Item := Group.Items.Add;
-  Item.Name := 'EnableNonFiscalFooter';
-  Item.Caption := SEnableNonFiscalFooter;
-  Item.Description := SEnableNonFiscalFooter;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'True';
-
-  Item := Group.Items.Add;
-  Item.Name := 'UseRepeatDocument';
-  Item.Caption := SUseRepeatDocument;
-  Item.Description := SUseRepeatDocument;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  { ORANGE DATA }
-  // Orange data
-  Page := FParamList.Pages.Add;
-  Page.Caption := SOrangeData;
-  Group := Page.Groups.Add;
-  Group.Caption := SOrangeDataConnection;
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODEnabled';
-  Item.Caption := SODEnabled;
-  Item.Description := SODEnabled;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODServerURL';
-  Item.Caption := SODServerURL;
-  Item.Description := SODServerURL;
-  Item.TypeValue := 'String';
-  Item.DefaultValue := 'https://apip.orangedata.ru:2443/api/v2/';
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODINN';
-  Item.Caption := SODINN;
-  Item.Description := SODINN;
-  Item.TypeValue := 'String';
-  Item.DefaultValue := '';
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODGroup';
-  Item.Caption := SODGroup;
-  Item.Description := SODGroup;
-  Item.TypeValue := 'String';
-  Item.DefaultValue := '';
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODCertFileName';
-  Item.Caption := SODCertFileName;
-  Item.Description := SODCertFileName;
-  Item.TypeValue := 'String';
-  Item.DefaultValue := '';
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODKeyFileName';
-  Item.Caption := SODKeyFileName;
-  Item.Description := SODKeyFileName;
-  Item.TypeValue := 'String';
-  Item.DefaultValue := '';
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODSignKeyFileName';
-  Item.Caption := SODSignKeyFileName;
-  Item.Description := SODSignKeyFileName;
-  Item.TypeValue := 'String';
-  Item.DefaultValue := '';
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODKeyName';
-  Item.Caption := SODKeyName;
-  Item.Description := SODKeyName;
-  Item.TypeValue := 'String';
-  Item.DefaultValue := '';
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODRetryCount';
-  Item.Caption := SODRetryCount;
-  Item.Description := SODRetryCount;
-  Item.TypeValue := 'Number';
-  Item.DefaultValue := '10';
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODRetryTimeout';
-  Item.Caption := SODRetryTimeout;
-  Item.Description := SODRetryTimeout;
-  Item.TypeValue := 'Number';
-  Item.DefaultValue := '2';
-
-  { ORANGE DATA 2 }
-  // Orange data
-  { Page := FParamList.Pages.Add;
-    Page.Caption := SOrangeData2;
-    Group := Page.Groups.Add;
-    Group.Caption := SOrangeData2; }
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODFFDVersion';
-  Item.Caption := SFFDVersion;
-  Item.Description := SFFDVersion;
-  Item.TypeValue := 'Number';
-  Item.DefaultValue := '4';
-  Item.AddChoiceListItem('ФФД 1.05', '2');
-  Item.AddChoiceListItem('ФФД 1.2', '4');
-
-  Group := Page.Groups.Add;
-  Group.Caption := SKKTParams;
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODFFDVersion';
-  Item.Caption := SFFDVersion;
-  Item.Description := SFFDVersion;
-  Item.TypeValue := 'Number';
-  Item.DefaultValue := '4';
-  Item.AddChoiceListItem('ФФД 1.05', '2');
-  Item.AddChoiceListItem('ФФД 1.2', '4');
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODKKTRetailDelivery';
-  Item.Caption := SKKTRetailDelivery;
-  Item.Description := SKKTRetailDelivery;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODKKTSerialNumber';
-  Item.Caption := SODKKTSerialNumber;
-  Item.Description := SODKKTSerialNumber;
-  Item.TypeValue := 'String';
-  Item.DefaultValue := '';
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODKKTRNM';
-  Item.Caption := SODKKTRNM;
-  Item.Description := SODKKTRNM;
-  Item.TypeValue := 'String';
-  Item.DefaultValue := '';
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODKKTFNSerialNumber';
-  Item.Caption := SODKKTFNSerialNumber;
-  Item.Description := SODKKTFNSerialNumber;
-  Item.TypeValue := 'String';
-  Item.DefaultValue := '';
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODSaleAddress';
-  Item.Caption := SODSaleAddress;
-  Item.Description := SODSaleAddress;
-  Item.TypeValue := 'String';
-  Item.DefaultValue := '';
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODSaleLocation';
-  Item.Caption := SODSaleLocation;
-  Item.Description := SODSaleLocation;
-  Item.TypeValue := 'String';
-  Item.DefaultValue := '';
-
-  Group := Page.Groups.Add;
-  Group.Caption := SODTax;
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODTaxOSN';
-  Item.Caption := SODTaxOSN;
-  Item.Description := SODTaxOSN;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'True';
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODTaxUSND';
-  Item.Caption := SODTaxUSND;
-  Item.Description := SODTaxUSND;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODTaxUSNDMR';
-  Item.Caption := SODTaxUSNDMR;
-  Item.Description := SODTaxUSNDMR;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODTaxENVD';
-  Item.Caption := SODTaxENVD;
-  Item.Description := SODTaxENVD;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODTaxESN';
-  Item.Caption := SODTaxESN;
-  Item.Description := SODTaxESN;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  Item := Group.Items.Add;
-  Item.Name := 'ODTaxPSN';
-  Item.Caption := SODTaxPSN;
-  Item.Description := SODTaxPSN;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  { OD Режим работы }
-  Group := Page.Groups.Add;
-  Group.Caption := SODWorkMode;
-
-  // Признак автономного режима
-  Item := Group.Items.Add;
-  Item.Name := 'ODIsOffline';
-  Item.Caption := SODIsOffline;
-  Item.Description := SODIsOffline;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  // Признак шифрование данных
-  Item := Group.Items.Add;
-  Item.Name := 'ODIsEncrypted';
-  Item.Caption := SODIsEncrypted;
-  Item.Description := SODIsEncrypted;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  // Признак расчетов за услуги
-  Item := Group.Items.Add;
-  Item.Name := 'ODIsService';
-  Item.Caption := SODIsService;
-  Item.Description := SODIsService;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  // Признак продажи подакцизного товара
-  Item := Group.Items.Add;
-  Item.Name := 'ODIsExcisable';
-  Item.Caption := SODIsExcisable;
-  Item.Description := SODIsExcisable;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  // Признак проведения азартных игр
-  Item := Group.Items.Add;
-  Item.Name := 'ODIsGambling';
-  Item.Caption := SODIsGambling;
-  Item.Description := SODIsGambling;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  // Признак Признак проведения лотереи
-  Item := Group.Items.Add;
-  Item.Name := 'ODIsLottery';
-  Item.Caption := SODIsLottery;
-  Item.Description := SODIsLottery;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  // Признак формирования АС БСО
-  Item := Group.Items.Add;
-  Item.Name := 'ODBSOSing';
-  Item.Caption := SODBSOSing;
-  Item.Description := SODBSOSing;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  // Признак ККТ для расчетов в Интернет
-  Item := Group.Items.Add;
-  Item.Name := 'ODIsOnline';
-  Item.Caption := SODIsOnline;
-  Item.Description := SODIsOnline;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  // Признак установки принтера в автомате
-  Item := Group.Items.Add;
-  Item.Name := 'ODIsAutomaticPrinter';
-  Item.Caption := SODIsAutomaticPrinter;
-  Item.Description := SODIsAutomaticPrinter;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  // Признак автоматического режима
-  Item := Group.Items.Add;
-  Item.Name := 'ODIsAutomatic';
-  Item.Caption := SODIsAutomatic;
-  Item.Description := SODIsAutomatic;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  // Номер автомата автоматического режима
-  Item := Group.Items.Add;
-  Item.Name := 'ODAutomaticNumber';
-  Item.Caption := SODAutomaticNumber;
-  Item.Description := SODAutomaticNumber;
-  Item.TypeValue := 'String';
-  Item.DefaultValue := '';
-
-  // Признак применения при осуществлении торговли товарами, подлежащими обязательной маркировке средствами идентификации
-  Item := Group.Items.Add;
-  Item.Name := 'ODIsMarking';
-  Item.Caption := SODIsMarking;
-  Item.Description := SODIsMarking;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  // Признак применения при осуществлении ломбардами кредитования граждан
-  Item := Group.Items.Add;
-  Item.Name := 'ODIsPawnshop';
-  Item.Caption := SODIsPawnshop;
-  Item.Description := SODIsPawnshop;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-
-  // Признак применения при осуществлении деятельности по страхованию
-  Item := Group.Items.Add;
-  Item.Name := 'ODIsAssurance';
-  Item.Caption := SODIsAssurance;
-  Item.Description := SODIsAssurance;
-  Item.TypeValue := 'Boolean';
-  Item.DefaultValue := 'False';
-*)
 end;
 
 function TMitsuDrv1C.SetParameter(const Name: WideString; Value: OleVariant)
@@ -1355,163 +824,18 @@ begin
   try
     if WideSameStr('ConnectionType', Name) then
       FParams.ConnectionType := Value;
-    if WideSameStr('Port', Name) then
+    if WideSameStr('SerialPort', Name) then
       FParams.PortName := Value;
     if WideSameStr('Baudrate', Name) then
       FParams.Baudrate := Value;
-    if WideSameStr('Timeout', Name) then
+    if WideSameStr('ByteTimeout', Name) then
       FParams.ByteTimeout := Value;
+    if WideSameStr('CommandTimeout', Name) then
+      FParams.CommandTimeout := Value;
     if WideSameStr('IPAddress', Name) then
       FParams.RemoteHost := Value;
     if WideSameStr('TCPPort', Name) then
       FParams.RemotePort := Value;
-    (*
-      if WideSameStr('AdminPassword', Name) then
-      FParams.AdminPassword := Value;
-      if WideSameStr('QRCodeDotWidth', Name) then
-      FParams.QRCodeDotWidth := Value;
-
-      if WideSameStr('EnablePaymentSignPrint', Name) then
-      FParams.EnablePaymentSignPrint := (WideSameText('True', Value)) or (WideSameText('1', Value));
-
-      if WideSameStr('ODEnabled', Name) then
-      FParams.ODEnabled := (WideSameText('True', Value)) or (WideSameText('1', Value));
-
-      if WideSameStr('ODServerURL', Name) then
-      FParams.ODServerURL := Value;
-
-      if WideSameStr('ODINN', Name) then
-      FParams.ODINN := Value;
-
-      if WideSameStr('ODGroup', Name) then
-      FParams.ODGroup := Value;
-
-      if WideSameStr('ODCertFileName', Name) then
-      FParams.ODCertFileName := Value;
-
-      if WideSameStr('ODKeyFileName', Name) then
-      FParams.ODKeyFileName := Value;
-
-      if WideSameStr('ODSignKeyFileName', Name) then
-      FParams.ODSignKeyFileName := Value;
-
-      if WideSameStr('ODKeyName', Name) then
-      FParams.ODKeyName := Value;
-
-      if WideSameStr('ODRetryCount', Name) then
-      FParams.ODRetryCount := Value;
-
-      if WideSameStr('ODRetryTimeout', Name) then
-      FParams.ODRetryTimeout := Value;
-
-      if WideSameStr('ItemNameLength', Name) then
-      FParams.ItemNameLength := Value;
-
-      if WideSameStr('CheckFontNumber', Name) then
-      FParams.CheckFontNumber := Value;
-
-      if WideSameStr('ODFFDVersion', Name) then
-      FParams.ODFFDVersion := StrToInt(Value);
-
-      if WideSameStr('ODTaxOSN', Name) then
-      FParams.ODTaxOSN := Value;
-
-      if WideSameStr('ODTaxUSND', Name) then
-      FParams.ODTaxUSND := Value;
-
-      if WideSameStr('ODTaxUSNDMR', Name) then
-      FParams.ODTaxUSNDMR := Value;
-
-      if WideSameStr('ODTaxENVD', Name) then
-      FParams.ODTaxENVD := Value;
-
-      if WideSameStr('ODTaxESN', Name) then
-      FParams.ODTaxESN := Value;
-
-      if WideSameStr('ODTaxPSN', Name) then
-      FParams.ODTaxPSN := Value;
-
-      if WideSameStr('EnableNonFiscalHeader', Name) then
-      FParams.EnableNonFiscalHeader := Value;
-
-      if WideSameStr('EnableNonFiscalFooter', Name) then
-      FParams.EnableNonFiscalFooter := Value;
-
-      if WideSameStr('DisablePrintReports', Name) then
-      FParams.DisablePrintReports := Value;
-
-      if WideSameStr('CheckClock', Name) then
-      FParams.CheckClock := Value;
-
-      if WideSameStr('ODKKTRetailDelivery', Name) then
-      FParams.ODKKTRetailDelivery := Value;
-
-      if WideSameStr('ODKKTSerialNumber', Name) then
-      FParams.ODKKTSerialNumber := Value;
-
-      if WideSameStr('ODKKTRNM', Name) then
-      FParams.ODKKTRNM := Value;
-
-      if WideSameStr('ODKKTFNSerialNumber', Name) then
-      FParams.ODKKTFNSerialNumber := Value;
-
-      if WideSameStr('ODAutomaticNumber', Name) then
-      FParams.ODAutomaticNumber := Value;
-
-      if WideSameStr('ODIsOffline', Name) then
-      FParams.ODIsOffline := Value;
-
-      if WideSameStr('ODIsEncrypted', Name) then
-      FParams.ODIsEncrypted := Value;
-
-      if WideSameStr('ODIsService', Name) then
-      FParams.ODIsService := Value;
-
-      if WideSameStr('ODIsExcisable', Name) then
-      FParams.ODIsExcisable := Value;
-
-      if WideSameStr('ODIsGambling', Name) then
-      FParams.ODIsGambling := Value;
-
-      if WideSameStr('ODIsLottery', Name) then
-      FParams.ODIsLottery := Value;
-
-      if WideSameStr('ODBSOSing', Name) then
-      FParams.ODBSOSing := Value;
-
-      if WideSameStr('ODIsOnline', Name) then
-      FParams.ODIsOnline := Value;
-
-      if WideSameStr('ODIsAutomaticPrinter', Name) then
-      FParams.ODIsAutomaticPrinter := Value;
-
-      if WideSameStr('ODIsAutomatic', Name) then
-      FParams.ODIsAutomatic := Value;
-
-      if WideSameStr('ODIsMarking', Name) then
-      FParams.ODIsMarking := Value;
-
-      if WideSameStr('ODIsPawnshop', Name) then
-      FParams.ODIsPawnshop := Value;
-
-      if WideSameStr('ODIsAssurance', Name) then
-      FParams.ODIsAssurance := Value;
-
-      if WideSameStr('ODSaleAddress', Name) then
-      FParams.ODSaleAddress := Value;
-
-      if WideSameStr('ODSaleLocation', Name) then
-      FParams.ODSaleLocation := Value;
-
-      if WideSameStr('KgKKTEnabled', Name) then
-      FParams.KgKKTEnabled := Value;
-
-      if WideSameStr('KgKKTUrl', Name) then
-      FParams.KgKKTUrl := Value;
-
-      if WideSameStr('UseRepeatDocument', Name) then
-      FParams.UseRepeatDocument := Value;
-    *)
   except
     on E: Exception do
     begin
@@ -1585,7 +909,6 @@ begin
   try
     SelectDevice(DeviceID);
     Params := FXmlDocument.Read(InputParameters);
-    // !!!
   except
     on E: Exception do
     begin

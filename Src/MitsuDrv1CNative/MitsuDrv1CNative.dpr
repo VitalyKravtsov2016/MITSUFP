@@ -23,7 +23,6 @@ uses
 var
   ClassReg: TClassReg;
 begin
-
 {$IFDEF V1C_34}
   ClassReg := ClassRegList.RegisterClass(TExtention30, 'MitsuDrv1C4', 'MitsuDrv1C4');
 {$ELSE}

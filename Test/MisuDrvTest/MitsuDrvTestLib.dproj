@@ -152,7 +152,6 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="Units\duMitsuDrv1C.pas"/>
         <DCCReference Include="..\..\Src\MitsuDrv1C\Units\MitsuDrv.pas"/>
         <DCCReference Include="..\..\Src\Shared\PrinterPort.pas"/>
         <DCCReference Include="..\..\Src\Shared\SerialPort.pas"/>
@@ -172,7 +171,6 @@
         <DCCReference Include="..\..\Src\MitsuDrv1C\Units\ParamList1CGroup.pas"/>
         <DCCReference Include="..\..\Src\MitsuDrv1C\Units\ParamList1CItem.pas"/>
         <DCCReference Include="..\..\Src\MitsuDrv1C\Units\Param1CChoiceList.pas"/>
-        <DCCReference Include="..\..\Src\TstShared\LangUtils.pas"/>
         <DCCReference Include="..\..\Src\TstShared\DriverTypes.pas"/>
         <DCCReference Include="..\..\Src\TstShared\GlobalConst.pas"/>
         <DCCReference Include="..\..\Src\MitsuDrv1C\Units\FDTypes.pas"/>
@@ -189,9 +187,15 @@
         <DCCReference Include="..\..\Src\MitsuDrv1C\Units\AddIn1CTypes.pas"/>
         <DCCReference Include="..\..\Src\MitsuDrv1C\Units\AddIn1CInterface.pas"/>
         <DCCReference Include="..\..\Src\MitsuDrv1C\Units\TextEncoding.pas"/>
-        <DCCReference Include="..\..\Src\Shared\TranslationUtil.pas"/>
-        <DCCReference Include="..\..\Src\Shared\gnugettext.pas"/>
         <DCCReference Include="..\..\Src\Shared\FileUtils.pas"/>
+        <DCCReference Include="Units\duMitsuDrv1C.pas"/>
+        <DCCReference Include="..\..\Src\MitsuDrv1C\Units\Driver1C10.pas"/>
+        <DCCReference Include="..\MisuAccTest\Units\duDriver1Cst.pas"/>
+        <DCCReference Include="..\..\Src\MitsuDrv1CTst\MitsuDrv1CTst_TLB.pas"/>
+        <DCCReference Include="..\..\Src\MitsuDrv1CTst\Units\OleArray1C.pas"/>
+        <DCCReference Include="..\..\Src\TstShared\LangUtils.pas"/>
+        <DCCReference Include="..\..\Src\MitsuDrv1C\Units\DriverParams1C.pas"/>
+        <DCCReference Include="Units\duLogFile.pas"/>
         <None Include="MitsuDrvTest.dpr">
             <ContainerId>File</ContainerId>
         </None>

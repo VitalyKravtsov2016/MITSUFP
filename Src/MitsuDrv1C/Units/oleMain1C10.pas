@@ -93,6 +93,9 @@ begin
   if FLogger = nil then
   begin
     FLogger := TLogFile.Create;
+    FLogger.FilePath := 'C:\';
+    FLogger.DeviceName := 'MitsuDrv1C';
+    FLogger.Enabled := True;
   end;
   Result := FLogger;
 end;

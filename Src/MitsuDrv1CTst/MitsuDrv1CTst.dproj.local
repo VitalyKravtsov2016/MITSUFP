@@ -4,4 +4,7 @@
     <Transaction>1899.12.30 00:00:00.000.802,D:\projects\Mitsu1C\Src\MitsuDrv1CTst\Units\untTypes.pas=</Transaction>
     <Transaction>1899.12.30 00:00:00.000.173,=D:\projects\Mitsu1C\Src\MitsuDrv1C\Units\DriverParams1C.pas</Transaction>
   </Transactions>
+	<ActiveMobileDevice>
+		<NoProfile Android64=""/>
+	</ActiveMobileDevice>
 </BorlandProject>

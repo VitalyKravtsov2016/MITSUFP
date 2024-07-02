@@ -164,8 +164,7 @@ const
   ConnectionTypeSerial = 0;
   ConnectionTypeSocket = 1;
 
-  ConnectionTypes: TConnectionTypes = (ConnectionTypeSerial,
-    ConnectionTypeSocket);
+  ConnectionTypes: TConnectionTypes = (ConnectionTypeSerial, ConnectionTypeSocket);
 
   BaudRates: TBaudRates = (CBR_2400, CBR_4800, CBR_9600, CBR_14400, CBR_19200,
     CBR_38400, CBR_56000, CBR_57600, CBR_115200);
@@ -468,6 +467,7 @@ type
     PortName: AnsiString;
     BaudRate: Integer;
     ByteTimeout: Integer;
+    CommandTimeout: Integer;
     RemoteHost: AnsiString;
     RemotePort: Integer;
     LogPath: WideString;
@@ -1351,8 +1351,8 @@ begin
     FLogger := TLogFile.Create;
     FLogger.MaxCount := 10;
     FLogger.Enabled := True;
-    FLogger.FilePath := 'Logs';
-    FLogger.DeviceName := 'DeviceName';
+    FLogger.FilePath := 'C:\';
+    FLogger.DeviceName := 'MitsuDrv';
   end;
   FParams.ConnectionType := ConnectionTypeSerial;
   FParams.PortName := 'COM8';

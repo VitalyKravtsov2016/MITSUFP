@@ -614,34 +614,11 @@ begin
   begin
     FLogger := TLogFile.Create;
     FLogger.FilePath := 'C:\';
-    FLogger.FileName := 'v8napi.log';
+    FLogger.DeviceName := 'v8napi';
     FLogger.Enabled := True;
 
   end;
   Result := FLogger;
-end;
-
-// IInitDone
-
-function TActiveXControl1C.Init(pConnection: IDispatch): HResult;
-begin
-  Result := S_OK;
-end;
-
-function TActiveXControl1C.Done: HResult;
-begin
-  Result := S_OK;
-end;
-
-function TActiveXControl1C.GetInfo(var pInfo: PSafeArray): HResult;
-var
-  Index: Integer;
-  Value: OleVariant;
-begin
-  Index := 0;
-  Value := '1000';
-  SafeArrayPutElement(pInfo, Index, Value);
-  Result := S_OK;
 end;
 
 procedure TActiveXControl1C.Initialize;
@@ -651,11 +628,38 @@ begin
   FProps := TAddinProps.Create;
   FMethods := TAddinFuncs.Create;
   UpdateAddinLists;
-//  LogMethods;
+  LogMethods;
+end;
+
+// IInitDone
+
+function TActiveXControl1C.Init(pConnection: IDispatch): HResult;
+begin
+  Logger.Debug('TActiveXControl1C.Init');
+  Result := S_OK;
+end;
+
+function TActiveXControl1C.Done: HResult;
+begin
+  Logger.Debug('TActiveXControl1C.Done');
+  Result := S_OK;
+end;
+
+function TActiveXControl1C.GetInfo(var pInfo: PSafeArray): HResult;
+var
+  Index: Integer;
+  Value: OleVariant;
+begin
+  Logger.Debug('TActiveXControl1C.GetInfo');
+  Index := 0;
+  Value := '1000';
+  SafeArrayPutElement(pInfo, Index, Value);
+  Result := S_OK;
 end;
 
 function TActiveXControl1C.SetLocale(bstrLocale: WideString): HResult;
 begin
+  Logger.Debug('TActiveXControl1C.SetLocale');
   Result := S_OK;
   SetLanguage(bstrLocale);
 end;
@@ -713,7 +717,6 @@ begin
     FP.Free;
     FM.Free;
   end
-
 end;
 
 end.

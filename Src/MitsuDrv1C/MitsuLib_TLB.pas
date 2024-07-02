@@ -12,11 +12,11 @@
 // ************************************************************************ //
 
 // $Rev: 98336 $
-// File generated on 07.06.2024 14:58:27 from Type Library described below.
+// File generated on 02.07.2024 11:26:28 from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\projects\Mitsu1C\Src\MitsuDrv1C\MitsuDrv1C (1)
-// LIBID: {97D449D6-FAEC-403E-B21E-0A35B942DA10}
+// LIBID: {8C69BB55-8F17-4946-A0AD-4E9DF680F85A}
 // LCID: 0
 // Helpfile:
 // HelpString: MITSU 1-F driver for 1C
@@ -45,21 +45,21 @@ uses Winapi.Windows, System.Classes, System.Variants, System.Win.StdVCL, Vcl.Gra
 // *********************************************************************//
 const
   // TypeLibrary Major and minor versions
-  MitsuLibMajorVersion = 5;
-  MitsuLibMinorVersion = 17;
+  MitsuLibMajorVersion = 1;
+  MitsuLibMinorVersion = 0;
 
-  LIBID_MitsuLib: TGUID = '{97D449D6-FAEC-403E-B21E-0A35B942DA10}';
+  LIBID_MitsuLib: TGUID = '{8C69BB55-8F17-4946-A0AD-4E9DF680F85A}';
 
-  IID_IMitsu1C: TGUID = '{FC75F797-8ACE-4AE4-979C-00070E237E8B}';
-  CLASS_Mitsu1C: TGUID = '{39DDDA2A-E540-4E11-A584-FB9BD787B568}';
-  IID_IMitsu1C11: TGUID = '{C406E0FD-0B49-4D7C-A70E-A037EDE25F48}';
-  CLASS_Mitsu1C11: TGUID = '{E93D7E5C-7FE7-4D51-A273-01E6110B7E08}';
-  IID_IMitsu1C17: TGUID = '{9F7ACDBB-DBE8-4D5F-81AC-A64353A7B988}';
-  CLASS_Mitsu1C17: TGUID = '{CEE7B7DF-A1FE-42C6-B148-8DD3EA3F3E25}';
-  IID_IMitsu1C22: TGUID = '{033B9BD2-75B1-4CFD-AA3E-28BB85DF2636}';
-  CLASS_Mitsu1C22: TGUID = '{D1BD4A84-0E34-495A-B9BC-5B855BA8BB6A}';
-  IID_IMitsu1C30: TGUID = '{08D7B9DA-133B-42FA-B9CF-26B72F79C893}';
-  CLASS_Mitsu1C30: TGUID = '{A1769D95-0EA0-413E-AC5C-CC720C9F4EA5}';
+  IID_IMitsu1C: TGUID = '{73B0EE0E-73F2-46EA-84AA-B47700462C1F}';
+  CLASS_Mitsu1C: TGUID = '{0BFF23D1-7C0E-4D32-A52B-DBA98C86F76C}';
+  IID_IMitsu1C11: TGUID = '{7B5D3811-BAA3-4714-AAE5-68469572E5D2}';
+  CLASS_Mitsu1C11: TGUID = '{9042D8E2-BAC1-4060-B58E-5CA5D67FE23C}';
+  IID_IMitsu1C17: TGUID = '{E2A613DA-1844-42C1-9C48-4A13E6804A6C}';
+  CLASS_Mitsu1C17: TGUID = '{5E687886-93E8-4761-83E6-F255E02EDF14}';
+  IID_IMitsu1C22: TGUID = '{46F19A5E-6E83-4448-B94B-02D5F0F64D9F}';
+  CLASS_Mitsu1C22: TGUID = '{6E7FA51F-510C-47FC-9BA5-EC5A30B490A0}';
+  IID_IMitsu1C30: TGUID = '{1CD466C1-DACD-47F0-BCBC-3897881C67A9}';
+  CLASS_Mitsu1C30: TGUID = '{2A26DE93-F367-4CE8-95E3-51C539978AC8}';
 type
 
 // *********************************************************************//
@@ -90,10 +90,10 @@ type
 // *********************************************************************//
 // Interface: IMitsu1C
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {FC75F797-8ACE-4AE4-979C-00070E237E8B}
+// GUID:      {73B0EE0E-73F2-46EA-84AA-B47700462C1F}
 // *********************************************************************//
   IMitsu1C = interface(IDispatch)
-    ['{FC75F797-8ACE-4AE4-979C-00070E237E8B}']
+    ['{73B0EE0E-73F2-46EA-84AA-B47700462C1F}']
     function GetVersion: WideString; safecall;
     function GetLastError(out ErrorDescription: WideString): Integer; safecall;
     function Close(const DeviceID: WideString): WordBool; safecall;
@@ -134,10 +134,10 @@ type
 // *********************************************************************//
 // DispIntf:  IMitsu1CDisp
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {FC75F797-8ACE-4AE4-979C-00070E237E8B}
+// GUID:      {73B0EE0E-73F2-46EA-84AA-B47700462C1F}
 // *********************************************************************//
   IMitsu1CDisp = dispinterface
-    ['{FC75F797-8ACE-4AE4-979C-00070E237E8B}']
+    ['{73B0EE0E-73F2-46EA-84AA-B47700462C1F}']
     function GetVersion: WideString; dispid 201;
     function GetLastError(out ErrorDescription: WideString): Integer; dispid 202;
     function Close(const DeviceID: WideString): WordBool; dispid 204;
@@ -174,10 +174,10 @@ type
 // *********************************************************************//
 // Interface: IMitsu1C11
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {C406E0FD-0B49-4D7C-A70E-A037EDE25F48}
+// GUID:      {7B5D3811-BAA3-4714-AAE5-68469572E5D2}
 // *********************************************************************//
   IMitsu1C11 = interface(IDispatch)
-    ['{C406E0FD-0B49-4D7C-A70E-A037EDE25F48}']
+    ['{7B5D3811-BAA3-4714-AAE5-68469572E5D2}']
     function GetVersion: WideString; safecall;
     function GetDescription(out Name: WideString; out Description: WideString;
                             out EquipmentType: WideString; out InterfaceRevision: Integer;
@@ -223,10 +223,10 @@ type
 // *********************************************************************//
 // DispIntf:  IMitsu1C11Disp
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {C406E0FD-0B49-4D7C-A70E-A037EDE25F48}
+// GUID:      {7B5D3811-BAA3-4714-AAE5-68469572E5D2}
 // *********************************************************************//
   IMitsu1C11Disp = dispinterface
-    ['{C406E0FD-0B49-4D7C-A70E-A037EDE25F48}']
+    ['{7B5D3811-BAA3-4714-AAE5-68469572E5D2}']
     function GetVersion: WideString; dispid 201;
     function GetDescription(out Name: WideString; out Description: WideString;
                             out EquipmentType: WideString; out InterfaceRevision: Integer;
@@ -272,10 +272,10 @@ type
 // *********************************************************************//
 // Interface: IMitsu1C17
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {9F7ACDBB-DBE8-4D5F-81AC-A64353A7B988}
+// GUID:      {E2A613DA-1844-42C1-9C48-4A13E6804A6C}
 // *********************************************************************//
   IMitsu1C17 = interface(IDispatch)
-    ['{9F7ACDBB-DBE8-4D5F-81AC-A64353A7B988}']
+    ['{E2A613DA-1844-42C1-9C48-4A13E6804A6C}']
     function GetVersion: WideString; safecall;
     function GetDescription(out Name: WideString; out Description: WideString;
                             out EquipmentType: WideString; out InterfaceRevision: Integer;
@@ -320,10 +320,10 @@ type
 // *********************************************************************//
 // DispIntf:  IMitsu1C17Disp
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {9F7ACDBB-DBE8-4D5F-81AC-A64353A7B988}
+// GUID:      {E2A613DA-1844-42C1-9C48-4A13E6804A6C}
 // *********************************************************************//
   IMitsu1C17Disp = dispinterface
-    ['{9F7ACDBB-DBE8-4D5F-81AC-A64353A7B988}']
+    ['{E2A613DA-1844-42C1-9C48-4A13E6804A6C}']
     function GetVersion: WideString; dispid 201;
     function GetDescription(out Name: WideString; out Description: WideString;
                             out EquipmentType: WideString; out InterfaceRevision: Integer;
@@ -368,10 +368,10 @@ type
 // *********************************************************************//
 // Interface: IMitsu1C22
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {033B9BD2-75B1-4CFD-AA3E-28BB85DF2636}
+// GUID:      {46F19A5E-6E83-4448-B94B-02D5F0F64D9F}
 // *********************************************************************//
   IMitsu1C22 = interface(IDispatch)
-    ['{033B9BD2-75B1-4CFD-AA3E-28BB85DF2636}']
+    ['{46F19A5E-6E83-4448-B94B-02D5F0F64D9F}']
     function GetVersion: WideString; safecall;
     function GetDescription(out Name: WideString; out Description: WideString;
                             out EquipmentType: WideString; out InterfaceRevision: Integer;
@@ -421,10 +421,10 @@ type
 // *********************************************************************//
 // DispIntf:  IMitsu1C22Disp
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {033B9BD2-75B1-4CFD-AA3E-28BB85DF2636}
+// GUID:      {46F19A5E-6E83-4448-B94B-02D5F0F64D9F}
 // *********************************************************************//
   IMitsu1C22Disp = dispinterface
-    ['{033B9BD2-75B1-4CFD-AA3E-28BB85DF2636}']
+    ['{46F19A5E-6E83-4448-B94B-02D5F0F64D9F}']
     function GetVersion: WideString; dispid 201;
     function GetDescription(out Name: WideString; out Description: WideString;
                             out EquipmentType: WideString; out InterfaceRevision: Integer;
@@ -474,10 +474,10 @@ type
 // *********************************************************************//
 // Interface: IMitsu1C30
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {08D7B9DA-133B-42FA-B9CF-26B72F79C893}
+// GUID:      {1CD466C1-DACD-47F0-BCBC-3897881C67A9}
 // *********************************************************************//
   IMitsu1C30 = interface(IDispatch)
-    ['{08D7B9DA-133B-42FA-B9CF-26B72F79C893}']
+    ['{1CD466C1-DACD-47F0-BCBC-3897881C67A9}']
     function GetInterfaceRevision: Integer; safecall;
     function GetDescription(out DriverDescription: WideString): WordBool; safecall;
     function GetLastError(out ErrorDescription: WideString): Integer; safecall;
@@ -529,10 +529,10 @@ type
 // *********************************************************************//
 // DispIntf:  IMitsu1C30Disp
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {08D7B9DA-133B-42FA-B9CF-26B72F79C893}
+// GUID:      {1CD466C1-DACD-47F0-BCBC-3897881C67A9}
 // *********************************************************************//
   IMitsu1C30Disp = dispinterface
-    ['{08D7B9DA-133B-42FA-B9CF-26B72F79C893}']
+    ['{1CD466C1-DACD-47F0-BCBC-3897881C67A9}']
     function GetInterfaceRevision: Integer; dispid 201;
     function GetDescription(out DriverDescription: WideString): WordBool; dispid 202;
     function GetLastError(out ErrorDescription: WideString): Integer; dispid 203;

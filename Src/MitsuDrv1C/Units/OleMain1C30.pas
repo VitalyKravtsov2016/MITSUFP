@@ -112,7 +112,7 @@ begin
   begin
     FLogger := TLogFile.Create;
     FLogger.FilePath := 'C:\';
-    FLogger.FileName := 'MitsuDrv1C.log';
+    FLogger.DeviceName := 'MitsuDrv1C';
     FLogger.Enabled := True;
   end;
   Result := FLogger;
@@ -122,7 +122,9 @@ end;
 function TOleMain1C30.CashInOutcome(const DeviceID, InputParameters: WideString;
   Amount: Double): WordBool;
 begin
+  Logger.Debug('CashInOutcome.0');
   Result := Driver.CashInOutcome(DeviceID, InputParameters, Amount);
+  Logger.Debug('CashInOutcome.1');
 end;
 
 function TOleMain1C30.Close(const DeviceID: WideString): WordBool;

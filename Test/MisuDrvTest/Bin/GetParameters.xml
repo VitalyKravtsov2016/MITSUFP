@@ -8,373 +8,43 @@
 					<Item Value="1">TCP подключение</Item>
 				</ChoiceList>
 			</Parameter>
-			<Parameter Name="Port" Caption="Порт" Description="Порт" TypeValue="Number" ReadOnly="False" DefaultValue="1">
+			<Parameter Name="SerialPort" Caption="ИмяПорта" Description="ИмяПорта" TypeValue="String" ReadOnly="False" DefaultValue="COM1">
 				<ChoiceList>
-					<Item Value="1">COM1</Item>
-					<Item Value="2">COM2</Item>
-					<Item Value="3">COM3</Item>
-					<Item Value="4">COM4</Item>
-					<Item Value="5">COM5</Item>
-					<Item Value="6">COM6</Item>
-					<Item Value="7">COM7</Item>
-					<Item Value="8">COM8</Item>
-					<Item Value="9">COM9</Item>
-					<Item Value="10">COM10</Item>
-					<Item Value="11">COM11</Item>
-					<Item Value="12">COM12</Item>
-					<Item Value="13">COM13</Item>
-					<Item Value="14">COM14</Item>
-					<Item Value="15">COM15</Item>
-					<Item Value="16">COM16</Item>
-					<Item Value="17">COM17</Item>
-					<Item Value="18">COM18</Item>
-					<Item Value="19">COM19</Item>
-					<Item Value="20">COM20</Item>
-					<Item Value="21">COM21</Item>
-					<Item Value="22">COM22</Item>
-					<Item Value="23">COM23</Item>
-					<Item Value="24">COM24</Item>
-					<Item Value="25">COM25</Item>
-					<Item Value="26">COM26</Item>
-					<Item Value="27">COM27</Item>
-					<Item Value="28">COM28</Item>
-					<Item Value="29">COM29</Item>
-					<Item Value="30">COM30</Item>
-					<Item Value="31">COM31</Item>
-					<Item Value="32">COM32</Item>
-					<Item Value="33">COM33</Item>
-					<Item Value="34">COM34</Item>
-					<Item Value="35">COM35</Item>
-					<Item Value="36">COM36</Item>
-					<Item Value="37">COM37</Item>
-					<Item Value="38">COM38</Item>
-					<Item Value="39">COM39</Item>
-					<Item Value="40">COM40</Item>
-					<Item Value="41">COM41</Item>
-					<Item Value="42">COM42</Item>
-					<Item Value="43">COM43</Item>
-					<Item Value="44">COM44</Item>
-					<Item Value="45">COM45</Item>
-					<Item Value="46">COM46</Item>
-					<Item Value="47">COM47</Item>
-					<Item Value="48">COM48</Item>
-					<Item Value="49">COM49</Item>
-					<Item Value="50">COM50</Item>
-					<Item Value="51">COM51</Item>
-					<Item Value="52">COM52</Item>
-					<Item Value="53">COM53</Item>
-					<Item Value="54">COM54</Item>
-					<Item Value="55">COM55</Item>
-					<Item Value="56">COM56</Item>
-					<Item Value="57">COM57</Item>
-					<Item Value="58">COM58</Item>
-					<Item Value="59">COM59</Item>
-					<Item Value="60">COM60</Item>
-					<Item Value="61">COM61</Item>
-					<Item Value="62">COM62</Item>
-					<Item Value="63">COM63</Item>
-					<Item Value="64">COM64</Item>
-					<Item Value="65">COM65</Item>
-					<Item Value="66">COM66</Item>
-					<Item Value="67">COM67</Item>
-					<Item Value="68">COM68</Item>
-					<Item Value="69">COM69</Item>
-					<Item Value="70">COM70</Item>
-					<Item Value="71">COM71</Item>
-					<Item Value="72">COM72</Item>
-					<Item Value="73">COM73</Item>
-					<Item Value="74">COM74</Item>
-					<Item Value="75">COM75</Item>
-					<Item Value="76">COM76</Item>
-					<Item Value="77">COM77</Item>
-					<Item Value="78">COM78</Item>
-					<Item Value="79">COM79</Item>
-					<Item Value="80">COM80</Item>
-					<Item Value="81">COM81</Item>
-					<Item Value="82">COM82</Item>
-					<Item Value="83">COM83</Item>
-					<Item Value="84">COM84</Item>
-					<Item Value="85">COM85</Item>
-					<Item Value="86">COM86</Item>
-					<Item Value="87">COM87</Item>
-					<Item Value="88">COM88</Item>
-					<Item Value="89">COM89</Item>
-					<Item Value="90">COM90</Item>
-					<Item Value="91">COM91</Item>
-					<Item Value="92">COM92</Item>
-					<Item Value="93">COM93</Item>
-					<Item Value="94">COM94</Item>
-					<Item Value="95">COM95</Item>
-					<Item Value="96">COM96</Item>
-					<Item Value="97">COM97</Item>
-					<Item Value="98">COM98</Item>
-					<Item Value="99">COM99</Item>
-					<Item Value="100">COM100</Item>
-					<Item Value="101">COM101</Item>
-					<Item Value="102">COM102</Item>
-					<Item Value="103">COM103</Item>
-					<Item Value="104">COM104</Item>
-					<Item Value="105">COM105</Item>
-					<Item Value="106">COM106</Item>
-					<Item Value="107">COM107</Item>
-					<Item Value="108">COM108</Item>
-					<Item Value="109">COM109</Item>
-					<Item Value="110">COM110</Item>
-					<Item Value="111">COM111</Item>
-					<Item Value="112">COM112</Item>
-					<Item Value="113">COM113</Item>
-					<Item Value="114">COM114</Item>
-					<Item Value="115">COM115</Item>
-					<Item Value="116">COM116</Item>
-					<Item Value="117">COM117</Item>
-					<Item Value="118">COM118</Item>
-					<Item Value="119">COM119</Item>
-					<Item Value="120">COM120</Item>
-					<Item Value="121">COM121</Item>
-					<Item Value="122">COM122</Item>
-					<Item Value="123">COM123</Item>
-					<Item Value="124">COM124</Item>
-					<Item Value="125">COM125</Item>
-					<Item Value="126">COM126</Item>
-					<Item Value="127">COM127</Item>
-					<Item Value="128">COM128</Item>
-					<Item Value="129">COM129</Item>
-					<Item Value="130">COM130</Item>
-					<Item Value="131">COM131</Item>
-					<Item Value="132">COM132</Item>
-					<Item Value="133">COM133</Item>
-					<Item Value="134">COM134</Item>
-					<Item Value="135">COM135</Item>
-					<Item Value="136">COM136</Item>
-					<Item Value="137">COM137</Item>
-					<Item Value="138">COM138</Item>
-					<Item Value="139">COM139</Item>
-					<Item Value="140">COM140</Item>
-					<Item Value="141">COM141</Item>
-					<Item Value="142">COM142</Item>
-					<Item Value="143">COM143</Item>
-					<Item Value="144">COM144</Item>
-					<Item Value="145">COM145</Item>
-					<Item Value="146">COM146</Item>
-					<Item Value="147">COM147</Item>
-					<Item Value="148">COM148</Item>
-					<Item Value="149">COM149</Item>
-					<Item Value="150">COM150</Item>
-					<Item Value="151">COM151</Item>
-					<Item Value="152">COM152</Item>
-					<Item Value="153">COM153</Item>
-					<Item Value="154">COM154</Item>
-					<Item Value="155">COM155</Item>
-					<Item Value="156">COM156</Item>
-					<Item Value="157">COM157</Item>
-					<Item Value="158">COM158</Item>
-					<Item Value="159">COM159</Item>
-					<Item Value="160">COM160</Item>
-					<Item Value="161">COM161</Item>
-					<Item Value="162">COM162</Item>
-					<Item Value="163">COM163</Item>
-					<Item Value="164">COM164</Item>
-					<Item Value="165">COM165</Item>
-					<Item Value="166">COM166</Item>
-					<Item Value="167">COM167</Item>
-					<Item Value="168">COM168</Item>
-					<Item Value="169">COM169</Item>
-					<Item Value="170">COM170</Item>
-					<Item Value="171">COM171</Item>
-					<Item Value="172">COM172</Item>
-					<Item Value="173">COM173</Item>
-					<Item Value="174">COM174</Item>
-					<Item Value="175">COM175</Item>
-					<Item Value="176">COM176</Item>
-					<Item Value="177">COM177</Item>
-					<Item Value="178">COM178</Item>
-					<Item Value="179">COM179</Item>
-					<Item Value="180">COM180</Item>
-					<Item Value="181">COM181</Item>
-					<Item Value="182">COM182</Item>
-					<Item Value="183">COM183</Item>
-					<Item Value="184">COM184</Item>
-					<Item Value="185">COM185</Item>
-					<Item Value="186">COM186</Item>
-					<Item Value="187">COM187</Item>
-					<Item Value="188">COM188</Item>
-					<Item Value="189">COM189</Item>
-					<Item Value="190">COM190</Item>
-					<Item Value="191">COM191</Item>
-					<Item Value="192">COM192</Item>
-					<Item Value="193">COM193</Item>
-					<Item Value="194">COM194</Item>
-					<Item Value="195">COM195</Item>
-					<Item Value="196">COM196</Item>
-					<Item Value="197">COM197</Item>
-					<Item Value="198">COM198</Item>
-					<Item Value="199">COM199</Item>
-					<Item Value="200">COM200</Item>
-					<Item Value="201">COM201</Item>
-					<Item Value="202">COM202</Item>
-					<Item Value="203">COM203</Item>
-					<Item Value="204">COM204</Item>
-					<Item Value="205">COM205</Item>
-					<Item Value="206">COM206</Item>
-					<Item Value="207">COM207</Item>
-					<Item Value="208">COM208</Item>
-					<Item Value="209">COM209</Item>
-					<Item Value="210">COM210</Item>
-					<Item Value="211">COM211</Item>
-					<Item Value="212">COM212</Item>
-					<Item Value="213">COM213</Item>
-					<Item Value="214">COM214</Item>
-					<Item Value="215">COM215</Item>
-					<Item Value="216">COM216</Item>
-					<Item Value="217">COM217</Item>
-					<Item Value="218">COM218</Item>
-					<Item Value="219">COM219</Item>
-					<Item Value="220">COM220</Item>
-					<Item Value="221">COM221</Item>
-					<Item Value="222">COM222</Item>
-					<Item Value="223">COM223</Item>
-					<Item Value="224">COM224</Item>
-					<Item Value="225">COM225</Item>
-					<Item Value="226">COM226</Item>
-					<Item Value="227">COM227</Item>
-					<Item Value="228">COM228</Item>
-					<Item Value="229">COM229</Item>
-					<Item Value="230">COM230</Item>
-					<Item Value="231">COM231</Item>
-					<Item Value="232">COM232</Item>
-					<Item Value="233">COM233</Item>
-					<Item Value="234">COM234</Item>
-					<Item Value="235">COM235</Item>
-					<Item Value="236">COM236</Item>
-					<Item Value="237">COM237</Item>
-					<Item Value="238">COM238</Item>
-					<Item Value="239">COM239</Item>
-					<Item Value="240">COM240</Item>
-					<Item Value="241">COM241</Item>
-					<Item Value="242">COM242</Item>
-					<Item Value="243">COM243</Item>
-					<Item Value="244">COM244</Item>
-					<Item Value="245">COM245</Item>
-					<Item Value="246">COM246</Item>
-					<Item Value="247">COM247</Item>
-					<Item Value="248">COM248</Item>
-					<Item Value="249">COM249</Item>
-					<Item Value="250">COM250</Item>
-					<Item Value="251">COM251</Item>
-					<Item Value="252">COM252</Item>
-					<Item Value="253">COM253</Item>
-					<Item Value="254">COM254</Item>
-					<Item Value="255">COM255</Item>
-					<Item Value="256">COM256</Item>
+					<Item Value="COM1">COM1</Item>
+					<Item Value="COM2">COM2</Item>
+					<Item Value="COM3">COM3</Item>
+					<Item Value="COM4">COM4</Item>
+					<Item Value="COM5">COM5</Item>
+					<Item Value="COM6">COM6</Item>
+					<Item Value="COM7">COM7</Item>
+					<Item Value="COM8">COM8</Item>
+					<Item Value="COM9">COM9</Item>
+					<Item Value="COM10">COM10</Item>
+					<Item Value="COM11">COM11</Item>
+					<Item Value="COM12">COM12</Item>
+					<Item Value="COM13">COM13</Item>
+					<Item Value="COM14">COM14</Item>
+					<Item Value="COM15">COM15</Item>
+					<Item Value="COM16">COM16</Item>
 				</ChoiceList>
 			</Parameter>
-			<Parameter Name="Baudrate" Caption="Скорость" Description="Скорость" TypeValue="Number" ReadOnly="False" DefaultValue="115200">
+			<Parameter Name="BaudRate" Caption="Скорость" Description="Скорость" TypeValue="Number" ReadOnly="False" DefaultValue="115200">
 				<ChoiceList>
-					<Item Value="0">0</Item>
-					<Item Value="1">1</Item>
-					<Item Value="2">2</Item>
-					<Item Value="3">3</Item>
-					<Item Value="4">4</Item>
-					<Item Value="5">5</Item>
-					<Item Value="6">6</Item>
-					<Item Value="7">7</Item>
-					<Item Value="8">8</Item>
+					<Item Value="2400">2400</Item>
+					<Item Value="4800">4800</Item>
+					<Item Value="9600">9600</Item>
+					<Item Value="14400">14400</Item>
+					<Item Value="19200">19200</Item>
+					<Item Value="38400">38400</Item>
+					<Item Value="56000">56000</Item>
+					<Item Value="57600">57600</Item>
+					<Item Value="115200">115200</Item>
 				</ChoiceList>
 			</Parameter>
-			<Parameter Name="Timeout" Caption="Таймаут" Description="Таймаут" TypeValue="Number" ReadOnly="False" DefaultValue="10000"/>
+			<Parameter Name="ByteTimeout" Caption="Таймаут" Description="Таймаут" TypeValue="Number" ReadOnly="False" DefaultValue="100"/>
+			<Parameter Name="CommandTimeout" Caption="Таймаут команды" Description="Таймаут команды" TypeValue="Number" ReadOnly="False" DefaultValue="1000"/>
 			<Parameter Name="IPAddress" Caption="IP адрес" Description="IP адрес" TypeValue="String" ReadOnly="False" DefaultValue="192.168.137.111"/>
 			<Parameter Name="TCPPort" Caption="TCP порт" Description="TCP порт" TypeValue="Number" ReadOnly="False" DefaultValue="7778"/>
-		</Group>
-	</Page>
-	<Page Caption="Параметры устройства">
-		<Group Caption="Параметры устройства">
-			<Parameter Name="AdminPassword" Caption="Пароль администратора" Description="Пароль администратора" TypeValue="Number" ReadOnly="False" DefaultValue="30"/>
-			<Parameter Name="BarcodeFirstLine" Caption="Номер линии для загрузки QR Code" Description="Номер линии для загрузки QR Code" TypeValue="Number" ReadOnly="False" DefaultValue="1"/>
-			<Parameter Name="QRCodeDotWidth" Caption="Толщина точки QR Code (3-8)" Description="Толщина точки QR Code (3-8)" TypeValue="Number" ReadOnly="False" DefaultValue="3"/>
-			<Parameter Name="CheckClock" Caption="Синхронизировать часы ККТ перед открытием смены" Description="Синхронизировать часы ККТ перед открытием смены" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-		</Group>
-	</Page>
-	<Page Caption="Налоговые ставки и типы оплат">
-		<Group Caption="Налоговые ставки и типы оплат">
-			<Parameter Name="CloseSession" Caption="Закрывать смену для программирования налоговых ставок (в случае некорректных значений)" Description="Закрывать смену для программирования налоговых ставок (в случае некорректных значений)" TypeValue="Boolean" ReadOnly="False" DefaultValue="True"/>
-			<Parameter Name="PayName1" Caption="Тип безнал. оплаты 1" Description="Тип безнал. оплаты 1" TypeValue="String" ReadOnly="False" DefaultValue="ПЛАТ.КАРТОЙ"/>
-			<Parameter Name="PayName2" Caption="Тип безнал. оплаты 2" Description="Тип безнал. оплаты 2" TypeValue="String" ReadOnly="False" DefaultValue="КРЕДИТОМ"/>
-			<Parameter Name="PayName3" Caption="Тип безнал. оплаты 3" Description="Тип безнал. оплаты 3" TypeValue="String" ReadOnly="False" DefaultValue="СЕРТИФИКАТОМ"/>
-		</Group>
-	</Page>
-	<Page Caption="Настройка лога">
-		<Group Caption="Настройка лога">
-			<Parameter Name="EnableLog" Caption="Вести лог (путь к логу настраивается через тест драйвера)" Description="Вести лог (путь к логу настраивается через тест драйвера)" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-			<Parameter Name="LogPath" Caption="Путь к файлу лога" Description="Путь к файлу лога" TypeValue="String" ReadOnly="False"/>
-		</Group>
-	</Page>
-	<Page Caption="Формат чека">
-		<Group Caption="Формат чека">
-			<Parameter Name="DisablePrintReports" Caption="Не печатать фискальные отчеты и чеки внесения/выемки на бумаге" Description="Не печатать фискальные отчеты и чеки внесения/выемки на бумаге" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-			<Parameter Name="EnablePaymentSignPrint" Caption="Печатать признак и способ расчета (ФФД 1.05)" Description="Печатать признак и способ расчета (ФФД 1.05)" TypeValue="Boolean" ReadOnly="False" DefaultValue="True"/>
-			<Parameter Name="ItemNameLength" Caption="Кол-во используемых символов наименования товара (0 - использовать целиком)" Description="Кол-во используемых символов наименования товара (0 - использовать целиком)" TypeValue="Number" ReadOnly="False" DefaultValue="0"/>
-			<Parameter Name="CheckFontNumber" Caption="Номер шрифта тела чека" Description="Номер шрифта тела чека" TypeValue="Number" ReadOnly="False" DefaultValue="1"/>
-			<Parameter Name="EnableNonFiscalHeader" Caption="Печатать заголовок нефиск. документа" Description="Печатать заголовок нефиск. документа" TypeValue="Boolean" ReadOnly="False" DefaultValue="True"/>
-			<Parameter Name="EnableNonFiscalFooter" Caption="Печатать окончание нефиск. документа" Description="Печатать окончание нефиск. документа" TypeValue="Boolean" ReadOnly="False" DefaultValue="True"/>
-			<Parameter Name="UseRepeatDocument" Caption="Для печати копии последнего документа использовать команду повтора документа" Description="Для печати копии последнего документа использовать команду повтора документа" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-		</Group>
-	</Page>
-	<Page Caption="Orange Data">
-		<Group Caption="Параметры подключения">
-			<Parameter Name="ODEnabled" Caption="Включить передачу данных в Orange Data" Description="Включить передачу данных в Orange Data" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-			<Parameter Name="ODServerURL" Caption="URL сервера" Description="URL сервера" TypeValue="String" ReadOnly="False" DefaultValue="https://apip.orangedata.ru:2443/api/v2/"/>
-			<Parameter Name="ODINN" Caption="ИНН" Description="ИНН" TypeValue="String" ReadOnly="False"/>
-			<Parameter Name="ODGroup" Caption="Группа" Description="Группа" TypeValue="String" ReadOnly="False"/>
-			<Parameter Name="ODCertFileName" Caption="Путь к файлу клиентского сертификата (.crt)" Description="Путь к файлу клиентского сертификата (.crt)" TypeValue="String" ReadOnly="False"/>
-			<Parameter Name="ODKeyFileName" Caption="Путь к файлу клиентского ключа (.key)" Description="Путь к файлу клиентского ключа (.key)" TypeValue="String" ReadOnly="False"/>
-			<Parameter Name="ODSignKeyFileName" Caption="Путь к файлу ключа для подписи запросов (.pem)" Description="Путь к файлу ключа для подписи запросов (.pem)" TypeValue="String" ReadOnly="False"/>
-			<Parameter Name="ODKeyName" Caption="Название ключа для проверки подписи (опционально)" Description="Название ключа для проверки подписи (опционально)" TypeValue="String" ReadOnly="False"/>
-			<Parameter Name="ODRetryCount" Caption="Количество попыток подтверждения документа" Description="Количество попыток подтверждения документа" TypeValue="Number" ReadOnly="False" DefaultValue="10"/>
-			<Parameter Name="ODRetryTimeout" Caption="Время между попытками подтверждения документа, сек." Description="Время между попытками подтверждения документа, сек." TypeValue="Number" ReadOnly="False" DefaultValue="2"/>
-			<Parameter Name="ODFFDVersion" Caption="Версия ФФД" Description="Версия ФФД" TypeValue="Number" ReadOnly="False" DefaultValue="4">
-				<ChoiceList>
-					<Item Value="2">ФФД 1.05</Item>
-					<Item Value="4">ФФД 1.2</Item>
-				</ChoiceList>
-			</Parameter>
-		</Group>
-		<Group Caption="Параметры ККТ">
-			<Parameter Name="ODFFDVersion" Caption="Версия ФФД" Description="Версия ФФД" TypeValue="Number" ReadOnly="False" DefaultValue="4">
-				<ChoiceList>
-					<Item Value="2">ФФД 1.05</Item>
-					<Item Value="4">ФФД 1.2</Item>
-				</ChoiceList>
-			</Parameter>
-			<Parameter Name="ODKKTRetailDelivery" Caption="ККТ для развозной торговли" Description="ККТ для развозной торговли" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-			<Parameter Name="ODKKTSerialNumber" Caption="Заводской номер ККТ" Description="Заводской номер ККТ" TypeValue="String" ReadOnly="False"/>
-			<Parameter Name="ODKKTRNM" Caption="РНМ ККТ" Description="РНМ ККТ" TypeValue="String" ReadOnly="False"/>
-			<Parameter Name="ODKKTFNSerialNumber" Caption="Заводской номер ФН" Description="Заводской номер ФН" TypeValue="String" ReadOnly="False"/>
-			<Parameter Name="ODSaleAddress" Caption="Адрес проведения расчетов" Description="Адрес проведения расчетов" TypeValue="String" ReadOnly="False"/>
-			<Parameter Name="ODSaleLocation" Caption="Место проведения расчетов" Description="Место проведения расчетов" TypeValue="String" ReadOnly="False"/>
-		</Group>
-		<Group Caption="Системы налогообложения">
-			<Parameter Name="ODTaxOSN" Caption="ОСН" Description="ОСН" TypeValue="Boolean" ReadOnly="False" DefaultValue="True"/>
-			<Parameter Name="ODTaxUSND" Caption="УСН доход" Description="УСН доход" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-			<Parameter Name="ODTaxUSNDMR" Caption="УСН доход минус расход" Description="УСН доход минус расход" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-			<Parameter Name="ODTaxENVD" Caption="ЕНВД" Description="ЕНВД" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-			<Parameter Name="ODTaxESN" Caption="ЕСН" Description="ЕСН" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-			<Parameter Name="ODTaxPSN" Caption="ПСН" Description="ПСН" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-		</Group>
-		<Group Caption="Режим работы ККТ">
-			<Parameter Name="ODIsOffline" Caption="Признак автономного режима" Description="Признак автономного режима" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-			<Parameter Name="ODIsEncrypted" Caption="Признак шифрование данных" Description="Признак шифрование данных" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-			<Parameter Name="ODIsService" Caption="Признак расчетов за услуги" Description="Признак расчетов за услуги" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-			<Parameter Name="ODIsExcisable" Caption="Признак продажи подакцизного товара" Description="Признак продажи подакцизного товара" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-			<Parameter Name="ODIsGambling" Caption="Признак проведения азартных игр" Description="Признак проведения азартных игр" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-			<Parameter Name="ODIsLottery" Caption="Признак проведения лотереи" Description="Признак проведения лотереи" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-			<Parameter Name="ODBSOSing" Caption="Признак формирования АС БСО" Description="Признак формирования АС БСО" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-			<Parameter Name="ODIsOnline" Caption="Признак ККТ для расчетов в Интернет" Description="Признак ККТ для расчетов в Интернет" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-			<Parameter Name="ODIsAutomaticPrinter" Caption="Признак установки принтера в автомате" Description="Признак установки принтера в автомате" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-			<Parameter Name="ODIsAutomatic" Caption="Признак автоматического режима" Description="Признак автоматического режима" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-			<Parameter Name="ODAutomaticNumber" Caption="Номер автомата для автоматического режима" Description="Номер автомата для автоматического режима" TypeValue="String" ReadOnly="False"/>
-			<Parameter Name="ODIsMarking" Caption="Признак торговли маркированными товарами" Description="Признак торговли маркированными товарами" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-			<Parameter Name="ODIsPawnshop" Caption="Признак ломбардной деятельности" Description="Признак ломбардной деятельности" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
-			<Parameter Name="ODIsAssurance" Caption="Признак страховой деятельности" Description="Признак страховой деятельности" TypeValue="Boolean" ReadOnly="False" DefaultValue="False"/>
 		</Group>
 	</Page>
 </Settings>

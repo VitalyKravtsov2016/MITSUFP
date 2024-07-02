@@ -136,8 +136,8 @@ begin
    Driver.sm_FormatVersion := 32;
 {$ENDIF}
 
-   // Result := Driver.GetDescription(DriverDescription);
-   // Exit;
+    Result := Driver.GetDescription(DriverDescription);
+    Exit;
   end;
 
   Result := True;
@@ -149,11 +149,11 @@ begin
     Xml.Options := Xml.Options + [doNodeAutoIndent];
     Node := Xml.AddChild('DriverDescription');
 {$IFDEF V1C_34}
-    Node.Attributes['Name'] := 'Штрих-М: Драйвер ККТ с передачей данных в ОФД (4.1)';
-    Node.Attributes['Description'] := 'Штрих-М: Драйвер ККТ с передачей данных в ОФД (4.1)';
+    Node.Attributes['Name'] := 'ВиЭйВи: Драйвер ККТ с передачей данных в ОФД (4.1)';
+    Node.Attributes['Description'] := 'ВиЭйВи: Драйвер ККТ с передачей данных в ОФД (4.1)';
 {$ELSE}
-    Node.Attributes['Name'] := 'Штрих-М: Драйвер ККТ с передачей данных в ОФД (3.2)';
-    Node.Attributes['Description'] := 'Штрих-М: Драйвер ККТ с передачей данных в ОФД (3.2)';
+    Node.Attributes['Name'] := 'ВиЭйВи: Драйвер ККТ с передачей данных в ОФД (3.2)';
+    Node.Attributes['Description'] := 'ВиЭйВи: Драйвер ККТ с передачей данных в ОФД (3.2)';
 {$ENDIF}
 
     Node.Attributes['EquipmentType'] := 'KKT';
@@ -164,8 +164,8 @@ begin
     else
       Node.Attributes['DriverVersion'] := '1.0';
     Node.Attributes['IntegrationComponentVersion'] := GetModuleVersion;
-    Node.Attributes['DownloadURL'] := 'http://www.shtrih-m.ru/support/download/?section_id=76&product_id=all&type_id=156';
-    Node.Attributes['LogIsEnabled'] := 'false';
+    Node.Attributes['DownloadURL'] := 'http://www.mitsu.ru/support/download/?section_id=76&product_id=all&type_id=156';
+    Node.Attributes['LogIsEnabled'] := 'true';
     Node.Attributes['LogPath'] := '';
     DriverDescription := Xml.XML.Text;
   finally

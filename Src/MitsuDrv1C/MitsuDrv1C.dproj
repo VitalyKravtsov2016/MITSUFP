@@ -214,9 +214,7 @@
         <DCCReference Include="Units\Driver1C10.pas"/>
         <DCCReference Include="Units\Params1C.pas"/>
         <DCCReference Include="..\Shared\gnugettext.pas"/>
-        <DCCReference Include="Units\DriverParams1C.pas">
-            <Form>$E dll</Form>
-        </DCCReference>
+        <DCCReference Include="Units\DriverParams1C.pas"/>
         <RidlCompile Include="MitsuDrv1C.ridl"/>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>
